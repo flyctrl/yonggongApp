@@ -8,8 +8,9 @@ const BASE_URL = ``
 
 export const HOME = `${BASE_URL}/Home`
 export const MESSAGE = `${BASE_URL}/Message`
-export const PUSHORDER = `${BASE_URL}/PushOrder` // 发布工单
 export const WORKORDER = `${BASE_URL}/WorkOrder` // 工单列表
+
+export const PUSHNORMALORDER = `${BASE_URL}/PushOrder/pushNormalOrder` // 发布普通工单
 
 // 工单
 export const APPLYDETAIL = `${WORKORDER}/applyDetail` // 审批详情

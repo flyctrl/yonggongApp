@@ -8,6 +8,8 @@ import React, { Component } from 'react'
 // import { Link } from 'react-router-dom'
 import { Header, Content } from 'Components'
 import { Flex, WingBlank, Carousel } from 'antd-mobile'
+import * as urls from 'Contants/urls'
+import history from 'Util/history'
 import style from './style.css'
 
 class Home extends Component {
@@ -27,6 +29,10 @@ class Home extends Component {
   handleClickGrid(ele, index) {
     console.log(index)
   }
+
+  handlePushNormalOrder = () => {
+    history.push(urls.PUSHNORMALORDER)
+  }
   render() {
     return (
       <div className='contentBox'>
@@ -41,7 +47,7 @@ class Home extends Component {
             <div className={style['flex-container']}>
               <Flex>
                 <Flex.Item>
-                  <div className={style['pushtype-btn']}>
+                  <div onClick={this.handlePushNormalOrder} className={style['pushtype-btn']}>
                     <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
                     <div className={style['pushtype-text']}>发布工单</div>
                   </div>

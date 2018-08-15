@@ -19,12 +19,13 @@ const Message = Loadable({ // 消息
   loader: () => import(/* webpackChunkName: "message" */ '../models/Message'),
   loading: MyLoadingComponent
 })
-const PushOrder = Loadable({ // 发布工单
-  loader: () => import(/* webpackChunkName: "pushorder" */ '../models/PushOrder'),
-  loading: MyLoadingComponent
-})
 const WorkOrder = Loadable({ // 工单
   loader: () => import(/* webpackChunkName: "tobedone" */ '../models/WorkOrder'),
+  loading: MyLoadingComponent
+})
+
+const PushNormalOrder = Loadable({ // 发布普通工单
+  loader: () => import(/* webpackChunkName: "pushorder" */ '../models/PushOrder/pushNormalOrder'),
   loading: MyLoadingComponent
 })
 
@@ -135,9 +136,9 @@ const routes = [
     showMenu: true,
     title: '工单'
   }, {
-    path: urls.PUSHORDER,
+    path: urls.PUSHNORMALORDER,
     exact: true,
-    component: PushOrder,
+    component: PushNormalOrder,
     parent: null,
     showMenu: false,
     animated: false,

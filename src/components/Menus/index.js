@@ -28,12 +28,12 @@ const data = [
     onIcon: '#icon-backLog_pre',
     title: '工单'
   }, {
-    path: urls.PUSHORDER,
-    key: 'PushOrder',
-    icon: '#icon-add',
-    onIcon: '#icon-add',
-    title: null
-  }, {
+  //   path: urls.PUSHORDER,
+  //   key: 'PushOrder',
+  //   icon: '#icon-add',
+  //   onIcon: '#icon-add',
+  //   title: null
+  // }, {
     path: urls.MESSAGE,
     key: 'Message',
     icon: '#icon-message',

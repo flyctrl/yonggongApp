@@ -8,26 +8,42 @@ import React, { Component } from 'react'
 import style from './style.css'
 // import { Link } from 'react-router-dom'
 import * as urls from 'Contants/urls'
-import { List, Radio, Picker, InputItem, DatePicker, TextareaItem, Toast } from 'antd-mobile'
+import { List, Radio, Picker, InputItem, DatePicker, TextareaItem, Toast, Icon } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import { createForm } from 'rc-form'
 import history from 'Util/history'
 import Upload from 'rc-upload'
 import NewIcon from 'Components/NewIcon'
-import ConfirmOrder from './confirmOrder'
+import ConfirmOrder from '../confirmOrder'
 
 // const Brief = List.Item.Brief
-const radioData = [
-  { value: 0, label: '关联已有项目' },
-  { value: 1, label: '不关联已有项目' }
+const valModeData = [
+  { value: 0, label: '计量(面积/体积/数量)' },
+  { value: 1, label: '计时(日/周/月/年)' }
 ]
-const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent)
-let moneyKeyboardWrapProps
-if (isIPhone) {
-  moneyKeyboardWrapProps = {
-    onTouchStart: e => e.preventDefault(),
-  }
-}
+const totalRadio = [
+  { value: 0, label: '计量(面积/体积/数量)' },
+  { value: 1, label: '总时长' }
+]
+const settleRadio = [
+  { value: 0, label: '按工程进度' },
+  { value: 1, label: '计时(日/周/月/年)' }
+]
+const payModeRadio = [
+  { value: 0, label: '直接付款' },
+  { value: 1, label: '代付' }
+]
+const rightWrongRadio = [
+  { value: 0, label: '是' },
+  { value: 1, label: '否' }
+]
+// const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent)
+// let moneyKeyboardWrapProps
+// if (isIPhone) {
+//   moneyKeyboardWrapProps = {
+//     onTouchStart: e => e.preventDefault(),
+//   }
+// }
 class PushOrder extends Component {
   constructor(props) {
     super(props)
@@ -100,6 +116,9 @@ class PushOrder extends Component {
     this.setState({
       workTypeSelect: true
     })
+  }
+  handleNatural = () => {
+    console.log('资质要求')
   }
 
   delUploadList(ev) {
@@ -181,7 +200,7 @@ class PushOrder extends Component {
       }
     }
     const { getFieldProps } = this.props.form
-    const { fileList, radioVaule, proData, worktypeData, isEdit, postData } = this.state
+    const { fileList, radioVaule, proData, worktypeData, isEdit, postData, proSelect, dateSelect, workTypeSelect } = this.state
     return (
       <div className='pageBox'>
         <div style={{ display: isEdit ? 'block' : 'none' }}>
@@ -203,16 +222,7 @@ class PushOrder extends Component {
           />
           <Content>
             <form className={style['pushOrderForm']}>
-              <List className={`${style['radio-form-list']} my-bottom-border`}>
-                {
-                  radioData.map((item) => {
-                    return (
-                      <Radio key={item.value} checked={radioVaule === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange(item.value)}>{item.label}</Radio>
-                    )
-                  })
-                }
-              </List>
-              <List className={`${style['input-form-list']} ${this.state.proSelect ? style['selected-form-list'] : ''} my-bottom-border`} renderHeader={() => '项目名称'}>
+              <List className={`${style['input-form-list']} ${proSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '项目名称'}>
                 <Picker extra='请选择' className='myPicker' data={proData} cols={1}
                   {...getFieldProps('proname', {
                     onChange: this.onProChange,
@@ -224,19 +234,7 @@ class PushOrder extends Component {
                   <List.Item arrow='horizontal'></List.Item>
                 </Picker>
               </List>
-              <List className={`${style['input-form-list']} my-bottom-border`} renderHeader={() => '施工地址'}>
-                <InputItem
-                  {...getFieldProps('address', {
-                    rules: [
-                      // { required: true, message: '请填写施工地址' },
-                    ]
-                  })}
-                  clear
-                  placeholder='请输入'
-                  ref={(el) => { this.autoFocusInst = el }}
-                ></InputItem>
-              </List>
-              <List className={`${style['input-form-list']} ${this.state.dateSelect ? style['selected-form-list'] : ''} my-bottom-border`} renderHeader={() => '施工时间'}>
+              <List className={`${style['input-form-list']} ${dateSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '施工时间'}>
                 <DatePicker
                   {...getFieldProps('workDate', {
                     onChange: this.onDateChange,
@@ -249,7 +247,25 @@ class PushOrder extends Component {
                   <List.Item arrow='horizontal'></List.Item>
                 </DatePicker>
               </List>
-              <List className={`${style['input-form-list']} my-bottom-border`} renderHeader={() => '价格预算'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '计价方式'}>
+                {
+                  valModeData.map((item) => {
+                    return (
+                      <Radio key={item.value} checked={radioVaule === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange(item.value)}>{item.label}</Radio>
+                    )
+                  })
+                }
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '总数'}>
+                {
+                  totalRadio.map((item) => {
+                    return (
+                      <Radio key={item.value} checked={radioVaule === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange(item.value)}>{item.label}</Radio>
+                    )
+                  })
+                }
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '单价（单位：元）'}>
                 <InputItem
                   {...getFieldProps('price', {
                     rules: [
@@ -260,10 +276,28 @@ class PushOrder extends Component {
                   placeholder='请输入'
                   extra='¥'
                   ref={(el) => { this.autoFocusInst = el }}
-                  moneyKeyboardWrapProps={moneyKeyboardWrapProps}
+                  // moneyKeyboardWrapProps={moneyKeyboardWrapProps}
                 ></InputItem>
               </List>
-              <List className={`${style['input-form-list']} ${this.state.workTypeSelect ? style['selected-form-list'] : ''} my-bottom-border`} renderHeader={() => '工种需求'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '结算方式'}>
+                {
+                  settleRadio.map((item) => {
+                    return (
+                      <Radio key={item.value} checked={radioVaule === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange(item.value)}>{item.label}</Radio>
+                    )
+                  })
+                }
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '付款方式'}>
+                {
+                  payModeRadio.map((item) => {
+                    return (
+                      <Radio key={item.value} checked={radioVaule === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange(item.value)}>{item.label}</Radio>
+                    )
+                  })
+                }
+              </List>
+              <List className={`${style['input-form-list']} ${workTypeSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '工种（非必填）'}>
                 <Picker data={worktypeData} extra='请选择' cols={1}
                   {...getFieldProps('worktype', {
                     onChange: this.onWorkTypeChange,
@@ -274,6 +308,58 @@ class PushOrder extends Component {
                 >
                   <List.Item arrow='horizontal'></List.Item>
                 </Picker>
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '保证金比例（单位：%）'}>
+                <InputItem
+                  {...getFieldProps('price', {
+                    rules: [
+                      // { required: true, message: '请填写价格预算' },
+                    ]
+                  })}
+                  clear
+                  placeholder='请输入'
+                  extra='%'
+                  ref={(el) => { this.autoFocusInst = el }}
+                  // moneyKeyboardWrapProps={moneyKeyboardWrapProps}
+                ></InputItem>
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '违约金（单位：元）'}>
+                <InputItem
+                  {...getFieldProps('price', {
+                    rules: [
+                      // { required: true, message: '请填写价格预算' },
+                    ]
+                  })}
+                  clear
+                  placeholder='请输入'
+                  extra='¥'
+                  ref={(el) => { this.autoFocusInst = el }}
+                  // moneyKeyboardWrapProps={moneyKeyboardWrapProps}
+                ></InputItem>
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '是否开票'}>
+                {
+                  rightWrongRadio.map((item) => {
+                    return (
+                      <Radio key={item.value} checked={radioVaule === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange(item.value)}>{item.label}</Radio>
+                    )
+                  })
+                }
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '资质要求'}>
+                <div onClick={this.handleNatural}>
+                  <InputItem
+                    {...getFieldProps('address', {
+                      rules: [
+                        // { required: true, message: '请填写施工地址' },
+                      ]
+                    })}
+                    disabled
+                    placeholder='请选择'
+                    ref={(el) => { this.autoFocusInst = el }}
+                  ></InputItem>
+                  <Icon type='right' color='#ccc' />
+                </div>
               </List>
               <List className={style['textarea-form-list']} renderHeader={() => '需求描述'}>
                 <TextareaItem
