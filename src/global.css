@@ -1,0 +1,205 @@
+/*
+* @Author: chengbs
+* @Date:   2018-05-22 10:58:21
+* @Last Modified by:   chengbs
+* @Last Modified time: 2018-06-05 23:52:45
+*/
+:global(.contentBox) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 50px;
+}
+
+:global(.pageBox) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+:global(.my-top-border) {
+  position: relative;
+  border-top: 1PX solid #ddd;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  html:not([data-scale]) :global(.my-top-border) {
+    position: relative;
+    border-top: none;
+  }
+  html:not([data-scale]) :global(.my-top-border:before) {
+    content: '';
+    position: absolute;
+    background-color: #ddd;
+    display: block;
+    z-index: 1;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: 0;
+    width: 100%;
+    height: 1PX;
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2) and (-webkit-min-device-pixel-ratio: 3), (min-resolution: 2dppx) and (min-resolution: 3dppx) {
+  html:not([data-scale]) :global(.my-top-border:before) {
+    -webkit-transform: scaleY(0.33);
+    transform: scaleY(0.33);
+  }
+}
+
+:global(.my-bottom-border) {
+  border-bottom: 1PX solid #ddd;
+  position: relative;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  html:not([data-scale]) :global(.my-bottom-border) {
+    border-bottom: none;
+    position: relative;
+  }
+  html:not([data-scale]) :global(.my-bottom-border:after) {
+    content: '';
+    position: absolute;
+    background-color: #ddd;
+    display: block;
+    z-index: 1;
+    bottom: 0;
+    right: auto;
+    top: auto;
+    left: 0;
+    width: 100%;
+    height: 1PX;
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2) and (-webkit-min-device-pixel-ratio: 3), (min-resolution: 2dppx) and (min-resolution: 3dppx) {
+  html:not([data-scale]) :global(.my-top-border:after) {
+    -webkit-transform: scaleY(0.33);
+    transform: scaleY(0.33);
+  }
+}
+
+:global(.my-full-border) {
+  position: relative;
+  border: 1PX solid #ddd;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  html:not([data-scale]) :global(.my-full-border) {
+    position: relative;
+    border: none;
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  html:not([data-scale]) :global(.my-full-border:before) {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 200%;
+    height: 200%;
+    border: 1PX solid #ddd;
+    border-radius: 10px;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+}
+
+:global(.my-left-border) {
+  position: relative;
+  border-left: 1PX solid #ddd;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  html:not([data-scale]) :global(.my-left-border:before)  {
+    position: relative;
+    border-left: none;
+  }
+  html:not([data-scale]) :global(.my-left-border:before) {
+    content: '';
+    position: absolute;
+    background-color: #ddd;
+    display: block;
+    z-index: 1;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: 0;
+    width: 1PX;
+    height: 100%;
+    -webkit-transform-origin: 100% 50%;
+    transform-origin: 100% 50%;
+    -webkit-transform: scaleX(0.5);
+    transform: scaleX(0.5);
+  }
+}
+@media (-webkit-min-device-pixel-ratio: 2) and (-webkit-min-device-pixel-ratio: 3), (min-resolution: 2dppx) and (min-resolution: 3dppx) {
+  html:not([data-scale]) :global(.my-left-border:before)  {
+    -webkit-transform: scaleX(0.33);
+    transform: scaleX(0.33);
+  }
+}
+
+:global(.my-right-border) {
+  position: relative;
+  border-right: 1PX solid #ddd;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  html:not([data-scale]) :global(.my-right-border:before)  {
+    position: relative;
+    border-right: none;
+  }
+  html:not([data-scale]) :global(.my-right-border:before) {
+    content: '';
+    position: absolute;
+    background-color: #ddd;
+    display: block;
+    z-index: 1;
+    top: 0;
+    left: auto;
+    bottom: auto;
+    right: 0;
+    width: 1PX;
+    height: 100%;
+    -webkit-transform-origin: 100% 50%;
+    transform-origin: 100% 50%;
+    -webkit-transform: scaleX(0.5);
+    transform: scaleX(0.5);
+  }
+}
+@media (-webkit-min-device-pixel-ratio: 2) and (-webkit-min-device-pixel-ratio: 3), (min-resolution: 2dppx) and (min-resolution: 3dppx) {
+  html:not([data-scale]) :global(.my-right-border:before)  {
+    -webkit-transform: scaleX(0.33);
+    transform: scaleX(0.33);
+  }
+}
+
+:global(.ellipsis) {
+  overflow:hidden;
+  white-space:nowrap;
+  -o-text-overflow:ellipsis;
+  text-overflow:ellipsis;
+  _width: 100%;
+}
+
+:global(html:not([data-scale]) .am-list-body:before) {
+  height: 0;
+}
+:global(html:not([data-scale]) .am-list-body:after) {
+  height: 0;
+}

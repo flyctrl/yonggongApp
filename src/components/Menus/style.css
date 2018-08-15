@@ -1,0 +1,107 @@
+/*
+* @Author: baosheng
+* @Date:   2018-04-02 22:17:11
+* @Last Modified by:   chengbs
+* @Last Modified time: 2018-05-22 15:23:45
+*/
+.menuBtn {
+  width: 22px;
+  height: 22px;
+  background: 'url(../../assets/home.png) center center /  21px 21px no-repeat';
+}
+
+.tabBody {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.tabBody-fix-iphoneX {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-bottom: 15px solid #FFF;
+  &:after {
+    content: '';
+    position: absolute;
+    background-color: #FFF;
+    display: block;
+    z-index: 1;
+    top: auto;
+    right: auto;
+    bottom: -15px;
+    left: 0;
+    width: 100%;
+    height: 15px;
+  }
+}
+
+.icon-menu {
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+  overflow: hidden;
+}
+.bigicon-menu {
+  width: 40px;
+  height: 40px;
+  margin-top:5px;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+.tabBody :global(.am-tab-bar-tab) {
+  height: 100%;
+}
+
+.tabBody :global(.am-tab-bar-bar .am-tab-bar-tab-title) {
+  margin-top: 6px;
+}
+
+.none {
+  display: none;
+}
+
+.tabBody-fix-iphoneX :global(.tabBody .am-tab-bar-bar .am-tab-bar-tab),
+.tabBody :global(.tabBody .am-tab-bar-bar .am-tab-bar-tab) {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-transition: all .2s ease-in-out;
+  transition: all .2s ease-in-out;
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout: none;
+  touch-callout: none;
+}
+
+.tabBody-fix-iphoneX :global(.am-tab-bar-bar .am-tab-bar-tab.feedback),
+.tabBody :global(.am-tab-bar-bar .am-tab-bar-tab.feedback) {
+  -webkit-transform: scale(0.86);
+  transform: scale(0.86);
+}
+
+.tabBody-fix-iphoneX :global(.am-tab-bar),
+.tabBody :global(.am-tab-bar) {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  height: 50px;
+};
+
+.tabBody-fix-iphoneX :global(.am-tabs-pane-wrap-inactive),
+.tabBody :global(.am-tabs-pane-wrap-inactive) {
+  display: none;
+}
+
+.tabBody-fix-iphoneX :global(.am-tabs-pane-wrap-active),
+.tabBody :global(.am-tabs-pane-wrap-active) {
+  display: block;
+  height: 100%;
+}
+

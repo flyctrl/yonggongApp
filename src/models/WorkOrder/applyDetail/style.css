@@ -1,0 +1,43 @@
+/*
+* @Author: baosheng
+* @Date:   2018-08-14 15:42:08
+* @Last Modified by:   baosheng
+* @Last Modified time: 2018-08-14 18:05:27
+*/
+.applyinfo-list {
+  padding: 20px;
+  padding-top: 10px;
+  & li {
+    height: 46px;
+    line-height: 46px;
+    color: rgba(49, 63, 72, 1);
+    font-size: 14px;
+    & span {
+      color: rgba(138, 150, 160, 1);
+      padding-right: 20px;
+    }
+  }
+}
+
+.lookpat-box {
+  width: 100%;
+  min-height: 14px;
+  & .lookpat-btn {
+    padding-right: 20px;
+    color: rgba(4, 103, 224, 1.0);
+    font-size: 14px;
+    float: right;
+  }
+}
+
+.control-btn {
+  width: 100%;
+  padding: 20px 0;
+  overflow: hidden;
+  & :global(.am-button-primary) {
+    width: 172px;
+    background: rgba(4, 103, 244, 1.0);
+    float: left;
+    margin-left: 10px;
+  }
+}

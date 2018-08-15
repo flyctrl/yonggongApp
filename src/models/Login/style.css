@@ -1,0 +1,228 @@
+/* stylelint-disable */
+
+.regBtn {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.logobox{
+  width: 100px;
+  height: 120px;
+  margin: 0 auto;
+  margin-top: 82px;
+  & img {
+    display: block;
+    width: 100px;
+    height: 90px;
+  }
+  & span {
+    display: block;
+    text-align: center;
+    height: 18px;
+    line-height: 18px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: rgba(138, 150, 160, .5);
+  }
+}
+
+.regLogobox {
+  width: 76px;
+  height: 76px;
+  margin-top: 60px;
+  & img {
+    width: 50px;
+    height: 45px;
+    margin: 0 auto;
+  }
+}
+
+.loginTitle {
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  color: rgba(49, 63, 72, 1);
+  font-size: 24px;
+  margin-top: 22px;
+}
+
+.loginForm {
+  width: 254px;
+  margin: 0 auto;
+  margin-top: 30px;
+  & :global(.login-item) {
+    & :global(.login-line) {
+      position: relative;
+      & input {
+        display: block;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 5px;
+        border: 1Px solid rgba(138, 150, 160, .5);
+        font-size: 12px;
+        margin: 0 auto;
+        margin-top: 10px;
+        text-indent: 15px;
+        &:global(::-webkit-input-placeholder) {
+          color: rgba(138, 150, 160, .5);
+          text-indent: 15px;
+        }
+      }
+      & :global(.am-input-clear) {
+        position: absolute;
+        top: 11px;
+        right: 5px;
+        width: 20px;
+        height: 20px;
+        display: block;
+        background: url(../../assets/close.png) no-repeat;
+        background-size: 100% 100%;
+      }
+    }
+
+    &:global(.am-input-error) {
+      & :global(.login-line) {
+        & input {
+          border-color: red;
+        }
+      }
+    }
+  }
+  & .forgetPwd {
+    text-align: right;
+    height: 60px;
+    & .forgetPwdBtn {
+      display: inline-block;
+      color: rgba(4, 103, 224, 1);
+      font-size: 12px;
+      margin-top: 24px;
+    }
+  }
+  & .submitBtn {
+    height: 40px;
+    line-height: 40px;
+    border-radius: 8px;
+    border: none;
+    background-color: rgba(4, 103, 224, 1);
+    color: rgba(255, 255, 255, 1);
+    font-size: 14px;
+    &.activeSubmitBtn {
+      background-color: rgba(4, 103, 224, .8);
+    }
+  }
+}
+
+.register {
+  text-align: center;
+  height: 84px;
+  & .registeBtn {
+    display: inline-block;
+    height: 15px;
+    line-height: 15px;
+    color: rgba(4, 103, 224, 1);
+    font-size: 12px;
+    text-decoration: underline;
+    margin-top: 34px;
+  }
+}
+
+.registerForm {
+  width: 250px;
+  margin: 0 auto;
+  margin-top: 20px;
+  & :global(.register-item) {
+    & :global(.register-line) {
+      position: relative;
+      & input {
+        border:none;
+        outline: none;
+        display: block;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 5px;
+        border: 1Px solid rgba(138, 150, 160, .5);
+        font-size: 12px;
+        margin: 0 auto;
+        margin-top: 10px;
+        text-indent: 15px;
+        &:global(::-webkit-input-placeholder) {
+          color: rgba(138, 150, 160, .5);
+          text-indent: 15px;
+        }
+      }
+      & :global(.am-input-clear) {
+        position: absolute;
+        top: 11px;
+        right: 5px;
+        width: 20px;
+        height: 20px;
+        display: block;
+        background: url(../../assets/close.png) no-repeat;
+        background-size: 100% 100%;
+      }
+    }
+
+    &:global(.am-input-error) {
+      & :global(.register-line) {
+        & input {
+          border-color: red;
+        }
+      }
+    }
+  }
+  & .codeBox {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    & :global(.register-item .register-line .am-input-clear) {
+      right: 90px;
+    }
+  }
+  & :global(.am-button-ghost) {
+    padding: 0;
+    top: 6px;
+    right: 0;
+    width: 80px;
+    height: 32px;
+    background: rgba(4, 103, 224, 1);
+    & span {
+      display: block;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+      line-height: 32px;
+      font-size: 12px;
+    }
+  }
+  & :global(.am-button-disabled) {
+    background: rgba(4, 103, 224, .5);
+  }
+  & .loginBtn {
+    display: inline-block;
+    height: 15px;
+    line-height: 15px;
+    color: rgba(4, 103, 224, .7);
+    font-size: 12px;
+    text-decoration: underline;
+    margin-top: 34px;
+  }
+  & .submitBtn {
+    margin-top: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 8px;
+    background-color: rgba(4, 103, 224, 1);
+    color: rgba(255, 255, 255, 1);
+    font-size: 14px;
+    &.activeSubmitBtn {
+      background-color: rgba(4, 103, 224, .8);
+    }
+  }
+  & .timer {
+    color: rgba(255,255,255,.9);
+  }
+}
+

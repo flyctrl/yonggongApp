@@ -1,0 +1,75 @@
+/*:global(.am-tabs-pane-wrap-active), :global(.bitch) {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 400ms ease-out;
+}
+:global(.am-tabs-pane-wrap-inactive) {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 400ms ease-out;
+}*/
+
+
+:global(.transitionWrapperX-enter) {
+  position: absolute;
+  top: 0;
+  z-index: 10000;
+  opacity: 1;
+  transform: translateX(100%);
+}
+
+:global(.transitionWrapperX-enter.transitionWrapperX-enter-active) {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 300ms ease-out;
+}
+
+:global(.transitionWrapperX-leave) {
+  opacity: 1;
+  transform: translateX(-100%);
+}
+
+:global(.transitionWrapperX-leave.transitionWrapperX-leave-active) {
+  opacity: 1;
+  transform: translateX(-100%);
+  transition: all 300ms ease-out;
+}
+
+:global(.transitionWrapperX) {
+  position: relative;
+  height: 100%;
+}
+
+:global(.transitionWrapperY-enter) {
+  position: absolute;
+  top: 0;
+  z-index: 10000;
+  opacity: 1;
+  transform: translateY(100%);
+}
+
+:global(.transitionWrapperY-enter.transitionWrapperY-enter-active) {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 300ms ease-out;
+}
+
+:global(.transitionWrapperY-leave) {
+  opacity: 1;
+  transform: translateY(-100%);
+}
+
+:global(.transitionWrapperY-leave.transitionWrapperY-leave-active) {
+  opacity: 1;
+  transform: translateY(-100%);
+  transition: all 300ms ease-out;
+}
+
+:global(.transitionWrapperY) {
+  height: 100%;
+  position: relative;
+}
+:global(.am-tab-bar-item) {
+  position: relative;
+}
+

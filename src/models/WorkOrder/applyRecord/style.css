@@ -1,0 +1,28 @@
+/*
+* @Author: baosheng
+* @Date:   2018-08-14 18:16:44
+* @Last Modified by:   baosheng
+* @Last Modified time: 2018-08-14 18:49:47
+*/
+.record-step {
+  padding: 30px;
+  padding-top: 15px;
+  & .desc-box {
+    color: rgba(138, 150, 160, 1);
+    font-size: 14px;
+    overflow: hidden;
+    & span {
+      float: right;
+    }
+  }
+  & :global(.am-steps-item-title) {
+    font-weight: normal;
+  }
+
+  & :global(.am-steps-vertical .am-steps-item-content) {
+    min-height: 1rem;
+  }
+}
+
+
+

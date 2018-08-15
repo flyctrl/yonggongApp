@@ -1,0 +1,56 @@
+/**
+* @Author: baosheng
+* @Date: 2018-05-21 14:54:01
+* @Title:  我的账户
+*/
+.account {
+  padding-top: 40px;
+  text-align: center;
+  font-family: PingFang-SC-Medium;
+  border-bottom: 1Px solid #F4F4F4;
+  & .title {
+    height: 17px;
+    line-height: 17px;
+    color: rgba(28, 40, 51, 1);
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+  & .money {
+    height: 67px;
+    line-height: 67px;
+    color: rgba(28, 40, 51, 1);
+    font-size: 48px;
+    margin-bottom: 4px;
+  }
+  & .tip {
+    padding-left: 66px;
+    height: 23px;
+    line-height: 23px;
+    color: rgba(4, 103, 224, 1);
+    font-size: 13px;
+    text-align: left;
+  }
+  & .btns {
+    margin: 12px 0 26px;
+    & .reChange-btn {
+      width: 150px;
+      height: 38px;
+      line-height: 38px;
+      border-radius: 8px;
+      background-color: rgba(4, 103, 224, 1);
+      margin-right: 13px;
+      font-size: 14px;
+    }
+    & .withdraw-cash-btn {
+      width: 100px;
+      height: 38px;
+      line-height: 38px;
+      border-radius: 8px;
+      background-color: rgba(138, 150, 160, 1);
+      color: #FFF;
+      font-size: 14px;
+    }
+  }
+}
+
+

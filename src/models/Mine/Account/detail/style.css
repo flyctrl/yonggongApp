@@ -1,0 +1,62 @@
+.detail {
+  font-family: PingFang-SC-Medium;
+  & :global(.am-tabs-default-bar-tab) {
+    width: 24px;
+    height: 42px;
+    line-height: 42px;
+    font-size: 12px;
+    text-align: center;
+    color: #666;
+    opacity: 0.5;
+  }
+  & :global(.am-tabs-default-bar-tab-active) {
+    color: #0467E0;
+    opacity: 1;
+  }
+  & :global(.am-tabs-default-bar.am-tabs-default-bar-animated.am-tabs-default-bar-top) {
+    position: fixed;
+    height: 42px;
+  }
+  & :global(.am-tabs-pane-wrap.am-tabs-pane-wrap-active), & :global(.am-tabs-pane-wrap.am-tabs-pane-wrap-inactive) {
+    padding-top: 42px;
+  }
+  & .status {
+    vertical-align: middle;
+    height: 20px;
+    line-height: 20px;
+    margin-right: 12px;
+    color: rgba(49, 63, 72, 1);
+    font-size: 14px;
+    font-family: PingFang-SC-Bold;
+  }
+  & .date {
+    height: 17px;
+    line-height: 17px;
+    color: rgba(138, 150, 160, 1);
+    font-size: 12px;
+    font-family: PingFangSC-Regular;
+  }
+  & .money {
+    height: 21px;
+    line-height: 21px;
+    color: rgba(4, 103, 224, 1);
+    font-size: 15px;
+    font-family: PingFang-SC-Bold;
+  }
+  & .all-money {
+    height: 17px;
+    line-height: 17px;
+    color: rgba(138, 150, 160, 1);
+    font-size: 12px;
+    font-family: PingFangSC-Regular;
+  }
+  & .address {
+    vertical-align: middle;
+    padding: 3px 5px;
+    color: rgba(255, 255, 255, 1);
+    font-size: 10px;
+    font-family: PingFangSC-Regular;
+    border-radius: 2px;
+    background-color: rgba(4, 103, 224, 1);
+  }
+}

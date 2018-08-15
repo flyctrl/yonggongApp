@@ -1,0 +1,45 @@
+/*
+* @Author: baosheng
+* @Date:   2018-08-14 21:48:33
+* @Last Modified by:   baosheng
+* @Last Modified time: 2018-08-15 10:00:43
+*/
+.confirm-list {
+  & li {
+    padding: 0 20px;
+    height: 80px;
+    background: rgba(138, 150, 160, 0.05);
+    overflow: hidden;
+    & .confirm-l {
+      float: left;
+      & h2 {
+        font-size: 12px;
+        font-weight: normal;
+        color: rgba(49, 63, 72, 1);
+        height: 30px;
+        line-height: 36px;
+      }
+      & p {
+        font-size: 12px;
+        color: rgba(138, 150, 160, 1);
+        height: 20px;
+        line-height: 20px;
+        & em {
+          color: rgba(49, 63, 72, 1);
+        }
+      }
+    }
+    & .confirm-r {
+      float: right;
+      & :global(.am-button-small) {
+        width: 80px;
+        height: 22px;
+        line-height: 22px;
+        font-size: 12px;
+        border-color: rgba(4, 103, 224, 1);
+        color: rgba(4, 103, 224, 1);
+        margin-top: 12px;
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+/*
+* @Author: baosheng
+* @Date:   2018-08-14 14:49:01
+* @Last Modified by:   baosheng
+* @Last Modified time: 2018-08-14 15:32:14
+*/
+.comp-list {
+  padding: 18px;
+  & li {
+    overflow: hidden;
+    padding-bottom: 18px;
+    & .comp-info {
+      float: left;
+      width: 260px;
+      & h2 {
+        color: rgba(48, 48, 48, 1);
+        font-size: 14px;
+        height: 24px;
+        line-height: 24px;
+        font-weight: normal;
+      }
+      & p {
+        color: rgba(146, 146, 146, 0.7);
+        font-size: 11px;
+        line-height: 14px;
+      }
+    }
+    & .win-btn {
+      float: right;
+      width: 64px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+      color: rgba(4, 103, 224, 1);
+      font-size: 12px;
+      border: 1Px solid #0467E0;
+      margin-top: 37px;
+    }
+  }
+}

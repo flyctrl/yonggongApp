@@ -1,0 +1,57 @@
+/**
+* @Author: baosheng
+* @Date: 2018-05-21 17:42:54
+* @Title: 充值
+*/
+.rechange {
+  background-color: #f6f7f8;
+  height: 100%;
+  & .title {
+    height: 22px;
+    line-height: 22px;
+    color: rgba(49, 63, 72, 1);
+    font-size: 16px;
+    font-family: PingFangSC-Regular;
+  }
+  & .subtitle {
+    height: 21px;
+    line-height: 21px;
+    color: rgba(138, 150, 160, 1);
+    font-size: 15px;
+    font-family: PingFangSC-Regular;
+  }
+  & :global(.am-list-thumb img) {
+    width: 35.74px;
+    height: 35.94px;
+    border-radius: 50%;
+  }
+  & .max-money {
+    padding-left: 15px;
+    margin: 10px 0;
+    width: 181px;
+    height: 17px;
+    line-height: 16.98px;
+    color: rgba(138, 150, 160, 1);
+    font-size: 14px;
+    font-family: PingFangSC-Regular;
+  }
+  & .disabled-btn {
+    height: 46.94px;
+    line-height: 46.94px;
+    margin: 15px;
+    border-radius: 4.99px;
+    background-color: rgba(138, 150, 160, 1);
+    &:before {
+      display: none;
+    }
+  }
+  & .primary-btn {
+    height: 46.94px;
+    line-height: 46.94px;
+    margin: 15px;
+    border-radius: 4.99px;
+  }
+  & :global(.am-list-line:after) {
+    display: none!important;
+  }
+}
