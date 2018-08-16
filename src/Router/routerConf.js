@@ -70,6 +70,10 @@ const Mine = Loadable({ // 我的
   loader: () => import(/* webpackChunkName: "mine" */ '../models/Mine'),
   loading: MyLoadingComponent
 })
+const MyPush = Loadable({ // 我的发布
+  loader: () => import(/* webpackChunkName: "mypush" */ '../models/Mine/myPush'),
+  loading: MyLoadingComponent
+})
 const Account = Loadable({ // 我的账户
   loader: () => import(/* webpackChunkName: "account" */ '../models/Mine/Account'),
   loading: MyLoadingComponent
@@ -84,6 +88,10 @@ const AccountRecharge = Loadable({ // 我的账户》充值
 })
 const AccountWithdrawCash = Loadable({ // 我的账户》提现
   loader: () => import(/* webpackChunkName: "accountwithdrawcash" */ '../models/Mine/Account/withdrawCash'),
+  loading: MyLoadingComponent
+})
+const CompanyAuth = Loadable({ // 企业认证
+  loader: () => import(/* webpackChunkName: "companyauth" */ '../models/Mine/companyAuth'),
   loading: MyLoadingComponent
 })
 
@@ -240,10 +248,18 @@ const routes = [
     showMenu: true,
     title: '进度确认'
   }, {
+    path: urls.MYPUSH,
+    exact: true,
+    component: MyPush,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '我的发布'
+  }, {
     path: urls.ACCOUNT,
     exact: true,
     component: Account,
-    parent: true,
+    parent: 'Mine',
     animated: true,
     showMenu: false,
     title: '我的账户'
@@ -251,7 +267,7 @@ const routes = [
     path: urls.ACCOUNTDETAIL,
     exact: true,
     component: AccountDetail,
-    parent: true,
+    parent: 'Account',
     animated: true,
     showMenu: false,
     title: '账户详情'
@@ -259,7 +275,7 @@ const routes = [
     path: urls.ACCOUNTRECHARGE,
     exact: true,
     component: AccountRecharge,
-    parent: true,
+    parent: 'Account',
     animated: true,
     showMenu: false,
     title: '充值'
@@ -267,10 +283,18 @@ const routes = [
     path: urls.ACCOUNTWITHDRAWCASH,
     exact: true,
     component: AccountWithdrawCash,
-    parent: true,
+    parent: 'Account',
     animated: true,
     showMenu: false,
     title: '提现'
+  }, {
+    path: urls.COMPANYAUTH,
+    exact: true,
+    component: CompanyAuth,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '企业认证'
   }, {
     path: urls.LOGIN,
     exact: true,

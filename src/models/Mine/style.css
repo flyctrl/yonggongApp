@@ -4,5 +4,70 @@
 * @Last Modified by:   baosheng
 * @Last Modified time: 2018-08-12 15:02:57
 */
+html .mine-header :global(.am-button-ghost::before) {
+  border-color: #fff;
+  border-radius: 26px;
+}
+.mine-header {
+  width: 296px;
+  height: 140px;
+  padding: 10px 20px;
+  margin: 0 auto;
+  margin-top: 20px;
+  background: #0467E0;
+  color: #fff;
+  & h2 {
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    font-weight: 200;
+  }
+  & p {
+    width: 100%;
+    font-size: 12px;
+    line-height: 24px;
+    height: 70px;
+    font-weight: 200;
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+  & :global(.am-button-ghost) {
+    width: 95px;
+    height: 32px;
+    margin-top: 8px;
+    line-height: 32px;
+    font-size: 12px;
+    font-weight: 100;
+    color: #fff;
+  }
+}
 
+.mine-btn-list {
+  margin-top: 10px;
+  overflow: hidden;
+  & li {
+    float: left;
+    width: 60px;
+    height: 68px;
+    margin-left: 27px;
+    margin-top: 32px;
+    & img {
+      display: block;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      margin: 0 auto;
+    }
+    & span {
+      text-align: center;
+      height: 20px;
+      line-height: 20px;
+      display: block;
+      font-size: 12px;
+    }
+  }
+}
 

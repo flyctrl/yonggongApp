@@ -25,10 +25,14 @@ export const CONFIRMPROGRESS = `${WORKORDER}/ConfirmProgress` // 进度确认
 
 // 我的
 export const MINE = `${BASE_URL}/Mine`
+export const MYPUSH = `${MINE}/myPush` // 我的发布
+
 export const ACCOUNT = `${MINE}/Account` // 我的账户
 export const ACCOUNTRECHARGE = `${ACCOUNT}/recharge` // 我的账户》充值
 export const ACCOUNTWITHDRAWCASH = `${ACCOUNT}/withdrawCash` // 我的账户》提现
 export const ACCOUNTDETAIL = `${ACCOUNT}/detail` // 我的账户》账户详细
+
+export const COMPANYAUTH = `${MINE}/companyAuth` // 企业认证
 
 export const LOGIN = `${BASE_URL}/Login/login` // 登录
 export const REGISTER = `${BASE_URL}/Login/register` // 注册

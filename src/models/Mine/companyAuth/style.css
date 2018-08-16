@@ -1,0 +1,97 @@
+/**
+* @Author: baosheng
+* @Date: 2018-05-29 17:37:09
+* @Title: 企业资格认证
+*/
+.company {
+  height: 100%;
+  position: relative;
+  & .input {
+    padding-top: 10px;
+    & >.title {
+      padding-left: 15px;
+      height: 20px;
+      line-height: 20px;
+      color: rgba(49, 63, 72, 1);
+      font-size: 14px;
+      text-align: left;
+      font-family: PingFangSC-Regular;
+    }
+    & :global(.am-list-item .am-input-control input) {
+      height: 20px;
+      line-height: 20px;
+      color: rgba(138, 150, 160, 1);
+      font-size: 14px;
+      text-align: left;
+      font-family: PingFangSC-Regular;
+    }
+  }
+  & .up-img {
+    display: inline-block;
+    margin: 15px;
+    & > div {
+      position: relative;
+      display: inline-block;
+      height: 79px;
+      width: 79px;
+      & .img-picker {
+        position: absolute;
+        z-index: 0;
+        display: inline-block;
+        width: 79px;
+        height: 79px;
+        border-radius: 3px;
+        border: 1Px dashed rgba(138, 150, 160, 0.5);
+        & :global(.am-image-picker-list) {
+          padding: 0;
+          margin: 0;
+          display: inline-block;
+          width: 79px;
+          height: 79px;
+          & :global(.am-flexbox-item:not(:first-child)) {
+            display: none;
+          }
+          & :global(.am-flexbox-item:first-child) {
+            margin: 0;
+            & :global(.am-image-picker-item.am-image-picker-upload-btn) {
+              opacity: 0;
+            }
+            & :global(.am-image-picker-item .am-image-picker-item-content) {
+              width: 78px;
+              height: 78px;
+              border-radius: 3px;
+            }
+          }
+        }
+      }
+      & .icon {
+        position: absolute;
+        left: 28px;
+        top: 18px;
+        width: 24px;
+        height: 19px;
+        z-index: -1;
+      }
+      & .title {
+        position: absolute;
+        left: 10px;
+        top: 48px;
+        width: 60px;
+        text-align: center;
+        color: rgba(138, 150, 160, 0.5);
+        font-size: 10px;
+        z-index: -1;
+      }
+    }
+  }
+  & .submit {
+    margin: 16px;
+    font-size: 18px;
+    position: absolute !important;
+    height: 47px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    font-family: PingFangSC-Regular;
+  }
+}
