@@ -45,7 +45,7 @@ const rightWrongRadio = [
 //     onTouchStart: e => e.preventDefault(),
 //   }
 // }
-class PushNormalOrder extends Component {
+class PushQuickOrder extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -230,7 +230,7 @@ class PushNormalOrder extends Component {
       <div className='pageBox'>
         <div style={{ display: isEdit ? 'block' : 'none' }}>
           <Header
-            title='发布工单'
+            title='发布快单'
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {
@@ -428,4 +428,4 @@ class PushNormalOrder extends Component {
   }
 }
 
-export default createForm()(PushNormalOrder)
+export default createForm()(PushQuickOrder)

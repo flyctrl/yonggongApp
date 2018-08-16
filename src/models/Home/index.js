@@ -33,6 +33,12 @@ class Home extends Component {
   handlePushNormalOrder = () => {
     history.push(urls.PUSHNORMALORDER)
   }
+  handlePushQuickOrder = () => {
+    history.push(urls.PUSHQUICKORDER)
+  }
+  handlePushBidOrder = () => {
+    history.push(urls.PUSHBIDORDER)
+  }
   render() {
     return (
       <div className='contentBox'>
@@ -53,13 +59,13 @@ class Home extends Component {
                   </div>
                 </Flex.Item>
                 <Flex.Item>
-                  <div className={style['pushtype-btn']}>
+                  <div onClick={this.handlePushQuickOrder} className={style['pushtype-btn']}>
                     <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
                     <div className={style['pushtype-text']}>发布快单</div>
                   </div>
                 </Flex.Item>
                 <Flex.Item>
-                  <div className={style['pushtype-btn']}>
+                  <div onClick={this.handlePushBidOrder} className={style['pushtype-btn']}>
                     <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
                     <div className={style['pushtype-text']}>劳务招标</div>
                   </div>

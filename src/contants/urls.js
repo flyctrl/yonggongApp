@@ -11,6 +11,8 @@ export const MESSAGE = `${BASE_URL}/Message`
 export const WORKORDER = `${BASE_URL}/WorkOrder` // 工单列表
 
 export const PUSHNORMALORDER = `${BASE_URL}/PushOrder/pushNormalOrder` // 发布普通工单
+export const PUSHQUICKORDER = `${BASE_URL}/PushOrder/pushQuickOrder` // 发布快单
+export const PUSHBIDORDER = `${BASE_URL}/PushOrder/pushBidOrder` // 发布招标
 
 // 工单
 export const APPLYDETAIL = `${WORKORDER}/applyDetail` // 审批详情

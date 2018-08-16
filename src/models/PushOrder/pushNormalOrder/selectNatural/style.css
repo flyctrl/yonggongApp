@@ -1,0 +1,21 @@
+.natural-box {
+  & :global(.am-list-item) {
+    & :global(.am-list-line) {
+      & :global(.am-list-content) {
+        font-size: 14px;
+      }
+    }
+    & :global(.am-list-thumb) {
+      margin-right: 5px;
+      & :global(.am-checkbox-inner) {
+        width: 18px;
+        height: 18px;
+        top: 13px;
+      }
+      & :global(.am-checkbox-inner:after) {
+        right: 5px;
+        top: 1px;
+      }
+    }
+  }
+}

@@ -25,7 +25,15 @@ const WorkOrder = Loadable({ // 工单
 })
 
 const PushNormalOrder = Loadable({ // 发布普通工单
-  loader: () => import(/* webpackChunkName: "pushorder" */ '../models/PushOrder/pushNormalOrder'),
+  loader: () => import(/* webpackChunkName: "pushnormalorder" */ '../models/PushOrder/pushNormalOrder'),
+  loading: MyLoadingComponent
+})
+const PushQuickOrder = Loadable({ // 发布快单
+  loader: () => import(/* webpackChunkName: "pushquickorder" */ '../models/PushOrder/pushQuickOrder'),
+  loading: MyLoadingComponent
+})
+const PushBidOrder = Loadable({ // 发布招标
+  loader: () => import(/* webpackChunkName: "pushbidorder" */ '../models/PushOrder/pushBidOrder'),
   loading: MyLoadingComponent
 })
 
@@ -143,6 +151,22 @@ const routes = [
     showMenu: false,
     animated: false,
     title: '发布工单'
+  }, {
+    path: urls.PUSHQUICKORDER,
+    exact: true,
+    component: PushQuickOrder,
+    parent: null,
+    showMenu: false,
+    animated: false,
+    title: '发布快单'
+  }, {
+    path: urls.PUSHBIDORDER,
+    exact: true,
+    component: PushBidOrder,
+    parent: null,
+    showMenu: false,
+    animated: false,
+    title: '发布招标'
   }, {
     path: urls.MESSAGE,
     exact: true,
