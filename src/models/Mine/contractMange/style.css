@@ -1,0 +1,20 @@
+.contract-list {
+  padding: 12px 0;
+  & li {
+    padding: 10px 12px;
+    & p {
+      font-size: 12px;
+      color: #5B666D;
+      height: 18px;
+      line-height: 18px;
+      overflow: hidden;
+      & span {
+        color: #A5AFB7;
+      }
+      & a {
+        float: right;
+        color: #0467E0;
+      }
+    }
+  }
+}

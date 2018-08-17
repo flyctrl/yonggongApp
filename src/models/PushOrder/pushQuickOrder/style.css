@@ -80,6 +80,7 @@ html:not([data-scale]) .pushOrderForm :global(.am-list-body div:not(:last-child)
             height: 11px;
             padding: 2px;
             margin-top: -2px;
+            background: #fff;
             & :global(.am-radio-inner) {
               width: 11px;
               height: 11px;
@@ -88,7 +89,12 @@ html:not([data-scale]) .pushOrderForm :global(.am-list-body div:not(:last-child)
               width: 5px;
               height: 10px;
               right: 4px;
+              border-color: #fff;
             }
+          }
+          & :global(.am-radio-checked) {
+            background: #108ee9;
+            border-color: #108ee9;
           }
         }
         & :global(.am-icon-right) {

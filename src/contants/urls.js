@@ -33,6 +33,11 @@ export const ACCOUNTWITHDRAWCASH = `${ACCOUNT}/withdrawCash` // 我的账户》�
 export const ACCOUNTDETAIL = `${ACCOUNT}/detail` // 我的账户》账户详细
 
 export const COMPANYAUTH = `${MINE}/companyAuth` // 企业认证
+export const INVOICEMANGE = `${MINE}/invoiceMange` // 发票管理
+export const APPLYINVOICE = `${MINE}/invoiceMange/applyInvoice` // 申请发票
+export const CONTRACTMANGE = `${MINE}/contractMange` // 合同管理
+export const PROJECTMANGE = `${MINE}/projectMange` // 项目管理
+export const CREATEPROJECT = `${MINE}/projectMange/createProject` // 创建项目
 
 export const LOGIN = `${BASE_URL}/Login/login` // 登录
 export const REGISTER = `${BASE_URL}/Login/register` // 注册

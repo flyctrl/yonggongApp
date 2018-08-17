@@ -156,7 +156,13 @@ html:not([data-scale]) .pushOrderForm :global(.am-list-body div:not(:last-child)
         }
       }
     }
-
+    
+    &.btn-form-list {
+      margin: 20px 0;
+      & :global(.am-button-primary) {
+        background: #0467E0;
+      }
+    }
   }
 
   & :global(.rc-upload) {

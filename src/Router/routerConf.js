@@ -94,6 +94,26 @@ const CompanyAuth = Loadable({ // 企业认证
   loader: () => import(/* webpackChunkName: "companyauth" */ '../models/Mine/companyAuth'),
   loading: MyLoadingComponent
 })
+const InvoiceMange = Loadable({ // 发票管理
+  loader: () => import(/* webpackChunkName: "invoicemange" */ '../models/Mine/invoiceMange'),
+  loading: MyLoadingComponent
+})
+const ApplyInvoice = Loadable({ // 申请发票
+  loader: () => import(/* webpackChunkName: "invoicemange" */ '../models/Mine/invoiceMange/applyInvoice'),
+  loading: MyLoadingComponent
+})
+const ContractMange = Loadable({ // 合同管理
+  loader: () => import(/* webpackChunkName: "contractmange" */ '../models/Mine/contractMange'),
+  loading: MyLoadingComponent
+})
+const ProjectMange = Loadable({ // 项目管理
+  loader: () => import(/* webpackChunkName: "projectmange" */ '../models/Mine/projectMange'),
+  loading: MyLoadingComponent
+})
+const CreateProject = Loadable({ // 创建项目
+  loader: () => import(/* webpackChunkName: "createproject" */ '../models/Mine/projectMange/createProject'),
+  loading: MyLoadingComponent
+})
 
 const Login = Loadable({ // 登录
   loader: () => import(/* webpackChunkName: "login" */ '../models/Login/login'),
@@ -295,6 +315,46 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '企业认证'
+  }, {
+    path: urls.INVOICEMANGE,
+    exact: true,
+    component: InvoiceMange,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '发票管理'
+  }, {
+    path: urls.APPLYINVOICE,
+    exact: true,
+    component: ApplyInvoice,
+    parent: 'InvoiceMange',
+    animated: true,
+    showMenu: false,
+    title: '申请发票'
+  }, {
+    path: urls.CONTRACTMANGE,
+    exact: true,
+    component: ContractMange,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '合同管理'
+  }, {
+    path: urls.PROJECTMANGE,
+    exact: true,
+    component: ProjectMange,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '项目管理'
+  }, {
+    path: urls.CREATEPROJECT,
+    exact: true,
+    component: CreateProject,
+    parent: 'ProjectMange',
+    animated: true,
+    showMenu: false,
+    title: '创建项目'
   }, {
     path: urls.LOGIN,
     exact: true,
