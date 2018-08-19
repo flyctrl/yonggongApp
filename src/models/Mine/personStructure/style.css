@@ -1,0 +1,103 @@
+.structurePage {
+  background: #F5F5F5;
+  & .structure-box {
+    & header {
+      overflow: hidden;
+      background: #fff;
+      padding: 20px;
+      & p {
+        width: 60px;
+        float: left;
+        text-align: center;
+        margin-left: 72px;
+        & .icon-struct {
+          width: 30px;
+          height: 30px;
+        }
+        & span {
+          display: block;
+          margin-top: 10px;
+          font-size: 14px;
+          color: #313F48;
+        }
+      }
+    }
+
+    & section {
+      & dl {
+        & dt {
+          padding-left: 24px;
+          height: 28px;
+          line-height: 28px;
+          font-size: 14px;
+          color: #1A173B;
+        }
+        & dd {
+          padding: 18px 0 18px 20px;
+          background: #fff;
+          overflow: hidden;
+          & img {
+            float: left;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin-right: 20px;
+            &.contact-img {
+              margin-top: 12px;
+            }
+          }
+          & .admin-info {
+            float: left;
+            width: 290px;
+            height: 38px;
+            line-height: 30px;
+            & span {
+              float: left;
+              font-size: 16px;
+              color: #313F48;
+            }
+            & em {
+              float: left;
+              background: #F6F9FB;
+              color: #0467E0;
+              height: 18px;
+              line-height: 18px;
+              font-size: 10px;
+              padding: 0 5px;
+              border-radius: 3px;
+              margin-top: 7px;
+              margin-left: 15px;
+              font-weight: 300;
+            }
+          }
+          & .contact-info {
+            float: left;
+            width: 290px;
+            height: 60px;
+            & .detail {
+              float: left;
+              & p {
+                height: 24px;
+                line-height: 24px;
+                font-size: 16px;
+                color: #313F48;
+              }
+              & span {
+                height: 24px;
+                line-height: 24px;
+                color: #8A96A0;
+              }
+            }
+            & em {
+              float: right;
+              height: 60px;
+              line-height: 60px;
+              color: #8A96A0;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

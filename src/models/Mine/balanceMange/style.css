@@ -1,0 +1,83 @@
+.balance-list {
+  & li {
+    & section {
+      padding: 15px 15px;
+      background: #F9FAFA;
+      overflow: hidden;
+      & em {
+        float: left;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        color: #0467E0;
+        font-size: 14px;
+        border: 2px solid #0467E0;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+      & .info {
+        float: left;
+        color: #333;
+        font-size: 12px;
+        & p {
+          height: 20px;
+          line-height: 20px;
+          margin-top: 3px;
+          & i {
+            color: #ABB4BB;
+          }
+        }
+      }
+      & span {
+        float: right;
+        color: #0467E0;
+        font-size: 12px;
+        height: 50px;
+        line-height: 50px;
+      }
+    }
+    & footer {
+      padding: 10px;
+      overflow: hidden;
+      & .money-info {
+        float: right;
+        color: #ABB4BB;
+        & p {
+          height: 24px;
+          line-height: 24px;
+          font-size: 14px;
+          & em {
+            color: #0467E0;
+            font-size: 16px;
+          }
+        }
+        & span {
+          font-size: 12px;
+          display: block;
+          text-align: center;
+        }
+      }
+      & .money-btn {
+        float: right;
+        height: 100%;
+        & :global(.am-button-ghost) {
+          height: 32px;
+          line-height: 32px;
+          border-color: #0467E0;
+          font-size: 12px;
+          width: 100px;
+          margin-top: 2px;
+        }
+      }
+    }
+
+    &.pending {
+      & footer {
+        & .money-info {
+          float: left;
+        }
+      }
+    }
+  }
+}

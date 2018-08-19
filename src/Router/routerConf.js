@@ -114,6 +114,42 @@ const CreateProject = Loadable({ // 创建项目
   loader: () => import(/* webpackChunkName: "createproject" */ '../models/Mine/projectMange/createProject'),
   loading: MyLoadingComponent
 })
+const BalanceMange = Loadable({ // 结算管理
+  loader: () => import(/* webpackChunkName: "balacemange" */ '../models/Mine/balanceMange'),
+  loading: MyLoadingComponent
+})
+const BalanceDetail = Loadable({ // 结算详情
+  loader: () => import(/* webpackChunkName: "balacedetail" */ '../models/Mine/balanceMange/balanceDetail'),
+  loading: MyLoadingComponent
+})
+const EnginReality = Loadable({ // 工程实况
+  loader: () => import(/* webpackChunkName: "enginreality" */ '../models/Mine/enginReality'),
+  loading: MyLoadingComponent
+})
+const LeaveSitu = Loadable({ // 考勤情况
+  loader: () => import(/* webpackChunkName: "leavesitu" */ '../models/Mine/enginReality/leaveSitu'),
+  loading: MyLoadingComponent
+})
+const Partner = Loadable({ // 合作方
+  loader: () => import(/* webpackChunkName: "partner" */ '../models/Mine/partner'),
+  loading: MyLoadingComponent
+})
+const AddPartner = Loadable({ // 添加合作方
+  loader: () => import(/* webpackChunkName: "addpartner" */ '../models/Mine/partner/addPartner'),
+  loading: MyLoadingComponent
+})
+const PersonStructure = Loadable({ // 组织架构
+  loader: () => import(/* webpackChunkName: "personstructure" */ '../models/Mine/personStructure'),
+  loading: MyLoadingComponent
+})
+const OrgantStruct = Loadable({ // 组织架构列表
+  loader: () => import(/* webpackChunkName: "organtstruct" */ '../models/Mine/personStructure/organtStruct'),
+  loading: MyLoadingComponent
+})
+const PersonStruct = Loadable({ // 人员列表
+  loader: () => import(/* webpackChunkName: "pesrsonstruct" */ '../models/Mine/personStructure/personStruct'),
+  loading: MyLoadingComponent
+})
 
 const Login = Loadable({ // 登录
   loader: () => import(/* webpackChunkName: "login" */ '../models/Login/login'),
@@ -355,6 +391,78 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '创建项目'
+  }, {
+    path: urls.BALANCEMANGE,
+    exact: true,
+    component: BalanceMange,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '结算管理'
+  }, {
+    path: urls.BALANCEDETAIL,
+    exact: true,
+    component: BalanceDetail,
+    parent: 'BalanceMange',
+    animated: true,
+    showMenu: false,
+    title: '结算详情'
+  }, {
+    path: urls.ENGINREALITY,
+    exact: true,
+    component: EnginReality,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '工程实况'
+  }, {
+    path: urls.LEAVESITU,
+    exact: true,
+    component: LeaveSitu,
+    parent: 'EnginReality',
+    animated: true,
+    showMenu: false,
+    title: '请假情况'
+  }, {
+    path: urls.PARTNER,
+    exact: true,
+    component: Partner,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '合作方'
+  }, {
+    path: urls.ADDPARTNER,
+    exact: true,
+    component: AddPartner,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '添加合作方'
+  }, {
+    path: urls.PERSONSTRUCTURE,
+    exact: true,
+    component: PersonStructure,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '组织架构'
+  }, {
+    path: urls.ORGANTSTRUCT,
+    exact: true,
+    component: OrgantStruct,
+    parent: 'PersonStructure',
+    animated: true,
+    showMenu: false,
+    title: '组织架构列表'
+  }, {
+    path: urls.PERSONSTRUCT,
+    exact: true,
+    component: PersonStruct,
+    parent: 'PersonStructure',
+    animated: true,
+    showMenu: false,
+    title: '人员列表'
   }, {
     path: urls.LOGIN,
     exact: true,

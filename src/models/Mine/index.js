@@ -79,7 +79,11 @@ const menuRouter = {
   3: urls.COMPANYAUTH,
   4: urls.INVOICEMANGE,
   5: urls.CONTRACTMANGE,
-  6: urls.PROJECTMANGE
+  6: urls.PROJECTMANGE,
+  7: urls.BALANCEMANGE,
+  8: urls.ENGINREALITY,
+  9: urls.PARTNER,
+  10: urls.PERSONSTRUCTURE
 }
 class Mine extends Component {
   constructor(props) {

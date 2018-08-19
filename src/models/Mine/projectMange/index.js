@@ -35,8 +35,8 @@ class ProjectMange extends Component {
             <Tabs tabs={tabs}
               initalPage={'t1'}
               tabBarTextStyle={{ fontSize: '12px', color: '#B2B6BC' }}
-              tabBarActiveTextColor='#0A83E6'
-              tabBarUnderlineStyle={{ borderColor: '#0A83E6', width: '12%', marginLeft: '6.5%' }}
+              tabBarActiveTextColor='#0467e0'
+              tabBarUnderlineStyle={{ borderColor: '#0467e0', width: '12%', marginLeft: '6.5%' }}
             >
               <div>
                 <ul className={style['project-mange-list']}>

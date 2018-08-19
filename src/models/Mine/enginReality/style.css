@@ -1,0 +1,128 @@
+html .engin-reality :global(.am-list-body::before) {
+  height: 0;
+}
+html .engin-reality :global(.am-list-item:not(:last-child) .am-list-line::after), html .engin-reality :global(.am-list-item:not(:last-child) .am-list-line::before) {
+  height: 0;
+}
+html .engin-reality :global(.am-list-body div:not(:last-child) .am-list-line::after) {
+  height: 0;
+}
+
+.engin-reality {
+  padding: 20px;
+  padding-top: 0;
+
+  & :global(.am-list) {
+    &.input-form-list {
+      height: 56px;
+      margin-top: 22px;
+      &.selected-form-list {
+        & :global(.am-list-body .am-list-item .am-list-line .am-list-extra) {
+          color: #000;
+        }
+      }
+      & :global(.am-list-header) {
+        padding: 0;
+        font-size: 14px;
+        color: rgba(49, 63, 72, 1);
+      }
+      & :global(.am-list-body) {
+        height: 38px;
+        & :global(.am-list-body:after) {
+          height: 0;
+        }
+        & :global(.am-list-item) {
+          padding-left: 0;
+          & :global(.am-list-line) {
+            padding-right: 0;
+            & :global(.am-list-extra) {
+              flex-basis: 92%;
+              font-size: 14px;
+              text-align: left;
+              color: rgba(138, 150, 160, .7);
+            }
+            & :global(.am-input-control) {
+              & :global(input) {
+                font-size: 14px;
+                &:global(::-webkit-input-placeholder) {
+                  color: rgba(138, 150, 160, .7);
+                  font-size: 14px;
+                }
+              }
+              & :global(.fake-input-placeholder) {
+                text-align: left;
+                font-size: 14px;
+                color: rgba(138, 150, 160, .7);
+              }
+            }
+          }
+        }
+        & :global(.am-icon-right) {
+          position: absolute;
+          top: 10px;
+          right: 2px;
+        }
+      }
+    }
+  }
+
+  & .engin-user {
+    height: 50px;
+    overflow: hidden;
+    & img {
+      float: left;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      margin-top: 8px;
+      margin-right: 10px;
+    }
+    & span {
+      float: left;
+      height: 50px;
+      line-height: 50px;
+      color: #313F48;
+      font-size: 14px;
+    }
+    & a {
+      float: right;
+      height: 40px;
+      line-height: 40px;
+      margin-top: 5px;
+      color: #313F48;
+      font-size: 12px;
+      & :global(.am-icon-right) {
+        margin-top: 9px;
+        float: right;
+      }
+    }
+  }
+
+  & .attend {
+    & li {
+      height: 40px;
+      & p {
+        float: left;
+        color: #313f48;
+        height: 40px;
+        line-height: 40px;
+        & span {
+          color: #ccc;
+          display: inline-block;
+          margin-left: 8px;
+        }
+      }
+      & em {
+        float: right;
+        color: #313f48;
+        height: 40px;
+        line-height: 40px;
+        margin-right: 5px;
+      }
+      & :global(.am-icon-right) {
+        float: right;
+        margin-top: 9px;
+      }
+    }
+  }
+}

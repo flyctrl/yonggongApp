@@ -1,0 +1,135 @@
+html .pushOrderForm :global(.am-list-body::before) {
+  height: 0;
+}
+html .pushOrderForm :global(.am-list-item:not(:last-child) .am-list-line::after), html .pushOrderForm :global(.am-list-item:not(:last-child) .am-list-line::before) {
+  height: 0;
+}
+html:not([data-scale]) .pushOrderForm :global(.am-list-body div:not(:last-child) .am-list-line::after) {
+  height: 0;
+}
+
+.pro-radio :global(.am-radio) {
+  padding: 3px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.pushOrderForm {
+  width: 328px;
+  margin: 0 auto;
+  & :global(.am-list) {
+    &.input-form-list {
+      height: 56px;
+      margin-top: 22px;
+      &.selected-form-list {
+        & :global(.am-list-body .am-list-item .am-list-line .am-list-extra) {
+          color: #000;
+        }
+      }
+      & :global(.am-list-header) {
+        padding: 0;
+        font-size: 14px;
+        color: rgba(49, 63, 72, 1);
+      }
+      & :global(.am-list-body) {
+        height: 38px;
+        & :global(.am-list-body:after) {
+          height: 0;
+        }
+        & :global(.am-list-item) {
+          padding-left: 0;
+          & :global(.am-list-line) {
+            padding-right: 0;
+            & :global(.am-list-extra) {
+              flex-basis: 92%;
+              font-size: 14px;
+              text-align: left;
+              color: rgba(138, 150, 160, .7);
+            }
+            & :global(.am-input-control) {
+              & :global(input) {
+                font-size: 14px;
+                &:global(::-webkit-input-placeholder) {
+                  color: rgba(138, 150, 160, .7);
+                  font-size: 14px;
+                }
+              }
+              & :global(.fake-input-placeholder) {
+                text-align: left;
+                font-size: 14px;
+                color: rgba(138, 150, 160, .7);
+              }
+            }
+          }
+        }
+        & .text-abled {
+          & :global(.am-input-control) {
+            & :global(input:disabled) {
+              color: #000;
+            }
+          }
+        }
+        & .pro-radio:nth-child(1) {
+          margin-right: 18px;
+        }
+        & .pro-radio {
+          display: inline-block;
+          margin-top: 10px;
+          & :global(.am-radio) {
+            width: 11px;
+            height: 11px;
+            padding: 2px;
+            margin-top: -2px;
+            background: #fff;
+            & :global(.am-radio-inner) {
+              width: 11px;
+              height: 11px;
+            }
+            & :global(.am-radio-inner:after) {
+              width: 5px;
+              height: 10px;
+              right: 4px;
+              border-color: #fff;
+            }
+          }
+          & :global(.am-radio-checked) {
+            background: #108ee9;
+            border-color: #108ee9;
+          }
+        }
+        & :global(.am-icon-right) {
+          position: absolute;
+          top: 10px;
+          right: 2px;
+        }
+      }
+    }
+
+    &.radio-form-list {
+      & :global(.am-list-body) {
+        height: 56px;
+        line-height: 56px;
+        & label {
+          font-size: 12px;
+          color: rgba(0, 0, 0, 0.65);
+          &:nth-child(1) {
+            margin-right: 70px;
+          }
+          & :global(.am-radio) {
+            width: 7px;
+            height: 7px;
+            margin-top: -2px;
+            & :global(.am-radio-inner:after) {
+            width: 5px;
+            height: 10px;
+            right: 3px;
+            top: -3px;
+            }
+          }
+        }
+      }
+    }
+
+  }
+}

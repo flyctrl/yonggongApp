@@ -38,6 +38,15 @@ export const APPLYINVOICE = `${MINE}/invoiceMange/applyInvoice` // 申请发票
 export const CONTRACTMANGE = `${MINE}/contractMange` // 合同管理
 export const PROJECTMANGE = `${MINE}/projectMange` // 项目管理
 export const CREATEPROJECT = `${MINE}/projectMange/createProject` // 创建项目
+export const BALANCEMANGE = `${MINE}/projectMange/balanceMange` // 结算管理
+export const BALANCEDETAIL = `${MINE}/projectMange/balanceMange/balanceDetail` // 结算详情
+export const ENGINREALITY = `${MINE}/enginReality` // 工程实况
+export const LEAVESITU = `${MINE}/enginReality/leaveSitu` // 请假情况
+export const PARTNER = `${MINE}/partner` // 合作方管理
+export const ADDPARTNER = `${MINE}/partner/addPartner` // 添加合作方
+export const PERSONSTRUCTURE = `${MINE}/personStructure` // 组织架构
+export const ORGANTSTRUCT = `${MINE}/personStructure/organtStruct` // 组织架构列表
+export const PERSONSTRUCT = `${MINE}/personStructure/personStruct` // 人员列表
 
 export const LOGIN = `${BASE_URL}/Login/login` // 登录
 export const REGISTER = `${BASE_URL}/Login/register` // 注册

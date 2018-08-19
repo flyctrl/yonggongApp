@@ -268,7 +268,7 @@ html:not([data-scale]) .fixedBottom :global(.am-list-item:not(:last-child) .am-l
 .user-info-page {
   & .header {
     width: 100%;
-    height: 280px;
+    height: 150px;
     background: url(../../assets/cover.png) no-repeat center center;
     & .back-icon {
       margin-top: 10px;
