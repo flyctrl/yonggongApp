@@ -42,32 +42,50 @@ export const FetchSave = (url, params, method = 'post', config) => {
   })
 }
 
+const prefix = '/employ'
+
 export default {
   auth: {
     login(params) { // 登录
-      return Fetch('/auth/login', params)
+      return Fetch(prefix + '/login', params)
     },
     register(params) { // 注册
-      return Fetch('/auth/register', params)
+      return Fetch(prefix + '/register', params)
+    },
+    getcode(params) { // 短信验证码
+      return Fetch('/common/verify/code', params)
     },
     loginout(params) { // 退出
-      return FetchSave('/auth/logout', params, 'get')
+      return FetchSave(prefix + '/logout', params, 'get')
     },
     refresh(params) { // 刷新token
-      return Fetch('/auth/refresh', params)
+      return Fetch(prefix + '/refresh', params)
     }
   },
   Mine: { // 我的
+    account: {
+      recharge(params) { // 创建充值订单
+        return Fetch(prefix + '/recharge', params)
+      },
+      selectDetail(params) { // 查询订单详情
+        return Fetch(prefix + '/recharge/info', params, 'get')
+      }
+    },
+    companyAuth: {
+      aptitude(params) { // 企业认证
+        return Fetch(prefix + '/aptitude', params)
+      }
+    },
     Personaldara: { // 编辑个人资料
       avatar(params) { // 上传用户头像
         console.log(params)
-        return Fetch('/users/avatar', params, 'post', { 'Content-Type': 'multipart/form-data' })
+        return Fetch(prefix + '/users/avatar', params, 'post', { 'Content-Type': 'multipart/form-data' })
       },
       edit(params) { // 修改用户资料
-        return Fetch('/users/edit', params)
+        return Fetch(prefix + '/users/edit', params)
       },
       info(params) { // 修改用户资料
-        return Fetch('/users', params, 'get')
+        return Fetch(prefix + '/users', params, 'get')
       },
     }
   }

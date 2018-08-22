@@ -18,22 +18,22 @@ const data = [
   {
     path: urls.HOME,
     key: 'Home',
-    icon: '#icon-jobHunting',
-    onIcon: '#icon-jobHunting_pre',
+    icon: '#icon-home',
+    onIcon: '#icon-home_pre',
     title: '首页'
   }, {
     path: urls.WORKORDER,
     key: 'WorkOrder',
-    icon: '#icon-backLog',
-    onIcon: '#icon-backLog_pre',
+    icon: '#icon-workbench',
+    onIcon: '#icon-workbench_pre',
     title: '工单'
   }, {
-  //   path: urls.PUSHORDER,
-  //   key: 'PushOrder',
-  //   icon: '#icon-add',
-  //   onIcon: '#icon-add',
-  //   title: null
-  // }, {
+    path: urls.PUSHNORMALORDER,
+    key: 'PushOrder',
+    icon: '#icon-add',
+    onIcon: '#icon-add',
+    title: null
+  }, {
     path: urls.MESSAGE,
     key: 'Message',
     icon: '#icon-message',

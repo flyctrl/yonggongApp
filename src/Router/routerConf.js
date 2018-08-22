@@ -61,8 +61,12 @@ const SelectComp = Loadable({ // 选择中标单位
   loader: () => import(/* webpackChunkName: "selectcomp" */ '../models/WorkOrder/selectComp'),
   loading: MyLoadingComponent
 })
-const ConfirmProgress = Loadable({ // 进度确认
-  loader: () => import(/* webpackChunkName: "confirmprogress" */ '../models/WorkOrder/confirmProgress'),
+const BeginList = Loadable({ // 开工列表
+  loader: () => import(/* webpackChunkName: "beginlist" */ '../models/WorkOrder/beginList'),
+  loading: MyLoadingComponent
+})
+const SettleList = Loadable({ // 结算列表
+  loader: () => import(/* webpackChunkName: "settlelist" */ '../models/WorkOrder/settleList'),
   loading: MyLoadingComponent
 })
 
@@ -86,6 +90,14 @@ const AccountRecharge = Loadable({ // 我的账户》充值
   loader: () => import(/* webpackChunkName: "accountrecharge" */ '../models/Mine/Account/recharge'),
   loading: MyLoadingComponent
 })
+const SuccessPage = Loadable({ // 成功页面
+  loader: () => import(/* webpackChunkName: "successpage" */ '../models/Mine/Account/successPage'),
+  loading: MyLoadingComponent
+})
+const FailPage = Loadable({ // 失败页面
+  loader: () => import(/* webpackChunkName: "failpage" */ '../models/Mine/Account/failPage'),
+  loading: MyLoadingComponent
+})
 const AccountWithdrawCash = Loadable({ // 我的账户》提现
   loader: () => import(/* webpackChunkName: "accountwithdrawcash" */ '../models/Mine/Account/withdrawCash'),
   loading: MyLoadingComponent
@@ -99,7 +111,7 @@ const InvoiceMange = Loadable({ // 发票管理
   loading: MyLoadingComponent
 })
 const ApplyInvoice = Loadable({ // 申请发票
-  loader: () => import(/* webpackChunkName: "invoicemange" */ '../models/Mine/invoiceMange/applyInvoice'),
+  loader: () => import(/* webpackChunkName: "applyinvoice" */ '../models/Mine/invoiceMange/applyInvoice'),
   loading: MyLoadingComponent
 })
 const ContractMange = Loadable({ // 合同管理
@@ -148,6 +160,22 @@ const OrgantStruct = Loadable({ // 组织架构列表
 })
 const PersonStruct = Loadable({ // 人员列表
   loader: () => import(/* webpackChunkName: "pesrsonstruct" */ '../models/Mine/personStructure/personStruct'),
+  loading: MyLoadingComponent
+})
+const PersonDetail = Loadable({ // 人员详情
+  loader: () => import(/* webpackChunkName: "pesrsondetail" */ '../models/Mine/personStructure/personDetail'),
+  loading: MyLoadingComponent
+})
+const AddPerson = Loadable({ // 添加人员
+  loader: () => import(/* webpackChunkName: "addperson" */ '../models/Mine/personStructure/addPerson'),
+  loading: MyLoadingComponent
+})
+const AddDepartment = Loadable({ // 添加部门
+  loader: () => import(/* webpackChunkName: "adddepartment" */ '../models/Mine/personStructure/addDepartment'),
+  loading: MyLoadingComponent
+})
+const FeedBack = Loadable({ // 问题反馈
+  loader: () => import(/* webpackChunkName: "feedback" */ '../models/Mine/feedBack'),
   loading: MyLoadingComponent
 })
 
@@ -296,13 +324,21 @@ const routes = [
     showMenu: true,
     title: '选择中标单位'
   }, {
-    path: urls.CONFIRMPROGRESS,
+    path: urls.BEGINLIST,
     exact: true,
-    component: ConfirmProgress,
+    component: BeginList,
     parent: 'WorkOrder',
     animated: true,
     showMenu: true,
-    title: '进度确认'
+    title: '开工列表'
+  }, {
+    path: urls.SETTLELIST,
+    exact: true,
+    component: SettleList,
+    parent: 'WorkOrder',
+    animated: true,
+    showMenu: true,
+    title: '结算列表'
   }, {
     path: urls.MYPUSH,
     exact: true,
@@ -335,6 +371,22 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '充值'
+  }, {
+    path: urls.SUCCESSPAGE,
+    exact: true,
+    component: SuccessPage,
+    parent: 'Account',
+    animated: true,
+    showMenu: false,
+    title: '支付成功'
+  }, {
+    path: urls.FAILPAGE,
+    exact: true,
+    component: FailPage,
+    parent: 'Account',
+    animated: true,
+    showMenu: false,
+    title: '支付失败'
   }, {
     path: urls.ACCOUNTWITHDRAWCASH,
     exact: true,
@@ -463,6 +515,38 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '人员列表'
+  }, {
+    path: urls.PERSONDETAIL,
+    exact: true,
+    component: PersonDetail,
+    parent: 'PersonStruct',
+    animated: true,
+    showMenu: false,
+    title: '人员详情'
+  }, {
+    path: urls.ADDPERSON,
+    exact: true,
+    component: AddPerson,
+    parent: 'PersonStructure',
+    animated: true,
+    showMenu: false,
+    title: '添加人员'
+  }, {
+    path: urls.ADDDEPARTMENT,
+    exact: true,
+    component: AddDepartment,
+    parent: 'OrgantStruct',
+    animated: true,
+    showMenu: false,
+    title: '添加部门'
+  }, {
+    path: urls.FEEDBACK,
+    exact: true,
+    component: FeedBack,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '问题反馈'
   }, {
     path: urls.LOGIN,
     exact: true,

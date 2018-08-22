@@ -39,7 +39,7 @@ html .comp-list :global(.am-button:before) {
         color: #fff;
         font-size: 12px;
         background: #0467E0;
-        margin-top: 20px;
+        margin-top: 36px;
         font-weight: 300;
       }
       & .fail-btn {

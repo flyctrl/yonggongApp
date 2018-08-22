@@ -35,6 +35,8 @@
   animation-duration: 200ms;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
 }
 
 :global(.animated.infinite) {

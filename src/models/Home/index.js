@@ -9,18 +9,15 @@ import React, { Component } from 'react'
 import { Header, Content } from 'Components'
 import { Flex, WingBlank, Carousel } from 'antd-mobile'
 import * as urls from 'Contants/urls'
+import NewIcon from 'Components/NewIcon'
 import history from 'Util/history'
+import homeimg from 'Src/assets/homimg.png'
 import style from './style.css'
 
 class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      gridData: [
-        { icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png', text: '发布工单' },
-        { icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png', text: '发布快单' },
-        { icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png', text: '发布招标' }
-      ]
     }
 
     this.handleClickGrid = this.handleClickGrid.bind(this)
@@ -46,36 +43,39 @@ class Home extends Component {
           <Header
             className={style['usr-home-header']}
             title='亚雀信息科技有限公司'
-            rightTitle='消息'
+            rightTitle={<NewIcon className={style['message-icon']} type='icon-messageTz' />}
           />
           <Content>
-            <div className={style['home-silder']}></div>
+            <div className={style['home-silder']}>
+              <img src={homeimg} />
+            </div>
             <div className={style['flex-container']}>
               <Flex>
                 <Flex.Item>
                   <div onClick={this.handlePushNormalOrder} className={style['pushtype-btn']}>
-                    <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
+                    <NewIcon type='icon-publishWorkOrder' />
                     <div className={style['pushtype-text']}>发布工单</div>
                   </div>
                 </Flex.Item>
                 <Flex.Item>
                   <div onClick={this.handlePushQuickOrder} className={style['pushtype-btn']}>
-                    <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
+                    <NewIcon type='icon-fastSingle' />
                     <div className={style['pushtype-text']}>发布快单</div>
                   </div>
                 </Flex.Item>
                 <Flex.Item>
                   <div onClick={this.handlePushBidOrder} className={style['pushtype-btn']}>
-                    <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
+                    <NewIcon type='icon-laborBidding' />
                     <div className={style['pushtype-text']}>劳务招标</div>
                   </div>
                 </Flex.Item>
               </Flex>
             </div>
             <div className={`${style['notice-container']} my-top-border my-bottom-border`}>
+              <NewIcon type='icon-Initials' className={style['notice-icon']} />
               <span>系统通知</span>
               <WingBlank>
-                <Carousel className='my-carousel'
+                <Carousel className={style['my-carousel']}
                   vertical
                   dots={false}
                   dragging={false}
@@ -83,9 +83,9 @@ class Home extends Component {
                   autoplay
                   infinite
                 >
-                  <div className='v-item'>carousel 1</div>
-                  <div className='v-item'>carousel 2</div>
-                  <div className='v-item'>carousel 3</div>
+                  <div className={style['v-item']}>carousel 1<em>下午 3：45</em></div>
+                  <div className={style['v-item']}>carousel 2<em>下午 3：45</em></div>
+                  <div className={style['v-item']}>carousel 3<em>下午 3：45</em></div>
                 </Carousel>
               </WingBlank>
             </div>

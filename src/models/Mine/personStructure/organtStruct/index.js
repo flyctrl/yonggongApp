@@ -8,7 +8,7 @@ import style from './style.css'
 const Item = List.Item
 class OrgantStruct extends Component {
   handleShowPerson = () => {
-    history.push(urls.PERSONSTRUCT)
+    history.push(urls.PERSONSTRUCT + '?url=PERSONSTRUCTURE')
   }
   render() {
     return (
@@ -22,7 +22,7 @@ class OrgantStruct extends Component {
           }}
           rightTitle='添加部门'
           rightClick={() => {
-            console.log('添加部门')
+            history.push(urls.ADDDEPARTMENT)
           }}
         />
         <Content>

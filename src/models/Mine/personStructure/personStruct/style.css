@@ -1,0 +1,33 @@
+.person-list {
+  & ul {
+    padding-left: 20px;
+    & li {
+      overflow: hidden;
+      padding-top: 5px;
+      padding-bottom: 10px;
+      & img {
+        float: left;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+      }
+      & span {
+        float: left;
+        height: 44px;
+        line-height: 44px;
+        margin: 0 10px;
+        font-size: 16px;
+        color: #2F2F2F;
+      }
+      & em {
+        float: left;
+        padding: 2px 8px;
+        background: #F3F4F5;
+        font-size: 11px;
+        color: #0467E0;
+        border-radius: 3px;
+        margin-top: 15px;
+      }
+    }
+  }
+}

@@ -9,19 +9,25 @@ class PesrsonStructure extends Component {
   handleOrgant = () => {
     history.push(urls.ORGANTSTRUCT)
   }
+  handleDepart = () => {
+    history.push(urls.PERSONSTRUCT + '?url=PERSONSTRUCTURE')
+  }
+  handlePerson = () => {
+    history.push(urls.PERSONDETAIL + '?url=PERSONSTRUCTURE')
+  }
   render() {
     return (
       <div className={`${style['structurePage']} pageBox`}>
         <Header
-          title='通讯录'
+          title='组织架构'
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
             history.push(urls.MINE)
           }}
-          rightTitle='添加'
+          rightTitle='添加人员'
           rightClick={() => {
-            console.log('添加')
+            history.push(urls.ADDPERSON)
           }}
         />
         <Content>
@@ -31,7 +37,7 @@ class PesrsonStructure extends Component {
                 <NewIcon type='icon-myDepartment' className={style['icon-struct']} />
                 <span>组织架构</span>
               </p>
-              <p>
+              <p onClick={this.handleDepart}>
                 <NewIcon type='icon-myDepartment' className={style['icon-struct']} />
                 <span>我的部门</span>
               </p>
@@ -39,7 +45,7 @@ class PesrsonStructure extends Component {
             <section>
               <dl>
                 <dt>管理员</dt>
-                <dd>
+                <dd onClick={this.handlePerson}>
                   <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
                   <div className={`${style['admin-info']} my-bottom-border`}>
                     <span>王大大</span>

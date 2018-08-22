@@ -5,7 +5,6 @@
 * @Last Modified time: 2018-07-07 20:23:56
 */
 import React, { Component } from 'react'
-import style from './style.css'
 // import { Link } from 'react-router-dom'
 import * as urls from 'Contants/urls'
 import { List, Radio, Picker, InputItem, DatePicker, TextareaItem, Toast, Icon } from 'antd-mobile'
@@ -16,6 +15,7 @@ import Upload from 'rc-upload'
 import NewIcon from 'Components/NewIcon'
 import ConfirmOrder from '../confirmOrder'
 import SelectNatural from './selectNatural'
+import style from '../form.css'
 
 // const Brief = List.Item.Brief
 const valModeData = [

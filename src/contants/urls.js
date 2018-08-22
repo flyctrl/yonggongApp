@@ -21,7 +21,8 @@ export const ORDERDETAIL = `${WORKORDER}/orderDetail` // 工单详情
 export const ELETAGREEMENT = `${WORKORDER}/eletAgreement` // 电子合同
 export const APPLYSUGGEST = `${WORKORDER}/applySuggest` // 审批意见
 export const SELECTCOMP = `${WORKORDER}/selectComp` // 选择中标单位
-export const CONFIRMPROGRESS = `${WORKORDER}/ConfirmProgress` // 进度确认
+export const BEGINLIST = `${WORKORDER}/beginList` // 开工列表
+export const SETTLELIST = `${WORKORDER}/settleList` // 结算列表
 
 // 我的
 export const MINE = `${BASE_URL}/Mine`
@@ -30,6 +31,8 @@ export const MYPUSH = `${MINE}/myPush` // 我的发布
 export const ACCOUNT = `${MINE}/Account` // 我的账户
 export const ACCOUNTRECHARGE = `${ACCOUNT}/recharge` // 我的账户》充值
 export const ACCOUNTWITHDRAWCASH = `${ACCOUNT}/withdrawCash` // 我的账户》提现
+export const SUCCESSPAGE = `${ACCOUNT}/successPage` // 支付成功页面
+export const FAILPAGE = `${ACCOUNT}/failPage` // 支付失败页面
 export const ACCOUNTDETAIL = `${ACCOUNT}/detail` // 我的账户》账户详细
 
 export const COMPANYAUTH = `${MINE}/companyAuth` // 企业认证
@@ -47,6 +50,10 @@ export const ADDPARTNER = `${MINE}/partner/addPartner` // 添加合作方
 export const PERSONSTRUCTURE = `${MINE}/personStructure` // 组织架构
 export const ORGANTSTRUCT = `${MINE}/personStructure/organtStruct` // 组织架构列表
 export const PERSONSTRUCT = `${MINE}/personStructure/personStruct` // 人员列表
+export const PERSONDETAIL = `${MINE}/personStructure/personDetail` // 人员详情
+export const ADDPERSON = `${MINE}/personStructure/addPerson` // 添加人员
+export const ADDDEPARTMENT = `${MINE}/personStructure/addDepartment` // 添加部门
+export const FEEDBACK = `${MINE}/feedBack` // 问题反馈
 
 export const LOGIN = `${BASE_URL}/Login/login` // 登录
 export const REGISTER = `${BASE_URL}/Login/register` // 注册

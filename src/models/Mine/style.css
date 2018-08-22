@@ -4,6 +4,11 @@
 * @Last Modified by:   baosheng
 * @Last Modified time: 2018-08-12 15:02:57
 */
+.message-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
 html .mine-header :global(.am-button-ghost::before) {
   border-color: #fff;
   border-radius: 26px;
@@ -51,10 +56,10 @@ html .mine-header :global(.am-button-ghost::before) {
   & li {
     float: left;
     width: 60px;
-    height: 68px;
+    height: 72px;
     margin-left: 27px;
     margin-top: 32px;
-    & img {
+    & svg {
       display: block;
       width: 48px;
       height: 48px;
@@ -63,10 +68,12 @@ html .mine-header :global(.am-button-ghost::before) {
     }
     & span {
       text-align: center;
-      height: 20px;
-      line-height: 20px;
+      height: 22px;
+      line-height: 22px;
       display: block;
       font-size: 12px;
+      margin-top: 4px;
+      color: #333;
     }
   }
 }

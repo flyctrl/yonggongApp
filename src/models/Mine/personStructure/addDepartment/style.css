@@ -1,0 +1,69 @@
+html .pushOrderForm :global(.am-list-body::before) {
+  height: 0;
+}
+html .pushOrderForm :global(.am-list-item:not(:last-child) .am-list-line::after), html .pushOrderForm :global(.am-list-item:not(:last-child) .am-list-line::before) {
+  height: 0;
+}
+html:not([data-scale]) .pushOrderForm :global(.am-list-body div:not(:last-child) .am-list-line::after) {
+  height: 0;
+}
+.pushOrderForm {
+  width: 328px;
+  margin: 0 auto;
+  & :global(.am-list) {
+    &.input-form-list {
+      height: 56px;
+      margin-top: 22px;
+      &.selected-form-list {
+        & :global(.am-list-body .am-list-item .am-list-line .am-list-extra) {
+          color: #000;
+        }
+      }
+      & :global(.am-list-header) {
+        padding: 0;
+        font-size: 14px;
+        color: rgba(49, 63, 72, 1);
+      }
+      & :global(.am-list-body) {
+        height: 38px;
+        & :global(.am-list-body:after) {
+          height: 0;
+        }
+        & :global(.am-list-item) {
+          padding-left: 0;
+          & :global(.am-list-line) {
+            padding-right: 0;
+            & :global(.am-list-extra) {
+              flex-basis: 92%;
+              font-size: 14px;
+              text-align: left;
+              color: rgba(138, 150, 160, .7);
+            }
+            & :global(.am-input-control) {
+              & :global(input) {
+                font-size: 14px;
+                &:global(::-webkit-input-placeholder) {
+                  color: rgba(138, 150, 160, .7);
+                  font-size: 14px;
+                }
+              }
+              & :global(.fake-input-placeholder) {
+                text-align: left;
+                font-size: 14px;
+                color: rgba(138, 150, 160, .7);
+              }
+            }
+          }
+        }
+
+        & :global(.am-icon-right) {
+          position: absolute;
+          top: 10px;
+          right: 2px;
+        }
+      }
+    }
+
+  }
+
+}

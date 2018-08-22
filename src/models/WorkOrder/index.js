@@ -7,6 +7,7 @@
 import React, { Component } from 'react'
 import { Tabs, SegmentedControl, Button } from 'antd-mobile'
 import { Header, Content, RefreshList } from 'Components'
+import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import style from './style.css'
 
@@ -23,7 +24,6 @@ class WorkOrder extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: true,
       data: [],
     }
   }
@@ -46,8 +46,11 @@ class WorkOrder extends Component {
   handleSelectComp = () => {
     this.props.match.history.push(urls.SELECTCOMP)
   }
-  handleSureProgres = () => {
-    this.props.match.history.push(urls.CONFIRMPROGRESS)
+  handleBeginList = () => {
+    this.props.match.history.push(urls.BEGINLIST)
+  }
+  handleSettleList = () => {
+    this.props.match.history.push(urls.SETTLELIST)
   }
   handleCall = () => {
     console.log('电话')
@@ -90,8 +93,8 @@ class WorkOrder extends Component {
   pubrow = (rowData) => {
     return (
       <div>
-        <div className={style.title}><span className={style.left}>{rowData.title}</span><span className={style.right}>申请人数：{rowData.status}人</span></div>
-        <div className={style.desc}>
+        <div className={style.title}><span className={style.left}>{rowData.title}</span><NewIcon type='icon-phone' /><NewIcon type='icon-message_pre' /></div>
+        <div onClick={this.handleDetail} className={style.desc}>
           <div className={style.ordernum}>工单号：{rowData.code}<span className={style.timeblock}>{rowData.time}</span></div>
           <div onClick={this.handleCall}>接包单位：{rowData.date}</div>
           <div>预算：{rowData.day}万</div>
@@ -102,34 +105,32 @@ class WorkOrder extends Component {
     )
   }
   render() {
-    const { loading } = this.state
-
     const row1 = (rowData, sectionID, rowID) => {
       return (
-        <div className={`${style.item} ${loading ? style.loading : ''}`} key={rowID}>
+        <div className={`${style.item}`} key={rowID}>
           {this.pubrow(rowData)}
           <div className={style.itemfooter}>
-            <a onClick={this.handleApplyDetail} className='my-right-border'>查看详情</a>
-            <a onClick={this.handleWeChat}>聊天</a>
+            <Button onClick={this.handleApplyDetail} className={style.detailbtn}>审批详情</Button>
           </div>
         </div>
       )
     }
     const row2 = (rowData, sectionID, rowID) => {
       return (
-        <div className={`${style.item} ${loading ? style.loading : ''}`} key={rowID}>
+        <div className={`${style.item}`} key={rowID}>
           {this.pubrow(rowData)}
           <div className={style.itemfooter}>
-            <Button onClick={this.handleSelectComp} className={style.detailbtn}>查看详情</Button>
+            <Button onClick={this.handleSelectComp} className={style.detailbtn}>选择中标单位</Button>
           </div>
         </div>
       )
     }
     const row3 = (rowData, sectionID, rowID) => {
       return (
-        <div className={`${style.item} ${loading ? style.loading : ''}`} key={rowID}>
+        <div className={`${style.item}`} key={rowID}>
           {this.pubrow(rowData)}
           <div className={style.itemfooter}>
+            <Button className={style.detailbtn}>取消开工</Button>
             <Button className={style.detailbtn}>确认开工</Button>
           </div>
         </div>
@@ -137,32 +138,26 @@ class WorkOrder extends Component {
     }
     const row4 = (rowData, sectionID, rowID) => {
       return (
-        <div className={`${style.item} ${loading ? style.loading : ''}`} key={rowID}>
+        <div className={`${style.item}`} key={rowID}>
           {this.pubrow(rowData)}
           <div className={style.itemfooter}>
-            <a onClick={this.handleDetail} className='my-right-border'>查看详情</a>
-            <a onClick={this.handleSureProgres}>进度确认</a>
+            <Button onClick={this.handleSettleList} className={style.detailbtn}>结算列表</Button>
+            <Button onClick={this.handleBeginList} className={style.detailbtn}>开工列表</Button>
           </div>
         </div>
       )
     }
     const row5 = (rowData, sectionID, rowID) => {
       return (
-        <div className={`${style.item} ${loading ? style.loading : ''}`} key={rowID}>
+        <div className={`${style.item}`} key={rowID}>
           {this.pubrow(rowData)}
-          <div className={style.itemfooter}>
-            <Button className={style.detailbtn}>确认结算</Button>
-          </div>
         </div>
       )
     }
     const row6 = (rowData, sectionID, rowID) => {
       return (
-        <div className={`${style.item} ${loading ? style.loading : ''}`} key={rowID}>
+        <div className={`${style.item}`} key={rowID}>
           {this.pubrow(rowData)}
-          <div className={style.itemfooter}>
-            <Button className={style.detailbtn} style={{ color: '#ccc' }}>已失效</Button>
-          </div>
         </div>
       )
     }

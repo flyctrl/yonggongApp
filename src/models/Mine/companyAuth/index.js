@@ -53,7 +53,7 @@ class Company extends Component {
       <Content>
         <div className={style.company}>
           <div className={`${style.input} my-bottom-border`}>
-            <div className={style.title}>企业机构名称</div>
+            <div className={style.title}>企业名称</div>
             <InputItem {...getFieldProps('title', {
               rules: [{
                 required: true, message: '请输入企业名称',

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { SearchBar } from 'antd-mobile'
 import { Header, Content } from 'Components'
+import NewIcon from 'Components/NewIcon'
 import history from 'Util/history'
 import * as urls from 'Contants/urls'
 import style from './style.css'
@@ -16,7 +17,7 @@ class Partner extends Component {
           leftClick1={() => {
             history.push(urls.MINE)
           }}
-          rightTitle='添加'
+          rightTitle={<NewIcon type='icon-hzfadd' />}
           rightClick={() => {
             history.push(urls.ADDPARTNER)
           }}
@@ -34,8 +35,8 @@ class Partner extends Component {
                   <p>9:43更新 | 成单指数<em>4</em></p>
                 </section>
                 <footer>
-                  <a>1</a>
-                  <a>2</a>
+                  <NewIcon type='icon-message_pre' />
+                  <NewIcon type='icon-phone' />
                 </footer>
               </li>
               <li className='my-bottom-border'>
@@ -45,8 +46,8 @@ class Partner extends Component {
                   <p>9:43更新 | 成单指数<em>4</em></p>
                 </section>
                 <footer>
-                  <a>1</a>
-                  <a>2</a>
+                  <NewIcon type='icon-message_pre' />
+                  <NewIcon type='icon-phone' />
                 </footer>
               </li>
               <li className='my-bottom-border'>
@@ -56,8 +57,8 @@ class Partner extends Component {
                   <p>9:43更新 | 成单指数<em>4</em></p>
                 </section>
                 <footer>
-                  <a>1</a>
-                  <a>2</a>
+                  <NewIcon type='icon-message_pre' />
+                  <NewIcon type='icon-phone' />
                 </footer>
               </li>
             </ul>

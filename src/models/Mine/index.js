@@ -7,6 +7,7 @@
 import React, { Component } from 'react'
 import { Button } from 'antd-mobile'
 import { Header, Content } from 'Components'
+import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import history from 'Util/history'
 import style from './style.css'
@@ -14,62 +15,62 @@ import style from './style.css'
 const menuData = [
   {
     title: '我的发布',
-    icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png',
+    icon: 'icon-publishWorkOrder',
     type: 1
   },
   {
     title: '我的账户',
-    icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png',
+    icon: 'icon-myAccount1',
     type: 2
   },
   {
     title: '企业认证',
-    icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png',
+    icon: 'icon-corporateApproval',
     type: 3
   },
   {
     title: '发票管理',
-    icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png',
+    icon: 'icon-invoiceManagement',
     type: 4
   },
   {
     title: '合同管理',
-    icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png',
+    icon: 'icon-contractManagement',
     type: 5
   },
   {
     title: '项目管理',
-    icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png',
+    icon: 'icon-projectManagement',
     type: 6
   },
   {
     title: '结算管理',
-    icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png',
+    icon: 'icon-settlementManagement',
     type: 7
   },
   {
     title: '工程实况',
-    icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png',
+    icon: 'icon-engineeringPractice',
     type: 8
   },
   {
     title: '合作方管理',
-    icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png',
+    icon: 'icon-partnerManagement',
     type: 9
   },
   {
     title: '组织架构',
-    icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png',
+    icon: 'icon-organizationChart',
     type: 10
   },
   {
     title: '问题反馈',
-    icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png',
+    icon: 'icon-problemFeedback',
     type: 11
   },
   {
     title: '分享应用',
-    icon: 'https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png',
+    icon: 'icon-sharingApplication',
     type: 12
   }
 ]
@@ -83,7 +84,8 @@ const menuRouter = {
   7: urls.BALANCEMANGE,
   8: urls.ENGINREALITY,
   9: urls.PARTNER,
-  10: urls.PERSONSTRUCTURE
+  10: urls.PERSONSTRUCTURE,
+  11: urls.FEEDBACK
 }
 class Mine extends Component {
   constructor(props) {
@@ -101,7 +103,7 @@ class Mine extends Component {
       <div className='contentBox'>
         <Header
           title='我的'
-          rightTitle='消息'
+          rightTitle={<NewIcon className={style['message-icon']} type='icon-messageTz' />}
         />
         <Content>
           <div className={style['mine-header']}>
@@ -114,7 +116,7 @@ class Mine extends Component {
               menuData.map((item, index) => {
                 return (
                   <li key={index} onClick={this.handleMenuClick.bind(this, item.type)}>
-                    <img src={item.icon} />
+                    <NewIcon type={item.icon}/>
                     <span>{item.title}</span>
                   </li>
                 )

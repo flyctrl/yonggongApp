@@ -1,0 +1,17 @@
+.feedback-form {
+  padding: 10px;
+  & :global(.am-list-body) {
+    border-right: 1Px solid #eee;
+    border-left: 1Px solid #eee;
+    & :global(.am-textarea-control) {
+      & textarea {
+        font-size: 14px;
+        color: #333;
+        &:global(::-webkit-input-placeholder) {
+          font-size: 14px;
+          font-weight: 300;
+        }
+      }
+    }
+  }
+}

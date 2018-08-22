@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Tabs } from 'antd-mobile'
 import { Header, Content } from 'Components'
+import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import history from 'Util/history'
 import style from './style.css'
@@ -25,7 +26,7 @@ class ProjectMange extends Component {
           leftClick1={() => {
             history.push(urls.MINE)
           }}
-          rightTitle='新建项目'
+          rightTitle={<NewIcon type='icon-hzfadd' />}
           rightClick={() => {
             this.handleCreateProject()
           }}

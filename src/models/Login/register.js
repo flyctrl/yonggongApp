@@ -55,19 +55,25 @@ class Register extends Component {
       codeText: '重新发送'
     })
   }
-  getCode() {
-    const phoneErr = this.props.form.getFieldError('phone')
-    const phone = this.props.form.getFieldValue('phone')
+  async getCode() {
+    const phoneErr = this.props.form.getFieldError('mobile')
+    const phone = this.props.form.getFieldValue('mobile')
     if (phone === undefined || phone === '') {
       Toast.fail('请输入手机号码', 1)
     } else if (phoneErr !== undefined) {
       Toast.fail('请输入正确格式手机号码', 1)
     }
     if (phoneErr === undefined && phone !== undefined) {
-      this.setState({
-        codeDisabled: true
-      })
       console.log(phone)
+      const data = await api.auth.getcode({
+        mobile: phone,
+        type: 2
+      }) || false
+      if (data) {
+        this.setState({
+          codeDisabled: true
+        })
+      }
     }
   }
 
@@ -202,5 +208,4 @@ class Register extends Component {
   }
 }
 
-const RegisterWrapper = createForm()(Register)
-export default RegisterWrapper
+export default createForm()(Register)

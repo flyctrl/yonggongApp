@@ -1,0 +1,55 @@
+.person-detail {
+  padding: 20px;
+  & header {
+    overflow: hidden;
+    & span {
+      height: 50px;
+      line-height: 50px;
+      float: left;
+      font-size: 24px;
+      color: #313F48;
+      margin-right: 15px;
+    }
+    & em {
+      float: left;
+      padding: 3px 8px;
+      background: #F3F4F5;
+      color: #0467E0;
+      border-radius: 3px;
+      font-size: 11px;
+      margin-top: 16px;
+    }
+    & img {
+      float: right;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-top: 8px;
+    }
+  }
+  & dl {
+    padding-left: 10px;
+    margin-top: 10px;
+    & dt {
+      height: 60px;
+      line-height: 74px;
+      font-size: 18px;
+      color: #313F48;
+    }
+    & dd {
+      height: 50px;
+      color: #8A96A0;
+      font-size: 16px;
+      padding-top: 20px;
+      & span {
+        display: block;
+        height: 20px;
+        line-height: 20px;
+      }
+      & p {
+        height: 20px;
+        line-height: 20px;
+      }
+    }
+  }
+}

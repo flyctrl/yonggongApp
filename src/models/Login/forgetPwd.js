@@ -16,6 +16,7 @@ import { InputItem, Button, Toast, List } from 'antd-mobile'
 import { createForm } from 'rc-form'
 import { Content } from 'Components'
 import Timer from './timer'
+import api from 'Util/api'
 import style from './style.css'
 import logo from 'Src/assets/logo.png'
 import * as urls from 'Contants/urls'
@@ -50,7 +51,7 @@ class ForgetPwd extends Component {
       codeText: '重新发送'
     })
   }
-  getCode() {
+  async getCode() {
     const phoneErr = this.props.form.getFieldError('phone')
     const phone = this.props.form.getFieldValue('phone')
     if (phone === undefined || phone === '') {
@@ -63,6 +64,15 @@ class ForgetPwd extends Component {
         codeDisabled: true
       })
       console.log(phone)
+      const data = await api.auth.getcode({
+        mobile: phone,
+        type: 2
+      }) || false
+      if (data) {
+        this.setState({
+          codeDisabled: true
+        })
+      }
     }
   }
 

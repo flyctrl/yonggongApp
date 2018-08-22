@@ -1,13 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-<<<<<<< HEAD
-* @Last Modified by:   baosheng
-* @Last Modified time: 2018-07-04 20:10:45
-=======
-* @Last Modified by:   chengbs
-* @Last Modified time: 2018-06-19 22:49:33
->>>>>>> origin/develop
+* @Last Modified time: 2018-08-21 16:10:27
 */
 import storage from '../utils/storage'
 import axios from 'axios'
@@ -43,7 +37,7 @@ fetcher.interceptors.response.use(function (response) {
     window.location.href = '/Login/login'
   } else if (response.data.code === 10011) { // token过期
     let refreshToken = storage.get('refreshToken')
-    axios.post(baseUrl + '/auth/refresh', { refresh_token: refreshToken }).then(function(res) {
+    axios.post(baseUrl + '/refresh', { refresh_token: refreshToken }).then(function(res) {
       console.log(res.data.data.access_token)
       storage.set('Authorization', 'Bearer ' + res.data.data.access_token)
       storage.set('refreshToken', res.data.data.refresh_token)
@@ -51,6 +45,8 @@ fetcher.interceptors.response.use(function (response) {
     }).catch(function(err) {
       console.log(err)
     })
+  } else if (response.data.code === 16030001) { // 企业未认证
+    window.location.href = '/Mine/companyAuth'
   }
   return response.data
 }, function (error) {

@@ -5,17 +5,16 @@
 * @Last Modified time: 2018-07-07 20:23:56
 */
 import React, { Component } from 'react'
-import style from './style.css'
 // import { Link } from 'react-router-dom'
 import * as urls from 'Contants/urls'
-import { List, Radio, Picker, InputItem, DatePicker, TextareaItem, Toast, Icon } from 'antd-mobile'
+import { List, Radio, Picker, InputItem, DatePicker, TextareaItem, Toast, Icon, Button } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import { createForm } from 'rc-form'
 import history from 'Util/history'
 import Upload from 'rc-upload'
 import NewIcon from 'Components/NewIcon'
-import ConfirmOrder from '../confirmOrder'
 import SelectNatural from './selectNatural'
+import style from '../form.css'
 
 // const Brief = List.Item.Brief
 const valModeData = [
@@ -94,9 +93,6 @@ class PushNormalOrder extends Component {
     this.onProChange = this.onProChange.bind(this)
     this.onDateChange = this.onDateChange.bind(this)
     this.onWorkTypeChange = this.onWorkTypeChange.bind(this)
-    this.onHandleNext = this.onHandleNext.bind(this)
-    this.onHandleSubmit = this.onHandleSubmit.bind(this)
-    this.closeConfirmOrder = this.closeConfirmOrder.bind(this)
   }
 
   onRadioChange(value) {
@@ -143,7 +139,7 @@ class PushNormalOrder extends Component {
     })
   }
 
-  onHandleNext() {
+  onHandleNext = () => {
     // this.setState({
     //   isEdit: false
     // })
@@ -177,11 +173,11 @@ class PushNormalOrder extends Component {
     })
   }
 
-  onHandleSubmit() {
+  onHandleSubmit = () => {
     console.log('提交数据', this.state.postData)
   }
 
-  closeConfirmOrder() {
+  closeConfirmOrder = () => {
     this.setState({
       isEdit: true
     })
@@ -202,6 +198,65 @@ class PushNormalOrder extends Component {
     this.props.form.setFieldsValue({
       natural: strval.slice(0, strval.length - 1)
     })
+  }
+
+  confirmOrder = (postData, proData, worktypeData) => {
+    return (
+      <div className='pageBox'>
+        <Header
+          title='确认项目信息'
+          leftIcon='icon-back'
+          leftTitle1='返回'
+          leftClick1={() => {
+            this.closeConfirmOrder
+          }}
+        />
+        <Content>
+          <div className={style['show-order-box']}>
+            <List className='my-bottom-border' renderHeader={() => '项目名称'}>
+              {
+                proData.find((item) => {
+                  return item.value === postData['proname'][0]
+                })['label']
+              }
+            </List>
+            <List className='my-bottom-border' renderHeader={() => '施工地址'}>
+              {postData['address']}
+            </List>
+            <List className='my-bottom-border' renderHeader={() => '施工时间'}>
+              {postData['workDate']}
+            </List>
+            <List className='my-bottom-border' renderHeader={() => '价格预算'}>
+              {postData['price']} 元
+            </List>
+            <List className='my-bottom-border' renderHeader={() => '工种需求'}>
+              {
+                worktypeData.find((item) => {
+                  return item.value === postData['worktype'][0]
+                })['label']
+              }
+            </List>
+            <List className='my-bottom-border' renderHeader={() => '需求描述'}>
+              {postData['memo']}
+            </List>
+            <List className={`${style['attch-list']} my-bottom-border`} renderHeader={() => '附件'}>
+              <ul className={style['file-list']}>
+                {
+                  postData['files'].map((item, index, ary) => {
+                    return (
+                      <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.name}</a></li>
+                    )
+                  })
+                }
+              </ul>
+            </List>
+            <div>
+              <Button type='primary' onClick={this.onHandleSubmit} >提 交</Button>
+            </div>
+          </div>
+        </Content>
+      </div>
+    )
   }
 
   render() {
@@ -421,7 +476,7 @@ class PushNormalOrder extends Component {
           {!isEdit && naturalData ? <SelectNatural onClickBack={this.handleCloseNatural} /> : null}
         </div>
         <div style={{ display: !isEdit && postData ? 'block' : 'none' }}>
-          {!isEdit && postData ? <ConfirmOrder onClickBack={this.closeConfirmOrder} onHandleSubmit={this.onHandleSubmit} postData={postData} proData={proData} worktypeData={worktypeData} /> : null}
+          {!isEdit && postData ? this.confirmOrder(postData, proData, worktypeData) : null}
         </div>
       </div>
     )

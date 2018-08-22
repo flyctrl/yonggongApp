@@ -11,7 +11,7 @@ import history from 'Util/history'
 import * as urls from 'Contants/urls'
 import style from './style.css'
 
-class SelectComp extends Component {
+class BeginList extends Component {
   constructor(props) {
     super(props)
     this.state = {}
@@ -23,13 +23,9 @@ class SelectComp extends Component {
           leftClick1={() => {
             history.push(urls.WORKORDER)
           }}
-          title='选择中标单位'
+          title='开工列表'
           leftIcon='icon-back'
           leftTitle1='返回'
-          rightTitle='一键确认'
-          rightClick={() => {
-            console.log('一键确认')
-          }}
         />
         <Content>
           <ul className={style['comp-list']}>
@@ -40,7 +36,7 @@ class SelectComp extends Component {
               </div>
               <div className={style['contrl-btn']}>
                 <Button type='primary' className={style['win-btn']}>确认</Button>
-                <Button className={style['fail-btn']}>拒绝</Button>
+                <Button className={style['fail-btn']}>驳回</Button>
               </div>
             </li>
             <li className='my-bottom-border'>
@@ -50,7 +46,7 @@ class SelectComp extends Component {
               </div>
               <div className={style['contrl-btn']}>
                 <Button type='primary' className={style['win-btn']}>确认</Button>
-                <Button className={style['fail-btn']}>拒绝</Button>
+                <Button className={style['fail-btn']}>驳回</Button>
               </div>
             </li>
             <li className='my-bottom-border'>
@@ -60,7 +56,7 @@ class SelectComp extends Component {
               </div>
               <div className={style['contrl-btn']}>
                 <Button type='primary' className={style['win-btn']}>确认</Button>
-                <Button className={style['fail-btn']}>拒绝</Button>
+                <Button className={style['fail-btn']}>驳回</Button>
               </div>
             </li>
           </ul>
@@ -70,4 +66,4 @@ class SelectComp extends Component {
   }
 }
 
-export default SelectComp
+export default BeginList
