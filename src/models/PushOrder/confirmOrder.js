@@ -32,33 +32,33 @@ class ConfirmOrder extends Component {
         />
         <Content>
           <div className={style['show-order-box']}>
-            <List className='my-bottom-border' renderHeader={() => '项目名称'}>
+            <List renderHeader={() => '项目名称'}>
               {
                 proData.find((item) => {
                   return item.value === postData['proname'][0]
                 })['label']
               }
             </List>
-            <List className='my-bottom-border' renderHeader={() => '施工地址'}>
+            <List renderHeader={() => '施工地址'}>
               {postData['address']}
             </List>
-            <List className='my-bottom-border' renderHeader={() => '施工时间'}>
+            <List renderHeader={() => '施工时间'}>
               {postData['workDate']}
             </List>
-            <List className='my-bottom-border' renderHeader={() => '价格预算'}>
+            <List renderHeader={() => '价格预算'}>
               {postData['price']} 元
             </List>
-            <List className='my-bottom-border' renderHeader={() => '工种需求'}>
+            <List renderHeader={() => '工种需求'}>
               {
                 worktypeData.find((item) => {
                   return item.value === postData['worktype'][0]
                 })['label']
               }
             </List>
-            <List className='my-bottom-border' renderHeader={() => '需求描述'}>
+            <List renderHeader={() => '需求描述'}>
               {postData['memo']}
             </List>
-            <List className={`${style['attch-list']} my-bottom-border`} renderHeader={() => '附件'}>
+            <List className={`${style['attch-list']}`} renderHeader={() => '附件'}>
               <ul className={style['file-list']}>
                 {
                   postData['files'].map((item, index, ary) => {

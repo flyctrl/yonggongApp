@@ -45,6 +45,17 @@ export const FetchSave = (url, params, method = 'post', config) => {
 const prefix = '/employ'
 
 export default {
+  Common: {
+    getProList(params) { // 获取项目列表
+      return Fetch(prefix + '/project/list/select', params)
+    },
+    getAptitude(params) { // 获取工种列表和企业资质列表
+      return Fetch('/common/aptitude', params, 'get')
+    },
+    getSkillList(params) { // 获取技能认证列表
+      return Fetch('/common/aptitude/list', params, 'get')
+    }
+  },
   auth: {
     login(params) { // 登录
       return Fetch(prefix + '/login', params)
@@ -60,6 +71,11 @@ export default {
     },
     refresh(params) { // 刷新token
       return Fetch(prefix + '/refresh', params)
+    }
+  },
+  PushOrder: {
+    workSheet(params) { // 发布工单/快单/招标
+      return FetchSave(prefix + '/worksheet/add', params, 'post')
     }
   },
   Mine: { // 我的

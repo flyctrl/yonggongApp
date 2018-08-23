@@ -14,9 +14,23 @@ html .pushOrderForm :global(.am-list-item:not(:last-child) .am-list-line::after)
 html:not([data-scale]) .pushOrderForm :global(.am-list-body div:not(:last-child) .am-list-line::after) {
   height: 0;
 }
+
+html .show-order-box :global(.am-list-body::before) {
+  height: 0;
+}
+html .show-order-box :global(.am-list-item:not(:last-child) .am-list-line::after), html .show-order-box :global(.am-list-item:not(:last-child) .am-list-line::before) {
+  height: 0;
+}
+html:not([data-scale]) .show-order-box :global(.am-list-body div:not(:last-child) .am-list-line::after) {
+  height: 0;
+}
+
 .pushOrderForm {
   width: 328px;
   margin: 0 auto;
+  & :global(.am-calendar .content) {
+    z-index: 1000;
+  }
   & :global(.am-list) {
     &.input-form-list {
       height: 56px;
@@ -73,6 +87,9 @@ html:not([data-scale]) .pushOrderForm :global(.am-list-body div:not(:last-child)
           margin-right: 18px;
         }
         & .pro-radio {
+          &.sm-radio {
+            margin-right: 8px;
+          }
           display: inline-block;
           margin-top: 10px;
           & :global(.am-radio) {
@@ -222,7 +239,7 @@ html:not([data-scale]) .pushOrderForm :global(.am-list-body div:not(:last-child)
   margin: 0 auto;
   & :global(.am-list) {
     height: 56px;
-    margin-top: 18px;
+    margin-top: 10px;
     &.attch-list {
       height: auto;
       & :global(.am-list-body) {
@@ -241,6 +258,9 @@ html:not([data-scale]) .pushOrderForm :global(.am-list-body div:not(:last-child)
       color: #313F48;
       height: 22px;
       line-height: 22px;
+    }
+    & :global(.am-button-primary) {
+      margin: 24px 0;
     }
   }
 }
