@@ -9,31 +9,23 @@ html .comp-list :global(.am-button:before) {
 }
 .comp-list {
   padding: 18px;
-  & .nodata {
-    height: 60px;
-    line-height: 60px;
-    text-align: center;
-    font-size: 14px;
-    color: #666;
-  }
   & li {
     overflow: hidden;
-    padding-bottom: 10px;
+    padding-bottom: 18px;
     & .comp-info {
       float: left;
       width: 260px;
       & h2 {
         color: rgba(48, 48, 48, 1);
         font-size: 14px;
-        height: 40px;
-        line-height: 40px;
+        height: 24px;
+        line-height: 24px;
         font-weight: normal;
       }
       & p {
         color: rgba(146, 146, 146, 0.7);
-        font-size: 12px;
-        height: 18px;
-        line-height: 18px;
+        font-size: 11px;
+        line-height: 14px;
         font-weight: 300;
       }
     }
@@ -47,7 +39,7 @@ html .comp-list :global(.am-button:before) {
         color: #fff;
         font-size: 12px;
         background: #0467E0;
-        margin-top: 5px;
+        margin-top: 20px;
         font-weight: 300;
       }
       & .fail-btn {
@@ -57,7 +49,7 @@ html .comp-list :global(.am-button:before) {
         text-align: center;
         color: #0467E0;
         font-size: 12px;
-        margin-top: 5px;
+        margin-top: 10px;
         font-weight: 300;
       }
     }

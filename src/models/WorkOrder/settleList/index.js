@@ -8,15 +8,69 @@ import React, { Component } from 'react'
 import { Header, Content } from 'Components'
 import { Button } from 'antd-mobile'
 import history from 'Util/history'
+import api from 'Util/api'
+import * as tooler from 'Contants/tooler'
 import * as urls from 'Contants/urls'
 import style from './style.css'
 
 class SettleList extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      dataSource: [],
+      id: tooler.getQueryString('id'),
+      isloading: false
+    }
+  }
+  componentDidMount() {
+    this.getList()
+  }
+  getList = async () => {
+    let { id } = this.state
+    const data = await api.WorkOrder.settleList({
+      worksheet_id: id
+    }) || false
+    this.setState({
+      dataSource: data['list'],
+      isloading: true
+    })
+  }
+  controlBtn = async (json) => {
+    const data = await api.WorkOrder.confirmSettle(json) || false
+    if (data) {
+      this.getList()
+    }
+  }
+  handleSubmit = (e) => {
+    let id = e.currentTarget.getAttribute('data-id')
+    let settleapplyid = id.split('&&')[0]
+    let worksheetorderid = id.split('&&')[1]
+    this.controlBtn({
+      worksheet_order_id: worksheetorderid,
+      settle_apply_id: settleapplyid,
+      type: 1
+    })
+  }
+  showList = (dataSource) => {
+    console.log(dataSource)
+    if (dataSource.length === 0 && this.state.isloading) {
+      return <div className={style['nodata']}>暂无数据</div>
+    } else {
+      return dataSource.map((item, index) => {
+        return <li className='my-bottom-border'>
+          <div className={style['comp-info']}>
+            <h2>{item['worker_name']}</h2>
+            <p>{item['created_at']}</p>
+          </div>
+          <div className={style['contrl-btn']}>
+            <Button onClick={this.handleSubmit} data-id={`${item['id']}&&${item['worksheet_order_id']}`} type='primary' className={style['win-btn']}>确认</Button>
+          </div>
+        </li>
+      })
+    }
   }
   render() {
+    let { dataSource } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -29,33 +83,9 @@ class SettleList extends Component {
         />
         <Content>
           <ul className={style['comp-list']}>
-            <li className='my-bottom-border'>
-              <div className={style['comp-info']}>
-                <h2>**有限公司</h2>
-                <p>**有限公司成立于2010年，**有限公司成立于2011年，是以项目管理、工程监理为核心业务，服务范围涵盖建设项目报批报建、工程技术咨询、质量评估、管理团队输出等建设相关服务的企业。</p>
-              </div>
-              <div className={style['contrl-btn']}>
-                <Button type='primary' className={style['win-btn']}>确认</Button>
-              </div>
-            </li>
-            <li className='my-bottom-border'>
-              <div className={style['comp-info']}>
-                <h2>**有限公司</h2>
-                <p>**有限公司成立于2010年，**有限公司成立于2011年，是以项目管理、工程监理为核心业务，服务范围涵盖建设项目报批报建、工程技术咨询、质量评估、管理团队输出等建设相关服务的企业。</p>
-              </div>
-              <div className={style['contrl-btn']}>
-                <Button type='primary' className={style['win-btn']}>确认</Button>
-              </div>
-            </li>
-            <li className='my-bottom-border'>
-              <div className={style['comp-info']}>
-                <h2>**有限公司</h2>
-                <p>**有限公司成立于2010年，**有限公司成立于2011年，是以项目管理、工程监理为核心业务，服务范围涵盖建设项目报批报建、工程技术咨询、质量评估、管理团队输出等建设相关服务的企业。</p>
-              </div>
-              <div className={style['contrl-btn']}>
-                <Button type='primary' className={style['win-btn']}>确认</Button>
-              </div>
-            </li>
+            {
+              this.showList(dataSource)
+            }
           </ul>
         </Content>
       </div>

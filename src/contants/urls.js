@@ -23,6 +23,9 @@ export const APPLYSUGGEST = `${WORKORDER}/applySuggest` // 审批意见
 export const SELECTCOMP = `${WORKORDER}/selectComp` // 选择中标单位
 export const BEGINLIST = `${WORKORDER}/beginList` // 开工列表
 export const SETTLELIST = `${WORKORDER}/settleList` // 结算列表
+export const RECEPTQKRECORD = `${WORKORDER}/receptQkRecord` // 查看接单记录 快单
+export const RECEPTNMRECORD = `${WORKORDER}/receptNmRecord` // 查看接单记录 普通工单
+export const CONFIRMCOMPWORK = `${WORKORDER}/confirmCompWork` // 确认完工列表
 
 // 我的
 export const MINE = `${BASE_URL}/Mine`

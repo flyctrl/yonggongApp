@@ -247,6 +247,14 @@ html:not([data-scale]) .show-order-box :global(.am-list-body div:not(:last-child
         line-height: auto;
       }
     }
+
+    &.remark-desc {
+      height: auto;
+      &:global(.am-list-body) {
+        height: auto;
+      }
+    }
+
     & :global(.am-list-header) {
       padding: 0;
       height: 32px;
@@ -254,13 +262,15 @@ html:not([data-scale]) .show-order-box :global(.am-list-body div:not(:last-child
       color: rgba(138, 150, 160, .8);
       font-size: 14px;
     }
+
     & :global(.am-list-body) {
       color: #313F48;
       height: 22px;
       line-height: 22px;
     }
-    & :global(.am-button-primary) {
-      margin: 24px 0;
-    }
+    
+  }
+  & :global(.am-button-primary) {
+    margin: 24px 0;
   }
 }

@@ -43,6 +43,7 @@ class RefreshList extends Component {
   }
 
   componentDidMount() {
+    console.log('row', this.props.row)
     const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows([{}, {}, {}]),
@@ -58,10 +59,11 @@ class RefreshList extends Component {
 
   onRefresh = async () => {
     this.setState({ refreshing: true, isLoading: true })
-    this.rData = await this.props.genData('0') || []
+    let rData = await this.props.genData('0') || []
+    console.log('sb', rData)
     console.log('onRefresh')
     this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(this.rData),
+      dataSource: this.state.dataSource.cloneWithRows(rData),
       refreshing: false,
       isLoading: false,
     })

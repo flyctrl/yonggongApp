@@ -1,0 +1,21 @@
+.qtrecord-list {
+  & :global(.am-list-item) {
+    & :global(.am-list-line) {
+      & :global(.am-list-content) {
+        font-size: 14px;
+        color: #313F48;
+      }
+      & :global(.am-list-extra) {
+        color: #8A96A0;
+        font-size: 12px;
+      }
+    }
+  }
+  & .nodata {
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+  }
+}

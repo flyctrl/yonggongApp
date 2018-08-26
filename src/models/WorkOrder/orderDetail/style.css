@@ -41,6 +41,7 @@
         float: left;
         height: 22px;
         line-height: 22px;
+        width: 226px;
         &.usr-tel {
           color: rgba(49, 63, 72, 1);
           font-size: 15px;

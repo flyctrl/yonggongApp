@@ -27,7 +27,7 @@ class BeginList extends Component {
   }
   getList = async () => {
     let { id } = this.state
-    const data = await api.WorkOrder.confirmWorkList({
+    const data = await api.WorkOrder.applyQtList({
       worksheet_id: id
     }) || false
     this.setState({
@@ -36,28 +36,22 @@ class BeginList extends Component {
     })
   }
   controlBtn = async (json) => {
-    const data = await api.WorkOrder.confirmWorkOrderlist(json) || false
+    const data = await api.WorkOrder.confirmApplyRecord(json) || false
     if (data) {
       this.getList()
     }
   }
   handleSubmit = async (e) => {
     let id = e.currentTarget.getAttribute('data-id')
-    let ordersubmitid = id.split('&&')[0]
-    let worksheetorderid = id.split('&&')[1]
     this.controlBtn({
-      worksheet_order_id: worksheetorderid,
-      order_submit_id: ordersubmitid,
+      apply_record_id: id,
       type: 1
     })
   }
   handleRefusal = async (e) => {
     let id = e.currentTarget.getAttribute('data-id')
-    let ordersubmitid = id.split('&&')[0]
-    let worksheetorderid = id.split('&&')[1]
     this.controlBtn({
-      worksheet_order_id: worksheetorderid,
-      order_submit_id: ordersubmitid,
+      apply_record_id: id,
       type: 2
     })
   }
@@ -73,8 +67,8 @@ class BeginList extends Component {
             <p>{item['created_at']}</p>
           </div>
           <div className={style['contrl-btn']}>
-            <Button onClick={this.handleSubmit} data-id={`${item['id']}&&${item['worksheet_order_id']}`} type='primary' className={style['win-btn']}>确认</Button>
-            <Button data-id={`${item['id']}&&${item['worksheet_order_id']}`} onClick={this.handleRefusal} className={style['fail-btn']}>驳回</Button>
+            <Button onClick={this.handleSubmit} data-id={`${item['id']}`} type='primary' className={style['win-btn']}>确认</Button>
+            <Button data-id={`${item['id']}`} onClick={this.handleRefusal} className={style['fail-btn']}>拒绝</Button>
           </div>
         </li>
       })
@@ -88,7 +82,7 @@ class BeginList extends Component {
           leftClick1={() => {
             history.push(urls.WORKORDER)
           }}
-          title='开工列表'
+          title='接单记录'
           leftIcon='icon-back'
           leftTitle1='返回'
         />

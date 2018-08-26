@@ -23,26 +23,26 @@ class BeginList extends Component {
     }
   }
   componentDidMount() {
-    this.getList()
+    this.getConfirmlist()
   }
-  getList = async () => {
+  getConfirmlist = async () => {
     let { id } = this.state
-    const data = await api.WorkOrder.confirmWorkList({
+    const data = await api.WorkOrder.handleConfirmComp({
       worksheet_id: id
-    }) || false
+    }) || {}
     this.setState({
       dataSource: data['list'],
       isloading: true
     })
   }
   controlBtn = async (json) => {
-    const data = await api.WorkOrder.confirmWorkOrderlist(json) || false
+    const data = await api.WorkOrder.confirmQtReefusal(json) || {}
     if (data) {
-      this.getList()
+      this.getConfirmlist()
     }
   }
-  handleSubmit = async (e) => {
-    let id = e.currentTarget.getAttribute('data-id')
+  handleSubmit = async (event) => {
+    let id = event.target.parentElement.id
     let ordersubmitid = id.split('&&')[0]
     let worksheetorderid = id.split('&&')[1]
     this.controlBtn({
@@ -51,8 +51,8 @@ class BeginList extends Component {
       type: 1
     })
   }
-  handleRefusal = async (e) => {
-    let id = e.currentTarget.getAttribute('data-id')
+  handleRefusal = async (event) => {
+    let id = event.target.parentElement.id
     let ordersubmitid = id.split('&&')[0]
     let worksheetorderid = id.split('&&')[1]
     this.controlBtn({
@@ -73,8 +73,8 @@ class BeginList extends Component {
             <p>{item['created_at']}</p>
           </div>
           <div className={style['contrl-btn']}>
-            <Button onClick={this.handleSubmit} data-id={`${item['id']}&&${item['worksheet_order_id']}`} type='primary' className={style['win-btn']}>确认</Button>
-            <Button data-id={`${item['id']}&&${item['worksheet_order_id']}`} onClick={this.handleRefusal} className={style['fail-btn']}>驳回</Button>
+            <Button onClick={this.handleSubmit} id={`${item['id']}&&${item['worksheet_order_id']}`} type='primary' className={style['win-btn']}>确认</Button>
+            <Button id={`${item['id']}&&${item['worksheet_order_id']}`} onClick={this.handleRefusal} className={style['fail-btn']}>驳回</Button>
           </div>
         </li>
       })
@@ -88,7 +88,7 @@ class BeginList extends Component {
           leftClick1={() => {
             history.push(urls.WORKORDER)
           }}
-          title='开工列表'
+          title='确认完工列表'
           leftIcon='icon-back'
           leftTitle1='返回'
         />

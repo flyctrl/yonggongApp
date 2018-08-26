@@ -7,23 +7,14 @@ const priceModeData = [
   { value: 'B03', label: '月' },
   { value: 'B04', label: '年' },
 ]
-const singePrice = {
-  'A01': '每平方米',
-  'A02': '每立方米',
-  'A03': '每个',
-  'B01': '每天',
-  'B02': '每周',
-  'B03': '每月',
-  'B04': '每年'
-}
-const totalSinge = {
-  'A01': '总平方米',
-  'A02': '总立方米',
-  'A03': '总数',
-  'B01': '总天数',
-  'B02': '总周数',
-  'B03': '总月数',
-  'B04': '总年数'
+const unitPrice = {
+  'A01': '平方米',
+  'A02': '立方米',
+  'A03': '个',
+  'B01': '天',
+  'B02': '周',
+  'B03': '月',
+  'B04': '年'
 }
 
 const settleRadio = [
@@ -43,4 +34,4 @@ const rightWrongRadio = [
   { value: 1, label: '是' }
 ]
 
-export { priceModeData, singePrice, totalSinge, settleRadio, payModeRadio, rightWrongRadio }
+export { priceModeData, settleRadio, payModeRadio, rightWrongRadio, unitPrice }

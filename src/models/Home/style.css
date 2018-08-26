@@ -5,10 +5,7 @@
 * @Last Modified time: 2018-08-14 10:20:50
 */
 
-.message-icon {
-  display: block;
-  width: 20px;
-  height: 20px;
+.message-icon {display: block;width: 20px;height: 20px;
 }
 .usr-home-header {
   background: #ffffff;

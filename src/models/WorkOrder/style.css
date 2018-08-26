@@ -158,6 +158,13 @@ html .my-work-list :global(.am-button:before) {
       }
     }
   }
+  & :global(.am-list-footer) {
+    & .render-footer {
+      height: 60px;
+      line-height: 20px;
+      text-align: center;
+    }
+  }
 }
 :global(.am-tabs-pane-wrap) {
   -webkit-overflow-scrolling : touch;

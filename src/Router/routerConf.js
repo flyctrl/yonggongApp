@@ -8,8 +8,14 @@ import React from 'react'
 import * as urls from 'Contants/urls'
 import Loadable from 'react-loadable'
 
-function MyLoadingComponent() {
-  return <div></div>
+function MyLoadingComponent({ error, pastDelay }) {
+  if (error) {
+    return <div>Error!</div>
+  } else if (pastDelay) {
+    return <div>Loading...</div>
+  } else {
+    return null
+  }
 }
 const Home = Loadable({ // 首页
   loader: () => import(/* webpackChunkName: "home" */ '../models/Home'),
@@ -20,7 +26,7 @@ const Message = Loadable({ // 消息
   loading: MyLoadingComponent
 })
 const WorkOrder = Loadable({ // 工单
-  loader: () => import(/* webpackChunkName: "tobedone" */ '../models/WorkOrder'),
+  loader: () => import(/* webpackChunkName: "workorder" */ '../models/WorkOrder'),
   loading: MyLoadingComponent
 })
 
@@ -67,6 +73,18 @@ const BeginList = Loadable({ // 开工列表
 })
 const SettleList = Loadable({ // 结算列表
   loader: () => import(/* webpackChunkName: "settlelist" */ '../models/WorkOrder/settleList'),
+  loading: MyLoadingComponent
+})
+const ReceptQkRecord = Loadable({ // 接单记录 快单
+  loader: () => import(/* webpackChunkName: "receptqkrecord" */ '../models/WorkOrder/receptQkRecord'),
+  loading: MyLoadingComponent
+})
+const ReceptNmRecord = Loadable({ // 接单记录 普通工单
+  loader: () => import(/* webpackChunkName: "receptnmrecord" */ '../models/WorkOrder/receptNmRecord'),
+  loading: MyLoadingComponent
+})
+const ConfirmCompWork = Loadable({ // 确认完工列表
+  loader: () => import(/* webpackChunkName: "confirmcompwork" */ '../models/WorkOrder/confirmCompWork'),
   loading: MyLoadingComponent
 })
 
@@ -339,6 +357,30 @@ const routes = [
     animated: true,
     showMenu: true,
     title: '结算列表'
+  }, {
+    path: urls.RECEPTQKRECORD,
+    exact: true,
+    component: ReceptQkRecord,
+    parent: 'WorkOrder',
+    animated: true,
+    showMenu: true,
+    title: '接单记录'
+  }, {
+    path: urls.RECEPTNMRECORD,
+    exact: true,
+    component: ReceptNmRecord,
+    parent: 'WorkOrder',
+    animated: true,
+    showMenu: true,
+    title: '接单记录'
+  }, {
+    path: urls.CONFIRMCOMPWORK,
+    exact: true,
+    component: ConfirmCompWork,
+    parent: 'WorkOrder',
+    animated: true,
+    showMenu: true,
+    title: '确认完工列表'
   }, {
     path: urls.MYPUSH,
     exact: true,

@@ -6,6 +6,7 @@
 */
 import fetch from 'Util/fetch'
 import { Toast } from 'antd-mobile'
+import { baseUrl } from 'Util/index'
 
 // 获取数据类接口
 export const Fetch = (url, params, method = 'post', config) => {
@@ -54,6 +55,10 @@ export default {
     },
     getSkillList(params) { // 获取技能认证列表
       return Fetch('/common/aptitude/list', params, 'get')
+    },
+    uploadFile: baseUrl + '/common/attach/file',
+    getOrderDetail(params) { // 获取工单详情
+      return Fetch(prefix + '/worksheet/detail', params)
     }
   },
   auth: {
@@ -76,6 +81,50 @@ export default {
   PushOrder: {
     workSheet(params) { // 发布工单/快单/招标
       return FetchSave(prefix + '/worksheet/add', params, 'post')
+    }
+  },
+  WorkOrder: {
+    WorkOrderList(params) { // 工单列表
+      return Fetch(prefix + '/worksheet/list', params)
+    },
+    getStatusList(params) { // 获取工单状态
+      return Fetch(prefix + '/worksheet/stat/status', params)
+    },
+    confirmConstruct(params) { // 确认开工 快单、普通工单、招标
+      return FetchSave(prefix + '/worksheet/confirmConstruct', params)
+    },
+    cancelConstruct(params) { // 取消开工 快单、普通工单、招标
+      return FetchSave(prefix + '/worksheet/cancel', params)
+    },
+    handleConfirmComp(params) { // 快单 确认完工列表
+      return Fetch(prefix + '/worksheetOrder/confirmList', params)
+    },
+    confirmQtReefusal(params) { // 确认和驳回 快单
+      return FetchSave(prefix + '/worksheetOrder/confirm', params)
+    },
+    applyQtList(params) { // 快单接单记录
+      return Fetch(prefix + '/worksheetOrder/applyList', params)
+    },
+    reviewOrder(params) { // 审批工单
+      return FetchSave(prefix + '/worksheet/review', params)
+    },
+    confirmApplyRecord(params) { // 确认拒绝接单记录
+      return FetchSave(prefix + '/worksheet/confirmApplyRecord', params)
+    },
+    confirmOrder(params) { // 确认工单 普通工单、招标
+      return FetchSave(prefix + '/worksheet/confirm', params)
+    },
+    confirmWorkList(params) { // 开工列表
+      return Fetch(prefix + '/worksheetOrder/confirmList', params)
+    },
+    confirmWorkOrderlist(params) { // 开工列表的确认
+      return FetchSave(prefix + '/worksheetOrder/confirm', params)
+    },
+    settleList(params) { // 结算列表
+      return Fetch(prefix + '/worksheetOrder/settleList', params)
+    },
+    confirmSettle(params) { // 结算确认
+      return FetchSave(prefix + '/worksheetOrder/settle', params)
     }
   },
   Mine: { // 我的

@@ -5,18 +5,17 @@
 * @Last Modified time: 2018-07-07 20:23:56
 */
 import React, { Component } from 'react'
-// import { Link } from 'react-router-dom'
-import { List, Radio, Picker, InputItem, TextareaItem, Toast, Button, Calendar, Icon } from 'antd-mobile'
+import { List, Radio, Picker, InputItem, TextareaItem, Toast, Button, Icon } from 'antd-mobile'
+import Loadable from 'react-loadable'
 import { Header, Content } from 'Components'
 import { createForm } from 'rc-form'
-import history from 'Util/history'
-import Upload from 'rc-upload'
 import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import { formatDate } from 'Contants/tooler'
-import { priceModeData, singePrice, totalSinge, settleRadio, payModeRadio, rightWrongRadio } from 'Contants/fieldmodel'
+import { priceModeData, settleRadio, payModeRadio, rightWrongRadio, unitPrice } from 'Contants/fieldmodel'
 import style from '../form.css'
+import 'antd-mobile/lib/calendar/style/css'
 
 // const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent)
 // let moneyKeyboardWrapProps
@@ -26,6 +25,29 @@ import style from '../form.css'
 //   }
 // }
 const now = new Date()
+let Upload = Loadable({
+  loader: () => import('rc-upload'),
+  loading: () => {
+    return null
+  },
+  render(loaded, props) {
+    let Upload = loaded.default
+    return <Upload {...props}/>
+  }
+})
+let Calendar = Loadable({
+  loader: () => import('antd-mobile'),
+  modules: ['./Calendar'],
+  webpack: () => [require.resolveWeak('antd-mobile')],
+  loading: () => {
+    return null
+  },
+  render(loaded, props) {
+    console.log(loaded)
+    let Calendar = loaded.Calendar
+    return <Calendar {...props}/>
+  }
+})
 class PushQuickOrder extends Component {
   constructor(props) {
     super(props)
@@ -182,37 +204,27 @@ class PushQuickOrder extends Component {
       worktypeData
     })
   }
-
   componentDidMount() {
     this.getProjectList()
     this.getWorkTypeList()
   }
   onHandleNext = () => {
-    // this.setState({
-    //   isEdit: false
-    // })
     let validateAry = ['prj_id', 'construction_place', 'valuation_way', 'valuation_unit_price', 'valuation_quantity', 'penalty']
     const { fileList, settleRadioVal, paymodeRadioVal, assignRadioVal, startLowerTime, startUpperTime, endLowerTime, endUpperTime } = this.state
-    const formData = new FormData()
-    fileList.forEach((file) => {
-      formData.append('files', file)
+    let postFile = []
+    fileList.map((item, index, ary) => {
+      postFile.push(item['path'])
     })
-    console.log(formData.get('files'))
-
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, (error, values) => {
-      // console.log(this.props.form.getFieldsValue())
-      let newData = { prj_id: values['prj_id'][0], professional_level: values['professional_level'][0], valuation_way: values['valuation_way'][0], work_type_id: values['work_type_id'][0], payment_method: settleRadioVal, salary_payment_way: paymodeRadioVal, assign_type: assignRadioVal, start_lower_time: startLowerTime, start_upper_time: startUpperTime, end_lower_time: endLowerTime, end_upper_time: endUpperTime, worksheet_type: 3 }
-      delete values.startWorkDate
-      delete values.endWorkDate
       if (!error) {
-        let postData = { ...{ attachment: fileList }, ...values, ...newData }
+        let newData = { prj_id: values['prj_id'][0], professional_level: values['professional_level'][0], valuation_way: values['valuation_way'][0], work_type_id: values['work_type_id'][0], payment_method: settleRadioVal, salary_payment_way: paymodeRadioVal, assign_type: assignRadioVal, start_lower_time: startLowerTime, start_upper_time: startUpperTime, end_lower_time: endLowerTime, end_upper_time: endUpperTime, worksheet_type: 3 }
+        let postData = { ...{ attachment: postFile }, ...values, ...newData }
         console.log(postData)
         this.setState({
           isEdit: false,
           postData
         })
-        // history.push(urls.CONFIRMORDER, postData)
       } else {
         for (let value of validateAry) {
           if (error[value]) {
@@ -240,7 +252,7 @@ class PushQuickOrder extends Component {
   }
 
   showConfirmOrder = () => { // 工单确认
-    let { postData, proData, worktypeData, professData } = this.state
+    let { postData, proData, worktypeData, professData, fileList } = this.state
     console.log(postData)
     if (proData === [] || worktypeData === [] || professData === []) return false
     return (
@@ -265,6 +277,12 @@ class PushQuickOrder extends Component {
             <List renderHeader={() => '施工地址'}>
               {postData['construction_place']}
             </List>
+            <List renderHeader={() => '开工日期范围'}>
+              {postData['startWorkDate']}
+            </List>
+            <List renderHeader={() => '竣工日期范围'}>
+              {postData['endWorkDate']}
+            </List>
             <List renderHeader={() => '工种'}>
               {
                 worktypeData.find((item) => {
@@ -281,7 +299,7 @@ class PushQuickOrder extends Component {
             </List>
             <List renderHeader={() => '人数'}>
               {
-                postData['people_number']
+                `${postData['people_number']} 个`
               }
             </List>
             <List renderHeader={() => '计价方式'}>
@@ -292,13 +310,11 @@ class PushQuickOrder extends Component {
               }
             </List>
             <List renderHeader={() => '单价'}>
-              {
-                postData['valuation_unit_price']
-              }
+              { `${postData['valuation_unit_price']} 元` }
             </List>
             <List renderHeader={() => '总数'}>
               {
-                postData['valuation_quantity']
+                `${postData['valuation_quantity']} ${unitPrice[postData['valuation_way']]}`
               }
             </List>
             <List renderHeader={() => '结算方式'}>
@@ -320,21 +336,21 @@ class PushQuickOrder extends Component {
                 postData['assign_type'] === 1 ? '是' : '否'
               }
             </List>
-            <List renderHeader={() => '需求描述'}>
-              {postData['remark']}
+            <List className={style['remark-desc']} renderHeader={() => '需求描述'}>
+              {postData['description']}
             </List>
             {
-            // <List className={`${style['attch-list']} my-bottom-border`} renderHeader={() => '附件'}>
-            //   <ul className={style['file-list']}>
-            //     {
-            //       postData['files'].map((item, index, ary) => {
-            //         return (
-            //           <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.name}</a></li>
-            //         )
-            //       })
-            //     }
-            //   </ul>
-            // </List>
+              <List className={`${style['attch-list']} my-bottom-border`} renderHeader={() => '附件'}>
+                <ul className={style['file-list']}>
+                  {
+                    fileList.map((item, index, ary) => {
+                      return (
+                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a></li>
+                      )
+                    })
+                  }
+                </ul>
+              </List>
             }
             <div>
               <Button type='primary' onClick={this.onHandleSubmit} >提 交</Button>
@@ -346,27 +362,37 @@ class PushQuickOrder extends Component {
   }
 
   render() {
-    const uploadProps = {
-      action: '//jsonplaceholder.typicode.com/posts/',
-      onSuccess() {
-        console.log('success')
-      },
-      data(files) {
-        console.log(files)
-      },
-      beforeUpload: (file) => {
-        console.log(file)
-        console.log(fileList)
-        this.setState(({ fileList }) => ({
-          fileList: [...fileList, file],
-        }), () => {
-          console.log(this.state.fileList[0].name)
-        })
-        return false
-      }
-    }
     const { getFieldDecorator } = this.props.form
     const { fileList, proData, worktypeData, isEdit, postData, proSelect, workTypeSelect, priceWay, priceWaySelect, professSelect, professData, settleRadioVal, paymodeRadioVal, assignRadioVal, startDateShow, endDateShow } = this.state
+    const uploaderProps = {
+      action: api.Common.uploadFile,
+      data: { type: 3 },
+      multiple: false,
+      beforeUpload(file) {
+        console.log('beforeUpload', file.name)
+      },
+      onStart: (file) => {
+        console.log('onStart', file.name)
+      },
+      onSuccess: (file) => {
+        console.log('onSuccess', file)
+        if (file['code'] === 0) {
+          this.setState(({ fileList }) => ({
+            fileList: [...fileList, file['data']],
+          }), () => {
+            console.log(this.state.fileList[0].org_name)
+          })
+        } else {
+          Toast.fail(file['msg'], 1)
+        }
+      },
+      onProgress(step, file) {
+        console.log('onProgress', Math.round(step.percent), file.name)
+      },
+      onError(err) {
+        console.log('onError', err)
+      }
+    }
     return (
       <div>
         <div style={{ display: isEdit ? 'block' : 'none' }} className='pageBox'>
@@ -375,11 +401,11 @@ class PushQuickOrder extends Component {
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {
-              history.push(urls.HOME)
+              this.props.match.history.push(urls.HOME)
             }}
             leftTitle2='关闭'
             leftClick2={() => {
-              history.push(urls.HOME)
+              this.props.match.history.push(urls.HOME)
             }}
             rightTitle='下一步'
             rightClick={() => {
@@ -500,7 +526,7 @@ class PushQuickOrder extends Component {
                   </Picker>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => `单价${singePrice[priceWay] ? '(' + singePrice[priceWay] + ')' : ''}`}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => `单价${unitPrice[priceWay] ? '(' + unitPrice[priceWay] + ')' : ''}`}>
                 {getFieldDecorator('valuation_unit_price', {
                   rules: [
                     { required: true, message: '请输入单价' },
@@ -513,7 +539,7 @@ class PushQuickOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => `总数${totalSinge[priceWay] ? '(' + totalSinge[priceWay] + ')' : ''}`}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => `总数${unitPrice[priceWay] ? '(' + unitPrice[priceWay] + '数)' : ''}`}>
                 {getFieldDecorator('valuation_quantity', {
                   rules: [
                     { required: true, message: '请输入总数' },
@@ -596,7 +622,7 @@ class PushQuickOrder extends Component {
                 )}
               </List>
               <List className={style['textarea-form-list']} renderHeader={() => '描述（非必填）'}>
-                {getFieldDecorator('remark')(
+                {getFieldDecorator('description')(
                   <TextareaItem
                     placeholder='请输入...'
                     rows={5}
@@ -607,12 +633,14 @@ class PushQuickOrder extends Component {
               </List>
               <List>
                 <p className={style['push-title']}>附件</p>
-                <Upload {...uploadProps} ><NewIcon type='icon-upload' className={style['push-upload-icon']} /></Upload>
+                {getFieldDecorator('files')(
+                  <Upload {...uploaderProps} ><NewIcon type='icon-upload' className={style['push-upload-icon']} /></Upload>
+                )}
                 <ul className={style['file-list']}>
                   {
                     fileList.map((item, index, ary) => {
                       return (
-                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.name}</a><i onClick={this.delUploadList.bind(this, item.uid)}>&#10005;</i></li>
+                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={this.delUploadList.bind(this, item.uid)}>&#10005;</i></li>
                       )
                     })
                   }
