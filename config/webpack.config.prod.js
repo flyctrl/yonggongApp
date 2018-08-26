@@ -59,9 +59,7 @@ module.exports = Merge(CommonConfig,{
   // You can exclude the *.map files from the build during deployment.
   devtool: shouldUseSourceMap ? 'source-map' : false,
   // In production, we only want to load the polyfills and the app code.
-  entry: {
-    index: [require.resolve('./polyfills'), paths.appIndexJs]
-  },
+  entry: [require.resolve('./polyfills'), paths.appIndexJs],
   output: {
     path: paths.appBuild,
     filename: 'static/js/[name].min.js?rand=[chunkhash:8]',
@@ -362,13 +360,7 @@ module.exports = Merge(CommonConfig,{
     // solution that requires the user to opt into importing specific locales.
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'common',
-      chunks: ['index'],
-      filename: 'common.bundle.js',
-      minChunks: Infinity
-    })
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
