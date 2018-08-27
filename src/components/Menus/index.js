@@ -106,7 +106,11 @@ class AppMenu extends Component {
                       selectedTab: item['key'],
                     })
                     this.props.onTouch(item['title'])
-                    history.push(item['path'], { title: item['title'] })
+                    if (item['key'] === 'PushOrder') {
+                      console.log('pushorder')
+                    } else {
+                      history.push(item['path'], { title: item['title'] })
+                    }
                   }}
                   data-touchfeedback={true}
                 >
