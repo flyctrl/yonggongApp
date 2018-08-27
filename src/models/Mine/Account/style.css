@@ -53,4 +53,17 @@
   }
 }
 
+.bindbtn-box {
+  width: 100%;
+  text-align: center;
+  & .bindcard-btn {
+    display: inline-block;
+    color: #828282;
+    font-size: 14px;
+    margin: 0 auto;
+    margin-top: 30px;
+  }
+}
+
+
 

@@ -5,11 +5,9 @@
 * @Last Modified time: 2018-08-12 14:48:51
 */
 import React, { Component } from 'react'
-// import { Route } from 'react-router-dom'
 import { TabBar } from 'antd-mobile'
 import history from 'Util/history'
 import * as urls from 'Contants/urls'
-// import './Container.css'
 import menuStyle from './style.css'
 import { isIphoneX } from 'Util/ua'
 import TouchFeedback from 'Util/touchFeedback.js'

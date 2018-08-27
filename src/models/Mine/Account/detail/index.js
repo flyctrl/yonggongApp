@@ -8,12 +8,13 @@ import { Tabs, List } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
 import { addCommas } from 'Contants/tooler'
+import api from 'Util/api'
 import style from './style.css'
 
 const tabs = [
   { title: '全部' },
   { title: '收入' },
-  { title: '提现' }
+  { title: '支出' }
 ]
 const Item = List.Item
 const Brief = Item.Brief
@@ -22,7 +23,9 @@ class Detail extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: []
+      data: [],
+      tabsIndex: 0,
+      isloading: false
     }
   }
 
@@ -30,29 +33,27 @@ class Detail extends Component {
     this.handleChange('', 0)
   }
 
-  handleChange = (tab, index) => {
-    const { data } = this.state
-    data[index] = Array.from(new Array(20)).map(() => ({
-      title: '收入',
-      date: '2017-12-13 18:00:00',
-      address: '莫干山项目',
-      money: '+0.06',
-      allMoney: '1231',
-      status: index
-    }))
-    setTimeout(() => {
-      this.setState({ data })
-    }, 500)
+  getDetailList = async (type) => {
+    const data = await api.Mine.account.accountDetail({
+      input_output: type
+    }) || false
+    this.setState({
+      data: data['list'],
+      isloading: false
+    })
   }
-
-  _getLists(key) {
-    const { data } = this.state
-    return <List>{data[key] && data[key].map((item, index) => <Item multipleLine extra={<span><span
-      className={style.money}>{item.money}</span><Brief><span
-      className={style['all-money']}>{addCommas(item.allMoney)}</span></Brief></span>}><span className={style.status}>{tabs[item.status].title}</span><span className={style.address}>{item.address}</span><Brief><span className={style.date}>{item.date}</span></Brief></Item>)}</List>
+  handleChange = (tab, index) => {
+    this.setState({
+      data: [],
+      tabsIndex: index,
+      isloading: true
+    })
+    this.getDetailList(index)
   }
 
   render() {
+    let { data, tabsIndex, isloading } = this.state
+    console.log(data)
     return <div className={`${style.detail} pageBox`}>
       <Header
         title='账户详情'
@@ -63,15 +64,19 @@ class Detail extends Component {
         }}
       />
       <Content>
-        <Tabs tabs={tabs} onChange={this.handleChange} swipeable={false}>
+        <Tabs tabs={tabs} onChange={this.handleChange} initialPage={0} page={tabsIndex} swipeable={false}>
           <div>
-            {this._getLists(0)}
-          </div>
-          <div>
-            {this._getLists(1)}
-          </div>
-          <div>
-            {this._getLists(2)}
+            <List className={data.length !== 0 ? '' : style['nodatalist'] }>
+              {
+                data.length !== 0 && !isloading ? data.map((item, index) => {
+                  return <Item multipleLine key={item['id']}
+                    extra={<span><span className={style.money}>{`${item['input_output'] === 1 ? '+' : '-'}${item['amount']}`}</span><Brief><span className={style['all-money']}>{addCommas(item['after_usable_amount'])}</span></Brief></span>}>
+                    <span className={style.status}>{item['input_output'] === 1 ? '收入' : '支出'}</span>
+                    <Brief><span className={style.date}>{item['created_at']}</span></Brief>
+                  </Item>
+                }) : <p className={style['nodata']}>{ !isloading ? '暂无数据' : '' }</p>
+              }
+            </List>
           </div>
         </Tabs>
       </Content>

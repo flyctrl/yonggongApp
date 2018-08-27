@@ -104,6 +104,10 @@ const AccountDetail = Loadable({ // 我的账户》账户详情
   loader: () => import(/* webpackChunkName: "accountdetail" */ '../models/Mine/Account/detail'),
   loading: MyLoadingComponent
 })
+const BankCard = Loadable({ // 绑定银行卡
+  loader: () => import(/* webpackChunkName: "bankcard" */ '../models/Mine/Account/bankCard'),
+  loading: MyLoadingComponent
+})
 const AccountRecharge = Loadable({ // 我的账户》充值
   loader: () => import(/* webpackChunkName: "accountrecharge" */ '../models/Mine/Account/recharge'),
   loading: MyLoadingComponent
@@ -138,6 +142,10 @@ const ContractMange = Loadable({ // 合同管理
 })
 const ProjectMange = Loadable({ // 项目管理
   loader: () => import(/* webpackChunkName: "projectmange" */ '../models/Mine/projectMange'),
+  loading: MyLoadingComponent
+})
+const ProjectDetail = Loadable({ // 项目详情
+  loader: () => import(/* webpackChunkName: "projectdetail" */ '../models/Mine/projectMange/projectDetail'),
   loading: MyLoadingComponent
 })
 const CreateProject = Loadable({ // 创建项目
@@ -406,6 +414,14 @@ const routes = [
     showMenu: false,
     title: '账户详情'
   }, {
+    path: urls.BANKCARD,
+    exact: true,
+    component: BankCard,
+    parent: 'Account',
+    animated: true,
+    showMenu: false,
+    title: '绑定银行卡'
+  }, {
     path: urls.ACCOUNTRECHARGE,
     exact: true,
     component: AccountRecharge,
@@ -477,6 +493,14 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '项目管理'
+  }, {
+    path: urls.PROJECTDETAIL,
+    exact: true,
+    component: ProjectDetail,
+    parent: 'ProjectMange',
+    animated: true,
+    showMenu: false,
+    title: '项目详情'
   }, {
     path: urls.CREATEPROJECT,
     exact: true,

@@ -8,21 +8,29 @@ import { Button } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
 import { addCommas } from 'Contants/tooler'
+import api from 'Util/api'
 import style from './style.css'
 
 class Account extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      moneyA: '',
+      moneyB: ''
+    }
   }
-
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        moneyA: 300000,
-        moneyB: 200000
-      })
+  getAmount = async () => {
+    const data = await api.Mine.account.myAccount() || false
+    this.setState({
+      moneyA: data['usable_amount'],
+      moneyB: data['freeze_amount']
     })
+  }
+  handleBindCard = () => {
+    this.props.match.history.push(urls.BANKCARD)
+  }
+  componentDidMount() {
+    this.getAmount()
   }
 
   render() {
@@ -51,6 +59,7 @@ class Account extends Component {
             this.props.match.history.push(urls.ACCOUNTWITHDRAWCASH)
           }}>提现</Button></div>
         </div>
+        <div className={style['bindbtn-box']}><a onClick={this.handleBindCard} className={style['bindcard-btn']}>绑定银行卡</a></div>
       </Content>
     </div>
   }

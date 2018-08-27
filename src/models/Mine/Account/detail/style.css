@@ -1,3 +1,6 @@
+html .detail .nodatalist :global(.am-list-body::after) {
+  height: 0;
+}
 .detail {
   font-family: PingFang-SC-Medium;
   & :global(.am-tabs-default-bar-tab) {
@@ -58,5 +61,14 @@
     font-family: PingFangSC-Regular;
     border-radius: 2px;
     background-color: rgba(4, 103, 224, 1);
+  }
+  & .nodatalist {
+    & .nodata {
+      height: 100px;
+      line-height: 100px;
+      text-align: center;
+      color: #333;
+      font-size: 14px;
+    }
   }
 }

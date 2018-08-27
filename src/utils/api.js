@@ -59,6 +59,9 @@ export default {
     uploadFile: baseUrl + '/common/attach/file',
     getOrderDetail(params) { // 获取工单详情
       return Fetch(prefix + '/worksheet/detail', params)
+    },
+    supportBank(params) { // 支持银行卡列表
+      return Fetch('/common/bank/list', params, 'get')
     }
   },
   auth: {
@@ -134,6 +137,26 @@ export default {
       },
       selectDetail(params) { // 查询订单详情
         return Fetch(prefix + '/recharge/info', params, 'get')
+      },
+      myAccount(params = {}) { // 我的账户
+        return Fetch(prefix + '/user_cash/account', params, 'get')
+      },
+      accountDetail(params) { // 交易明细
+        return Fetch(prefix + '/user_cash/list', params, 'get')
+      },
+      bindBinkcard(params) {
+        return FetchSave(prefix + '/bank', params)
+      }
+    },
+    projectMange: { // 项目管理
+      createProject(params) { // 创建项目
+        return FetchSave(prefix + '/project/add', params)
+      },
+      projectList(params) { // 项目列表
+        return Fetch(prefix + '/project/list/select', params)
+      },
+      projectDetail(params) { // 项目详情
+        return Fetch(prefix + '/project/detail', params)
       }
     },
     companyAuth: {

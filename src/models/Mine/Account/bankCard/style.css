@@ -1,0 +1,41 @@
+html .bind-bankcard :global(.am-list-body::before) {
+  height: 0;
+}
+.bind-bankcard {
+  padding: 15px;
+  & :global(.am-list-item) {
+    & :global(.am-input-label.am-input-label-5) {
+      color: #313F48;
+      font-size: 14px;
+    }
+    & :global(.am-input-control) {
+      & input::-webkit-input-placeholder {
+        color: #ccc;
+        font-size: 14px;
+      }
+    }
+    & :global(.am-list-line) {
+      & :global(.am-list-content) {
+        color: #313F48;
+        font-size: 14px;
+      }
+      & :global(.am-list-extra) {
+        font-size: 14px;
+        color: #ccc;
+      }
+    }
+  }
+  & .onpicker {
+    & :global(.am-list-item) {
+      & :global(.am-list-line) {
+        & :global(.am-list-extra) {
+          color: #313F48;
+        }
+      }
+    }
+  }
+  & .bindcard-btn {
+    background-color: #0467E0;
+    margin-top: 30px;
+  }
+}

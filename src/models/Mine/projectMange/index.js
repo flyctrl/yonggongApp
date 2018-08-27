@@ -16,6 +16,9 @@ class ProjectMange extends Component {
   handleCreateProject = () => {
     history.push(urls.CREATEPROJECT)
   }
+  handleDetail = () => { // 项目详情
+    history.push(urls.PROJECTDETAIL)
+  }
   render() {
     return (
       <div className='pageBox'>
@@ -41,7 +44,7 @@ class ProjectMange extends Component {
             >
               <div>
                 <ul className={style['project-mange-list']}>
-                  <li className='my-bottom-border'>
+                  <li onClick={this.handleDetail} className='my-bottom-border'>
                     <section>
                       <h4>天津鲁能一期项目</h4>
                       <p><span>50w</span><em>砌墙</em><em>木工</em><em>土方石</em></p>

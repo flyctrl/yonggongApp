@@ -37,12 +37,14 @@ export const ACCOUNTWITHDRAWCASH = `${ACCOUNT}/withdrawCash` // 我的账户》�
 export const SUCCESSPAGE = `${ACCOUNT}/successPage` // 支付成功页面
 export const FAILPAGE = `${ACCOUNT}/failPage` // 支付失败页面
 export const ACCOUNTDETAIL = `${ACCOUNT}/detail` // 我的账户》账户详细
+export const BANKCARD = `${ACCOUNT}/bankCard` // 银行卡
 
 export const COMPANYAUTH = `${MINE}/companyAuth` // 企业认证
 export const INVOICEMANGE = `${MINE}/invoiceMange` // 发票管理
 export const APPLYINVOICE = `${MINE}/invoiceMange/applyInvoice` // 申请发票
 export const CONTRACTMANGE = `${MINE}/contractMange` // 合同管理
 export const PROJECTMANGE = `${MINE}/projectMange` // 项目管理
+export const PROJECTDETAIL = `${MINE}/projectMange/projectDetail` // 项目详情
 export const CREATEPROJECT = `${MINE}/projectMange/createProject` // 创建项目
 export const BALANCEMANGE = `${MINE}/projectMange/balanceMange` // 结算管理
 export const BALANCEDETAIL = `${MINE}/projectMange/balanceMange/balanceDetail` // 结算详情
