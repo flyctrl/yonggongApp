@@ -3,6 +3,34 @@
 * @Date: 2018-05-21 18:38:01
 * @Title: 提现
 */
+.banklist {
+  & :global(.am-list-item) {
+    & :global(.am-list-line) {
+      & :global(.am-list-content) {
+          overflow: hidden;
+          line-height: 16px;
+          color: #313f48;
+          & img {
+            float: left;
+            width: 36px;
+            height: 36px;
+            margin-right: 10px;
+          }
+          & .brief {
+            float: left;
+            font-size: 16px;
+            & :global(.am-list-brief) {
+              font-size: 14px;
+              margin-top: 2px;
+            }
+          }
+      }
+    }
+  }
+  & :global(.am-radio.am-radio-checked .am-radio-inner:after) {
+    border-color: #0467e0;
+  }
+}
 
 .withdraw-cash {
   background-color: #f6f7f8;
@@ -35,6 +63,15 @@
     font-size: 17px;
     font-family: PingFangSC-Regular;
     background-color: #ffffff;
+  }
+  & .account-money {
+    min-height: 22px;
+    padding-top: 20px;
+    & :global(.am-list-line) {
+      & :global(.am-list-content) {
+        padding: 0;
+      }
+    }
   }
   & .maxMoney {
     height: 20px;

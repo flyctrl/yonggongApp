@@ -144,8 +144,17 @@ export default {
       accountDetail(params) { // 交易明细
         return Fetch(prefix + '/user_cash/list', params, 'get')
       },
-      bindBinkcard(params) {
-        return FetchSave(prefix + '/bank', params)
+      bindBinkcard(params) { // 绑定银行卡
+        return Fetch(prefix + '/bank', params)
+      },
+      getbindBinkcard(params) { // 获取已绑定银行卡列表
+        return Fetch(prefix + '/bank', params, 'get')
+      },
+      bindDefaultCard(params) { // 默认绑定的银行卡
+        return Fetch(prefix + '/bank/default', params, 'get')
+      },
+      withdraw(params) { // 提现
+        return FetchSave(prefix + '/withdraw', params)
       }
     },
     projectMange: { // 项目管理

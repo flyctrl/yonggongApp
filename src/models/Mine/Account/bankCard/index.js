@@ -49,7 +49,7 @@ class BankCard extends Component {
       })
     }
   }
-  handleBindSubmit = () => { // 确认绑定
+  handleBindSubmit = () => { // 确认绑定事件
     let validateAry = ['bank_id', 'bank_type', 'realname', 'card_no', 'mobile', 'bank_sub_name']
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, async (error, values) => {
