@@ -184,6 +184,12 @@ export default {
       info(params) { // 修改用户资料
         return Fetch(prefix + '/users', params, 'get')
       },
+    },
+    checkDetails: {
+      info(params) { // 查看企业资料
+        return Fetch(prefix + '/company', params, 'get')
+      }
+
     }
   }
 }
