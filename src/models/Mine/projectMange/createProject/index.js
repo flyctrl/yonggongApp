@@ -5,25 +5,15 @@
 * @Last Modified time: 2018-07-07 20:23:56
 */
 import React, { Component } from 'react'
-import { List, Radio, Picker, InputItem, TextareaItem, Toast } from 'antd-mobile'
+import { List, InputItem, TextareaItem, Toast } from 'antd-mobile'
 import Loadable from 'react-loadable'
 import { Header, Content } from 'Components'
 import { createForm } from 'rc-form'
 import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
-import { payModeRadio, settleRadio } from 'Contants/fieldmodel'
-import addressOptions from 'Contants/address-options'
-import 'antd-mobile/lib/calendar/style/css'
 import style from 'Src/models/PushOrder/form.css'
 
-// const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent)
-// let moneyKeyboardWrapProps
-// if (isIPhone) {
-//   moneyKeyboardWrapProps = {
-//     onTouchStart: e => e.preventDefault(),
-//   }
-// }
 let Upload = Loadable({
   loader: () => import('rc-upload'),
   loading: () => {
@@ -34,57 +24,14 @@ let Upload = Loadable({
     return <Upload {...props}/>
   }
 })
-// let addressOptions = Loadable({
-//   loader: () => import('./address-options'),
-//   loading: () => {
-//     return null
-//   },
-//   render(loaded) {
-//     console.log(loaded)
-//     return loaded
-//   }
-// })
+
 class CreateProject extends Component {
   constructor(props) {
     super(props)
     this.state = {
       fileList: [],
-      // addressOptions: [],
-      areaSelect: false,
-      naturalSelect: false,
-      naturalData: [],
-      postData: null,
-      settleRadioVal: 'B01',
-      paymodeRadioVal: 'A'
+      postData: null
     }
-  }
-  loadAddressOpt = () => {
-    console.log('loadAddressOpt')
-    // import('Contants/address-options').then(addressOptions => {
-    //   this.setState({ addressOptions })
-    // })
-  }
-  onAddressChange() {
-    this.setState({
-      areaSelect: true
-    })
-  }
-  onSettleChange = (value) => { // 结算方式单选事件
-    this.setState({
-      settleRadioVal: value
-    })
-  }
-
-  onPayWayChange = (value) => { // 付款方式单选事件
-    this.setState({
-      paymodeRadioVal: value
-    })
-  }
-
-  onNaturalhange = () => { // 资质要求
-    this.setState({
-      naturalSelect: true
-    })
   }
 
   delUploadList(ev) {
@@ -102,20 +49,11 @@ class CreateProject extends Component {
     })
   }
 
-  getNaturalList = async () => { // 获取资质列表
-    const naturalData = await api.Common.getAptitude({
-      type: 'company'
-    }) || false
-    this.setState({
-      naturalData
-    })
-  }
   componentDidMount() {
-    this.getNaturalList()
   }
   onHandleSubmit = () => { // 提交数据
-    let validateAry = ['construction_place', 'penalty', 'bid_deposit', 'tender_deposit', 'tender_contract', 'tender_contract_way', 'penalty', 'tender_amount']
-    const { fileList, paymodeRadioVal, settleRadioVal } = this.state
+    let validateAry = ['prj_name', 'prj_win_bid_unit', 'bid_deposit', 'prj_build_unit', 'construction_place']
+    const { fileList } = this.state
     let postFile = []
     fileList.map((item, index, ary) => {
       postFile.push(item['path'])
@@ -123,15 +61,14 @@ class CreateProject extends Component {
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
-        let newData = { payment_method: settleRadioVal, salary_payment_way: paymodeRadioVal, worksheet_type: 1 }
-        let postData = { ...{ attachment: postFile }, ...values, ...newData }
+        let postData = { ...{ attachment: postFile }, ...values }
         console.log(postData)
-        const data = await api.projectMange.createProject(postData) || false
+        const data = await api.Mine.projectMange.createProject(postData) || false
         if (data) {
           Toast.success('发布成功')
+          this.props.match.history.push(urls.PROJECTMANGE)
         }
         this.setState({
-          isEdit: false,
           postData
         })
       } else {
@@ -147,7 +84,7 @@ class CreateProject extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form
-    const { fileList, paymodeRadioVal, settleRadioVal, naturalSelect, naturalData, areaSelect } = this.state
+    const { fileList } = this.state
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
@@ -185,11 +122,11 @@ class CreateProject extends Component {
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {
-              this.props.match.history.push(urls.HOME)
+              this.props.match.history.push(urls.PROJECTMANGE)
             }}
             leftTitle2='关闭'
             leftClick2={() => {
-              this.props.match.history.push(urls.HOME)
+              this.props.match.history.push(urls.PROJECTMANGE)
             }}
             rightTitle='提交'
             rightClick={() => {
@@ -211,42 +148,51 @@ class CreateProject extends Component {
                 )}
               </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '项目编号'}>
-                {getFieldDecorator('prj_name', {
-                  rules: [
-                    { required: true, message: '请输入项目编号' },
-                  ],
-                })(
+                {getFieldDecorator('project_no')(
                   <InputItem
                     clear
                     placeholder='请输入项目编号'
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '省级项目编号'}>
-                {getFieldDecorator('prj_name', {
+              <List className={`${style['input-form-list']}`} renderHeader={() => '中标单位'}>
+                {getFieldDecorator('prj_win_bid_unit', {
                   rules: [
-                    { required: true, message: '请输入省级项目编号' },
+                    { required: true, message: '请输入中标单位' },
                   ],
                 })(
                   <InputItem
                     clear
-                    placeholder='请输入省级项目编号'
+                    placeholder='请输入中标单位'
                   ></InputItem>
                 )}
               </List>
-              <List onClick={this.loadAddressOpt} className={`${style['input-form-list']} ${areaSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '所在区划'}>
-                {getFieldDecorator('area', {
-                  rules: [
-                    { required: true, message: '请选择所在区划' },
-                  ],
-                })(
-                  <Picker extra='请选择' className='myPicker' data={addressOptions} cols={3} onChange={this.onAddressChange}>
-                    <List.Item arrow='horizontal'></List.Item>
-                  </Picker>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '中标通知书编号(非必填)'}>
+                {getFieldDecorator('prj_win_bid_notice_no')(
+                  <InputItem
+                    clear
+                    placeholder='请输入中标通知书编号'
+                  ></InputItem>
+                )}
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '施工单位(非必填)'}>
+                {getFieldDecorator('prj_construct_unit')(
+                  <InputItem
+                    clear
+                    placeholder='请输入施工单位'
+                  ></InputItem>
+                )}
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '施工单位统一社会信用代码(非必填)'}>
+                {getFieldDecorator('prj_construct_unit_code')(
+                  <InputItem
+                    clear
+                    placeholder='请输入施工单位统一社会信用代码'
+                  ></InputItem>
                 )}
               </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '建设单位(非必填)'}>
-                {getFieldDecorator('prj_name', {
+                {getFieldDecorator('prj_build_unit', {
                   rules: [
                     { required: true, message: '请输入建设单位' },
                   ],
@@ -257,37 +203,29 @@ class CreateProject extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '建设单位组织机构代码(统一社会信用代码)(非必填)'}>
-                {getFieldDecorator('prj_name', {
+              <List className={`${style['input-form-list']}`} renderHeader={() => '施工地址'}>
+                {getFieldDecorator('construction_place', {
                   rules: [
-                    { required: true, message: '请输入建设单位组织机构代码' },
+                    { required: true, message: '请输入施工地址' },
                   ],
                 })(
                   <InputItem
                     clear
-                    placeholder='请输入建设单位组织机构代码'
+                    placeholder='请输入施工地址'
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '建筑总投资（单位：元）'}>
-                {getFieldDecorator('bid_deposit', {
-                  rules: [
-                    { required: true, message: '请输入建筑总投资' },
-                  ],
-                })(
+              <List className={`${style['input-form-list']}`} renderHeader={() => '总投资（单位：元）'}>
+                {getFieldDecorator('construction_amount')(
                   <InputItem
                     clear
-                    placeholder='请输入建筑总投资'
+                    placeholder='请输入总投资'
                     extra='¥'
                   ></InputItem>
                 )}
               </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '总面积（单位：平方米）'}>
-                {getFieldDecorator('bid_deposit', {
-                  rules: [
-                    { required: true, message: '请输入总面积' },
-                  ],
-                })(
+                {getFieldDecorator('construction_area')(
                   <InputItem
                     clear
                     placeholder='请输入总面积'
@@ -295,177 +233,16 @@ class CreateProject extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '立项文号（非必填）'}>
-                {getFieldDecorator('bid_deposit', {
-                  rules: [
-                    { required: true, message: '请输入立项文号' },
-                  ],
-                })(
-                  <InputItem
-                    clear
-                    placeholder='请输入立项文号'
-                  ></InputItem>
-                )}
-              </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '施工许可证编号（非必填）'}>
-                {getFieldDecorator('bid_deposit', {
-                  rules: [
-                    { required: true, message: '请输入施工许可证编号' },
-                  ],
-                })(
+                {getFieldDecorator('licence_no')(
                   <InputItem
                     clear
                     placeholder='请输入施工许可证编号'
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '省级施工许可证编号（非必填）'}>
-                {getFieldDecorator('bid_deposit', {
-                  rules: [
-                    { required: true, message: '请输入省级施工许可证编号' },
-                  ],
-                })(
-                  <InputItem
-                    clear
-                    placeholder='请输入省级施工许可证编号'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '项目地址'}>
-                {getFieldDecorator('construction_place', {
-                  rules: [
-                    { required: true, message: '请输入项目地址' },
-                  ],
-                })(
-                  <InputItem
-                    clear
-                    placeholder='请输入项目地址'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={`${style['input-form-list']} ${naturalSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '资质要求（非必填）'}>
-                {getFieldDecorator('aptitude_id_list')(
-                  <Picker data={naturalData} extra='请选择资质要求' cols={1} onChange={this.onNaturalhange}>
-                    <List.Item arrow='horizontal'></List.Item>
-                  </Picker>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '投标保证金（单位：元）'}>
-                {getFieldDecorator('bid_deposit', {
-                  rules: [
-                    { required: true, message: '请输入投标保证金' },
-                  ],
-                })(
-                  <InputItem
-                    clear
-                    placeholder='请输入投标保证金'
-                    extra='¥'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '招标保证金（单位：元）'}>
-                {getFieldDecorator('tender_deposit', {
-                  rules: [
-                    { required: true, message: '请输入招标保证金' },
-                  ],
-                })(
-                  <InputItem
-                    clear
-                    placeholder='请输入投标保证金'
-                    extra='¥'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '联系人'}>
-                {getFieldDecorator('tender_contract', {
-                  rules: [
-                    { required: true, message: '请输入联系人' },
-                  ],
-                })(
-                  <InputItem
-                    clear
-                    placeholder='请输入联系人'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '联系方式'}>
-                {getFieldDecorator('tender_contract_way', {
-                  rules: [
-                    { required: true, message: '请输入联系方式' },
-                  ],
-                })(
-                  <InputItem
-                    clear
-                    placeholder='请输入联系方式'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '结算方式'}>
-                {getFieldDecorator('payment_method')(
-                  <div>
-                    {
-                      settleRadio.map((item, index, ary) => {
-                        return (
-                          <Radio
-                            key={item.value}
-                            checked={settleRadioVal === item.value }
-                            name='payment_method'
-                            className={`${style['pro-radio']} ${style['sm-radio']}`}
-                            onChange={() => this.onSettleChange(item.value)}
-                          >{item.label}</Radio>
-                        )
-                      })
-                    }
-                  </div>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '付款方式'}>
-                {getFieldDecorator('salary_payment_way')(
-                  <div>
-                    {
-                      payModeRadio.map((item, index, ary) => {
-                        return (
-                          <Radio
-                            key={item.value}
-                            checked={paymodeRadioVal === item.value}
-                            name='salary_payment_way'
-                            className={style['pro-radio']}
-                            onChange={() => this.onPayWayChange(item.value)}
-                          >{item.label}</Radio>
-                        )
-                      })
-                    }
-                  </div>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '违约金（单位：元）'}>
-                {getFieldDecorator('penalty', {
-                  rules: [
-                    { required: true, message: '请输入违约金' },
-                  ],
-                })(
-                  <InputItem
-                    clear
-                    placeholder='请输入违约金'
-                    extra='¥'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '总价（单位：元）'}>
-                {getFieldDecorator('tender_amount', {
-                  rules: [
-                    { required: true, message: '请输入总价' },
-                  ],
-                })(
-                  <InputItem
-                    clear
-                    placeholder='请输入总价'
-                    extra='¥'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={style['textarea-form-list']} renderHeader={() => '项目详情（非必填）'}>
-                {getFieldDecorator('description')(
+              <List className={style['textarea-form-list']} renderHeader={() => '项目概况（非必填）'}>
+                {getFieldDecorator('prj_brief')(
                   <TextareaItem
                     placeholder='请输入...'
                     rows={5}
@@ -475,7 +252,7 @@ class CreateProject extends Component {
                 )}
               </List>
               <List>
-                <p className={style['push-title']}>项目施工图纸</p>
+                <p className={style['push-title']}>项目附件</p>
                 {getFieldDecorator('files')(
                   <Upload {...uploaderProps} ><NewIcon type='icon-upload' className={style['push-upload-icon']} /></Upload>
                 )}
