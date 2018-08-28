@@ -8,7 +8,7 @@
   position: relative;
   & .input {
     padding-top: 10px;
-    & >.title {
+    & .title {
       padding-left: 15px;
       height: 20px;
       line-height: 20px;
@@ -24,6 +24,17 @@
       font-size: 14px;
       text-align: left;
       font-family: PingFangSC-Regular;
+    }
+  }
+  & .upload-box {
+    height: 140px;
+    & .upload-item {
+      float: left;
+      & .title {
+        text-align: center;
+        padding-left: 0;
+        width: 100%;
+      }
     }
   }
   & .up-img {
@@ -74,8 +85,10 @@
       }
       & .title {
         position: absolute;
-        left: 10px;
-        top: 48px;
+        padding-left: 10px;
+        line-height: 16px;
+        left: 0;
+        top: 42px;
         width: 60px;
         text-align: center;
         color: rgba(138, 150, 160, 0.5);

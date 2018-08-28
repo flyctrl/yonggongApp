@@ -1,18 +1,37 @@
 import React, { Component } from 'react'
 import { Header, Content } from 'Components'
 import { Tabs, Button } from 'antd-mobile'
+import api from 'Util/api'
 import * as urls from 'Contants/urls'
 import history from 'Util/history'
 import style from './style.css'
 
 const tabs = [
-  { title: '全 部' },
-  { title: '待结算' },
-  { title: '已结算' }
+  { title: '全  部' },
+  { title: '未结算' },
+  { title: '部分结算' },
+  { title: '全部结算' },
 ]
 class BalanceMange extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      dataSource: []
+    }
+  }
   handleBalanceDetail = () => {
     history.push(urls.BALANCEDETAIL)
+  }
+  getBalanceList = async (status = 0) => { // 获取结算列表
+    const data = await api.Mine.balanceMange.settleList({
+      pay_status: status
+    }) || []
+    this.setState({
+      dataSource: data
+    })
+  }
+  componentDidMount() {
+    this.getBalanceList()
   }
   render() {
     return (
@@ -31,7 +50,7 @@ class BalanceMange extends Component {
               initalPage={'t1'}
               tabBarTextStyle={{ fontSize: '12px', color: '#B2B6BC' }}
               tabBarActiveTextColor='#0467e0'
-              tabBarUnderlineStyle={{ borderColor: '#0467e0', width: '12%', marginLeft: '11%' }}
+              tabBarUnderlineStyle={{ borderColor: '#0467e0', width: '12%', marginLeft: '6.3%' }}
             >
               <div>
                 <ul className={style['balance-list']}>

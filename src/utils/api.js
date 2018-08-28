@@ -62,6 +62,9 @@ export default {
     },
     supportBank(params) { // 支持银行卡列表
       return Fetch('/common/bank/list', params, 'get')
+    },
+    uploadImg(params) { // 图片上传
+      return FetchSave('/common/attach/image', params, 'post', { 'Content-Type': 'multipart/form-data' })
     }
   },
   auth: {
@@ -169,6 +172,11 @@ export default {
       },
       projectDetail(params) { // 项目详情
         return Fetch(prefix + '/project/detail', params)
+      }
+    },
+    balanceMange: { // 结算管理
+      settleList(params) { // 结算列表
+        return Fetch(prefix + '/worksheetManage/settle', params)
       }
     },
     companyAuth: {
