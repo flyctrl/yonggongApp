@@ -14,7 +14,9 @@ import api from 'Util/api'
 class EletAgreement extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      contractDetail: []
+    }
   }
   componentWillMount() {
     this.getcontractDetail()

@@ -199,5 +199,14 @@ export default {
       }
 
     }
-  }
+  },
+  Home: {
+    getSystemInforms(params) { // 系统通知
+      return Fetch(prefix + '/message/sys/list', params, 'get')
+    },
+    getTodayTodo(params) { // 获取首页今日代办
+      return Fetch(prefix + '/worksheet/todayToDo', params)
+    }
+  },
+
 }

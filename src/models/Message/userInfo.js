@@ -15,7 +15,9 @@ import api from 'Util/api'
 class UserInfo extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      companyDetail: {}
+    }
   }
 
   async componentDidMount() {
