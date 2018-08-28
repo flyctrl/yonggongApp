@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { SearchBar } from 'antd-mobile'
+// import { SearchBar } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import NewIcon from 'Components/NewIcon'
 import history from 'Util/history'
@@ -43,9 +43,9 @@ class Partner extends Component {
         />
         <Content>
           <div className={style['partner-box']}>
-            <div className={style['partner-search']}>
+            {/* <div className={style['partner-search']}>
               <SearchBar placeholder='搜索姓名/拼音/电话' maxLength={8} />
-            </div>
+            </div> */}
             <ul className={style['partner-list']}>
               {
                 partnerList.length &&

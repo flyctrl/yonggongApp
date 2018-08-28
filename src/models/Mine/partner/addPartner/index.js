@@ -46,6 +46,7 @@ class AddPartner extends Component {
     if (data) {
       Toast.success('发布成功')
       this.props.form.resetFields()
+      history.push(urls.PARTNER)
       this.setState({
         radioVaule: 1
       })
