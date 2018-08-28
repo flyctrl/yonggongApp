@@ -34,4 +34,11 @@ const rightWrongRadio = [
   { value: 1, label: '是' }
 ]
 
-export { priceModeData, settleRadio, payModeRadio, rightWrongRadio, unitPrice }
+const projectStatus = [
+  { title: '全部' },
+  { title: '审核中' },
+  { title: '已审核' },
+  { title: '未通过' }
+]
+
+export { priceModeData, settleRadio, payModeRadio, rightWrongRadio, unitPrice, projectStatus }

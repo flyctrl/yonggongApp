@@ -161,8 +161,11 @@ export default {
       createProject(params) { // 创建项目
         return FetchSave(prefix + '/project/add', params)
       },
-      projectList(params) { // 项目列表
+      projectList(params) { // 项目列表(发布工单时)
         return Fetch(prefix + '/project/list/select', params)
+      },
+      getProjectList(params) { // 项目列表
+        return Fetch(prefix + '/project/plist', params)
       },
       projectDetail(params) { // 项目详情
         return Fetch(prefix + '/project/detail', params)
