@@ -3,12 +3,28 @@ import { Header, Content } from 'Components'
 import * as urls from 'Contants/urls'
 import history from 'Util/history'
 import style from './style.css'
-
+import api from 'Util/api'
 class ContractMange extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      contractList: []
+    }
+  }
   handlePact = () => {
     history.push(urls.ELETAGREEMENT + '?url=CONTRACTMANGE')
   }
+  componentWillMount() {
+    this.getcontractList()
+  }
+  getcontractList = async () => {
+    const data = await api.Mine.contractMange.contractList({}) || false
+    this.setState({
+      contractList: data.list
+    })
+  }
   render() {
+    const { contractList } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -20,30 +36,20 @@ class ContractMange extends Component {
           }}
         />
         <Content>
-          <ul className={style['contract-list']}>
-            <li className='my-bottom-border'>
-              <p><span>合同编号：</span>2018010100101</p>
-              <p><span>承包方：</span>天津水滴建筑公司</p>
-              <p><span>合同金额：</span>¥1000.0w</p>
-              <p><span>保证金：</span>¥10.0w</p>
-              <p><span>履行期限：</span>2018年1月1日-2018年6月30日<a onClick={this.handlePact}>查看合同</a></p>
-            </li>
-            <li className='my-bottom-border'>
-              <p><span>合同编号：</span>2018010100101</p>
-              <p><span>承包方：</span>天津水滴建筑公司</p>
-              <p><span>合同金额：</span>¥1000.0w</p>
-              <p><span>保证金：</span>¥10.0w</p>
-              <p><span>履行期限：</span>2018年1月1日-2018年6月30日<a onClick={this.handlePact}>查看合同</a></p>
-            </li>
-            <li className='my-bottom-border'>
-              <p><span>合同编号：</span>2018010100101</p>
-              <p><span>承包方：</span>天津水滴建筑公司</p>
-              <p><span>合同金额：</span>¥1000.0w</p>
-              <p><span>保证金：</span>¥10.0w</p>
-              <p><span>履行期限：</span>2018年1月1日-2018年6月30日<a onClick={this.handlePact}>查看合同</a></p>
-            </li>
-          </ul>
-        </Content>
+          { contractList
+            ? <ul className={style['contract-list']}>
+              { contractList.map((item, index) => {
+                return (<li key={`${item.contract_no}-${item.id}`} className='my-bottom-border'>
+                  <p><span>合同编号：</span>{item.contract_no}</p>
+                  <p><span>承包方：</span>{item.worker_name}</p>
+                  <p><span>合同金额：</span>{item.amount}</p>
+                  <p><span>履行期限：</span>{`${item.start_time}-${item.end_time}`}
+                    <a onClick={this.handlePact}>查看合同</a>
+                  </p>
+                </li>)
+              })}
+            </ul> : <div style={{ textAlign: 'center' }} className={style['contract-list']}>合同为空</div>
+          }</Content>
       </div>
     )
   }
