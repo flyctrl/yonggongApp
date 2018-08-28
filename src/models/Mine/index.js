@@ -11,7 +11,7 @@ import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import history from 'Util/history'
 import style from './style.css'
-
+import api from 'Util/api'
 const menuData = [
   {
     title: '我的发布',
@@ -93,12 +93,23 @@ class Mine extends Component {
     this.state = {
     }
   }
+  async componentDidMount() {
+    const data = await api.Mine.checkDetails.info({
+    }) || false
+    this.setState({
+      companyDetail: data
+    })
+  }
 
   handleMenuClick(type) {
     history.push(menuRouter[type])
   }
 
+  handleSeeClick = () => {
+    history.push(urls.USERINFO + '?url=MINE')
+  }
   render() {
+    const { companyDetail } = this.state
     return (
       <div className='contentBox'>
         <Header
@@ -107,9 +118,9 @@ class Mine extends Component {
         />
         <Content>
           <div className={style['mine-header']}>
-            <h2>***建工集团公司</h2>
-            <p>省政府授权依据产权关系经营集团内部分成员企事业单位的国有资产、代管部分事业单位省政府授权依据产权关系经营集团内部分成员企事业单位的国有资产、代管部分事业单位省政府授权依据产权关系经营集团内部分成员企事业单位的国有资产、代管部分事业单位省政府授权依据产权关系经营集团内部分成员企事业单位的国有资产、代管部分事业单位省政府授权依据产权关系经营集团内部分成员企事业单位的国有资产、代管部分事业单位</p>
-            <div style={{ textAlign: 'right' }}><Button type='ghost' inline className='am-button-borderfix'>查看详情</Button></div>
+            <h2>{ companyDetail ? companyDetail.name : ''}</h2>
+            <p>{ companyDetail ? companyDetail.description : ''}</p>
+            <div style={{ textAlign: 'right' }}><Button type='ghost' onClick={this.handleSeeClick} inline className='am-button-borderfix'>查看详情</Button></div>
           </div>
           <ul className={style['mine-btn-list']}>
             {

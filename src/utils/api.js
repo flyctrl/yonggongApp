@@ -187,6 +187,20 @@ export default {
       info(params) { // 修改用户资料
         return Fetch(prefix + '/users', params, 'get')
       },
+    },
+    contractMange: { // 合同管理
+      contractList(params) { // 合同列表
+        return Fetch(prefix + '/contract/list/worksheet', params, 'get')
+      },
+      contractDetail(params) { // 合同详情
+        return Fetch(prefix + '/contract/show/:contract_no', params, 'get')
+      }
+    },
+    checkDetails: {
+      info(params) { // 查看企业资料
+        return Fetch(prefix + '/company', params, 'get')
+      }
+
     }
   }
 }
