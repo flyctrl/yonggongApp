@@ -198,6 +198,14 @@ export default {
         return Fetch(prefix + '/company', params, 'get')
       }
 
+    },
+    partnerMange: { // 合作方管理
+      getPartnerList(params) { // 获取列表
+        return Fetch(prefix + '/partner', params, 'get')
+      },
+      addPartnerList(params) { // 添加 列表
+        return FetchSave(prefix + '/partner', params, 'post')
+      },
     }
   },
   Home: {

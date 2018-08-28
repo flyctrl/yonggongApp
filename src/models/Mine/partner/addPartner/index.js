@@ -52,7 +52,7 @@ class AddPartner extends Component {
             </List>
             <List className={`${style['input-form-list']}`} renderHeader={() => '合作方名称'}>
               <InputItem
-                {...getFieldProps('price', {
+                {...getFieldProps('name', {
                   rules: [
                     // { required: true, message: '请填写价格预算' },
                   ]
@@ -61,9 +61,9 @@ class AddPartner extends Component {
                 placeholder='请输入'
               ></InputItem>
             </List>
-            <List className={`${style['input-form-list']}`} renderHeader={() => '联系电话'}>
+            <List className={`${style['input-form-list']}`} renderHeader={() => '合作方类型'}>
               <InputItem
-                {...getFieldProps('price', {
+                {...getFieldProps('type', {
                   rules: [
                     // { required: true, message: '请填写价格预算' },
                   ]
@@ -72,9 +72,9 @@ class AddPartner extends Component {
                 placeholder='请输入'
               ></InputItem>
             </List>
-            <List className={`${style['input-form-list']}`} renderHeader={() => '地址'}>
+            <List className={`${style['input-form-list']}`} renderHeader={() => '手机号'}>
               <InputItem
-                {...getFieldProps('price', {
+                {...getFieldProps('mobile', {
                   rules: [
                     // { required: true, message: '请填写价格预算' },
                   ]
@@ -83,9 +83,9 @@ class AddPartner extends Component {
                 placeholder='请输入'
               ></InputItem>
             </List>
-            <List className={`${style['input-form-list']}`} renderHeader={() => '其他'}>
+            <List className={`${style['input-form-list']}`} renderHeader={() => '备注'}>
               <InputItem
-                {...getFieldProps('price', {
+                {...getFieldProps('remark', {
                   rules: [
                     // { required: true, message: '请填写价格预算' },
                   ]

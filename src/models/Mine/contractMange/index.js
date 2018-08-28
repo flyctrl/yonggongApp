@@ -56,7 +56,7 @@ class ContractMange extends Component {
                   </p>
                 </li>)
               })}
-            </ul> : <div style={{ textAlign: 'center' }} className={style['contract-list']}>{ !isloading ? '' : '合同为空' }</div>
+            </ul> : <div style={{ textAlign: 'center' }} className={style['contract-list']}>{ isloading ? '合同为空' : '' }</div>
           }</Content>
       </div>
     )
