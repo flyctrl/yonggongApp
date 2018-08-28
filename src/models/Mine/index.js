@@ -93,14 +93,16 @@ class Mine extends Component {
     this.state = {
     }
   }
-  async componentDidMount() {
+  componentWillMount() {
+    this.getMineDetail()
+  }
+  getMineDetail = async() => {
     const data = await api.Mine.checkDetails.info({
     }) || false
     this.setState({
       companyDetail: data
     })
   }
-
   handleMenuClick(type) {
     history.push(menuRouter[type])
   }

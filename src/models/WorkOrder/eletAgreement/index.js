@@ -9,14 +9,27 @@ import { Header, Content } from 'Components'
 import history from 'Util/history'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
-import agree from 'Src/assets/agree.png'
-
+// import agree from 'Src/assets/agree.png'
+import api from 'Util/api'
 class EletAgreement extends Component {
   constructor(props) {
     super(props)
     this.state = {}
   }
+  componentWillMount() {
+    this.getcontractDetail()
+  }
+  getcontractDetail = async (id) => {
+    let contract = tooler.getQueryString('contract_no')
+    const data = await api.Mine.contractMange.contractDetail({
+      contract_no: contract
+    }) || false
+    this.setState({
+      contractDetail: data.img_list
+    })
+  }
   render() {
+    const { contractDetail } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -34,7 +47,9 @@ class EletAgreement extends Component {
         />
         <Content>
           <div>
-            <img style={{ width: '100%' }} src={agree} />
+            { contractDetail &&
+              contractDetail.map((item, index) => { return <img key={`${index}-${item.id}`} style={{ width: '100%' }} src={item} /> })
+            }
           </div>
         </Content>
       </div>

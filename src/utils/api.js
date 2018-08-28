@@ -190,7 +190,7 @@ export default {
         return Fetch(prefix + '/contract/list/worksheet', params, 'get')
       },
       contractDetail(params) { // 合同详情
-        return Fetch(prefix + '/contract/show/:contract_no', params, 'get')
+        return Fetch(prefix + '/contract/show', params, 'get')
       }
     },
     checkDetails: {
