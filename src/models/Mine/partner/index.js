@@ -20,12 +20,13 @@ class Partner extends Component {
     const data = await api.Mine.partnerMange.getPartnerList({ // 获取合作方 列表
     }) || false
     this.setState({
-      partnerList: data
+      partnerList: data.list
     })
   }
 
   render() {
     const { partnerList } = this.state
+    console.log(partnerList)
     return (
       <div className='pageBox'>
         <Header

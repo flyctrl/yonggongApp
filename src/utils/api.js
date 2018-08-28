@@ -204,7 +204,7 @@ export default {
         return Fetch(prefix + '/partner', params, 'get')
       },
       addPartnerList(params) { // 添加 列表
-        return FetchSave(prefix + '/partner', params, 'post')
+        return FetchSave(prefix + '/partner', params)
       },
     }
   },
