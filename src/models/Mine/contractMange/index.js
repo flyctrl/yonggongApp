@@ -8,7 +8,8 @@ class ContractMange extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      contractList: []
+      contractList: [],
+      isloading: false
     }
   }
   componentWillMount() {
@@ -20,14 +21,18 @@ class ContractMange extends Component {
   }
 
   getcontractList = async () => {
+    this.setState({
+      isloading: false
+    })
     const data = await api.Mine.contractMange.contractList({
     }) || false
     this.setState({
-      contractList: data.list
+      contractList: data.list,
+      isloading: true
     })
   }
   render() {
-    const { contractList } = this.state
+    const { contractList, isloading } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -39,7 +44,7 @@ class ContractMange extends Component {
           }}
         />
         <Content>
-          { contractList.length
+          { contractList.length !== 0 && isloading
             ? <ul className={style['contract-list']}>
               { contractList.map((item, index) => {
                 return (<li key={`${item.contract_no}-${item.id}`} className='my-bottom-border'>
@@ -51,7 +56,7 @@ class ContractMange extends Component {
                   </p>
                 </li>)
               })}
-            </ul> : <div style={{ textAlign: 'center' }} className={style['contract-list']}>合同为空</div>
+            </ul> : <div style={{ textAlign: 'center' }} className={style['contract-list']}>{ !isloading ? '' : '合同为空' }</div>
           }</Content>
       </div>
     )
