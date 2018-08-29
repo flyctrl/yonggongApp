@@ -40,6 +40,7 @@ export const ACCOUNTDETAIL = `${ACCOUNT}/detail` // 我的账户》账户详细
 export const BANKCARD = `${ACCOUNT}/bankCard` // 银行卡
 
 export const COMPANYAUTH = `${MINE}/companyAuth` // 企业认证
+export const COMPANYAUTHDETAIL = `${MINE}/companyAuthDetail` // 企业认证详情
 export const INVOICEMANGE = `${MINE}/invoiceMange` // 发票管理
 export const APPLYINVOICE = `${MINE}/invoiceMange/applyInvoice` // 申请发票
 export const CONTRACTMANGE = `${MINE}/contractMange` // 合同管理

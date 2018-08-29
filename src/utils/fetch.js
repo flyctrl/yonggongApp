@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2018-08-22 15:09:02
+* @Last Modified time: 2018-08-29 09:59:42
 */
 import storage from '../utils/storage'
 import axios from 'axios'
@@ -45,8 +45,10 @@ fetcher.interceptors.response.use(function (response) {
     }).catch(function(err) {
       console.log(err)
     })
-  } else if (response.data.code === 16030001) { // 企业未认证
+  } else if (response.data.code === 16030001) { // 企业未认证 未提交认证
     window.location.href = '/Mine/companyAuth'
+  } else if (response.data.code === 16030007 || response.data.code === 16030006) { // 企业未认证 未通过
+    window.location.href = '/Mine/companyAuthDetail'
   }
   return response.data
 }, function (error) {

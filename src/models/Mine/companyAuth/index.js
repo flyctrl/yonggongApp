@@ -57,9 +57,15 @@ class Company extends Component {
   handleSubmit = () => {
     const validateAry = ['name', 'legal', 'card_no', 'credit_code', 'mobile', 'license', 'card_front', 'card_back']
     const { validateFields, getFieldError } = this.props.form
-    validateFields((err, value) => {
+    validateFields(async (err, value) => {
       if (!err) {
-        console.info('success', value)
+        let newData = { license: value['license'][0]['path'], card_back: value['card_back'][0]['path'], card_front: value['card_front'][0]['path'] }
+        const data = await api.Mine.companyAuth.aptitude({
+          ...value, ...newData
+        }) || false
+        if (data) {
+          this.props.match.history.push(urls.MINE)
+        }
       } else {
         const validateErr = validateAry.find(item => err[item])
         if (validateErr) {
@@ -172,7 +178,7 @@ class Company extends Component {
                       <ImagePicker
                         className={style['img-picker']}
                         files={cardfrontImg}
-                        onChange={() => { this.handleChange('cardfrontImg') }}
+                        onChange={(img) => { this.handleChange(img, 'cardfrontImg') }}
                         selectable={cardfrontImg.length < 1}
                       />
                     )
@@ -195,7 +201,7 @@ class Company extends Component {
                       <ImagePicker
                         className={style['img-picker']}
                         files={cardbackImg}
-                        onChange={() => { this.handleChange('cardbackImg') }}
+                        onChange={(img) => { this.handleChange(img, 'cardbackImg') }}
                         selectable={cardbackImg.length < 1}
                       />
                     )

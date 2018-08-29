@@ -41,4 +41,25 @@ const projectStatus = [
   { title: '未通过' }
 ]
 
-export { priceModeData, settleRadio, payModeRadio, rightWrongRadio, unitPrice, projectStatus }
+const balanceType = [
+  { title: '全  部' },
+  { title: '未结算' },
+  { title: '部分结算' },
+  { title: '全部结算' },
+]
+const worksheetType = {
+  1: '招标',
+  2: '工单',
+  3: '快单'
+}
+const orderStatus = {
+  1: '待审批',
+  2: '待接单',
+  3: '待确认',
+  4: '待开工',
+  5: '施工中',
+  6: '已失效',
+  7: '已完工',
+}
+
+export { priceModeData, settleRadio, payModeRadio, rightWrongRadio, unitPrice, projectStatus, balanceType, worksheetType, orderStatus }

@@ -18,15 +18,12 @@ class ProjectMange extends Component {
     }
   }
   getProjectlist = async (status = 0) => {
-    this.setState({
-      isloading: true
-    })
     const data = await api.Mine.projectMange.getProjectList({
       status
     }) || false
     this.setState({
       dataSource: data['list'],
-      isloading: false
+      isloading: true
     })
   }
   componentDidMount() {
@@ -76,7 +73,7 @@ class ProjectMange extends Component {
               <div>
                 <ul className={style['project-mange-list']}>
                   {
-                    dataSource.length !== 0 && !isloading ? dataSource.map((item, index) => {
+                    dataSource.length !== 0 && isloading ? dataSource.map((item, index) => {
                       return (<li key={item['id']} data-id={item['id']} onClick={this.handleDetail} className='my-bottom-border'>
                         <section>
                           <h4>{item['prj_name']}</h4>
@@ -85,7 +82,7 @@ class ProjectMange extends Component {
                         </section>
                         <a>{projectStatus[item['status']]['title']}</a>
                       </li>)
-                    }) : <div className={style['nodata']}>{ !isloading ? '暂无数据' : '' }</div>
+                    }) : <div className={style['nodata']}>{ dataSource.length === 0 && isloading ? '暂无数据' : '' }</div>
                   }
                 </ul>
               </div>

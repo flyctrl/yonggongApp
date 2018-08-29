@@ -11,14 +11,17 @@ class ContractMange extends Component {
       contractList: []
     }
   }
-  handlePact = () => {
-    history.push(urls.ELETAGREEMENT + '?url=CONTRACTMANGE')
-  }
   componentWillMount() {
     this.getcontractList()
   }
+
+  handlePact = (id) => {
+    history.push(`${urls.ELETAGREEMENT}?url=CONTRACTMANGE&contract_no=${id}`)
+  }
+
   getcontractList = async () => {
-    const data = await api.Mine.contractMange.contractList({}) || false
+    const data = await api.Mine.contractMange.contractList({
+    }) || false
     this.setState({
       contractList: data.list
     })
@@ -36,7 +39,7 @@ class ContractMange extends Component {
           }}
         />
         <Content>
-          { contractList
+          { contractList.length
             ? <ul className={style['contract-list']}>
               { contractList.map((item, index) => {
                 return (<li key={`${item.contract_no}-${item.id}`} className='my-bottom-border'>
@@ -44,7 +47,7 @@ class ContractMange extends Component {
                   <p><span>承包方：</span>{item.worker_name}</p>
                   <p><span>合同金额：</span>{item.amount}</p>
                   <p><span>履行期限：</span>{`${item.start_time}-${item.end_time}`}
-                    <a onClick={this.handlePact}>查看合同</a>
+                    <a onClick={this.handlePact.bind(this, item.contract_no) }>查看合同</a>
                   </p>
                 </li>)
               })}

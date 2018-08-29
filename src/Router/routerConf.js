@@ -128,6 +128,10 @@ const CompanyAuth = Loadable({ // 企业认证
   loader: () => import(/* webpackChunkName: "companyauth" */ '../models/Mine/companyAuth'),
   loading: MyLoadingComponent
 })
+const CompanyAuthDetail = Loadable({ // 企业认证详情
+  loader: () => import(/* webpackChunkName: "companyauthdetail" */ '../models/Mine/companyAuthDetail'),
+  loading: MyLoadingComponent
+})
 const InvoiceMange = Loadable({ // 发票管理
   loader: () => import(/* webpackChunkName: "invoicemange" */ '../models/Mine/invoiceMange'),
   loading: MyLoadingComponent
@@ -461,6 +465,14 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '企业认证'
+  }, {
+    path: urls.COMPANYAUTHDETAIL,
+    exact: true,
+    component: CompanyAuthDetail,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '企业认证详情'
   }, {
     path: urls.INVOICEMANGE,
     exact: true,

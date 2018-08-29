@@ -93,6 +93,9 @@ export default {
     WorkOrderList(params) { // 工单列表
       return Fetch(prefix + '/worksheet/list', params)
     },
+    getListByPro(params) { // 根据项目获取工单列表
+      return Fetch(prefix + '/worksheet/prj/list', params)
+    },
     getStatusList(params) { // 获取工单状态
       return Fetch(prefix + '/worksheet/stat/status', params)
     },
@@ -177,11 +180,23 @@ export default {
     balanceMange: { // 结算管理
       settleList(params) { // 结算列表
         return Fetch(prefix + '/worksheetManage/settle', params)
+      },
+      settleBalance(params) { // 结算
+        return Fetch(prefix + '/worksheetOrder/settle', params)
+      },
+      settleDetail(params) { // 结算管理详情
+        return Fetch(prefix + '/worksheetManage/settleDetail', params)
       }
     },
     companyAuth: {
       aptitude(params) { // 企业认证
-        return Fetch(prefix + '/aptitude', params)
+        return FetchSave(prefix + '/aptitude', params)
+      },
+      aptitudeDetail(params) { // 企业认证详情
+        return Fetch(prefix + '/aptitude', params, 'get')
+      },
+      getCompanyStuts(params) { // 获取企业所有状态
+        return Fetch(prefix + '/company/status', params, 'get')
       }
     },
     Personaldara: { // 编辑个人资料
@@ -201,7 +216,7 @@ export default {
         return Fetch(prefix + '/contract/list/worksheet', params, 'get')
       },
       contractDetail(params) { // 合同详情
-        return Fetch(prefix + '/contract/show/:contract_no', params, 'get')
+        return Fetch(prefix + '/contract/show', params, 'get')
       }
     },
     checkDetails: {

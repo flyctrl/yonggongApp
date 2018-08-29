@@ -67,7 +67,8 @@ class Register extends Component {
       console.log(phone)
       const data = await api.auth.getcode({
         mobile: phone,
-        type: 2
+        type: 1,
+        app: 2
       }) || false
       if (data) {
         this.setState({

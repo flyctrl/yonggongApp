@@ -77,7 +77,7 @@ const menuData = [
 const menuRouter = {
   1: urls.MYPUSH,
   2: urls.ACCOUNT,
-  3: urls.COMPANYAUTH,
+  3: urls.COMPANYAUTHDETAIL,
   4: urls.INVOICEMANGE,
   5: urls.CONTRACTMANGE,
   6: urls.PROJECTMANGE,
@@ -93,14 +93,16 @@ class Mine extends Component {
     this.state = {
     }
   }
-  async componentDidMount() {
+  componentWillMount() {
+    this.getMineDetail()
+  }
+  getMineDetail = async() => {
     const data = await api.Mine.checkDetails.info({
     }) || false
     this.setState({
       companyDetail: data
     })
   }
-
   handleMenuClick(type) {
     history.push(menuRouter[type])
   }
