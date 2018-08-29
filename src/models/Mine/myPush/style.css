@@ -12,6 +12,7 @@
   }
 
   & .order-list {
+    height: 578px;
     & li {
       padding: 10px 15px;
       height: 70px;
@@ -50,5 +51,11 @@
         line-height: 50px;
       }
     }
+  }
+  & .nodata {
+    height: 80px;
+    line-height: 80px;
+    color: #313f48;
+    text-align: center;
   }
 }

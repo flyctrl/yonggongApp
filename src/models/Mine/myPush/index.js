@@ -2,33 +2,49 @@ import React, { Component } from 'react'
 import { Tabs } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import * as urls from 'Contants/urls'
+import { worksheetType, orderStatus } from 'Contants/fieldmodel'
 import history from 'Util/history'
 import style from './style.css'
 import api from 'Util/api'
 const tabs = [
-  { title: '我的招标' },
-  { title: '我的工单' },
-  { title: '我的快单' },
+  { title: '我的招标', status: 1 },
+  { title: '我的工单', status: 2 },
+  { title: '我的快单', status: 3 },
 ]
 class MyPush extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      dataList: []
+      dataList: [],
+      type: 1,
+      index: 0,
+      isloading: false
     }
   }
   componentWillMount() {
-
+    this.getMyPush()
   }
-  getMyPush = async() => {
-    const data = await api.Mine.push({ //  获取我的发布列表
+  getMyPush = async(type = 1) => { // 获取我的发布列表
+    const data = await api.WorkOrder.WorkOrderList({
+      status: 0,
+      worksheet_type: type
     }) || false
     this.setState({
-      dataList: data
+      dataList: data['list'],
+      isloading: true
     })
   }
+  handleChange = (tab, index) => { // tab点击事件
+    let type = tab['status']
+    this.setState({
+      type,
+      index,
+      isloading: false
+    })
+    this.getMyPush(type)
+  }
   render() {
-  //  const { dataList } = this.state
+    const { index, dataList, isloading } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -42,68 +58,26 @@ class MyPush extends Component {
         <Content>
           <div className={style['mypush-tabs']}>
             <Tabs tabs={tabs}
-              initalPage={'t1'}
+              initalPage={0}
+              page={index}
               tabBarActiveTextColor='#0467E0'
               tabBarUnderlineStyle={{ width: '15%', marginLeft: '9.4%', borderColor: '#0467E0' }}
               tabBarInactiveTextColor='#B1B5BC'
+              onChange={this.handleChange}
             >
-              {/*
-                dataList &&
-                dataList.map(item => {})
-              */}
               <ul className={`${style['order-list']}`}>
-                <li className='my-bottom-border'>
-                  <em>招标</em>
-                  <section>
-                    <p>北京好望山一期</p>
-                    <p><span>接包单位：</span>天津程明建筑公司等15家单位</p>
-                  </section>
-                  <a>待审核</a>
-                </li>
-                <li className='my-bottom-border'>
-                  <em>招标</em>
-                  <section>
-                    <p>北京好望山一期</p>
-                    <p><span>接包单位：</span>天津程明建筑公司等15家单位</p>
-                  </section>
-                  <a>待开工</a>
-                </li>
-              </ul>
-              <ul className={`${style['order-list']}`}>
-                <li className='my-bottom-border'>
-                  <em>工单</em>
-                  <section>
-                    <p>北京好望山一期</p>
-                    <p><span>接包单位：</span>天津程明建筑公司等15家单位</p>
-                  </section>
-                  <a>待审核</a>
-                </li>
-                <li className='my-bottom-border'>
-                  <em>工单</em>
-                  <section>
-                    <p>北京好望山一期</p>
-                    <p><span>接包单位：</span>天津程明建筑公司等15家单位</p>
-                  </section>
-                  <a>待开工</a>
-                </li>
-              </ul>
-              <ul className={`${style['order-list']}`}>
-                <li className='my-bottom-border'>
-                  <em>快单</em>
-                  <section>
-                    <p>北京好望山一期</p>
-                    <p><span>接包单位：</span>天津程明建筑公司等15家单位</p>
-                  </section>
-                  <a>待审核</a>
-                </li>
-                <li className='my-bottom-border'>
-                  <em>快单</em>
-                  <section>
-                    <p>北京好望山一期</p>
-                    <p><span>接包单位：</span>天津程明建筑公司等15家单位</p>
-                  </section>
-                  <a>待开工</a>
-                </li>
+                {
+                  dataList.length !== 0 && isloading ? dataList.map((item, index) => {
+                    return <li className='my-bottom-border'>
+                      <em>{worksheetType[item['worksheet_type']]}</em>
+                      <section>
+                        <p>工单号：{item['worksheet_no']}</p>
+                        <p><span>开工日期：</span>{`${item['start_lower_time']} ~ ${item['start_upper_time']}`}</p>
+                      </section>
+                      <a>{orderStatus[item['status']]}</a>
+                    </li>
+                  }) : <div className='nodata'>{ dataList.length === 0 && isloading ? '暂无数据' : ''}</div>
+                }
               </ul>
             </Tabs>
           </div>
