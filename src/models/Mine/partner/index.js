@@ -10,22 +10,27 @@ class Partner extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      partnerList: []
+      partnerList: [],
+      isLoading: false
     }
   }
   componentWillMount() {
     this.getPartnerList()
   }
   getPartnerList = async() => {
+    this.setState({
+      isLoading: false
+    })
     const data = await api.Mine.partnerMange.getPartnerList({ // 获取合作方 列表
     }) || false
     this.setState({
-      partnerList: data.list
+      partnerList: data.list,
+      isLoading: true
     })
   }
 
   render() {
-    const { partnerList } = this.state
+    const { partnerList, isLoading } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -47,21 +52,22 @@ class Partner extends Component {
             </div> */}
             <ul className={style['partner-list']}>
               {
-                partnerList.length &&
-                partnerList.map((item, index) => {
-                  return (<li key={index} className='my-bottom-border'>
-                    <section>
-                      <h4>{item.name}</h4>
-                      <p>{ item.type === 1 ? '个人' : '企业' }</p>
-                      <p>{item.mobile}<em>{ }</em></p>
-                      <p>{item.address || ''}</p>
-                    </section>
-                    <footer>
-                      <NewIcon type='icon-message_pre' />
-                      <NewIcon type='icon-phone' />
-                    </footer>
-                  </li>)
-                })}
+                partnerList.length && isLoading
+                  ? partnerList.map((item, index) => {
+                    return (<li key={index} className='my-bottom-border'>
+                      <section>
+                        <h4>{item.name}</h4>
+                        <p>{ item.type === 1 ? '个人' : '企业' }</p>
+                        <p>{item.mobile}<em>{ }</em></p>
+                        <p>{item.address || ''}</p>
+                      </section>
+                      <footer>
+                        <NewIcon type='icon-message_pre' />
+                        <NewIcon type='icon-phone' />
+                      </footer>
+                    </li>)
+                  }) : <div>{isLoading ? '无合作方' : ''}</div>
+              }
             </ul>
           </div>
         </Content>
