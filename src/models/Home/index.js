@@ -13,16 +13,44 @@ import NewIcon from 'Components/NewIcon'
 import history from 'Util/history'
 import homeimg from 'Src/assets/homimg.png'
 import style from './style.css'
-
+import api from 'Util/api'
 class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      sysInforms: [],
+      companyDetail: [],
+      todoList: []
     }
 
     this.handleClickGrid = this.handleClickGrid.bind(this)
   }
-
+  componentWillMount() {
+    this.getSystemInforms()
+    this.getMineDetail()
+    this.getTodayTodo()
+  }
+  getMineDetail = async() => {
+    const data = await api.Mine.checkDetails.info({ // 查看企业资料
+    }) || false
+    this.setState({
+      companyDetail: data
+    })
+  }
+  getSystemInforms = async () => {
+    const data = await api.Home.getSystemInforms({ // 获取系统通告
+    }) || false
+    this.setState({
+      sysInforms: data.list
+    })
+  }
+  getTodayTodo = async () => {
+    const data = await api.Home.getTodayTodo({ // 获取今日代办列表
+    }) || false
+    this.setState({
+      todoList: data.list
+    })
+  }
   handleClickGrid(ele, index) {
     console.log(index)
   }
@@ -36,13 +64,20 @@ class Home extends Component {
   handlePushBidOrder = () => {
     history.push(urls.PUSHBIDORDER)
   }
+  handleClickSysDetail = (e) => {
+    let id = e.currentTarget.getAttribute('data-id')
+    // id.split('$$')[]
+    history.push(`${urls.SYSTEMESSDETAIL}?id=${id}`)
+  }
   render() {
+    const { sysInforms, companyDetail, todoList } = this.state
+    console.log(todoList)
     return (
       <div className='contentBox'>
         <div className={style['usr-home-content']}>
           <Header
             className={style['usr-home-header']}
-            title='亚雀信息科技有限公司'
+            title={companyDetail.name}
             rightTitle={<NewIcon className={style['message-icon']} type='icon-messageTz' />}
           />
           <Content>
@@ -74,24 +109,45 @@ class Home extends Component {
             <div className={`${style['notice-container']} my-top-border my-bottom-border`}>
               <NewIcon type='icon-Initials' className={style['notice-icon']} />
               <span>系统通知</span>
-              <WingBlank>
-                <Carousel className={style['my-carousel']}
-                  vertical
-                  dots={false}
-                  dragging={false}
-                  swiping={false}
-                  autoplay
-                  infinite
-                >
-                  <div className={style['v-item']}>carousel 1<em>下午 3：45</em></div>
-                  <div className={style['v-item']}>carousel 2<em>下午 3：45</em></div>
-                  <div className={style['v-item']}>carousel 3<em>下午 3：45</em></div>
-                </Carousel>
-              </WingBlank>
+              {
+                sysInforms.length !== 0 ? <WingBlank>
+                  <Carousel className={style['my-carousel']}
+                    vertical
+                    dots={false}
+                    dragging={false}
+                    swiping={false}
+                    autoplay
+                    infinite
+                  >
+                    {
+                      sysInforms.map(item => {
+                        return <div key={item.company_id} data-id={`${item['id']}`} onClick={this.handleClickSysDetail} className={style['v-item']}>{item.content}<em>{item.created_at}</em></div>
+                      })
+                    }
+                  </Carousel>
+                </WingBlank> : <div></div>
+              }
             </div>
             <dl className={style['today-todo']}>
               <dt>今日待办</dt>
-              <dd className={'my-bottom-border'}>
+              {
+                todoList && todoList.map(item => {
+                  return (<dd key={item.event_no} className={'my-bottom-border'}>
+                    {/* <header>
+                      <em>{}</em>
+                      <span>{}</span>
+                    </header> */}
+                    <section>
+                      <h2>{item.title}</h2>
+                      <p>{item.content}</p>
+                    </section>
+                    <footer>
+                      {item.created_at}
+                    </footer>
+                  </dd>)
+                })
+              }
+              {/* <dd className={'my-bottom-border'}>
                 <header>
                   <em>1</em>
                   <span>待审批</span>
@@ -103,46 +159,7 @@ class Home extends Component {
                 <footer>
                   下午 2:23
                 </footer>
-              </dd>
-              <dd className={'my-bottom-border'}>
-                <header>
-                  <em>1</em>
-                  <span>待审批</span>
-                </header>
-                <section>
-                  <h2>****项目招标</h2>
-                  <p>*****公司刚刚投标了，请您尽快审批。</p>
-                </section>
-                <footer>
-                  下午 2:23
-                </footer>
-              </dd>
-              <dd className={'my-bottom-border'}>
-                <header>
-                  <em>1</em>
-                  <span>待审批</span>
-                </header>
-                <section>
-                  <h2>****项目招标</h2>
-                  <p>*****公司刚刚投标了，请您尽快审批。</p>
-                </section>
-                <footer>
-                  下午 2:23
-                </footer>
-              </dd>
-              <dd className={'my-bottom-border'}>
-                <header>
-                  <em>1</em>
-                  <span>待审批</span>
-                </header>
-                <section>
-                  <h2>****项目招标</h2>
-                  <p>*****公司刚刚投标了，请您尽快审批。</p>
-                </section>
-                <footer>
-                  下午 2:23
-                </footer>
-              </dd>
+              </dd> */}
             </dl>
           </Content>
         </div>

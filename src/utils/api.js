@@ -137,6 +137,7 @@ export default {
     }
   },
   Mine: { // 我的
+    push: {},
     account: {
       recharge(params) { // 创建充值订单
         return Fetch(prefix + '/recharge', params)
@@ -224,6 +225,26 @@ export default {
         return Fetch(prefix + '/company', params, 'get')
       }
 
+    },
+    partnerMange: { // 合作方管理
+      getPartnerList(params) { // 获取列表
+        return Fetch(prefix + '/partner', params, 'get')
+      },
+      addPartnerList(params) { // 添加 列表
+        return FetchSave(prefix + '/partner', params)
+      },
     }
-  }
+  },
+  Home: {
+    getSystemInforms(params) { // 系统通知
+      return Fetch(prefix + '/message/sys/list', params, 'get')
+    },
+    getSystemMessDetail(params) { // 系统通知详情
+      return Fetch(prefix + '/message/sys/show', params, 'get')
+    },
+    getTodayTodo(params) { // 获取首页今日代办
+      return Fetch(prefix + '/company/list/todo', params, 'get')
+    }
+  },
+
 }

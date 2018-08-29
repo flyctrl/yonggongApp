@@ -1,26 +1,56 @@
 import React, { Component } from 'react'
-import { List, Radio, InputItem } from 'antd-mobile'
+import { List, Radio, InputItem, Toast } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import { createForm } from 'rc-form'
 import history from 'Util/history'
 import * as urls from 'Contants/urls'
 import style from './style.css'
-
+import api from 'Util/api'
 const settleRadio = [
-  { value: 0, label: '企业' },
-  { value: 1, label: '个人' }
+  { value: 1, label: '个人' },
+  { value: 2, label: '企业' }
 ]
 class AddPartner extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      radioVaule: 0
+      radioVaule: 1
     }
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
   onRadioChange = (value) => {
     this.setState({
       radioVaule: value
     })
+  }
+  onHandleNext = () => {
+    let validateAry = ['name', 'mobile', 'address']
+    const { getFieldError } = this.props.form
+    const { radioVaule } = this.state
+    this.props.form.validateFields({ force: true }, (error, values) => {
+      if (!error) {
+        let newData = { type: radioVaule, ...values }
+        this.handleSubmit(newData)
+      } else {
+        for (let value of validateAry) {
+          if (error[value]) {
+            Toast.fail(getFieldError(value), 1)
+            return
+          }
+        }
+      }
+    })
+  }
+  handleSubmit = async (newData) => {
+    const data = await api.Mine.partnerMange.addPartnerList(newData) || false
+    if (data) {
+      Toast.success('发布成功')
+      this.props.form.resetFields()
+      history.push(urls.PARTNER)
+      this.setState({
+        radioVaule: 1
+      })
+    }
   }
   render() {
     const { getFieldProps } = this.props.form
@@ -36,12 +66,12 @@ class AddPartner extends Component {
           }}
           rightTitle='保存'
           rightClick={() => {
-            console.log('保存')
+            this.onHandleNext()
           }}
         />
         <Content>
           <form className={style['pushOrderForm']}>
-            <List className={`${style['input-form-list']}`} renderHeader={() => '性质'}>
+            <List className={`${style['input-form-list']}`} renderHeader={() => '合作方类型'}>
               {
                 settleRadio.map((item) => {
                   return (
@@ -52,7 +82,18 @@ class AddPartner extends Component {
             </List>
             <List className={`${style['input-form-list']}`} renderHeader={() => '合作方名称'}>
               <InputItem
-                {...getFieldProps('price', {
+                {...getFieldProps('name', {
+                  rules: [
+                    { required: true, message: '请填写合作方名称' },
+                  ]
+                })}
+                clear
+                placeholder='请输入'
+              ></InputItem>
+            </List>
+            {/* <List className={`${style['input-form-list']}`} renderHeader={() => '合作方类型'}>
+              <InputItem
+                {...getFieldProps('type', {
                   rules: [
                     // { required: true, message: '请填写价格预算' },
                   ]
@@ -60,12 +101,12 @@ class AddPartner extends Component {
                 clear
                 placeholder='请输入'
               ></InputItem>
-            </List>
-            <List className={`${style['input-form-list']}`} renderHeader={() => '联系电话'}>
+            </List> */}
+            <List className={`${style['input-form-list']}`} renderHeader={() => '手机号'}>
               <InputItem
-                {...getFieldProps('price', {
+                {...getFieldProps('mobile', {
                   rules: [
-                    // { required: true, message: '请填写价格预算' },
+                    { required: true, message: '请填写手机号' },
                   ]
                 })}
                 clear
@@ -74,18 +115,18 @@ class AddPartner extends Component {
             </List>
             <List className={`${style['input-form-list']}`} renderHeader={() => '地址'}>
               <InputItem
-                {...getFieldProps('price', {
+                {...getFieldProps('address', {
                   rules: [
-                    // { required: true, message: '请填写价格预算' },
+                    { required: true, message: '请填写地址' },
                   ]
                 })}
                 clear
                 placeholder='请输入'
               ></InputItem>
             </List>
-            <List className={`${style['input-form-list']}`} renderHeader={() => '其他'}>
+            <List className={`${style['input-form-list']}`} renderHeader={() => '备注'}>
               <InputItem
-                {...getFieldProps('price', {
+                {...getFieldProps('remark', {
                   rules: [
                     // { required: true, message: '请填写价格预算' },
                   ]

@@ -150,7 +150,7 @@ noLine: 是否有下边线（默认true，有下边线）
 /* 搜索框相关 */
 onSearch: 搜索回调
 searchTitle: 搜索框默认提示文字
-cancelText: 搜索框定制“取消”按钮的文字
+cancelText: 搜索框定制‘取消”按钮的文字
 onSearchFocus: 搜索框focus 事件的回调
 onSearchCancel: 搜索框点击取消按钮触发 (不再自动清除输入框的文字)
 onSearchSubmit: 搜索框submit事件 (点击键盘的 enter)
