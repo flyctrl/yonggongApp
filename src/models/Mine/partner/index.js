@@ -26,7 +26,6 @@ class Partner extends Component {
 
   render() {
     const { partnerList } = this.state
-    console.log(partnerList)
     return (
       <div className='pageBox'>
         <Header
@@ -54,7 +53,8 @@ class Partner extends Component {
                     <section>
                       <h4>{item.name}</h4>
                       <p>{ item.type === 1 ? '个人' : '企业' }</p>
-                      <p>{item.mobile}<em>{item.remark || '' }</em></p>
+                      <p>{item.mobile}<em>{ }</em></p>
+                      <p>{item.address || ''}</p>
                     </section>
                     <footer>
                       <NewIcon type='icon-message_pre' />

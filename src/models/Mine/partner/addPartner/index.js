@@ -24,7 +24,7 @@ class AddPartner extends Component {
     })
   }
   onHandleNext = () => {
-    let validateAry = ['name', 'mobile']
+    let validateAry = ['name', 'mobile', 'address']
     const { getFieldError } = this.props.form
     const { radioVaule } = this.state
     this.props.form.validateFields({ force: true }, (error, values) => {
@@ -107,6 +107,17 @@ class AddPartner extends Component {
                 {...getFieldProps('mobile', {
                   rules: [
                     { required: true, message: '请填写手机号' },
+                  ]
+                })}
+                clear
+                placeholder='请输入'
+              ></InputItem>
+            </List>
+            <List className={`${style['input-form-list']}`} renderHeader={() => '地址'}>
+              <InputItem
+                {...getFieldProps('address', {
+                  rules: [
+                    { required: true, message: '请填写地址' },
                   ]
                 })}
                 clear

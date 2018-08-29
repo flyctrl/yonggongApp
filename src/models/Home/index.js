@@ -28,7 +28,7 @@ class Home extends Component {
   componentWillMount() {
     this.getSystemInforms()
     this.getMineDetail()
-    // this.getTodayTodo()
+    this.getTodayTodo()
   }
   getMineDetail = async() => {
     const data = await api.Mine.checkDetails.info({ // 查看企业资料
@@ -46,9 +46,11 @@ class Home extends Component {
   }
   getTodayTodo = async () => {
     const data = await api.Home.getTodayTodo({ // 获取今日代办列表
+      page: 1,
+      limit: 10
     }) || false
     this.setState({
-      todoList: data
+      todoList: data.list
     })
   }
   handleClickGrid(ele, index) {
@@ -64,8 +66,14 @@ class Home extends Component {
   handlePushBidOrder = () => {
     history.push(urls.PUSHBIDORDER)
   }
+  handleClickSysDetail = (e) => {
+    let id = e.currentTarget.getAttribute('data-id')
+    // id.split('$$')[]
+    history.push(`${urls.SYSTEMESSDETAIL}?id=${id}`)
+  }
   render() {
-    const { sysInforms, companyDetail } = this.state
+    const { sysInforms, companyDetail, todoList } = this.state
+    console.log(todoList)
     return (
       <div className='contentBox'>
         <div className={style['usr-home-content']}>
@@ -115,7 +123,7 @@ class Home extends Component {
                   >
                     {
                       sysInforms.map(item => {
-                        return <div key={item.company_id} className={style['v-item']}>{item.content}<em>{item.created_at}</em></div>
+                        return <div key={item.company_id} data-id={`${item['id']}`} onClick={this.handleClickSysDetail} className={style['v-item']}>{item.content}<em>{item.created_at}</em></div>
                       })
                     }
                   </Carousel>
@@ -124,7 +132,24 @@ class Home extends Component {
             </div>
             <dl className={style['today-todo']}>
               <dt>今日待办</dt>
-              <dd className={'my-bottom-border'}>
+              {
+                todoList && todoList.map(item => {
+                  return (<dd key={item.event_no} className={'my-bottom-border'}>
+                    {/* <header>
+                      <em>{}</em>
+                      <span>{}</span>
+                    </header> */}
+                    <section>
+                      <h2>{item.title}</h2>
+                      <p>{item.content}</p>
+                    </section>
+                    <footer>
+                      {item.created_at}
+                    </footer>
+                  </dd>)
+                })
+              }
+              {/* <dd className={'my-bottom-border'}>
                 <header>
                   <em>1</em>
                   <span>待审批</span>
@@ -136,46 +161,7 @@ class Home extends Component {
                 <footer>
                   下午 2:23
                 </footer>
-              </dd>
-              <dd className={'my-bottom-border'}>
-                <header>
-                  <em>1</em>
-                  <span>待审批</span>
-                </header>
-                <section>
-                  <h2>****项目招标</h2>
-                  <p>*****公司刚刚投标了，请您尽快审批。</p>
-                </section>
-                <footer>
-                  下午 2:23
-                </footer>
-              </dd>
-              <dd className={'my-bottom-border'}>
-                <header>
-                  <em>1</em>
-                  <span>待审批</span>
-                </header>
-                <section>
-                  <h2>****项目招标</h2>
-                  <p>*****公司刚刚投标了，请您尽快审批。</p>
-                </section>
-                <footer>
-                  下午 2:23
-                </footer>
-              </dd>
-              <dd className={'my-bottom-border'}>
-                <header>
-                  <em>1</em>
-                  <span>待审批</span>
-                </header>
-                <section>
-                  <h2>****项目招标</h2>
-                  <p>*****公司刚刚投标了，请您尽快审批。</p>
-                </section>
-                <footer>
-                  下午 2:23
-                </footer>
-              </dd>
+              </dd> */}
             </dl>
           </Content>
         </div>

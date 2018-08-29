@@ -212,8 +212,11 @@ export default {
     getSystemInforms(params) { // 系统通知
       return Fetch(prefix + '/message/sys/list', params, 'get')
     },
+    getSystemMessDetail(params) { // 系统通知详情
+      return Fetch(prefix + '/message/sys/show', params, 'get')
+    },
     getTodayTodo(params) { // 获取首页今日代办
-      return Fetch(prefix + '/worksheet/todayToDo', params)
+      return Fetch(prefix + '/company/list/todo', params, 'get')
     }
   },
 
