@@ -46,8 +46,6 @@ class Home extends Component {
   }
   getTodayTodo = async () => {
     const data = await api.Home.getTodayTodo({ // 获取今日代办列表
-      page: 1,
-      limit: 10
     }) || false
     this.setState({
       todoList: data.list

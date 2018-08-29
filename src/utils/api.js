@@ -131,6 +131,7 @@ export default {
     }
   },
   Mine: { // 我的
+    push: {},
     account: {
       recharge(params) { // 创建充值订单
         return Fetch(prefix + '/recharge', params)
