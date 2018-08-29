@@ -250,7 +250,7 @@ html:not([data-scale]) .show-order-box :global(.am-list-body div:not(:last-child
 
     &.remark-desc {
       height: auto;
-      &:global(.am-list-body) {
+      & :global(.am-list-body) {
         height: auto;
       }
     }

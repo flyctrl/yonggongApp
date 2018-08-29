@@ -2,24 +2,50 @@ import React, { Component } from 'react'
 import { Tabs } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import NewIcon from 'Components/NewIcon'
+import api from 'Util/api'
 import * as urls from 'Contants/urls'
+import { projectStatus } from 'Contants/fieldmodel'
 import history from 'Util/history'
 import style from './style.css'
 
-const tabs = [
-  { title: '全部' },
-  { title: '审核中' },
-  { title: '已审核' },
-  { title: '未通过' }
-]
 class ProjectMange extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      dataSource: [],
+      tabIndex: 0,
+      isloading: false
+    }
+  }
+  getProjectlist = async (status = 0) => {
+    const data = await api.Mine.projectMange.getProjectList({
+      status
+    }) || false
+    this.setState({
+      dataSource: data['list'],
+      isloading: true
+    })
+  }
+  componentDidMount() {
+    this.getProjectlist()
+  }
+  handleTabsChange = (tabs, index) => {
+    this.getProjectlist(index)
+    this.setState({
+      tabIndex: index,
+      dataSource: [],
+      isloading: false
+    })
+  }
   handleCreateProject = () => {
     history.push(urls.CREATEPROJECT)
   }
-  handleDetail = () => { // 项目详情
-    history.push(urls.PROJECTDETAIL)
+  handleDetail = (e) => { // 项目详情
+    let id = e.currentTarget.getAttribute('data-id')
+    history.push(urls.PROJECTDETAIL + '?id=' + id)
   }
   render() {
+    let { dataSource, tabIndex, isloading } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -36,48 +62,29 @@ class ProjectMange extends Component {
         />
         <Content>
           <div className={style['project-mange-box']}>
-            <Tabs tabs={tabs}
-              initalPage={'t1'}
+            <Tabs tabs={projectStatus}
+              initalPage={1}
+              page={tabIndex}
               tabBarTextStyle={{ fontSize: '12px', color: '#B2B6BC' }}
               tabBarActiveTextColor='#0467e0'
               tabBarUnderlineStyle={{ borderColor: '#0467e0', width: '12%', marginLeft: '6.5%' }}
+              onChange={this.handleTabsChange}
             >
               <div>
                 <ul className={style['project-mange-list']}>
-                  <li onClick={this.handleDetail} className='my-bottom-border'>
-                    <section>
-                      <h4>天津鲁能一期项目</h4>
-                      <p><span>50w</span><em>砌墙</em><em>木工</em><em>土方石</em></p>
-                      <time>4月1日-4月6日（共计6天）</time>
-                    </section>
-                    <a>审核中</a>
-                  </li>
-                  <li className='my-bottom-border'>
-                    <section>
-                      <h4>天津鲁能一期项目</h4>
-                      <p><span>50w</span><em>砌墙</em><em>木工</em><em>土方石</em></p>
-                      <time>4月1日-4月6日（共计6天）</time>
-                    </section>
-                    <a>审核中</a>
-                  </li>
-                  <li className='my-bottom-border'>
-                    <section>
-                      <h4>天津鲁能一期项目</h4>
-                      <p><span>50w</span><em>砌墙</em><em>木工</em><em>土方石</em></p>
-                      <time>4月1日-4月6日（共计6天）</time>
-                    </section>
-                    <a>审核中</a>
-                  </li>
+                  {
+                    dataSource.length !== 0 && isloading ? dataSource.map((item, index) => {
+                      return (<li key={item['id']} data-id={item['id']} onClick={this.handleDetail} className='my-bottom-border'>
+                        <section>
+                          <h4>{item['prj_name']}</h4>
+                          <p><span>{item['construction_amount']}元</span><em>{item['construction_area']}㎡</em></p>
+                          <time>{item['created_at']}</time>
+                        </section>
+                        <a>{projectStatus[item['status']]['title']}</a>
+                      </li>)
+                    }) : <div className={style['nodata']}>{ dataSource.length === 0 && isloading ? '暂无数据' : '' }</div>
+                  }
                 </ul>
-              </div>
-              <div>
-                Content of second tab
-              </div>
-              <div>
-                Content of third tab
-              </div>
-              <div>
-                Content of third tab
               </div>
             </Tabs>
           </div>

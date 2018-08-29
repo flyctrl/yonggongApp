@@ -62,6 +62,9 @@ export default {
     },
     supportBank(params) { // 支持银行卡列表
       return Fetch('/common/bank/list', params, 'get')
+    },
+    uploadImg(params) { // 图片上传
+      return FetchSave('/common/attach/image', params, 'post', { 'Content-Type': 'multipart/form-data' })
     }
   },
   auth: {
@@ -89,6 +92,9 @@ export default {
   WorkOrder: {
     WorkOrderList(params) { // 工单列表
       return Fetch(prefix + '/worksheet/list', params)
+    },
+    getListByPro(params) { // 根据项目获取工单列表
+      return Fetch(prefix + '/worksheet/prj/list', params)
     },
     getStatusList(params) { // 获取工单状态
       return Fetch(prefix + '/worksheet/stat/status', params)
@@ -161,16 +167,36 @@ export default {
       createProject(params) { // 创建项目
         return FetchSave(prefix + '/project/add', params)
       },
-      projectList(params) { // 项目列表
+      projectList(params) { // 项目列表(发布工单时)
         return Fetch(prefix + '/project/list/select', params)
+      },
+      getProjectList(params) { // 项目列表
+        return Fetch(prefix + '/project/plist', params)
       },
       projectDetail(params) { // 项目详情
         return Fetch(prefix + '/project/detail', params)
       }
     },
+    balanceMange: { // 结算管理
+      settleList(params) { // 结算列表
+        return Fetch(prefix + '/worksheetManage/settle', params)
+      },
+      settleBalance(params) { // 结算
+        return Fetch(prefix + '/worksheetOrder/settle', params)
+      },
+      settleDetail(params) { // 结算管理详情
+        return Fetch(prefix + '/worksheetManage/settleDetail', params)
+      }
+    },
     companyAuth: {
       aptitude(params) { // 企业认证
-        return Fetch(prefix + '/aptitude', params)
+        return FetchSave(prefix + '/aptitude', params)
+      },
+      aptitudeDetail(params) { // 企业认证详情
+        return Fetch(prefix + '/aptitude', params, 'get')
+      },
+      getCompanyStuts(params) { // 获取企业所有状态
+        return Fetch(prefix + '/company/status', params, 'get')
       }
     },
     Personaldara: { // 编辑个人资料

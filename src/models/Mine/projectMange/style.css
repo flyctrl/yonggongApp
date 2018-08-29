@@ -44,4 +44,10 @@
       line-height: 84px;
     }
   }
+  & .nodata {
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    color: #313f48;
+  }
 }

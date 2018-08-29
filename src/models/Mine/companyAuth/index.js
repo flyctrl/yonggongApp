@@ -6,6 +6,7 @@
 import React, { Component } from 'react'
 import { InputItem, Button, Toast, ImagePicker } from 'antd-mobile'
 import { createForm } from 'rc-form'
+import api from 'Util/api'
 import * as urls from 'Contants/urls'
 import { Header, Content, NewIcon } from 'Components'
 import style from './style.css'
@@ -14,21 +15,57 @@ class Company extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      img: []
+      licenseImg: [],
+      cardfrontImg: [],
+      cardbackImg: []
     }
   }
 
   componentDidMount() {
   }
-  handleChange = (img) => {
-    this.setState({ img })
+
+  setImgstate = (images, name) => {
+    if (name === 'licenseImg') {
+      this.setState({ licenseImg: images })
+    } else if (name === 'cardfrontImg') {
+      this.setState({ cardfrontImg: images })
+    } else if (name === 'cardbackImg') {
+      this.setState({ cardbackImg: images })
+    }
+  }
+  uploadImg = async (images, name) => {
+    console.log('images', images)
+    if (images[0]) {
+      let formData = new FormData()
+      formData.append('image', images[0].file)
+      const data = await api.Common.uploadImg(formData) || {}
+      console.log(data)
+      if (data.url) {
+        images[0].url = data.url
+      } else {
+        images = []
+      }
+      this.setImgstate(images, name)
+    } else {
+      this.setImgstate(images, name)
+    }
+  }
+
+  handleChange = (img, name) => {
+    this.uploadImg(img, name)
   }
   handleSubmit = () => {
-    const validateAry = ['title', 'person', 'phone', 'license']
+    const validateAry = ['name', 'legal', 'card_no', 'credit_code', 'mobile', 'license', 'card_front', 'card_back']
     const { validateFields, getFieldError } = this.props.form
-    validateFields((err, value) => {
+    validateFields(async (err, value) => {
       if (!err) {
-        console.info('success', value)
+        let newData = { license: value['license'][0]['path'], card_back: value['card_back'][0]['path'], card_front: value['card_front'][0]['path'] }
+        const data = await api.Mine.companyAuth.aptitude({
+          ...value, ...newData
+        }) || false
+        if (data) {
+          this.props.match.history.push(urls.MINE)
+        }
       } else {
         const validateErr = validateAry.find(item => err[item])
         if (validateErr) {
@@ -39,8 +76,8 @@ class Company extends Component {
   }
 
   render() {
-    const { img } = this.state
-    const { getFieldProps } = this.props.form
+    const { licenseImg, cardfrontImg, cardbackImg } = this.state
+    const { getFieldDecorator } = this.props.form
     return <div className='pageBox'>
       <Header
         title='企业认证'
@@ -53,47 +90,126 @@ class Company extends Component {
       <Content>
         <div className={style.company}>
           <div className={`${style.input} my-bottom-border`}>
-            <div className={style.title}>企业名称</div>
-            <InputItem {...getFieldProps('title', {
+            <div className={style['title']}>企业名称</div>
+            {getFieldDecorator('name', {
               rules: [{
                 required: true, message: '请输入企业名称',
               }]
-            })} placeholder='请输入企业名称'/></div>
+            })(
+              <InputItem placeholder='请输入企业名称'/>
+            )}
+          </div>
           <div className={`${style.input} my-bottom-border`}>
-            <div className={style.title}>联系人</div>
-            <InputItem {...getFieldProps('person', {
+            <div className={style['title']}>法人</div>
+            {getFieldDecorator('legal', {
               rules: [{
-                required: true, message: '请输入联系人',
+                required: true, message: '请输入法人',
               }]
-            })} placeholder='请输入联系人'/></div>
+            })(
+              <InputItem placeholder='请输入法人'/>
+            )}
+          </div>
           <div className={`${style.input} my-bottom-border`}>
-            <div className={style.title}>联系电话</div>
-            <InputItem {...getFieldProps('phone', {
+            <div className={style['title']}>身份证号</div>
+            {getFieldDecorator('card_no', {
               rules: [{
-                required: true, message: '请输入联系电话',
+                required: true, message: '请输入身份证号',
               }]
-            })} placeholder='请输入联系电话'/></div>
+            })(
+              <InputItem placeholder='请输入身份证号'/>
+            )}
+          </div>
           <div className={`${style.input} my-bottom-border`}>
-            <div className={style.title}>营业执照注册号</div>
-            <InputItem {...getFieldProps('license', {
+            <div className={style['title']}>统一社会信用代码</div>
+            {getFieldDecorator('credit_code', {
               rules: [{
-                required: true, message: '请输入执照注册号',
+                required: true, message: '请输入统一社会信用代码',
               }]
-            })} placeholder='请输入执照注册号'/></div>
+            })(
+              <InputItem placeholder='请输入统一社会信用代码'/>
+            )}
+          </div>
           <div className={`${style.input} my-bottom-border`}>
-            <div className={style.title}>营业执照注册号</div>
-            <div className={style['up-img']}>
-              <div>
-                <NewIcon className={style.icon} type='icon-camera'/>
-                <span className={style.title}>营业执照扫描件</span>
-                <ImagePicker
-                  className={style['img-picker']}
-                  files={img}
-                  onChange={this.handleChange}
-                  selectable={img.length < 1}
-                />
+            <div className={style.title}>法人手机号</div>
+            {getFieldDecorator('mobile', {
+              rules: [{
+                required: true, message: '请输入法人手机号',
+              }]
+            })(
+              <InputItem placeholder='请输入法人手机号'/>
+            )}
+          </div>
+          <div className={`${style['input']} ${style['upload-box']} my-bottom-border`}>
+            <div className={style['upload-item']}>
+              <div className={style.title}>营业执照</div>
+              <div className={style['up-img']}>
+                <div>
+                  <NewIcon className={style.icon} type='icon-camera'/>
+                  <span className={style.title}>营业执照扫描件</span>
+                  {
+                    getFieldDecorator('license', {
+                      rules: [{
+                        required: true, message: '请上传营业执照',
+                      }]
+                    })(
+                      <ImagePicker
+                        className={style['img-picker']}
+                        files={licenseImg}
+                        onChange={(img) => { this.handleChange(img, 'licenseImg') }}
+                        selectable={licenseImg.length < 1}
+                      />
+                    )
+                  }
+                </div>
               </div>
-            </div></div>
+            </div>
+            <div className={style['upload-item']}>
+              <div className={style.title}>身份证正面</div>
+              <div className={style['up-img']}>
+                <div>
+                  <NewIcon className={style.icon} type='icon-camera'/>
+                  <span className={style.title}>身份证正面扫描件</span>
+                  {
+                    getFieldDecorator('card_front', {
+                      rules: [{
+                        required: true, message: '请上传身份证正面',
+                      }]
+                    })(
+                      <ImagePicker
+                        className={style['img-picker']}
+                        files={cardfrontImg}
+                        onChange={(img) => { this.handleChange(img, 'cardfrontImg') }}
+                        selectable={cardfrontImg.length < 1}
+                      />
+                    )
+                  }
+                </div>
+              </div>
+            </div>
+            <div className={style['upload-item']}>
+              <div className={style.title}>身份证反面</div>
+              <div className={style['up-img']}>
+                <div>
+                  <NewIcon className={style.icon} type='icon-camera'/>
+                  <span className={style.title}>身份证反面扫描件</span>
+                  {
+                    getFieldDecorator('card_back', {
+                      rules: [{
+                        required: true, message: '请上传身份证反面',
+                      }]
+                    })(
+                      <ImagePicker
+                        className={style['img-picker']}
+                        files={cardbackImg}
+                        onChange={(img) => { this.handleChange(img, 'cardbackImg') }}
+                        selectable={cardbackImg.length < 1}
+                      />
+                    )
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
           <Button className={style.submit} onClick={this.handleSubmit} type='primary'>提 交</Button>
         </div>
       </Content>

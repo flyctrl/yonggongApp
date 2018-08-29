@@ -80,4 +80,11 @@
       }
     }
   }
+  & .nodata {
+    height: 80px;
+    line-height: 80px;
+    color: #313f48;
+    font-size: 14px;
+    text-align: center;
+  }
 }
