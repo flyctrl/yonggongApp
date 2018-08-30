@@ -120,7 +120,7 @@ class Home extends Component {
                   >
                     {
                       sysInforms.map(item => {
-                        return <div key={item.company_id} data-id={`${item['id']}`} onClick={this.handleClickSysDetail} className={style['v-item']}>{item.content}<em>{item.created_at}</em></div>
+                        return <div key={item.id} data-id={`${item['id']}`} onClick={this.handleClickSysDetail} className={style['v-item']}>{item.content}<em>{item.created_at}</em></div>
                       })
                     }
                   </Carousel>
@@ -131,7 +131,7 @@ class Home extends Component {
               <dt>今日待办</dt>
               {
                 todoList && todoList.map(item => {
-                  return (<dd key={item.event_no} className={'my-bottom-border'}>
+                  return (<dd key={item.id} className={'my-bottom-border'}>
                     <header>
                       {item.zh_status}
                       {/* <em></em> */}

@@ -21,6 +21,9 @@ class UserInfo extends Component {
   }
 
   async componentDidMount() {
+    // if (window.location.search) {
+    //   this.state.urls = window.location.search
+    // }
     const data = await api.Mine.checkDetails.info({
       hasInfo: 1
     }) || false
@@ -30,6 +33,7 @@ class UserInfo extends Component {
   }
 
   handleUserBack = () => {
+  // let { urls } = this.state
     let url = tooler.getQueryString('url')
     if (url) {
       history.push(urls[url])

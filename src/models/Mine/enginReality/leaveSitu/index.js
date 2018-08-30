@@ -11,11 +11,12 @@ class LeaveSitu extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      dataList: []
+      dataList: [],
+      urls: ''
     }
   }
   handleUsrInfo = () => {
-    history.push(urls.USERINFO + '?url=LEAVESITU')
+  //  history.push(`${urls.USERINFO}?url=LEAVESITU&}`)
   }
   getMineDetail = async() => {
     let paramsData = tooler.parseURLParam()
@@ -27,6 +28,9 @@ class LeaveSitu extends Component {
     })
   }
   componentDidMount() {
+    // if (window.location.search) {
+    //   this.state.urls = window.location.search.substring(1)
+    // }
     this.getMineDetail()
   }
   render() {
@@ -34,7 +38,7 @@ class LeaveSitu extends Component {
     return (
       <div className='pageBox'>
         <Header
-          title='请假情况'
+          title='考勤情况'
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
