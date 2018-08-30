@@ -269,6 +269,15 @@ export default {
       addPartnerList(params) { // 添加 列表
         return FetchSave(prefix + '/partner', params)
       },
+    },
+    engineeringLive: { // 工程实况
+      getEngList(params) { // 考勤打卡统计
+        return Fetch(prefix + '/worksheetOrder/attend/stat', params, 'post')
+      },
+      getEngDetail(params) { // 考勤详情
+        return Fetch(prefix + '/worksheetOrder/attend/list', params, 'post')
+      }
+
     }
   },
   Home: {

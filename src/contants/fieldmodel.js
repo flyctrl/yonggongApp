@@ -62,4 +62,36 @@ const orderStatus = {
   7: '已完工',
 }
 
-export { priceModeData, settleRadio, payModeRadio, rightWrongRadio, unitPrice, projectStatus, balanceType, worksheetType, orderStatus }
+const attendanceList = { // 考勤打卡 统计
+  1: '正常打卡',
+  2: '异常',
+  3: '外勤',
+  4: '加班'
+}
+
+const attendanceDetailStatus = { // 考勤详情状态
+  1: '正常',
+  2: '迟到',
+  3: '早退',
+  4: '不在范围内'
+}
+
+const attendanceDetailType = { // 考勤详情打卡类型
+  1: '上班',
+  2: '下班'
+}
+
+export {
+  priceModeData,
+  settleRadio,
+  payModeRadio,
+  rightWrongRadio,
+  unitPrice,
+  projectStatus,
+  balanceType,
+  worksheetType,
+  orderStatus,
+  attendanceList,
+  attendanceDetailStatus,
+  attendanceDetailType
+}
