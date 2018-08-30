@@ -5,6 +5,7 @@ import { createForm } from 'rc-form'
 import Loadable from 'react-loadable'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
+import { attendanceList } from 'Contants/fieldmodel'
 import history from 'Util/history'
 import style from './style.css'
 import api from 'Util/api'
@@ -34,7 +35,8 @@ class EnginReality extends Component {
       endTime: null,
       proId: '', // 项目id
       orderid: '', // 工单id
-      worksheetNo: '' // 工单编号
+      worksheetNo: '', // 工单编号
+      attendanceData: [] // 考勤列表
 
     }
   }
@@ -53,7 +55,9 @@ class EnginReality extends Component {
       start_date: tooler.formatDate(startTime),
       end_date: tooler.formatDate(endTime)
     }) || false
-    console.log('111', data)
+    this.setState({
+      attendanceData: data
+    })
   }
 
   onProChange = (val) => { // 选择项目
@@ -109,14 +113,16 @@ class EnginReality extends Component {
       }
     })
   }
-  handleLeavesitu = () => {
-    history.push(urls.LEAVESITU)
+  handleLeavesitu = (e) => {
+    let { orderid, startTime, endTime } = this.state
+    let data = e.currentTarget.getAttribute('data-id')
+    history.push(`${urls.LEAVESITU}?worksheet_id=${orderid}&attend_status=${data}&start_date=${tooler.formatDate(startTime)}&end_date=${tooler.formatDate(endTime)}`)
   }
   componentDidMount() {
     this.getProjectList()
   }
   render() {
-    let { proSelect, proData, dateShow, startTime, endTime, showOrder, proId, worksheetNo } = this.state
+    let { proSelect, proData, dateShow, startTime, endTime, showOrder, proId, worksheetNo, attendanceData } = this.state
     const { getFieldDecorator } = this.props.form
 
     return (
@@ -165,11 +171,27 @@ class EnginReality extends Component {
                 <span>刘德华</span>
                 <a onClick={this.hanleShowCalendar}>{ startTime && endTime ? (new Date(startTime)).toLocaleDateString() + ' ~ ' + (new Date(endTime)).toLocaleDateString() : '请选择日期范围' } <Icon type='right' size='md' color=''/></a>
               </div>
-              <ul className={style['attend']}>
+              {/* <ul className={style['attend']}>
                 <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>正常打卡</p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
                 <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>异常<span>迟到</span><span>早退</span><span>未打卡</span></p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
                 <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>外勤</p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
                 <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>加班</p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
+              </ul> */}
+              <ul className={style['attend']}>
+                {
+                  attendanceData &&
+                  attendanceData.map(item => {
+                    return <li key={item.attend_status}
+                      onClick={this.handleLeavesitu}
+                      data-id={`${item['attend_status']}`}
+                      className='my-bottom-border'>
+                      <p>{attendanceList[item.attend_status]}
+                        { item.attend_status === 2 ? <span ><span>迟到</span><span>早退</span><span>未打卡</span></span> : null}
+                      </p><Icon type='right' size='md' color='#ccc'/>
+                      <em>{item.number}</em>
+                    </li>
+                  })
+                }
               </ul>
             </div>
             <Calendar

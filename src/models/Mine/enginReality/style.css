@@ -107,9 +107,11 @@ html .engin-reality :global(.am-list-body div:not(:last-child) .am-list-line::af
         height: 40px;
         line-height: 40px;
         & span {
-          color: #ccc;
-          display: inline-block;
-          margin-left: 8px;
+          & span {
+            color: #ccc;
+            display: inline-block;
+            margin-left: 8px;
+          }
         }
       }
       & em {

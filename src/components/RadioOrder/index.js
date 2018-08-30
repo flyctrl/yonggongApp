@@ -75,13 +75,13 @@ class RadioOrder extends Component {
           <div className={style['radio-box']}>
             <List>
               {data.length && isLoading
-                ? data.map(item => (
+                ? data.map((item, index) => (
                   <RadioItem key={`${item.id}-${item.worksheet_no}`} checked={value === item.id} onChange={() => this.onChange(item)}>
                     <dl>
                       <dt><span>工单编号: {item.worksheet_no}</span>
                         <em>{orderStatus[item.status]} </em>
                       </dt>
-                      <dd>支付方式：{settleRadio.map(list => { return list.value === item.payment_method ? list.label : '' })}</dd>
+                      {<dd>支付方式：{settleRadio.map(list => { return list.value === item.payment_method ? list.label : '' })}</dd> }
                       <dd><p>预算：{item.valuation_amount}</p><time>{item.created_at}</time></dd>
                       <dd>工资发放方式：{payModeRadio.map(list => { return list.value === item.salary_payment_way ? list.label : '' })}</dd>
                       <dd>施工地址：{item.ext.construction_place}</dd>

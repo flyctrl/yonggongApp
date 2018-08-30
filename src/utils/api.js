@@ -237,6 +237,9 @@ export default {
       getEngList(params) { // 考勤打卡统计
         return Fetch(prefix + '/worksheetOrder/attend/stat', params, 'post')
       },
+      getEngDetail(params) { // 考勤详情
+        return Fetch(prefix + '/worksheetOrder/attend/list', params, 'post')
+      }
 
     }
   },
