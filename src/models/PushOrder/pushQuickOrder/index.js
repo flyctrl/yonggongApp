@@ -209,7 +209,7 @@ class PushQuickOrder extends Component {
     this.getWorkTypeList()
   }
   onHandleNext = () => {
-    let validateAry = ['prj_id', 'construction_place', 'valuation_way', 'valuation_unit_price', 'valuation_quantity', 'penalty']
+    let validateAry = ['prj_id', 'construction_place', 'startWorkDate', 'endWorkDate', 'work_type_id', 'people_number', 'valuation_way', 'valuation_unit_price', 'valuation_quantity']
     const { fileList, settleRadioVal, paymodeRadioVal, assignRadioVal, startLowerTime, startUpperTime, endLowerTime, endUpperTime } = this.state
     let postFile = []
     fileList.map((item, index, ary) => {
@@ -481,7 +481,7 @@ class PushQuickOrder extends Component {
                   defaultDate={now}
                 />
               </List>
-              <List className={`${style['input-form-list']} ${workTypeSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '工种（非必填）'}>
+              <List className={`${style['input-form-list']} ${workTypeSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '工种'}>
                 {getFieldDecorator('work_type_id', {
                   rules: [
                     { required: true, message: '请选择工种' },
@@ -493,17 +493,13 @@ class PushQuickOrder extends Component {
                 )}
               </List>
               <List style={{ display: workTypeSelect ? 'block' : 'none' }} className={`${style['input-form-list']} ${professSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '技能认证（非必填）'}>
-                {getFieldDecorator('professional_level', {
-                  rules: [
-                    { required: true, message: '请选择技能认证' },
-                  ],
-                })(
+                {getFieldDecorator('professional_level')(
                   <Picker data={professData} extra='请选择技能认证' cols={1} onChange={this.onProfessChange}>
                     <List.Item arrow='horizontal'></List.Item>
                   </Picker>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '人数（非必填）'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '人数'}>
                 {getFieldDecorator('people_number', {
                   rules: [
                     { required: true, message: '请输入人数' },
@@ -608,12 +604,8 @@ class PushQuickOrder extends Component {
                   </div>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '违约金（单位：元）'}>
-                {getFieldDecorator('penalty', {
-                  rules: [
-                    { required: true, message: '请输入违约金' },
-                  ],
-                })(
+              <List className={`${style['input-form-list']}`} renderHeader={() => '违约金（单位：元）(非必填)'}>
+                {getFieldDecorator('penalty')(
                   <InputItem
                     clear
                     placeholder='请输入违约金'

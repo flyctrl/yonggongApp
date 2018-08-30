@@ -5,6 +5,7 @@ import { List, InputItem, Icon, Toast } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import { createForm } from 'rc-form'
 import SelectDepart from '../selectDepart'
+import * as tooler from 'Contants/tooler'
 import style from 'Src/models/PushOrder/form.css'
 
 class AddPerson extends Component {
@@ -12,7 +13,8 @@ class AddPerson extends Component {
     super(props)
     this.state = {
       showDepart: false,
-      selectGroupId: ''
+      selectGroupId: '',
+      exitData: {}
     }
   }
   handleChangeDepart = () => {
@@ -36,17 +38,28 @@ class AddPerson extends Component {
     })
   }
 
+  getGroupInfo = async () => {
+    let groupId = tooler.getQueryString('groupid')
+    const exitData = await api.Mine.department.getGroupInfo({
+      groupId
+    }) || false
+    this.setState({
+      selectGroupId: exitData['pid'],
+      exitData
+    })
+  }
+
   onHandleSubmit() {
-    console.log('提交数据', this.state.postData)
     let validateAry = ['name']
+    let groupId = tooler.getQueryString('groupid')
     const { selectGroupId } = this.state
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
-        let newData = { pid: selectGroupId }
+        let newData = { pid: selectGroupId, groupId: groupId }
         let postData = { ...values, ...newData }
         console.log(postData)
-        const data = await api.Mine.department.addGroup(postData) || false
+        const data = await api.Mine.department.editGroup(postData) || false
         if (data) {
           this.props.match.history.push(urls.ORGANTSTRUCT)
         }
@@ -60,16 +73,19 @@ class AddPerson extends Component {
       }
     })
   }
+  componentDidMount() {
+    this.getGroupInfo()
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form
-    const { showDepart } = this.state
+    const { showDepart, exitData } = this.state
     return (
       <div>
         <div style={{ display: showDepart ? 'none' : 'block' }} className='pageBox'>
           <div>
             <Header
-              title='添加部门'
+              title='修改部门'
               leftIcon='icon-back'
               leftTitle1='返回'
               leftClick1={() => {
@@ -85,7 +101,9 @@ class AddPerson extends Component {
                 <List className={`${style['input-form-list']}`} renderHeader={() => '上级部门(非必填)'}>
                   <div onClick={this.handleChangeDepart}>
                     {
-                      getFieldDecorator('pid')(
+                      getFieldDecorator('pid', {
+                        initialValue: exitData['group_parent_name']
+                      })(
                         <InputItem
                           className={style['text-abled']}
                           disabled
@@ -101,7 +119,8 @@ class AddPerson extends Component {
                     getFieldDecorator('name', {
                       rules: [
                         { required: true, message: '请输入部门名称' },
-                      ]
+                      ],
+                      initialValue: exitData['group_name']
                     })(
                       <InputItem
                         clear
@@ -112,7 +131,9 @@ class AddPerson extends Component {
                 </List>
                 <List className={`${style['input-form-list']}`} renderHeader={() => '部门描述(非必填)'}>
                   {
-                    getFieldDecorator('description')(
+                    getFieldDecorator('description', {
+                      initialValue: exitData['description']
+                    })(
                       <InputItem
                         clear
                         placeholder='请输入部门描述'

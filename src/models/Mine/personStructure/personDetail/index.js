@@ -1,12 +1,61 @@
 import React, { Component } from 'react'
 import { Header, Content } from 'Components'
 import history from 'Util/history'
+import api from 'Util/api'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
 
 class PesrsonDetail extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      dataSource: {}
+    }
+  }
+  getPersonDetail = async () => {
+    let uid = tooler.getQueryString('uid')
+    const data = await api.Mine.department.getPersonInfo({
+      uid
+    }) || false
+    this.setState({
+      dataSource: data
+    })
+    console.log(data)
+  }
+  componentDidMount() {
+    this.getPersonDetail()
+  }
+  showInfo = (dataSource) => {
+    let workno = dataSource['work_no']
+    let birthday = dataSource['birthday']
+    let entrydate = dataSource['entry_date']
+    if (workno || birthday || entrydate) {
+      return (<dl>
+        <dt className='my-bottom-border'>个人信息</dt>
+        {
+          workno ? <dd className='my-bottom-border'>
+            <span>工号</span>
+            <p>{workno}</p>
+          </dd> : null
+        }
+        {
+          entrydate ? <dd className='my-bottom-border'>
+            <span>生日</span>
+            <p>{entrydate}</p>
+          </dd> : null
+        }
+        {
+          birthday ? <dd className='my-bottom-border'>
+            <span>入职时间</span>
+            <p>{birthday}</p>
+          </dd> : null
+        }
+      </dl>)
+    }
+  }
   render() {
+    const { dataSource } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -15,8 +64,13 @@ class PesrsonDetail extends Component {
           leftTitle1='返回'
           leftClick1={() => {
             let url = tooler.getQueryString('url')
+            let idary = tooler.getQueryString('idary')
             if (url) {
-              history.push(urls[url])
+              if (idary !== null && idary !== '') {
+                history.push(urls[url] + '?idary=' + idary)
+              } else {
+                history.push(urls[url])
+              }
             } else {
               history.push(urls.HOME)
             }
@@ -25,30 +79,28 @@ class PesrsonDetail extends Component {
         <Content>
           <div className={style['person-detail']}>
             <header className='my-bottom-border'>
-              <span>王珂</span>
-              <em>主管</em>
-              <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
+              <span>{dataSource['realname']}</span>
+              {dataSource['is_owner'] === 1 ? <em>主管</em> : null}
+              {
+                // <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
+              }
             </header>
             <dl>
               <dt className='my-bottom-border'>
-                部门信息（行政部）
+                部门信息 {dataSource['group_name'] ? `(${dataSource['group_name']})` : null}
               </dt>
               <dd className='my-bottom-border'>
-                <span>姓名</span>
-                <p>王珂</p>
+                <span>用户名</span>
+                <p>{dataSource['username']}</p>
               </dd>
               <dd className='my-bottom-border'>
                 <span>电话</span>
-                <p>15858246633</p>
+                <p>{dataSource['mobile']}</p>
               </dd>
             </dl>
-            <dl>
-              <dt className='my-bottom-border'>个人信息</dt>
-              <dd className='my-bottom-border'>
-                <span>邮箱</span>
-                <p>gte@gmail.com</p>
-              </dd>
-            </dl>
+            {
+              this.showInfo(dataSource)
+            }
           </div>
         </Content>
       </div>

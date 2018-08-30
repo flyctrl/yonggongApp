@@ -82,6 +82,9 @@ export default {
     },
     refresh(params) { // 刷新token
       return Fetch(prefix + '/refresh', params)
+    },
+    realName(params) { // 实名认证
+      return FetchSave(prefix + '/user/identity', params)
     }
   },
   PushOrder: {
@@ -201,7 +204,6 @@ export default {
     },
     Personaldara: { // 编辑个人资料
       avatar(params) { // 上传用户头像
-        console.log(params)
         return Fetch(prefix + '/users/avatar', params, 'post', { 'Content-Type': 'multipart/form-data' })
       },
       edit(params) { // 修改用户资料
@@ -210,6 +212,41 @@ export default {
       info(params) { // 修改用户资料
         return Fetch(prefix + '/users', params, 'get')
       },
+    },
+    department: { // 组织架构
+      getGroup(params) { // 部门列表
+        return Fetch(prefix + '/group', params, 'get')
+      },
+      getMyDepart(params) { // 获取我的部门
+        return Fetch(prefix + '/group/info', params, 'get')
+      },
+      addGroup(params) { // 添加部门
+        return FetchSave(prefix + '/group', params)
+      },
+      deleteGroup(params) { // 删除部门
+        return FetchSave(prefix + '/group/del', params)
+      },
+      editGroup(params) { // 修改部门
+        return FetchSave(prefix + '/group/edit', params)
+      },
+      getGroupInfo(params) { // 获取部门详情
+        return Fetch(prefix + '/group/show', params, 'get')
+      },
+      getPersonDetail(params) { // 查询用户详情(我的)
+        return Fetch(prefix + '/user/info', params, 'get')
+      },
+      addPerson(params) { // 添加人员
+        return FetchSave(prefix + '/company/user', params)
+      },
+      editPerson(params) { // 修改人员
+        return FetchSave(prefix + '/company/user/edit', params)
+      },
+      delPerson(params) { // 删除人员
+        return FetchSave(prefix + '/company/user/edit', params)
+      },
+      getPersonInfo(params) { // 获取用户详情(组织架构)
+        return Fetch(prefix + '/company/user', params, 'get')
+      }
     },
     contractMange: { // 合同管理
       contractList(params) { // 合同列表

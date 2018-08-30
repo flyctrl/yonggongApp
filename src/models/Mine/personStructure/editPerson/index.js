@@ -3,12 +3,11 @@ import Loadable from 'react-loadable'
 import { List, InputItem, Icon, Radio, Toast } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import * as urls from 'Contants/urls'
-import { formatDate } from 'Contants/tooler'
+import { getQueryString, formatDate } from 'Contants/tooler'
 import api from 'Util/api'
 import SelectDepart from '../selectDepart'
 import { rightWrongRadio } from 'Contants/fieldmodel'
 import { createForm } from 'rc-form'
-import 'antd-mobile/lib/calendar/style/css'
 import style from 'Src/models/PushOrder/form.css'
 
 const now = new Date()
@@ -32,8 +31,7 @@ class AddPerson extends Component {
       showDepart: false,
       typeRadioVal: 0,
       selectGroupId: '',
-      entryDateShow: false,
-      birthDateShow: false
+      exitData: {}
     }
   }
 
@@ -98,15 +96,27 @@ class AddPerson extends Component {
       birthDateShow: false
     })
   }
+
+  getPesrsonInfo = async () => {
+    let uid = getQueryString('uid')
+    const exitData = await api.Mine.department.getPersonInfo({
+      uid
+    }) || false
+    this.setState({
+      selectGroupId: exitData['group_id'],
+      typeRadioVal: exitData['is_owner'],
+      exitData
+    })
+  }
   onHandleSubmit() {
-    let validateAry = ['username', 'password', 'realname', 'mobile']
+    let validateAry = ['username', 'realname', 'mobile']
     const { typeRadioVal, selectGroupId } = this.state
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
         let newData = { type: typeRadioVal, groupId: selectGroupId }
         let postData = { ...values, ...newData }
-        const data = await api.Mine.department.addPerson(postData) || false
+        const data = await api.Mine.department.editPerson(postData) || false
         if (data) {
           this.props.match.history.push(urls.PERSONSTRUCTURE)
         }
@@ -121,15 +131,18 @@ class AddPerson extends Component {
     })
   }
 
+  componentDidMount() {
+    this.getPesrsonInfo()
+  }
   render() {
     const { getFieldDecorator } = this.props.form
-    const { showDepart, typeRadioVal, entryDateShow, birthDateShow } = this.state
+    const { showDepart, typeRadioVal, exitData, entryDateShow, birthDateShow } = this.state
     return (
       <div>
         <div style={{ display: showDepart ? 'none' : 'block' }} className='pageBox'>
           <div>
             <Header
-              title='添加人员'
+              title='修改人员'
               leftIcon='icon-back'
               leftTitle1='返回'
               leftClick1={() => {
@@ -142,10 +155,28 @@ class AddPerson extends Component {
             />
             <Content>
               <form className={style['pushOrderForm']}>
+                <List className={`${style['input-form-list']}`} renderHeader={() => '用户名'}>
+                  {
+                    getFieldDecorator('username', {
+                      rules: [
+                        { required: true, message: '请填写用户名' },
+                      ],
+                      initialValue: exitData['username']
+                    })(
+                      <InputItem
+                        clear
+                        placeholder='请输入用户名'
+                        disabled
+                      ></InputItem>
+                    )
+                  }
+                </List>
                 <List className={`${style['input-form-list']}`} renderHeader={() => '所在部门(非必填)'}>
                   <div onClick={this.handleChangeDepart}>
                     {
-                      getFieldDecorator('groupId')(
+                      getFieldDecorator('groupId', {
+                        initialValue: exitData['group_name']
+                      })(
                         <InputItem
                           className={style['text-abled']}
                           disabled
@@ -156,41 +187,13 @@ class AddPerson extends Component {
                     <Icon type='right' color='#ccc' />
                   </div>
                 </List>
-                <List className={`${style['input-form-list']}`} renderHeader={() => '用户名'}>
-                  {
-                    getFieldDecorator('username', {
-                      rules: [
-                        { required: true, message: '请填写用户名' },
-                      ]
-                    })(
-                      <InputItem
-                        clear
-                        placeholder='请输入用户名'
-                      ></InputItem>
-                    )
-                  }
-                </List>
-                <List className={`${style['input-form-list']}`} renderHeader={() => '密码'}>
-                  {
-                    getFieldDecorator('password', {
-                      rules: [
-                        { required: true, message: '请填写密码' },
-                      ]
-                    })(
-                      <InputItem
-                        clear
-                        placeholder='请输入密码'
-                        type='password'
-                      ></InputItem>
-                    )
-                  }
-                </List>
                 <List className={`${style['input-form-list']}`} renderHeader={() => '姓名'}>
                   {
                     getFieldDecorator('realname', {
                       rules: [
                         { required: true, message: '请填写姓名' },
-                      ]
+                      ],
+                      initialValue: exitData['realname']
                     })(
                       <InputItem
                         clear
@@ -204,7 +207,8 @@ class AddPerson extends Component {
                     getFieldDecorator('mobile', {
                       rules: [
                         { required: true, message: '请填写手机号' },
-                      ]
+                      ],
+                      initialValue: exitData['mobile']
                     })(
                       <InputItem
                         clear
@@ -213,18 +217,10 @@ class AddPerson extends Component {
                     )
                   }
                 </List>
-                <List className={`${style['input-form-list']}`} renderHeader={() => '工号(非必填)'}>
-                  {
-                    getFieldDecorator('work_no')(
-                      <InputItem
-                        clear
-                        placeholder='请输入工号'
-                      ></InputItem>
-                    )
-                  }
-                </List>
                 <List className={`${style['input-form-list']}`} renderHeader={() => '是否负责人'}>
-                  {getFieldDecorator('type')(
+                  {getFieldDecorator('type', {
+                    initialValue: exitData['is_owner']
+                  })(
                     <div>
                       {
                         rightWrongRadio.map((item, index, ary) => {
@@ -242,12 +238,25 @@ class AddPerson extends Component {
                     </div>
                   )}
                 </List>
+                <List className={`${style['input-form-list']}`} renderHeader={() => '工号(非必填)'}>
+                  {
+                    getFieldDecorator('work_no', {
+                      initialValue: exitData['work_no']
+                    })(
+                      <InputItem
+                        clear
+                        placeholder='请输入工号'
+                      ></InputItem>
+                    )
+                  }
+                </List>
                 <List className={`${style['input-form-list']}`} renderHeader={() => '入职时间(非必填)'}>
                   <div onClick={this.onEntryDateChange}>
                     {
-                      getFieldDecorator('entry_date')(
+                      getFieldDecorator('entry_date', {
+                        initialValue: exitData['entry_date']
+                      })(
                         <InputItem
-                          className={style['text-abled']}
                           clear
                           placeholder='请输入入职时间'
                         ></InputItem>
@@ -259,7 +268,9 @@ class AddPerson extends Component {
                 <List className={`${style['input-form-list']}`} renderHeader={() => '生日(非必填)'}>
                   <div onClick={this.onBirthChange}>
                     {
-                      getFieldDecorator('birthday')(
+                      getFieldDecorator('birthday', {
+                        initialValue: exitData['birthday']
+                      })(
                         <InputItem
                           clear
                           placeholder='请输入生日'
