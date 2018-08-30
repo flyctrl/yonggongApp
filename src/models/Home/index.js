@@ -132,16 +132,17 @@ class Home extends Component {
               {
                 todoList && todoList.map(item => {
                   return (<dd key={item.event_no} className={'my-bottom-border'}>
-                    {/* <header>
-                      <em>{}</em>
-                      <span>{}</span>
-                    </header> */}
+                    <header>
+                      {item.zh_status}
+                      {/* <em></em> */}
+                      {/* <span>{}</span> */}
+                    </header>
                     <section>
                       <h2>{item.title}</h2>
                       <p>{item.content}</p>
                     </section>
                     <footer>
-                      {item.created_at}
+                      {item.publish_time}
                     </footer>
                   </dd>)
                 })
