@@ -108,7 +108,6 @@ class InvoiceDetail extends Component {
     const data = await api.Mine.invoiceMange.invoiceDetail({
       id
     }) || false
-    console.log(data)
     this.setState({
       dataSource: data
     })
@@ -117,11 +116,13 @@ class InvoiceDetail extends Component {
     this.getProjectDetail()
   }
   handleApplyInvoice = async (e) => {
+    let { dataSource } = this.state
     let status = e.currentTarget.getAttribute('data-type')
     let id = tooler.getQueryString('id')
     const data = await api.Mine.invoiceMange.applyInvoices({
       id,
-      status
+      status,
+      grant_remark: dataSource['grant_remark'] || ''
     }) || false
     console.log(data)
     history.push(`${urls.INVOICELISTTWO}`)
