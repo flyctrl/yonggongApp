@@ -47,13 +47,12 @@ class ApplyInvoice extends Component {
   }
   pushInvoiceList = async(postData) => {
     let orderNo = tooler.parseURLParam()
-    let data = await api.Mine.invoiceMange.applyInvoice({ // 申请开票
+    await api.Mine.invoiceMange.applyInvoice({ // 申请开票
       ...postData,
       order_no: orderNo.order_no
     }) || false
-    if (data.code === 0) {
-      history.push(history.push(urls.INVOICEMANGE))
-    }
+
+    history.push(urls.INVOICEMANGE)
   }
   onHandleNext = () => {
     let { valModeDataValue, totalRadioValue, settleRadioValue } = this.state

@@ -18,15 +18,15 @@ class InvoiceMange extends Component {
         />
         <Content>
           <ul className={style['invoice-list']}>
-            <li>
-              <span>代收发票：</span>
-              <nav onClick={() => { history.push(urls.INVOICELISTONE) }}>
+            <li onClick={() => { history.push(urls.INVOICELISTONE) }}>
+              <span>代收发票</span>
+              <nav >
                 <Icon type='right' size='md' color='#ccc'/>
               </nav>
             </li>
-            <li>
-              <span>代开发票:  </span>
-              <nav onClick={() => { history.push(urls.INVOICELISTTWO) }}>
+            <li onClick={() => { history.push(urls.INVOICELISTTWO) }}>
+              <span>代开发票</span>
+              <nav >
                 <Icon type='right' size='md' color='#ccc'/>
               </nav>
             </li>
