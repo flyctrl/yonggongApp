@@ -114,9 +114,13 @@ class EnginReality extends Component {
     })
   }
   handleLeavesitu = (e) => {
-    let { orderid, startTime, endTime } = this.state
-    let data = e.currentTarget.getAttribute('data-id')
-    history.push(`${urls.LEAVESITU}?worksheet_id=${orderid}&attend_status=${data}&start_date=${tooler.formatDate(startTime)}&end_date=${tooler.formatDate(endTime)}`)
+    let { orderid, startTime, endTime, worksheetNo } = this.state
+    let data = e.currentTarget.getAttribute('data-id').split('&')
+    let id = data[0]
+    let num = data[1]
+    if (num > 0) {
+      history.push(`${urls.LEAVESITU}?worksheet_id=${orderid}&worksheetNo=${worksheetNo}&attend_status=${id}&start_date=${tooler.formatDate(startTime)}&end_date=${tooler.formatDate(endTime)}`)
+    }
   }
   componentDidMount() {
     this.getProjectList()
@@ -183,7 +187,7 @@ class EnginReality extends Component {
                   attendanceData.map(item => {
                     return <li key={item.attend_status}
                       onClick={this.handleLeavesitu}
-                      data-id={`${item['attend_status']}`}
+                      data-id={`${item['attend_status']}&${item.number}`}
                       className='my-bottom-border'>
                       <p>{attendanceList[item.attend_status]}
                         { item.attend_status === 2 ? <span ><span>迟到</span><span>早退</span><span>未打卡</span></span> : null}
