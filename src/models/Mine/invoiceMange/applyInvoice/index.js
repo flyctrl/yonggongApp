@@ -47,10 +47,13 @@ class ApplyInvoice extends Component {
   }
   pushInvoiceList = async(postData) => {
     let orderNo = tooler.parseURLParam()
-    await api.Mine.invoiceMange.applyInvoice({ // 申请开票
+    let data = await api.Mine.invoiceMange.applyInvoice({ // 申请开票
       ...postData,
       order_no: orderNo.order_no
     }) || false
+    if (data.code === 0) {
+      history.push(history.push(urls.INVOICEMANGE))
+    }
   }
   onHandleNext = () => {
     let { valModeDataValue, totalRadioValue, settleRadioValue } = this.state
@@ -60,7 +63,6 @@ class ApplyInvoice extends Component {
       // console.log(this.props.form.getFieldsValue())
       if (!error) {
         let postData = { ...values, ...{ platform_type: valModeDataValue, type: totalRadioValue, title_type: settleRadioValue }}
-        console.log(postData)
         this.pushInvoiceList(postData)
       } else {
         for (let value of validateAry) {

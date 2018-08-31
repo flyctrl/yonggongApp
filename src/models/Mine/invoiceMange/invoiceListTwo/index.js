@@ -69,7 +69,7 @@ class InvoiceListTwo extends Component {
                     </nav>
                   </li>
                 })
-                : <li style={{ textAlign: 'center' }}>{ isLoading ? '无发票' : ''}</li>
+                : <li style={{ textAlign: 'center', height: '24px' }}>{ isLoading ? '无发票' : ''}</li>
             }
             {/* <li>
               <section>
