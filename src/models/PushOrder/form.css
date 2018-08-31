@@ -308,4 +308,11 @@ html:not([data-scale]) .show-order-box :global(.am-list-body div:not(:last-child
   & :global(.am-button-primary) {
     margin: 24px 0;
   }
+  & nav {
+      & :global(.am-button-ghost) {
+         margin: 16px 0;
+         height: 24px;
+         line-height: 24px;
+      }
+  }
 }

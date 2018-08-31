@@ -40,8 +40,8 @@ class Company extends Component {
       formData.append('image', images[0].file)
       const data = await api.Common.uploadImg(formData) || {}
       console.log(data)
-      if (data.url) {
-        images[0].url = data.url
+      if (data.path) {
+        images[0].path = data.path
       } else {
         images = []
       }
@@ -59,6 +59,7 @@ class Company extends Component {
     const { validateFields, getFieldError } = this.props.form
     validateFields(async (err, value) => {
       if (!err) {
+        console.log('value:', value)
         let newData = { license: value['license'][0]['path'], card_back: value['card_back'][0]['path'], card_front: value['card_front'][0]['path'] }
         const data = await api.Mine.companyAuth.aptitude({
           ...value, ...newData

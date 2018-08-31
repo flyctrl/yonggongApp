@@ -1,0 +1,29 @@
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  .control-btn {
+    width: 100%;
+    padding: 20px 0;
+    overflow: hidden;
+    & :global(.am-button-primary) {
+      width: 140px;
+      background: rgba(4, 103, 244, 1.0);
+      float: left;
+      margin-left: 10px;
+    }
+  }
+  

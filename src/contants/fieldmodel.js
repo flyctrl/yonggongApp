@@ -91,6 +91,16 @@ const tenderWayRadio = [
   { value: 'B', label: '竞价招标' }
 ]
 
+const applyInvoice = { // 是否已申请开票
+  0: '申请开票',
+  1: '已申请'
+}
+let invoiceStatus = { // 开票状态详情
+  1: '申请中',
+  2: '处理成功',
+  3: '作废'
+}
+
 export {
   priceModeData,
   settleRadio,
@@ -105,5 +115,7 @@ export {
   attendanceDetailStatus,
   attendanceDetailType,
   assignTypeRadio,
-  tenderWayRadio
+  tenderWayRadio,
+  applyInvoice,
+  invoiceStatus
 }

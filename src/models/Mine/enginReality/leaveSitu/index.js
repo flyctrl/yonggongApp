@@ -20,8 +20,13 @@ class LeaveSitu extends Component {
   }
   getMineDetail = async() => {
     let paramsData = tooler.parseURLParam()
+    let url = tooler.parseJsonUrl(paramsData)
+    console.log('13', url)
     const data = await api.Mine.engineeringLive.getEngDetail({ // 考勤详情
-      ...paramsData
+      end_date: paramsData.end_date,
+      start_date: paramsData.start_date,
+      worksheet_id: paramsData.worksheet_id,
+      attend_status: paramsData.attend_status
     }) || false
     this.setState({
       dataList: data.list
@@ -42,7 +47,7 @@ class LeaveSitu extends Component {
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
-            history.push(urls.ENGINREALITY)
+            history.push(`${urls.ENGINREALITY}${window.location.search || ''}`)
           }}
         />
         <Content>

@@ -145,6 +145,18 @@ const InvoiceMange = Loadable({ // 发票管理
   loader: () => import(/* webpackChunkName: "invoicemange" */ '../models/Mine/invoiceMange'),
   loading: MyLoadingComponent
 })
+const InvoiceListOne = Loadable({ // 代收发票管理
+  loader: () => import(/* webpackChunkName: "invoicemange" */ '../models/Mine/invoiceMange/invoiceListOne'),
+  loading: MyLoadingComponent
+})
+const InvoiceListTwo = Loadable({ // 代开发票管理
+  loader: () => import(/* webpackChunkName: "invoicemange" */ '../models/Mine/invoiceMange/invoiceListTwo'),
+  loading: MyLoadingComponent
+})
+const InvoiceDetail = Loadable({ // 代开发票详情
+  loader: () => import(/* webpackChunkName: "invoicemange" */ '../models/Mine/invoiceMange/invoiceListTwo/invoiceDetail'),
+  loading: MyLoadingComponent
+})
 const ApplyInvoice = Loadable({ // 申请发票
   loader: () => import(/* webpackChunkName: "applyinvoice" */ '../models/Mine/invoiceMange/applyInvoice'),
   loading: MyLoadingComponent
@@ -524,6 +536,32 @@ const routes = [
     showMenu: false,
     title: '发票管理'
   }, {
+    path: urls.INVOICELISTONE,
+    exact: true,
+    component: InvoiceListOne,
+    parent: 'invoiceMange',
+    animated: true,
+    showMenu: false,
+    title: '代收发票管理'
+  }, {
+    path: urls.INVOICELISTTWO,
+    exact: true,
+    component: InvoiceListTwo,
+    parent: 'invoiceMange',
+    animated: true,
+    showMenu: false,
+    title: '代开发票管理'
+  },
+  {
+    path: urls.INVOICELISTTWODETAIL,
+    exact: true,
+    component: InvoiceDetail,
+    parent: 'invoiceListTwo',
+    animated: true,
+    showMenu: false,
+    title: '代开发票详情'
+  },
+  {
     path: urls.APPLYINVOICE,
     exact: true,
     component: ApplyInvoice,
