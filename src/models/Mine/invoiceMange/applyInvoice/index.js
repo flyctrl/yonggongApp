@@ -19,16 +19,14 @@ const settleRadio = [
   { value: 1, label: '企业抬头' },
   { value: 2, label: '个人/非企业单位' }
 ]
-
 class ApplyInvoice extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      radioVaule: [],
       valModeDataValue: 1,
       totalRadioValue: 1,
       settleRadioValue: 1,
-      invoiceType: []
+      invoiceType: [],
     }
     this.onHandleSubmit = this.onHandleSubmit.bind(this)
   }
@@ -44,24 +42,17 @@ class ApplyInvoice extends Component {
       order_no: orderNo.order_no
     }) || false
     this.setState({
-      radioVaule: data
+      invoiceType: data
     })
   }
   pushInvoiceList = async(postData) => {
     let orderNo = tooler.parseURLParam()
-    const data = await api.Mine.invoiceMange.applyInvoice({ // 申请开票
+    await api.Mine.invoiceMange.applyInvoice({ // 申请开票
       ...postData,
       order_no: orderNo.order_no
     }) || false
-    this.setState({
-      invoiceType: data
-    })
-    console.log('data', data)
   }
   onHandleNext = () => {
-    // this.setState({
-    //   isEdit: false
-    // })
     let { valModeDataValue, totalRadioValue, settleRadioValue } = this.state
     let validateAry = ['title', 'content', 'amount', 'tax_no', 'recv_name', 'recv_mobile', 'recv_email', 'recv_address']
     const { getFieldError } = this.props.form
