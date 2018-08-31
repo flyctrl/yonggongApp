@@ -125,8 +125,7 @@ class ApplyInvoice extends Component {
                 {
                   valModeData.map((item, index) => {
                     return invoiceType.map((i) => {
-                      console.log(i)
-                      return i === item['value'] ? <Radio key={item.value} checked={valModeDataValue === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange('valModeDataValue', item.value)}>{item.label}</Radio> : null
+                      return i === item['value'] ? (<Radio key={item.value} checked={valModeDataValue === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange('valModeDataValue', item.value)}>{item.label}</Radio>) : null
                     })
                   })
                 }
