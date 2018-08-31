@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
-import { Button } from 'antd-mobile'
 import { Header, Content } from 'Components'
+import { Icon } from 'antd-mobile'
 import history from 'Util/history'
 import * as urls from 'Contants/urls'
 import style from './style.css'
-
 class InvoiceMange extends Component {
-  handleApplyInvoice = () => {
-    history.push(urls.APPLYINVOICE)
-  }
   render() {
     return (
       <div className={`${style['invoiceBox']} pageBox`}>
@@ -23,21 +19,15 @@ class InvoiceMange extends Component {
         <Content>
           <ul className={style['invoice-list']}>
             <li>
-              <section>
-                <p><span>工单编号：</span>20182531112124</p>
-                <p><span>项目名称：</span>好望山一期</p>
-              </section>
-              <nav>
-                <Button type='ghost' onClick={this.handleApplyInvoice} inline>申请开票</Button>
+              <span>代收发票：</span>
+              <nav onClick={() => { history.push(urls.INVOICELISTONE) }}>
+                <Icon type='right' size='md' color='#ccc'/>
               </nav>
             </li>
             <li>
-              <section>
-                <p><span>工单编号：</span>20182531112124</p>
-                <p><span>项目名称：</span>好望山一期</p>
-              </section>
-              <nav>
-                <Button type='ghost' disabled inline>申请开票</Button>
+              <span>代开发票:  </span>
+              <nav onClick={() => { history.push(urls.INVOICELISTTWO) }}>
+                <Icon type='right' size='md' color='#ccc'/>
               </nav>
             </li>
           </ul>

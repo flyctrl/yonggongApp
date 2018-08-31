@@ -199,6 +199,23 @@ export default {
         return Fetch(prefix + '/company/status', params, 'get')
       }
     },
+    invoiceMange: { // 发票管理
+      invoiceListOne(params) { // 代收 发票管理
+        return Fetch(prefix + '/invoice/list/worksheet', params, 'get')
+      },
+      invoiceListTwo(params) { // 代开 发票管理
+        return Fetch(prefix + '/invoice/list/grant', params, 'get')
+      },
+      invoiceDetail(params) { // 代开发票详情
+        return Fetch(prefix + '/invoice/show', params, 'get')
+      },
+      applyInvoicePlatform(params) { // 申请发票可选平台
+        return Fetch(prefix + '/invoice/apply/platform', params, 'get')
+      },
+      applyInvoice(params) { // 申请发票
+        return FetchSave(prefix + '/invoice/apply', params, 'post')
+      }
+    },
     Personaldara: { // 编辑个人资料
       avatar(params) { // 上传用户头像
         console.log(params)

@@ -81,6 +81,11 @@ const attendanceDetailType = { // 考勤详情打卡类型
   2: '下班'
 }
 
+const applyInvoice = { // 是否已申请开票
+  0: '申请开票',
+  1: '已申请'
+}
+
 export {
   priceModeData,
   settleRadio,
@@ -93,5 +98,6 @@ export {
   orderStatus,
   attendanceList,
   attendanceDetailStatus,
-  attendanceDetailType
+  attendanceDetailType,
+  applyInvoice
 }
