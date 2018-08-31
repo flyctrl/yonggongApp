@@ -1,0 +1,77 @@
+.crumb {
+  padding: 8px;
+  height: 30px;
+  line-height: 30px;
+  & span {
+    display: inline-block;
+  }
+  & svg {
+    vertical-align: middle;
+    &:global(.am-icon-md) {
+      width: 16px;
+    }
+  }
+  & a {
+    display: inline-block;
+    color: #0467e0;
+    font-size: 14px;
+  }
+  & a:last-child {
+    color: #ccc;
+  }
+}
+
+.depart-tree {
+    & :global(.am-radio.am-radio-checked .am-radio-inner:after) {
+      background: #0467e0;
+      border-style: none;
+      border-width: 0;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      top: 2px;
+      right: 2px;
+    }
+
+    &:global(.am-list) {
+      & :global(.am-list-item) {
+        & :global(.am-list-line) {
+          & :global(.am-list-content) {
+            padding-left: 26px;
+          }
+        }
+
+        &:global(.am-radio-item) {
+          & :global(.am-list-line) {
+            & :global(.am-list-extra) {
+              & :global(.am-radio) {
+                width: 290px;
+              }
+              & :global(.am-radio-input) {
+                width: 290px;
+              }
+
+              & :global(.am-radio-inner) {
+                left: 6px;
+                border: 1px solid #0467e0;
+                border-radius: 50%;
+              }
+            }
+          }
+        }
+
+      }
+    }
+
+    & .departbtn {
+      position: absolute;
+      display: block;
+      top: 7px;
+      right: 0;
+      width: 60px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      border-left: 1px solid #ccc;
+    }
+}

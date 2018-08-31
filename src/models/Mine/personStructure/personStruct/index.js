@@ -1,46 +1,64 @@
 import React, { Component } from 'react'
+import { List } from 'antd-mobile'
 import { Header, Content } from 'Components'
-import history from 'Util/history'
+import api from 'Util/api'
 import * as urls from 'Contants/urls'
-import * as tooler from 'Contants/tooler'
-import style from './style.css'
+import style from '../organtStruct/style.css'
 
-class PersonStruct extends Component {
+const Item = List.Item
+class OrgantStruct extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      userData: [],
+      groupData: []
+    }
+  }
+  getStruct = async () => {
+    const data = await api.Mine.department.getMyDepart({}) || false
+    this.setState({
+      userData: data['user'],
+      groupData: data['group']
+    })
+  }
+  componentDidMount() {
+    this.getStruct()
+  }
+
   render() {
+    let { userData, groupData } = this.state
     return (
       <div className='pageBox'>
         <Header
-          title=''
+          title={ '我的部门' }
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
-            let url = tooler.getQueryString('url')
-            if (url) {
-              history.push(urls[url])
-            } else {
-              history.push(urls.HOME)
-            }
+            this.props.match.history.push(urls.PERSONSTRUCTURE)
           }}
         />
         <Content>
-          <div className={style['person-list']}>
-            <ul>
-              <li className='my-bottom-border'>
-                <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
-                <span>王珂</span>
-                <em>主管</em>
-              </li>
-              <li className='my-bottom-border'>
-                <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
-                <span>王珂</span>
-                <em>主管</em>
-              </li>
-              <li className='my-bottom-border'>
-                <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
-                <span>王珂</span>
-                <em>主管</em>
-              </li>
-            </ul>
+          <div className={style['organt-list']}>
+            <List>
+              {
+                userData.map((item) => {
+                  return <ul key={item['uid']}>
+                    <li className='my-bottom-border'>
+                      <img src={item['avatar']} />
+                      <span>{item['username']}</span>
+                      {
+                        item['is_owner'] === 1 ? <em>主管</em> : null
+                      }
+                    </li>
+                  </ul>
+                })
+              }
+              {
+                groupData.map((item) => {
+                  return <Item key={item['groupId']} extra={item['userCount']} arrow={ 'none' } >{item['name']}</Item>
+                })
+              }
+            </List>
           </div>
         </Content>
       </div>
@@ -48,4 +66,4 @@ class PersonStruct extends Component {
   }
 }
 
-export default PersonStruct
+export default OrgantStruct

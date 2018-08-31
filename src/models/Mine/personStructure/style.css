@@ -33,7 +33,7 @@
           color: #1A173B;
         }
         & dd {
-          padding: 18px 0 18px 20px;
+          padding: 10px;
           background: #fff;
           overflow: hidden;
           & img {
@@ -41,9 +41,9 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            margin-right: 20px;
+            margin-right: 14px;
             &.contact-img {
-              margin-top: 12px;
+              margin-top: 4px;
             }
           }
           & .admin-info {
@@ -73,7 +73,7 @@
           & .contact-info {
             float: left;
             width: 290px;
-            height: 60px;
+            height: 50px;
             & .detail {
               float: left;
               & p {

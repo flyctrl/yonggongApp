@@ -41,6 +41,7 @@ export const ACCOUNTDETAIL = `${ACCOUNT}/detail` // 我的账户》账户详细
 export const BANKCARD = `${ACCOUNT}/bankCard` // 银行卡
 
 export const COMPANYAUTH = `${MINE}/companyAuth` // 企业认证
+export const REALNAMEAUTH = `${MINE}/realNameAuth` // 个人认证
 export const COMPANYAUTHDETAIL = `${MINE}/companyAuthDetail` // 企业认证详情
 export const INVOICEMANGE = `${MINE}/invoiceMange` // 发票管理
 export const INVOICELISTONE = `${INVOICEMANGE}/invoiceListOne` // 代收发票管理
@@ -62,7 +63,10 @@ export const ORGANTSTRUCT = `${MINE}/personStructure/organtStruct` // 组织架�
 export const PERSONSTRUCT = `${MINE}/personStructure/personStruct` // 人员列表
 export const PERSONDETAIL = `${MINE}/personStructure/personDetail` // 人员详情
 export const ADDPERSON = `${MINE}/personStructure/addPerson` // 添加人员
+export const EDITPERSON = `${MINE}/personStructure/editPerson` // 修改人员
 export const ADDDEPARTMENT = `${MINE}/personStructure/addDepartment` // 添加部门
+export const EDITDEPARTMENT = `${MINE}/personStructure/editDepartment` // 修改部门
+export const SELECTDEPART = `${MINE}/personStructure/selectDepart` // 选择部门
 export const FEEDBACK = `${MINE}/feedBack` // 问题反馈
 
 export const LOGIN = `${BASE_URL}/Login/login` // 登录

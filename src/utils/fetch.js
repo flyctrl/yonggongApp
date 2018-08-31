@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2018-08-29 09:59:42
+* @Last Modified time: 2018-08-30 10:03:32
 */
 import storage from '../utils/storage'
 import axios from 'axios'
@@ -45,6 +45,8 @@ fetcher.interceptors.response.use(function (response) {
     }).catch(function(err) {
       console.log(err)
     })
+  } else if (response.data.code === 16020006) { // 实名认证 未通过
+    window.location.href = '/Mine/realNameAuth'
   } else if (response.data.code === 16030001) { // 企业未认证 未提交认证
     window.location.href = '/Mine/companyAuth'
   } else if (response.data.code === 16030007 || response.data.code === 16030006) { // 企业未认证 未通过

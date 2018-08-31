@@ -202,7 +202,7 @@ class PushQuickOrder extends Component {
     this.getNaturalList()
   }
   onHandleNext = () => {
-    let validateAry = ['prj_id', 'construction_place', 'penalty', 'bid_deposit', 'tender_deposit', 'tender_contract', 'tender_contract_way', 'penalty', 'tender_amount']
+    let validateAry = ['prj_id', 'construction_place', 'bid_end_time', 'startWorkDate', 'endWorkDate', 'tender_amount']
     const { fileList, paymodeRadioVal, settleRadioVal, startLowerTime, startUpperTime, endLowerTime, endUpperTime } = this.state
     let postFile = []
     fileList.map((item, index, ary) => {
@@ -413,12 +413,8 @@ class PushQuickOrder extends Component {
                   </Picker>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '投标保证金（单位：元）'}>
-                {getFieldDecorator('bid_deposit', {
-                  rules: [
-                    { required: true, message: '请输入投标保证金' },
-                  ],
-                })(
+              <List className={`${style['input-form-list']}`} renderHeader={() => '投标保证金（单位：元）（非必填）'}>
+                {getFieldDecorator('bid_deposit')(
                   <InputItem
                     clear
                     placeholder='请输入投标保证金'
@@ -426,12 +422,8 @@ class PushQuickOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '招标保证金（单位：元）'}>
-                {getFieldDecorator('tender_deposit', {
-                  rules: [
-                    { required: true, message: '请输入招标保证金' },
-                  ],
-                })(
+              <List className={`${style['input-form-list']}`} renderHeader={() => '招标保证金（单位：元）（非必填）'}>
+                {getFieldDecorator('tender_deposit')(
                   <InputItem
                     clear
                     placeholder='请输入投标保证金'
@@ -507,11 +499,7 @@ class PushQuickOrder extends Component {
                 />
               </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '联系人'}>
-                {getFieldDecorator('tender_contract', {
-                  rules: [
-                    { required: true, message: '请输入联系人' },
-                  ],
-                })(
+                {getFieldDecorator('tender_contract')(
                   <InputItem
                     clear
                     placeholder='请输入联系人'
@@ -519,11 +507,7 @@ class PushQuickOrder extends Component {
                 )}
               </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '联系方式'}>
-                {getFieldDecorator('tender_contract_way', {
-                  rules: [
-                    { required: true, message: '请输入联系方式' },
-                  ],
-                })(
+                {getFieldDecorator('tender_contract_way')(
                   <InputItem
                     clear
                     placeholder='请输入联系方式'
@@ -569,11 +553,7 @@ class PushQuickOrder extends Component {
                 )}
               </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '违约金（单位：元）'}>
-                {getFieldDecorator('penalty', {
-                  rules: [
-                    { required: true, message: '请输入违约金' },
-                  ],
-                })(
+                {getFieldDecorator('penalty')(
                   <InputItem
                     clear
                     placeholder='请输入违约金'

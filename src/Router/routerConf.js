@@ -10,7 +10,7 @@ import Loadable from 'react-loadable'
 
 function MyLoadingComponent({ error, pastDelay }) {
   if (error) {
-    return <div>Error!</div>
+    return <div>网络异常，请重新加载！</div>
   } else if (pastDelay) {
     return <div>Loading...</div>
   } else {
@@ -132,6 +132,10 @@ const CompanyAuth = Loadable({ // 企业认证
   loader: () => import(/* webpackChunkName: "companyauth" */ '../models/Mine/companyAuth'),
   loading: MyLoadingComponent
 })
+const RealNameAuth = Loadable({ // 个人认证
+  loader: () => import(/* webpackChunkName: "realnameauth" */ '../models/Mine/realNameAuth/'),
+  loading: MyLoadingComponent
+})
 const CompanyAuthDetail = Loadable({ // 企业认证详情
   loader: () => import(/* webpackChunkName: "companyauthdetail" */ '../models/Mine/companyAuthDetail'),
   loading: MyLoadingComponent
@@ -216,8 +220,20 @@ const AddPerson = Loadable({ // 添加人员
   loader: () => import(/* webpackChunkName: "addperson" */ '../models/Mine/personStructure/addPerson'),
   loading: MyLoadingComponent
 })
+const EditPerson = Loadable({ // 修改人员
+  loader: () => import(/* webpackChunkName: "editperson" */ '../models/Mine/personStructure/editPerson'),
+  loading: MyLoadingComponent
+})
 const AddDepartment = Loadable({ // 添加部门
   loader: () => import(/* webpackChunkName: "adddepartment" */ '../models/Mine/personStructure/addDepartment'),
+  loading: MyLoadingComponent
+})
+const EditDepartment = Loadable({ // 修改部门
+  loader: () => import(/* webpackChunkName: "editdepartment" */ '../models/Mine/personStructure/editDepartment'),
+  loading: MyLoadingComponent
+})
+const SelectDepart = Loadable({ // 选择部门
+  loader: () => import(/* webpackChunkName: "selectdepart" */ '../models/Mine/personStructure/selectDepart'),
   loading: MyLoadingComponent
 })
 const FeedBack = Loadable({ // 问题反馈
@@ -491,6 +507,14 @@ const routes = [
     showMenu: false,
     title: '企业认证'
   }, {
+    path: urls.REALNAMEAUTH,
+    exact: true,
+    component: RealNameAuth,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '个人认证'
+  }, {
     path: urls.COMPANYAUTHDETAIL,
     exact: true,
     component: CompanyAuthDetail,
@@ -661,6 +685,14 @@ const routes = [
     showMenu: false,
     title: '添加人员'
   }, {
+    path: urls.EDITPERSON,
+    exact: true,
+    component: EditPerson,
+    parent: 'PersonStructure',
+    animated: true,
+    showMenu: false,
+    title: '修改人员'
+  }, {
     path: urls.ADDDEPARTMENT,
     exact: true,
     component: AddDepartment,
@@ -668,6 +700,22 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '添加部门'
+  }, {
+    path: urls.EDITDEPARTMENT,
+    exact: true,
+    component: EditDepartment,
+    parent: 'OrgantStruct',
+    animated: true,
+    showMenu: false,
+    title: '修改部门'
+  }, {
+    path: urls.SELECTDEPART,
+    exact: true,
+    component: SelectDepart,
+    parent: 'OrgantStruct',
+    animated: true,
+    showMenu: false,
+    title: '选择部门'
   }, {
     path: urls.FEEDBACK,
     exact: true,
