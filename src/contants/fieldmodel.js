@@ -18,7 +18,7 @@ const unitPrice = {
 }
 
 const settleRadio = [
-  { value: 'B01', label: '工程进度' },
+  // { value: 'B01', label: '工程进度' },
   { value: 'A01', label: '日' },
   { value: 'A02', label: '周' },
   { value: 'A03', label: '月' }
@@ -32,6 +32,11 @@ const payModeRadio = [
 const rightWrongRadio = [
   { value: 0, label: '否' },
   { value: 1, label: '是' }
+]
+
+const assignTypeRadio = [
+  { value: 0, label: '公开' },
+  { value: 1, label: '邀请' }
 ]
 
 const projectStatus = [
@@ -81,6 +86,11 @@ const attendanceDetailType = { // 考勤详情打卡类型
   2: '下班'
 }
 
+const tenderWayRadio = [
+  { value: 'A', label: '要约价招标' },
+  { value: 'B', label: '竞价招标' }
+]
+
 export {
   priceModeData,
   settleRadio,
@@ -93,5 +103,7 @@ export {
   orderStatus,
   attendanceList,
   attendanceDetailStatus,
-  attendanceDetailType
+  attendanceDetailType,
+  assignTypeRadio,
+  tenderWayRadio
 }

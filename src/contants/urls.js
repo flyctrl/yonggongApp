@@ -74,4 +74,5 @@ export const RESETPWD = `${BASE_URL}/Login/resetPwd` // 重置密码
 export const SYSNOTICE = `${BASE_URL}/Message/sysNotice` // 系统通知
 export const CHATBOX = `${BASE_URL}/Message/chatBox` // 聊天框
 export const USERINFO = `${BASE_URL}/Message/userInfo` // 用户信息
+export const SHOWINFODETAIL = `${BASE_URL}/Message/showDetail` // 详情
 

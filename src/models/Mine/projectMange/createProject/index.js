@@ -147,7 +147,7 @@ class CreateProject extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '项目编号'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '项目编号(非必填)'}>
                 {getFieldDecorator('project_no')(
                   <InputItem
                     clear
@@ -191,7 +191,7 @@ class CreateProject extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '建设单位(非必填)'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '建设单位'}>
                 {getFieldDecorator('prj_build_unit', {
                   rules: [
                     { required: true, message: '请输入建设单位' },
@@ -215,7 +215,7 @@ class CreateProject extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '总投资（单位：元）'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '总投资（单位：元）(非必填)'}>
                 {getFieldDecorator('construction_amount')(
                   <InputItem
                     clear
@@ -224,7 +224,7 @@ class CreateProject extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '总面积（单位：平方米）'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '总面积（单位：平方米）(非必填)'}>
                 {getFieldDecorator('construction_area')(
                   <InputItem
                     clear

@@ -53,6 +53,9 @@ export default {
     getAptitude(params) { // 获取工种列表和企业资质列表
       return Fetch('/common/aptitude', params, 'get')
     },
+    getCate(params) { // 获取施工内容
+      return Fetch('/common/aptitude/cate', params, 'get')
+    },
     getSkillList(params) { // 获取技能认证列表
       return Fetch('/common/aptitude/list', params, 'get')
     },
@@ -65,6 +68,9 @@ export default {
     },
     uploadImg(params) { // 图片上传
       return FetchSave('/common/attach/image', params, 'post', { 'Content-Type': 'multipart/form-data' })
+    },
+    getUnitlist(params) { // 获取计价列表
+      return Fetch(prefix + '/worksheet/list/valuation_unit', params, 'get')
     }
   },
   auth: {
@@ -90,7 +96,7 @@ export default {
   PushOrder: {
     workSheet(params) { // 发布工单/快单/招标
       return FetchSave(prefix + '/worksheet/add', params, 'post')
-    }
+    },
   },
   WorkOrder: {
     WorkOrderList(params) { // 工单列表
@@ -242,7 +248,7 @@ export default {
         return FetchSave(prefix + '/company/user/edit', params)
       },
       delPerson(params) { // 删除人员
-        return FetchSave(prefix + '/company/user/edit', params)
+        return FetchSave(prefix + '/company/user/del', params)
       },
       getPersonInfo(params) { // 获取用户详情(组织架构)
         return Fetch(prefix + '/company/user', params, 'get')
@@ -272,12 +278,14 @@ export default {
     },
     engineeringLive: { // 工程实况
       getEngList(params) { // 考勤打卡统计
-        return Fetch(prefix + '/worksheetOrder/attend/stat', params, 'post')
+        return Fetch(prefix + '/worksheetOrder/attend/stat', params)
       },
       getEngDetail(params) { // 考勤详情
-        return Fetch(prefix + '/worksheetOrder/attend/list', params, 'post')
+        return Fetch(prefix + '/worksheetOrder/attend/list', params)
       }
-
+    },
+    feedback: (params) => {
+      return FetchSave(prefix + '/user/feedback', params)
     }
   },
   Home: {
@@ -287,9 +295,16 @@ export default {
     getSystemMessDetail(params) { // 系统通知详情
       return Fetch(prefix + '/message/sys/show', params, 'get')
     },
-    getTodayTodo(params) { // 获取首页今日代办
+    getTodayTodo(params) { // 获取今日代办
       return Fetch(prefix + '/company/list/todo', params, 'get')
     }
   },
-
+  Message: { // 消息
+    getNoticeList(params) {
+      return Fetch(prefix + '/message/notice/list', params, 'get')
+    },
+    getNoticeDetail(params) {
+      return Fetch(prefix + '/message/notice/show', params, 'get')
+    }
+  }
 }

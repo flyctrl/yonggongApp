@@ -13,7 +13,7 @@ import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import { formatDate } from 'Contants/tooler'
-import { payModeRadio, settleRadio } from 'Contants/fieldmodel'
+import { payModeRadio, settleRadio, assignTypeRadio, tenderWayRadio } from 'Contants/fieldmodel'
 import style from '../form.css'
 import 'antd-mobile/lib/calendar/style/css'
 
@@ -43,7 +43,6 @@ let Calendar = Loadable({
     return null
   },
   render(loaded, props) {
-    console.log(loaded)
     let Calendar = loaded.Calendar
     return <Calendar {...props}/>
   }
@@ -67,8 +66,17 @@ class PushQuickOrder extends Component {
       endDateShow: false,
       endLowerTime: null,
       endUpperTime: null,
-      settleRadioVal: 'B01',
-      paymodeRadioVal: 'A'
+      settleRadioVal: 'A01',
+      tenderWayRadioVal: 'A',
+      paymodeRadioVal: 'A',
+      assignRadioVal: 1,
+      worktypeData: [],
+      workTypeSelect: false,
+      professData: [],
+      professSelect: false,
+      unitData: [],
+      priceWay: 0,
+      priceWaySelect: false,
     }
   }
 
@@ -78,9 +86,21 @@ class PushQuickOrder extends Component {
     })
   }
 
+  onTenderChange = (value) => { // 招标方式单选事件
+    this.setState({
+      tenderWayRadioVal: value
+    })
+  }
+
   onPayWayChange = (value) => { // 付款方式单选事件
     this.setState({
       paymodeRadioVal: value
+    })
+  }
+
+  onAssignChange = (value) => { // 是否指派单选事件
+    this.setState({
+      assignRadioVal: value
     })
   }
 
@@ -96,7 +116,6 @@ class PushQuickOrder extends Component {
   }
   onTenderDateConfirm = (tendTime) => {
     let tenderTime = formatDate(tendTime)
-    console.log(tenderTime)
     this.props.form.setFieldsValue({
       bid_end_time: tenderTime
     })
@@ -119,7 +138,6 @@ class PushQuickOrder extends Component {
   onStartDateConfirm = (startLowerTime, startUpperTime) => {
     let startTime = formatDate(startLowerTime)
     let endTime = formatDate(startUpperTime)
-    console.log(startTime)
     this.props.form.setFieldsValue({
       startWorkDate: startTime + ' ~ ' + endTime
     })
@@ -166,7 +184,6 @@ class PushQuickOrder extends Component {
   }
 
   delUploadList(ev) {
-    console.log(ev)
     const { fileList } = this.state
     let newFileList = []
     fileList.map((item) => {
@@ -174,7 +191,6 @@ class PushQuickOrder extends Component {
         newFileList.push(item)
       }
     })
-    console.log(newFileList)
     this.setState({
       fileList: newFileList
     })
@@ -189,6 +205,32 @@ class PushQuickOrder extends Component {
     })
   }
 
+  handleWorktype = async () => { // 获取施工内容
+    const worktypeData = await api.Common.getCate({
+      type: 'skill,machine'
+    }) || false
+    this.setState({
+      // workTypeSelect: true,
+      worktypeData
+    })
+  }
+  getWorkTypeChange = async (value, index) => { // 施工内容选择
+    if (value[0] === 'skill') {
+      this.setState({
+        workTypeSelect: true
+      })
+    } else {
+      this.setState({
+        workTypeSelect: false
+      })
+    }
+  }
+  onProfessChange = () => { // 技能认证
+    this.setState({
+      professSelect: true
+    })
+  }
+
   getNaturalList = async () => { // 获取资质列表
     const naturalData = await api.Common.getAptitude({
       type: 'company'
@@ -197,13 +239,30 @@ class PushQuickOrder extends Component {
       naturalData
     })
   }
+  handleClickSing = async () => { // 标的工作量点击
+    const unitData = await api.Common.getUnitlist({}) || false
+    this.setState({
+      unitData
+    })
+  }
+
+  onSingePriceChange = (value) => { // 标的工作量选择
+    this.setState({
+      priceWay: value,
+      priceWaySelect: true
+    })
+  }
+
   componentDidMount() {
     this.getProjectList()
     this.getNaturalList()
   }
   onHandleNext = () => {
-    let validateAry = ['prj_id', 'construction_place', 'bid_end_time', 'startWorkDate', 'endWorkDate', 'tender_amount']
-    const { fileList, paymodeRadioVal, settleRadioVal, startLowerTime, startUpperTime, endLowerTime, endUpperTime } = this.state
+    let validateAry = ['prj_id', 'construction_place', 'construct_ids', 'bid_end_time', 'startWorkDate', 'endWorkDate']
+    const { fileList, paymodeRadioVal, settleRadioVal, tenderWayRadioVal, assignRadioVal, startLowerTime, startUpperTime, endLowerTime, endUpperTime } = this.state
+    if (assignRadioVal === 1) {
+      validateAry.push('tender_amount')
+    }
     let postFile = []
     fileList.map((item, index, ary) => {
       postFile.push(item['path'])
@@ -211,9 +270,20 @@ class PushQuickOrder extends Component {
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, (error, values) => {
       if (!error) {
-        let newData = { prj_id: values['prj_id'][0], start_lower_time: startLowerTime, start_upper_time: startUpperTime, end_lower_time: endLowerTime, end_upper_time: endUpperTime, payment_method: settleRadioVal, salary_payment_way: paymodeRadioVal, worksheet_type: 1 }
+        let newData = {
+          prj_id: values['prj_id'][0],
+          construct_ids: values['construct_ids'][1],
+          valuation_unit: values['valuation_unit'][0],
+          start_lower_time: startLowerTime,
+          start_upper_time: startUpperTime,
+          end_lower_time: endLowerTime,
+          end_upper_time: endUpperTime,
+          payment_method: settleRadioVal,
+          tender_way: tenderWayRadioVal,
+          salary_payment_way: paymodeRadioVal,
+          assign_type: assignRadioVal,
+          worksheet_type: 1 }
         let postData = { ...{ attachment: postFile }, ...values, ...newData }
-        console.log(postData)
         this.setState({
           isEdit: false,
           postData
@@ -230,11 +300,11 @@ class PushQuickOrder extends Component {
   }
 
   onHandleSubmit = async () => { // 提交数据
-    console.log('提交数据', postData)
     let { postData } = this.state
     const data = await api.PushOrder.workSheet(postData) || false
     if (data) {
       Toast.success('发布成功')
+      this.props.match.history.push(urls.HOME)
     }
   }
 
@@ -245,9 +315,8 @@ class PushQuickOrder extends Component {
   }
 
   showConfirmOrder = () => { // 工单确认
-    let { postData, proData, fileList } = this.state
-    console.log(postData)
-    if (proData === []) return false
+    let { postData, proData, worktypeData, fileList, unitData, professData } = this.state
+    if (proData === [] || worktypeData === []) return false
     return (
       <div className='pageBox'>
         <Header
@@ -270,6 +339,31 @@ class PushQuickOrder extends Component {
             <List renderHeader={() => '施工地址'}>
               {postData['construction_place']}
             </List>
+            <List renderHeader={() => '施工内容'}>
+              {
+                worktypeData.map((item) => {
+                  return item['children'].map((i) => {
+                    if (i.value === postData['construct_ids']) {
+                      return i.label
+                    }
+                  })
+                })
+              }
+            </List>
+            <List renderHeader={() => '技能认证'}>
+              {
+                professData.length !== 0 ? professData.find((item) => {
+                  return item.value === postData['professional_level']
+                })['label'] : ''
+              }
+            </List>
+            <List renderHeader={() => '标的工作量'}>
+              {
+                unitData.find((item) => {
+                  return item.value === postData['valuation_unit']
+                })['label']
+              }
+            </List>
             <List renderHeader={() => '投标截止时间'}>
               {postData['bid_end_time']}
             </List>
@@ -279,31 +373,53 @@ class PushQuickOrder extends Component {
             <List renderHeader={() => '竣工日期范围'}>
               {postData['endWorkDate']}
             </List>
-            <List renderHeader={() => '结算方式'}>
+            <List renderHeader={() => '付款方式 '}>
               {
                 settleRadio.find((item) => {
                   return item.value === postData['payment_method']
                 })['label']
               }
             </List>
-            <List renderHeader={() => '付款方式'}>
+            <List renderHeader={() => '工资发放方式'}>
               {
                 payModeRadio.find((item) => {
                   return item.value === postData['salary_payment_way']
                 })['label']
               }
             </List>
+            <List renderHeader={() => '招标方式'}>
+              {
+                tenderWayRadio.find((item) => {
+                  return item.value === postData['tender_way']
+                })['label']
+              }
+            </List>
             <List renderHeader={() => '投标保证金'}>
               {postData['bid_deposit']}元
             </List>
-            <List renderHeader={() => '招标保证金'}>
+            <List renderHeader={() => '招标担保金'}>
               {postData['tender_deposit']}元
+            </List>
+            <List renderHeader={() => '履约担保总额'}>
+              {
+                `${postData['guarantee_amount']} 元`
+              }
+            </List>
+            <List renderHeader={() => '履约担保比例'}>
+              {
+                `${postData['deposit_rate']} %`
+              }
             </List>
             <List renderHeader={() => '联系人'}>
               {postData['tender_contract']}元
             </List>
             <List renderHeader={() => '联系方式'}>
               {postData['tender_contract_way']}元
+            </List>
+            <List renderHeader={() => '是否指派'}>
+              {
+                postData['assign_type'] === 1 ? '邀请' : '公开'
+              }
             </List>
             <List className={style['remark-desc']} renderHeader={() => '需求描述'}>
               {postData['description']}
@@ -332,34 +448,19 @@ class PushQuickOrder extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form
-    const { fileList, proData, isEdit, postData, proSelect, tenderDateShow, startDateShow, endDateShow, paymodeRadioVal, settleRadioVal, naturalSelect, naturalData } = this.state
+    const { fileList, proData, isEdit, postData, proSelect, workTypeSelect, worktypeData, professSelect, professData, tenderDateShow, startDateShow, endDateShow, paymodeRadioVal, settleRadioVal, tenderWayRadioVal, naturalSelect, naturalData, assignRadioVal, unitData, priceWaySelect } = this.state
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
       multiple: false,
-      beforeUpload(file) {
-        console.log('beforeUpload', file.name)
-      },
-      onStart: (file) => {
-        console.log('onStart', file.name)
-      },
       onSuccess: (file) => {
-        console.log('onSuccess', file)
         if (file['code'] === 0) {
           this.setState(({ fileList }) => ({
             fileList: [...fileList, file['data']],
-          }), () => {
-            console.log(this.state.fileList[0].org_name)
-          })
+          }))
         } else {
           Toast.fail(file['msg'], 1)
         }
-      },
-      onProgress(step, file) {
-        console.log('onProgress', Math.round(step.percent), file.name)
-      },
-      onError(err) {
-        console.log('onError', err)
       }
     }
     return (
@@ -406,6 +507,43 @@ class PushQuickOrder extends Component {
                   ></InputItem>
                 )}
               </List>
+              <List onClick={this.handleWorktype} className={`${style['input-form-list']} ${workTypeSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '施工内容'}>
+                {getFieldDecorator('construct_ids', {
+                  rules: [
+                    { required: true, message: '请选择施工内容' },
+                  ],
+                })(
+                  <Picker data={worktypeData} extra='请选择施工内容' cols={2} onChange={this.getWorkTypeChange}>
+                    <List.Item arrow='horizontal'></List.Item>
+                  </Picker>
+                )}
+              </List>
+              <List style={{ display: workTypeSelect ? 'block' : 'none' }} className={`${style['input-form-list']} ${professSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '技能认证（非必填）'}>
+                {getFieldDecorator('professional_level')(
+                  <Picker data={professData} extra='请选择技能认证' cols={1} onChange={this.onProfessChange}>
+                    <List.Item arrow='horizontal'></List.Item>
+                  </Picker>
+                )}
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '是否指派'}>
+                {getFieldDecorator('assign_type')(
+                  <div>
+                    {
+                      assignTypeRadio.map((item, index, ary) => {
+                        return (
+                          <Radio
+                            key={item.value}
+                            checked={assignRadioVal === item.value}
+                            name='assign_type'
+                            className={style['pro-radio']}
+                            onChange={() => this.onAssignChange(item.value)}
+                          >{item.label}</Radio>
+                        )
+                      })
+                    }
+                  </div>
+                )}
+              </List>
               <List className={`${style['input-form-list']} ${naturalSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '资质要求（非必填）'}>
                 {getFieldDecorator('aptitude_id_list')(
                   <Picker data={naturalData} extra='请选择资质要求' cols={1} onChange={this.onNaturalhange}>
@@ -422,11 +560,11 @@ class PushQuickOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '招标保证金（单位：元）（非必填）'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '招标担保金（单位：元）（非必填）'}>
                 {getFieldDecorator('tender_deposit')(
                   <InputItem
                     clear
-                    placeholder='请输入投标保证金'
+                    placeholder='请输入招标担保金'
                     extra='¥'
                   ></InputItem>
                 )}
@@ -498,6 +636,35 @@ class PushQuickOrder extends Component {
                   defaultDate={now}
                 />
               </List>
+              <List onClick={this.handleClickSing} className={`${style['input-form-list']} ${priceWaySelect ? style['selected-form-list'] : ''}`} renderHeader={() => '标的工作量'}>
+                {getFieldDecorator('valuation_unit', {
+                  rules: [
+                    { required: true, message: '请选择标的工作量' },
+                  ],
+                })(
+                  <Picker data={unitData} extra='请选择标的工作量' cols={1} onChange={this.onSingePriceChange}>
+                    <List.Item arrow='horizontal'></List.Item>
+                  </Picker>
+                )}
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '履约担保总额(元)(非必填)'}>
+                {getFieldDecorator('deposit_rate')(
+                  <InputItem
+                    clear
+                    placeholder='请输入履约担保总额'
+                    extra='¥'
+                  ></InputItem>
+                )}
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '保证金比例（单位：%）(非必填)'}>
+                {getFieldDecorator('guarantee_amount')(
+                  <InputItem
+                    clear
+                    placeholder='请输入保证金比例'
+                    extra='%'
+                  ></InputItem>
+                )}
+              </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '联系人'}>
                 {getFieldDecorator('tender_contract')(
                   <InputItem
@@ -514,7 +681,26 @@ class PushQuickOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '结算方式'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '招标方式'}>
+                {getFieldDecorator('tender_way')(
+                  <div>
+                    {
+                      tenderWayRadio.map((item, index, ary) => {
+                        return (
+                          <Radio
+                            key={item.value}
+                            checked={tenderWayRadioVal === item.value }
+                            name='tender_way'
+                            className={`${style['pro-radio']} ${style['sm-radio']}`}
+                            onChange={() => this.onTenderChange(item.value)}
+                          >{item.label}</Radio>
+                        )
+                      })
+                    }
+                  </div>
+                )}
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '付款方式'}>
                 {getFieldDecorator('payment_method')(
                   <div>
                     {
@@ -533,7 +719,7 @@ class PushQuickOrder extends Component {
                   </div>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '付款方式'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '工资发放方式'}>
                 {getFieldDecorator('salary_payment_way')(
                   <div>
                     {
@@ -561,15 +747,15 @@ class PushQuickOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '总价（单位：元）'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '工程造价(工程单价/工程总价)(单位：元)'}>
                 {getFieldDecorator('tender_amount', {
                   rules: [
-                    { required: true, message: '请输入总价' },
+                    { required: !!assignRadioVal, message: '请输入工程造价' },
                   ],
                 })(
                   <InputItem
                     clear
-                    placeholder='请输入总价'
+                    placeholder='请输入工程造价'
                     extra='¥'
                   ></InputItem>
                 )}

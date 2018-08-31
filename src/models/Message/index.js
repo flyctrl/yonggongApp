@@ -9,7 +9,7 @@ import { Tabs } from 'antd-mobile'
 import { Content } from 'Components'
 import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
-import history from 'Util/history'
+import api from 'Util/api'
 import style from './style.css'
 
 const tabs = [
@@ -19,62 +19,102 @@ const tabs = [
 class Message extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
-
-    this.handleSysNotice = this.handleSysNotice.bind(this)
+    this.state = {
+      noticeList: [],
+      tobeList: [],
+    }
   }
-  handleSysNotice() {
-    history.push(urls.SYSNOTICE)
+  getNoticeList = async () => {
+    const data = await api.Message.getNoticeList({}) || false
+    this.setState({
+      noticeList: data['list'],
+    })
+  }
+  getTobeDoneList = async () => {
+    const data = await api.Home.getTodayTodo({}) || false
+    this.setState({
+      tobeList: data['list'],
+    })
+  }
+  componentDidMount() {
+    this.getNoticeList()
+  }
+  handleSysNotice = (e) => {
+    let id = e.currentTarget.getAttribute('data-id')
+    this.props.match.history.push(urls.SHOWINFODETAIL + '?id=' + id)
   }
   handleMesage() {
-    history.push(urls.CHATBOX)
+    this.props.match.history.push(urls.CHATBOX)
+  }
+  handleTabChange = (value, index) => {
+    if (index === 1) {
+      this.getTobeDoneList()
+    } else if (index === 0) {
+      this.getNoticeList()
+    }
   }
   render() {
+    let { noticeList, tobeList } = this.state
     return (
       <div className={`${'contentBox'} ${style['message-content']}`}>
         <Content isHeader={false}>
           <Tabs tabs={tabs}
-            initalPage={'t1'}
+            initalPage={0}
             tabBarBackgroundColor='#FAFAFA'
+            onChange={this.handleTabChange}
           >
             <div>
-              <div onClick={this.handleSysNotice} className={`${style['notice-box']} my-bottom-border`}>
-                <dl>
-                  <dt>
-                    <span>
-                      <NewIcon className={style['notice-icon']} type='icon-xiaolaba' />
-                    </span>
-                  </dt>
-                  <dd>
-                    <p>消息通知<em>下午4：20</em></p>
-                    <span>您直接在线接单就可以了。</span>
-                  </dd>
-                </dl>
-              </div>
-              <ul className={style['mesg-list']}>
-                <li className='my-bottom-border' onClick={this.handleMesage}>
-                  <div className={`${style['usr-header']} my-full-border`}>小明</div>
-                  <div className={style['msg-box']}>
-                    <p>江西华夏建筑有限公司<em>下午 2:23 </em></p>
-                    <span>您直接在线接单就可以了。</span>
-                  </div>
-                </li>
-              </ul>
+              {
+                noticeList.length !== 0 ? noticeList.map((item) => {
+                  return (
+                    <div data-id={item['id']} key={item['id']} onClick={this.handleSysNotice} className={`${style['notice-box']} my-bottom-border`}>
+                      <dl>
+                        <dt>
+                          <span>
+                            <NewIcon className={style['notice-icon']} type='icon-xiaolaba' />
+                          </span>
+                        </dt>
+                        <dd>
+                          <p>公告通知<em>{item['created_at']}</em></p>
+                          <span>{item['title']}</span>
+                        </dd>
+                      </dl>
+                    </div>
+                  )
+                }) : <div className={'nodata'}>暂无消息</div>
+              }
+              {
+                // <ul className={style['mesg-list']}>
+                //   <li className='my-bottom-border' onClick={this.handleMesage}>
+                //     <div className={`${style['usr-header']} my-full-border`}>小明</div>
+                //     <div className={style['msg-box']}>
+                //       <p>江西华夏建筑有限公司<em>下午 2:23 </em></p>
+                //       <span>您直接在线接单就可以了。</span>
+                //     </div>
+                //   </li>
+                // </ul>
+              }
             </div>
             <div>
-              <div onClick={this.handleSysNotice} className={`${style['notice-box']} my-bottom-border`}>
-                <dl>
-                  <dt>
-                    <span>
-                      <NewIcon className={style['notice-icon']} type='icon-xiaolaba' />
-                    </span>
-                  </dt>
-                  <dd>
-                    <p>消息通知<em>下午4：20</em></p>
-                    <span>您直接在线接单就可以了。</span>
-                  </dd>
-                </dl>
-              </div>
+              {
+                tobeList.length !== 0 ? tobeList.map((item, index) => {
+                  return (
+                    <div className={`${style['notice-box']} my-bottom-border`}>
+                      <dl>
+                        <dt>
+                          <span className={style['tobedone']}>
+                            <NewIcon className={style['notice-icon']} type='icon-jinridaiban' />
+                          </span>
+                        </dt>
+                        <dd>
+                          <p>{item['title']}<em>{item['created_at']}</em></p>
+                          <span>{item['content']}</span>
+                        </dd>
+                      </dl>
+                    </div>
+                  )
+                }) : <div className={'nodata'}>暂无待办事项</div>
+              }
             </div>
           </Tabs>
         </Content>

@@ -1,0 +1,25 @@
+.detail-box {
+  & h2 {
+    font-size: 16px;
+    font-weight: normal;
+    color: #313f48;
+    text-align: center;
+    height: 34px;
+    line-height: 34px;
+    margin-top: 10px;
+  }
+  & p {
+    font-size: 14px;
+    height: 30px;
+    line-height: 30px;
+    color: #ccc;
+    text-align: center;
+  }
+  & .detail-content {
+    padding: 15px;
+    font-size: 14px;
+    color: #313f48;
+    margin-top: 10px;
+    line-height: 24px;
+  }
+}
