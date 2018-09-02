@@ -380,6 +380,11 @@ class PushQuickOrder extends Component {
                 })['label']
               }
             </List>
+            <List renderHeader={() => '违约金'}>
+              {
+                postData['penalty'] ? postData['penalty'] : ''
+              }
+            </List>
             <List renderHeader={() => '工资发放方式'}>
               {
                 payModeRadio.find((item) => {

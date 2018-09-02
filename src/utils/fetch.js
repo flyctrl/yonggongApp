@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2018-08-30 10:03:32
+* @Last Modified time: 2018-08-31 23:46:35
 */
 import storage from '../utils/storage'
 import axios from 'axios'
@@ -39,6 +39,9 @@ fetcher.interceptors.response.use(function (response) {
     let refreshToken = storage.get('refreshToken')
     axios.post(baseUrl + '/employ/refresh', { refresh_token: refreshToken }).then(function(res) {
       console.log(res.data.data.access_token)
+      if (res.data.code === 10012) {
+        window.location.href = '/Login/login'
+      }
       storage.set('Authorization', 'Bearer ' + res.data.data.access_token)
       storage.set('refreshToken', res.data.data.refresh_token)
       window.location.reload()

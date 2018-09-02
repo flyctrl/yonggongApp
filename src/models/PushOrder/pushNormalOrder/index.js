@@ -380,7 +380,7 @@ class PushNormalOrder extends Component {
             </List>
             <List renderHeader={() => '违约金'}>
               {
-                `${postData['penalty']}`
+                postData['penalty'] ? postData['penalty'] : ''
               }
             </List>
             <List renderHeader={() => '是否指派'}>
@@ -637,7 +637,7 @@ class PushNormalOrder extends Component {
                 )}
               </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '履约担保总额(元)(非必填)'}>
-                {getFieldDecorator('deposit_rate')(
+                {getFieldDecorator('guarantee_amount')(
                   <InputItem
                     clear
                     placeholder='请输入履约担保总额'
@@ -646,7 +646,7 @@ class PushNormalOrder extends Component {
                 )}
               </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '保证金比例（单位：%）(非必填)'}>
-                {getFieldDecorator('guarantee_amount')(
+                {getFieldDecorator('deposit_rate')(
                   <InputItem
                     clear
                     placeholder='请输入保证金比例'

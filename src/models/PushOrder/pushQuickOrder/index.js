@@ -235,7 +235,7 @@ class PushQuickOrder extends Component {
           end_upper_time: endUpperTime,
           attend_time_config: [
             [values['time1'] + ':' + values['time2'], values['time3'] + ':' + values['time4']],
-            [values['time5'] || '' + ':' + values['time6'] || '', values['time7'] || '' + ':' + values['time8'] || '']
+            [(values['time5'] ? values['time5'] : '') + ':' + (values['time6'] ? values['time6'] : ''), (values['time7'] ? values['time7'] : '') + ':' + (values['time8'] ? values['time8'] : '')]
           ],
           worksheet_type: 3
         }
@@ -355,12 +355,17 @@ class PushQuickOrder extends Component {
             </List>
             <List renderHeader={() => '违约金'}>
               {
-                `${postData['penalty']}`
+                postData['penalty'] ? postData['penalty'] : ''
               }
             </List>
             <List renderHeader={() => '是否指派'}>
               {
                 postData['assign_type'] === 1 ? '邀请' : '公开'
+              }
+            </List>
+            <List renderHeader={() => '考勤时间'}>
+              {
+                `${postData['time1']}:${postData['time2']}~${postData['time3']}:${postData['time4']}  ${postData['time5'] ? (postData['time5'] + ':') : ''}${postData['time6'] ? postData['time6'] : ''}${postData['time7'] ? ('~' + postData['time7'] + ':') : ''}${postData['time8'] ? postData['time8'] : ''}`
               }
             </List>
             <List className={style['remark-desc']} renderHeader={() => '需求描述'}>
@@ -616,7 +621,7 @@ class PushQuickOrder extends Component {
                   </Picker>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader='工程单价'>
+              <List className={`${style['input-form-list']}`}>
                 {getFieldDecorator('valuation_unit_price', {
                   rules: [
                     { required: true, message: '请输入工程单价' },
@@ -629,7 +634,7 @@ class PushQuickOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader='数量'>
+              <List className={`${style['input-form-list']}`}>
                 {getFieldDecorator('valuation_quantity', {
                   rules: [
                     { required: true, message: '请输入数量' },

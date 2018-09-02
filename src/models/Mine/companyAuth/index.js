@@ -36,6 +36,7 @@ class Company extends Component {
   uploadImg = async (images, name) => {
     console.log('images', images)
     if (images[0]) {
+      Toast.loading('上传中...', 0)
       let formData = new FormData()
       formData.append('image', images[0].file)
       const data = await api.Common.uploadImg(formData) || {}
@@ -45,6 +46,7 @@ class Company extends Component {
       } else {
         images = []
       }
+      Toast.hide()
       this.setImgstate(images, name)
     } else {
       this.setImgstate(images, name)
