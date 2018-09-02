@@ -23,7 +23,7 @@ class Account extends Component {
     const data = await api.Mine.account.myAccount() || false
     this.setState({
       moneyA: data['usable_amount'],
-      moneyB: data['freeze_amount']
+      moneyB: data['total_freeze_amount']
     })
   }
   handleBindCard = () => {

@@ -159,17 +159,22 @@ class PushNormalOrder extends Component {
     })
   }
 
-  delUploadList(ev) {
+  delUploadList = async (param) => {
     const { fileList } = this.state
     let newFileList = []
     fileList.map((item) => {
-      if (item.uid !== ev) {
+      if (item.path !== param['path']) {
         newFileList.push(item)
       }
     })
-    this.setState({
-      fileList: newFileList
-    })
+    const data = await api.Common.delAttch({
+      path: param['path']
+    }) || false
+    if (data) {
+      this.setState({
+        fileList: newFileList
+      })
+    }
   }
 
   getProjectList = async () => { // 获取项目
@@ -334,7 +339,7 @@ class PushNormalOrder extends Component {
             </List>
             <List renderHeader={() => '资质要求'}>
               {
-                naturalData.length !== 0 ? naturalData.find((item) => {
+                naturalData.length !== 0 && postData['aptitude_id_list'] ? naturalData.find((item) => {
                   return item.value === postData['aptitude_id_list'][0]
                 })['label'] : ''
               }
@@ -370,12 +375,12 @@ class PushNormalOrder extends Component {
             </List>
             <List renderHeader={() => '履约担保总额'}>
               {
-                `${postData['guarantee_amount']} 元`
+                postData['guarantee_amount'] ? postData['guarantee_amount'] + '元' : ''
               }
             </List>
             <List renderHeader={() => '履约担保比例'}>
               {
-                `${postData['deposit_rate']} %`
+                postData['deposit_rate'] ? postData['deposit_rate'] + '%' : ''
               }
             </List>
             <List renderHeader={() => '违约金'}>
@@ -421,6 +426,7 @@ class PushNormalOrder extends Component {
       data: { type: 3 },
       multiple: false,
       onSuccess: (file) => {
+        Toast.hide()
         if (file['code'] === 0) {
           this.setState(({ fileList }) => ({
             fileList: [...fileList, file['data']],
@@ -428,6 +434,9 @@ class PushNormalOrder extends Component {
         } else {
           Toast.fail(file['msg'], 1)
         }
+      },
+      beforeUpload(file) {
+        Toast.loading('上传中...', 0)
       }
     }
     return (
@@ -682,7 +691,7 @@ class PushNormalOrder extends Component {
                   {
                     fileList.map((item, index, ary) => {
                       return (
-                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={this.delUploadList.bind(this, item.uid)}>&#10005;</i></li>
+                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={() => { this.delUploadList(item) }}>&#10005;</i></li>
                       )
                     })
                   }

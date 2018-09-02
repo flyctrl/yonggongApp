@@ -11,6 +11,7 @@ import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 // import agree from 'Src/assets/agree.png'
 import api from 'Util/api'
+import style from './style.css'
 class EletAgreement extends Component {
   constructor(props) {
     super(props)
@@ -47,7 +48,7 @@ class EletAgreement extends Component {
           leftIcon='icon-back'
           leftTitle1='返回'
         />
-        <Content>
+        <Content className={style['argee-content']}>
           <div>
             { contractDetail &&
               contractDetail.map((item, index) => { return <img key={`${index}-${item.id}`} style={{ width: '100%' }} src={item} /> })

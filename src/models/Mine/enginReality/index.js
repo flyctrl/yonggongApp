@@ -198,13 +198,13 @@ class EnginReality extends Component {
                 }
               </ul>
             </div>
-            <Calendar
-              visible={dateShow}
-              onCancel={this.handleDateCancel}
-              onConfirm={this.handleDateConfirm}
-              defaultDate={now}
-            />
           </Content>
+          <Calendar
+            visible={dateShow}
+            onCancel={this.handleDateCancel}
+            onConfirm={this.handleDateConfirm}
+            defaultDate={now}
+          />
         </div>
         {
           showOrder ? <RadioOrder proData={proData} onClickBack={this.onClickBack} onClickSure={this.onHandleSure} proId={proId} /> : null

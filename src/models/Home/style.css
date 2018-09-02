@@ -70,22 +70,17 @@
     float: left;
     width: 230px;
     margin-right: 8px;
-    & .my-carousel {
-      & :global(.slider-slide) {
-        & .v-item {
-          height: 36px;
-          line-height: 36px;
-          padding-left: 10px;
-          color: #8A96A0;
-          font-size: 11px;
-          & em {
-            float: right;
-          }
-        }
-      }
+  }
+  & .v-item {
+    height: 36px;
+    line-height: 36px;
+    padding-left: 10px;
+    color: #8A96A0;
+    font-size: 11px;
+    & em {
+      float: right;
     }
   }
-
 }
 
 .today-todo {

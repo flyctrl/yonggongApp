@@ -126,16 +126,16 @@ class WorkOrder extends Component {
   }
 
   handleQuickReceptRecord = (e) => { // 查看接单记录 快单
-    let id = e.target.parentElement.id
+    let id = e.currentTarget.getAttribute('data-id')
     this.props.match.history.push(urls.RECEPTQKRECORD + '?id=' + id)
   }
   handleNormalReceptRecord = (e) => { // 查看接单记录 普通单、招标
-    let id = e.target.parentElement.id
+    let id = e.currentTarget.getAttribute('data-id')
     this.props.match.history.push(urls.RECEPTNMRECORD + '?id=' + id)
   }
   handleConfirmWork = async (e) => { // 确认开工
     // console.log(e.target.parentElement.id)
-    let id = e.target.parentElement.id
+    let id = e.currentTarget.getAttribute('data-id')
     const data = await api.WorkOrder.confirmConstruct({
       worksheet_id: id
     }) || false
@@ -153,7 +153,7 @@ class WorkOrder extends Component {
     }
   }
   handleConfirmComp = (e) => { // 确认完工列表
-    let id = e.target.parentElement.id
+    let id = e.currentTarget.getAttribute('data-id')
     this.props.match.history.push(urls.CONFIRMCOMPWORK + '?id=' + id)
   }
   handleApplyDetail = (e) => { // 审批详情
@@ -306,9 +306,6 @@ class WorkOrder extends Component {
           return (
             <div className={`${style.item}`} key={rowID}>
               {this.pubrow(rowData)}
-              <div className={style.itemfooter}>
-                <Button id={rowData['id']} onClick={this.handleNormalReceptRecord} className={style.detailbtn}>查看接单记录</Button>
-              </div>
             </div>
           )
         } else if (parentIndex === 1) { // 快单
@@ -316,7 +313,7 @@ class WorkOrder extends Component {
             <div className={`${style.item}`} key={rowID}>
               {this.pubrow(rowData)}
               <div className={style.itemfooter}>
-                <Button id={rowData['id']} onClick={this.handleQuickReceptRecord} className={style.detailbtn}>查看接单记录</Button>
+                <Button data-id={rowData['id']} onClick={this.handleQuickReceptRecord} className={style.detailbtn}>查看接单记录</Button>
               </div>
             </div>
           )
@@ -327,6 +324,7 @@ class WorkOrder extends Component {
             {this.pubrow(rowData)}
             <div className={style.itemfooter}>
               <Button data-id={rowData['id']} onClick={this.handleConfirmNmOrder} className={style.detailbtn}>确 认</Button>
+              <Button data-id={rowData['id']} onClick={this.handleNormalReceptRecord} className={style.detailbtn}>查看接单记录</Button>
             </div>
           </div>
         )
@@ -345,7 +343,7 @@ class WorkOrder extends Component {
             {this.pubrow(rowData)}
             <div className={style.itemfooter}>
               <Button data-id={rowData['id']} onClick={this.handleCancelWork} className={style.detailbtn}>取消开工</Button>
-              <Button id={rowData['id']} onClick={this.handleConfirmWork} className={style.detailbtn}>确认开工</Button>
+              <Button data-id={rowData['id']} onClick={this.handleConfirmWork} className={style.detailbtn}>确认开工</Button>
             </div>
           </div>
         )
@@ -355,7 +353,7 @@ class WorkOrder extends Component {
             <div className={`${style.item}`} key={rowID}>
               {this.pubrow(rowData)}
               <div className={style.itemfooter}>
-                <Button id={rowData['id']} onClick={this.handleConfirmComp} className={style.detailbtn}>确认完工列表</Button>
+                <Button data-id={rowData['id']} onClick={this.handleConfirmComp} className={style.detailbtn}>确认完工列表</Button>
               </div>
             </div>
           )

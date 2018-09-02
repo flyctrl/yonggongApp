@@ -47,7 +47,6 @@ class CompanyAuthDetail extends Component {
   }
   render() {
     let { dataSource } = this.state
-    console.log(dataSource)
     return (
       <div className='pageBox'>
         <Header
@@ -58,7 +57,7 @@ class CompanyAuthDetail extends Component {
             this.props.match.history.push(urls.MINE)
           }}
         />
-        <Content>
+        <Content className={ownStyle['comp-content']}>
           <div className={`${style['show-order-box']} ${ownStyle['aptide-order-box']}`}>
             <List className={`${ownStyle['aptide']} ${dataSource['status'] === 2 ? ownStyle['aptfailed'] : ''}`}>
               {

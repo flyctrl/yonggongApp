@@ -13,7 +13,7 @@ function MyLoadingComponent({ error, pastDelay }) {
   if (error) {
     return <div style={{ width: '100%', height: '400px', lineHeight: '400px', textAlign: 'center' }}>网络异常，请重新加载！</div>
   } else if (pastDelay) {
-    return <div style={{ width: '100%', height: '400px', lineHeight: '400px', textAlign: 'center' }}><Icon type='loading' /></div>
+    return <div style={{ width: '100%', height: '400px', lineHeight: '400px', textAlign: 'center' }}><Icon type='loading' size='lg' /></div>
   } else {
     return null
   }

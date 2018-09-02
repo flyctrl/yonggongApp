@@ -45,7 +45,7 @@ class UserInfo extends Component {
   render() {
     const { companyDetail } = this.state
     return (
-      <div className={`${style['user-info-page']}`}>
+      <div className={`${style['user-info-page']}`} style={{ overflowY: 'auto', width: '100%', height: '100%' }}>
         <div className={style['header']}>
           <Icon type='left' size='md' color='#fff' onClick={this.handleUserBack} className={style['back-icon']} />
         </div>

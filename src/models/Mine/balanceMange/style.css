@@ -40,6 +40,7 @@
     & footer {
       padding: 10px;
       overflow: hidden;
+      height: 60px;
       & .money-info {
         float: right;
         color: #ABB4BB;
@@ -61,6 +62,7 @@
       & .money-btn {
         float: right;
         height: 100%;
+        margin-right: 2px;
         & :global(.am-button-ghost) {
           height: 32px;
           line-height: 32px;

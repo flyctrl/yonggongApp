@@ -42,7 +42,7 @@ class BeginList extends Component {
     }
   }
   handleSubmit = async (event) => {
-    let id = event.target.parentElement.id
+    let id = event.currentTarget.getAttribute('data-id')
     let ordersubmitid = id.split('&&')[0]
     let worksheetorderid = id.split('&&')[1]
     this.controlBtn({
@@ -52,7 +52,7 @@ class BeginList extends Component {
     })
   }
   handleRefusal = async (event) => {
-    let id = event.target.parentElement.id
+    let id = event.currentTarget.getAttribute('data-id')
     let ordersubmitid = id.split('&&')[0]
     let worksheetorderid = id.split('&&')[1]
     this.controlBtn({
@@ -73,8 +73,8 @@ class BeginList extends Component {
             <p>{item['created_at']}</p>
           </div>
           <div className={style['contrl-btn']}>
-            <Button onClick={this.handleSubmit} id={`${item['id']}&&${item['worksheet_order_id']}`} type='primary' className={style['win-btn']}>确认</Button>
-            <Button id={`${item['id']}&&${item['worksheet_order_id']}`} onClick={this.handleRefusal} className={style['fail-btn']}>驳回</Button>
+            <Button onClick={this.handleSubmit} data-id={`${item['id']}&&${item['worksheet_order_id']}`} type='primary' className={style['win-btn']}>确认</Button>
+            <Button data-id={`${item['id']}&&${item['worksheet_order_id']}`} onClick={this.handleRefusal} className={style['fail-btn']}>驳回</Button>
           </div>
         </li>
       })

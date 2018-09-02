@@ -46,20 +46,20 @@ class OrderDetail extends Component {
               history.push(urls.HOME)
             }
           }}
-          rightClick={() => {
-            history.push(urls.ELETAGREEMENT + '?url=ORDERDETAIL')
-          }}
+          // rightClick={() => {
+          //   history.push(urls.ELETAGREEMENT + '?url=ORDERDETAIL')
+          // }}
           title='工单详情'
           leftIcon='icon-back'
           leftTitle1='返回'
-          rightTitle='查看电子合同'
+          // rightTitle='查看电子合同'
         />
         <Content>
           <div className={style['work-detail-content']}>
             <div className={style['title']}>工单编号：{dataSource['worksheet_no']}</div>
             <div className={style['usr-info']}>
               <dl>
-                <dt><img src='http://cimage1.tianjimedia.com/uploadImages/thirdImages/2017/162/D053720DJ162.jpg' /></dt>
+                <dt><img src={dataSource['avatar']} /></dt>
                 <dd className={style['usr-tel']}>{dataSource['prj_name']}</dd>
                 <dd className={style['push-time']}>发布于 {dataSource['created_at']}</dd>
               </dl>

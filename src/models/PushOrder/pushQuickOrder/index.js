@@ -151,17 +151,22 @@ class PushQuickOrder extends Component {
     })
   }
 
-  delUploadList(ev) {
+  delUploadList = async (param) => {
     const { fileList } = this.state
     let newFileList = []
     fileList.map((item) => {
-      if (item.uid !== ev) {
+      if (item.path !== param['path']) {
         newFileList.push(item)
       }
     })
-    this.setState({
-      fileList: newFileList
-    })
+    const data = await api.Common.delAttch({
+      path: param['path']
+    }) || false
+    if (data) {
+      this.setState({
+        fileList: newFileList
+      })
+    }
   }
 
   getProjectList = async () => { // 获取项目
@@ -401,6 +406,7 @@ class PushQuickOrder extends Component {
       data: { type: 3 },
       multiple: false,
       onSuccess: (file) => {
+        Toast.hide()
         if (file['code'] === 0) {
           this.setState(({ fileList }) => ({
             fileList: [...fileList, file['data']],
@@ -408,6 +414,9 @@ class PushQuickOrder extends Component {
         } else {
           Toast.fail(file['msg'], 1)
         }
+      },
+      beforeUpload(file) {
+        Toast.loading('上传中...', 0)
       }
     }
     return (
@@ -731,7 +740,7 @@ class PushQuickOrder extends Component {
                   {
                     fileList.map((item, index, ary) => {
                       return (
-                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={this.delUploadList.bind(this, item.uid)}>&#10005;</i></li>
+                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={() => { this.delUploadList(item) }}>&#10005;</i></li>
                       )
                     })
                   }

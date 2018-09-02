@@ -14,7 +14,8 @@ class Content extends Component {
     }
   }
   static defaultProps = {
-    isHeader: true
+    isHeader: true,
+    className: ''
   }
 
   componentWillMount() {
@@ -62,7 +63,7 @@ class Content extends Component {
       animateClass = style['bounceInRight']
     }
     return (
-      <div className={`${normalClass} animated ${animateClass}`}>
+      <div className={`${normalClass} animated ${animateClass} ${this.props.className}`}>
         {this.props.children}
       </div>
     )
