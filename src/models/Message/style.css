@@ -42,6 +42,7 @@ html .message-content :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab:
     }
   }
 }
+
 .notice-box {
   padding: 15px;
   height: 80px;
@@ -60,6 +61,14 @@ html .message-content :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab:
         & .notice-icon {
           width: 30px;
           height: 30px;
+        }
+        &.tobedone {
+          background: #fff;
+          line-height: 80px;
+          & .notice-icon {
+            width: 40px;
+            height: 40px;
+          }
         }
       }
     }

@@ -13,7 +13,7 @@ import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import { formatDate } from 'Contants/tooler'
-import { settleRadio, payModeRadio, assignTypeRadio } from 'Contants/fieldmodel'
+import { priceModeData, settleRadio, payModeRadio, rightWrongRadio, unitPrice } from 'Contants/fieldmodel'
 import style from '../form.css'
 import 'antd-mobile/lib/calendar/style/css'
 
@@ -43,6 +43,7 @@ let Calendar = Loadable({
     return null
   },
   render(loaded, props) {
+    console.log(loaded)
     let Calendar = loaded.Calendar
     return <Calendar {...props}/>
   }
@@ -54,16 +55,17 @@ class PushNormalOrder extends Component {
       fileList: [],
       priceWay: 0,
       priceWaySelect: false,
-      unitData: [],
       proSelect: false,
       workTypeSelect: false,
       proData: [],
       worktypeData: [],
+      naturalSelect: false,
+      naturalData: [],
       isEdit: true,
       postData: null,
       professSelect: false,
       professData: [],
-      settleRadioVal: 'A01',
+      settleRadioVal: 'B01',
       paymodeRadioVal: 'A',
       assignRadioVal: 0,
       startDateShow: false,
@@ -71,9 +73,7 @@ class PushNormalOrder extends Component {
       startUpperTime: null,
       endDateShow: false,
       endLowerTime: null,
-      endUpperTime: null,
-      naturalSelect: false,
-      naturalData: [],
+      endUpperTime: null
     }
   }
 
@@ -90,6 +90,7 @@ class PushNormalOrder extends Component {
   }
 
   onAssignChange = (value) => { // 是否指派单选事件
+    console.log(value)
     this.setState({
       assignRadioVal: value
     })
@@ -108,6 +109,7 @@ class PushNormalOrder extends Component {
   onStartDateConfirm = (startLowerTime, startUpperTime) => {
     let startTime = formatDate(startLowerTime)
     let endTime = formatDate(startUpperTime)
+    console.log(startTime)
     this.props.form.setFieldsValue({
       startWorkDate: startTime + ' ~ ' + endTime
     })
@@ -141,9 +143,28 @@ class PushNormalOrder extends Component {
     })
   }
 
+  onSingePriceChange = (value) => { // 计价方式单选
+    console.log(value)
+    this.setState({
+      priceWay: value,
+      priceWaySelect: true
+    })
+  }
+
   onProChange = () => {
     this.setState({
       proSelect: true
+    })
+  }
+
+  onWorkTypeChange = async (value) => { // 工种
+    const professData = await api.Common.getSkillList({
+      catId: value[0]
+    }) || false
+    this.setState({
+      professData,
+      workTypeSelect: true,
+      professSelect: false
     })
   }
 
@@ -160,6 +181,7 @@ class PushNormalOrder extends Component {
   }
 
   delUploadList(ev) {
+    console.log(ev)
     const { fileList } = this.state
     let newFileList = []
     fileList.map((item) => {
@@ -167,6 +189,7 @@ class PushNormalOrder extends Component {
         newFileList.push(item)
       }
     })
+    console.log(newFileList)
     this.setState({
       fileList: newFileList
     })
@@ -181,41 +204,14 @@ class PushNormalOrder extends Component {
     })
   }
 
-  handleWorktype = async () => { // 获取施工内容
-    const worktypeData = await api.Common.getCate({
-      type: 'skill,machine'
+  getWorkTypeList = async () => { // 获取工种列表
+    const worktypeData = await api.Common.getAptitude({
+      type: 'skill'
     }) || false
     this.setState({
-      // workTypeSelect: true,
       worktypeData
     })
   }
-  getWorkTypeChange = async (value, index) => { // 施工内容选择
-    if (value[0] === 'skill') {
-      this.setState({
-        workTypeSelect: true
-      })
-    } else {
-      this.setState({
-        workTypeSelect: false
-      })
-    }
-  }
-
-  handleClickSing = async () => { // 标的工作量点击
-    const unitData = await api.Common.getUnitlist({}) || false
-    this.setState({
-      unitData
-    })
-  }
-
-  onSingePriceChange = (value) => { // 标的工作量选择
-    this.setState({
-      priceWay: value,
-      priceWaySelect: true
-    })
-  }
-
   getNaturalList = async () => { // 获取资质列表
     const naturalData = await api.Common.getAptitude({
       type: 'company'
@@ -226,10 +222,11 @@ class PushNormalOrder extends Component {
   }
   componentDidMount() {
     this.getProjectList()
+    this.getWorkTypeList()
     this.getNaturalList()
   }
   onHandleNext = () => {
-    let validateAry = ['prj_id', 'construction_place', 'startWorkDate', 'endWorkDate', 'construct_ids', 'valuation_unit', 'valuation_unit_price', 'valuation_quantity']
+    let validateAry = ['prj_id', 'construction_place', 'startWorkDate', 'endWorkDate', 'work_type_id', 'valuation_way', 'valuation_unit_price', 'valuation_quantity']
     const { fileList, settleRadioVal, paymodeRadioVal, assignRadioVal, startLowerTime, startUpperTime, endLowerTime, endUpperTime } = this.state
     let postFile = []
     fileList.map((item, index, ary) => {
@@ -238,21 +235,9 @@ class PushNormalOrder extends Component {
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, (error, values) => {
       if (!error) {
-        let newData = {
-          prj_id: values['prj_id'][0],
-          professional_level: values['professional_level'] ? values['professional_level'][0] : '',
-          valuation_unit: values['valuation_unit'][0],
-          construct_ids: values['construct_ids'][1],
-          payment_method: settleRadioVal,
-          salary_payment_way: paymodeRadioVal,
-          assign_type: assignRadioVal,
-          start_lower_time: startLowerTime,
-          start_upper_time: startUpperTime,
-          end_lower_time: endLowerTime,
-          end_upper_time: endUpperTime,
-          worksheet_type: 2
-        }
+        let newData = { prj_id: values['prj_id'][0], professional_level: values['professional_level'][0], valuation_way: values['valuation_way'][0], work_type_id: values['work_type_id'][0], payment_method: settleRadioVal, salary_payment_way: paymodeRadioVal, assign_type: assignRadioVal, start_lower_time: startLowerTime, start_upper_time: startUpperTime, end_lower_time: endLowerTime, end_upper_time: endUpperTime, worksheet_type: 2 }
         let postData = { ...{ attachment: postFile }, ...values, ...newData }
+        console.log(postData)
         this.setState({
           isEdit: false,
           postData
@@ -269,11 +254,11 @@ class PushNormalOrder extends Component {
   }
 
   onHandleSubmit = async () => { // 提交数据
+    console.log('提交数据', postData)
     let { postData } = this.state
     const data = await api.PushOrder.workSheet(postData) || false
     if (data) {
       Toast.success('发布成功')
-      this.props.match.history.push(urls.HOME)
     }
   }
 
@@ -284,8 +269,9 @@ class PushNormalOrder extends Component {
   }
 
   showConfirmOrder = () => { // 工单确认
-    let { postData, proData, worktypeData, fileList, unitData, professData, naturalData } = this.state
-    if (proData === [] || worktypeData === []) return false
+    let { postData, proData, worktypeData, professData, fileList } = this.state
+    console.log(postData)
+    if (proData === [] || worktypeData === [] || professData === []) return false
     return (
       <div className='pageBox'>
         <Header
@@ -314,44 +300,33 @@ class PushNormalOrder extends Component {
             <List renderHeader={() => '竣工日期范围'}>
               {postData['endWorkDate']}
             </List>
-            <List renderHeader={() => '施工内容'}>
+            <List renderHeader={() => '工种'}>
               {
-                worktypeData.map((item) => {
-                  return item['children'].map((i) => {
-                    if (i.value === postData['construct_ids']) {
-                      return i.label
-                    }
-                  })
-                })
+                worktypeData.find((item) => {
+                  return item.value === postData['work_type_id']
+                })['label']
               }
             </List>
             <List renderHeader={() => '技能认证'}>
               {
-                professData.length !== 0 ? professData.find((item) => {
+                professData.find((item) => {
                   return item.value === postData['professional_level']
-                })['label'] : ''
+                })['label']
               }
             </List>
-            <List renderHeader={() => '资质要求'}>
+            <List renderHeader={() => '计价方式'}>
               {
-                naturalData.length !== 0 ? naturalData.find((item) => {
-                  return item.value === postData['aptitude_id_list'][0]
-                })['label'] : ''
-              }
-            </List>
-            <List renderHeader={() => '标的工作量'}>
-              {
-                unitData.find((item) => {
-                  return item.value === postData['valuation_unit']
+                priceModeData.find((item) => {
+                  return item.value === postData['valuation_way']
                 })['label']
               }
             </List>
             <List renderHeader={() => '单价'}>
               { `${postData['valuation_unit_price']} 元` }
             </List>
-            <List renderHeader={() => '数量'}>
+            <List renderHeader={() => '总数'}>
               {
-                `${postData['valuation_quantity']}`
+                `${postData['valuation_quantity']} ${unitPrice[postData['valuation_way']]}`
               }
             </List>
             <List renderHeader={() => '结算方式'}>
@@ -368,24 +343,12 @@ class PushNormalOrder extends Component {
                 })['label']
               }
             </List>
-            <List renderHeader={() => '履约担保总额'}>
-              {
-                `${postData['guarantee_amount']} 元`
-              }
-            </List>
-            <List renderHeader={() => '履约担保比例'}>
-              {
-                `${postData['deposit_rate']} %`
-              }
-            </List>
-            <List renderHeader={() => '违约金'}>
-              {
-                `${postData['penalty']}`
-              }
+            <List renderHeader={() => '保证金比例'}>
+              {postData['deposit_rate']}%
             </List>
             <List renderHeader={() => '是否指派'}>
               {
-                postData['assign_type'] === 1 ? '邀请' : '公开'
+                postData['assign_type'] === 1 ? '是' : '否'
               }
             </List>
             <List className={style['remark-desc']} renderHeader={() => '需求描述'}>
@@ -415,19 +378,34 @@ class PushNormalOrder extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form
-    const { fileList, proData, worktypeData, isEdit, postData, proSelect, workTypeSelect, unitData, priceWaySelect, professSelect, professData, settleRadioVal, paymodeRadioVal, assignRadioVal, startDateShow, endDateShow, naturalSelect, naturalData } = this.state
+    const { fileList, proData, worktypeData, isEdit, postData, proSelect, workTypeSelect, priceWay, priceWaySelect, professSelect, professData, settleRadioVal, paymodeRadioVal, assignRadioVal, startDateShow, endDateShow, naturalSelect, naturalData } = this.state
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
       multiple: false,
+      beforeUpload(file) {
+        console.log('beforeUpload', file.name)
+      },
+      onStart: (file) => {
+        console.log('onStart', file.name)
+      },
       onSuccess: (file) => {
+        console.log('onSuccess', file)
         if (file['code'] === 0) {
           this.setState(({ fileList }) => ({
             fileList: [...fileList, file['data']],
-          }))
+          }), () => {
+            console.log(this.state.fileList[0].org_name)
+          })
         } else {
           Toast.fail(file['msg'], 1)
         }
+      },
+      onProgress(step, file) {
+        console.log('onProgress', Math.round(step.percent), file.name)
+      },
+      onError(err) {
+        console.log('onError', err)
       }
     }
     return (
@@ -518,18 +496,18 @@ class PushNormalOrder extends Component {
                   defaultDate={now}
                 />
               </List>
-              <List onClick={this.handleWorktype} className={`${style['input-form-list']} ${workTypeSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '施工内容'}>
-                {getFieldDecorator('construct_ids', {
+              <List className={`${style['input-form-list']} ${workTypeSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '工种'}>
+                {getFieldDecorator('work_type_id', {
                   rules: [
-                    { required: true, message: '请选择施工内容' },
+                    { required: true, message: '请选择工种' },
                   ],
                 })(
-                  <Picker data={worktypeData} extra='请选择施工内容' cols={2} onChange={this.getWorkTypeChange}>
+                  <Picker data={worktypeData} extra='请选择工种' cols={1} onChange={this.onWorkTypeChange}>
                     <List.Item arrow='horizontal'></List.Item>
                   </Picker>
                 )}
               </List>
-              <List style={{ display: workTypeSelect === 1 ? 'block' : 'none' }} className={`${style['input-form-list']} ${professSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '技能认证（非必填）'}>
+              <List style={{ display: workTypeSelect ? 'block' : 'none' }} className={`${style['input-form-list']} ${professSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '技能认证（非必填）'}>
                 {getFieldDecorator('professional_level')(
                   <Picker data={professData} extra='请选择技能认证' cols={1} onChange={this.onProfessChange}>
                     <List.Item arrow='horizontal'></List.Item>
@@ -543,43 +521,43 @@ class PushNormalOrder extends Component {
                   </Picker>
                 )}
               </List>
-              <List onClick={this.handleClickSing} className={`${style['input-form-list']} ${priceWaySelect ? style['selected-form-list'] : ''}`} renderHeader={() => '标的工作量'}>
-                {getFieldDecorator('valuation_unit', {
+              <List className={`${style['input-form-list']} ${priceWaySelect ? style['selected-form-list'] : ''}`} renderHeader={() => '计价方式'}>
+                {getFieldDecorator('valuation_way', {
                   rules: [
-                    { required: true, message: '请选择标的工作量' },
+                    { required: true, message: '请选择计价方式' },
                   ],
                 })(
-                  <Picker data={unitData} extra='请选择标的工作量' cols={1} onChange={this.onSingePriceChange}>
+                  <Picker data={priceModeData} extra='请选择计价方式' cols={1} onChange={this.onSingePriceChange}>
                     <List.Item arrow='horizontal'></List.Item>
                   </Picker>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader='工程单价'>
+              <List className={`${style['input-form-list']}`} renderHeader={() => `单价${unitPrice[priceWay] ? '(' + unitPrice[priceWay] + ')' : ''}`}>
                 {getFieldDecorator('valuation_unit_price', {
                   rules: [
-                    { required: true, message: '请输入工程单价' },
+                    { required: true, message: '请输入单价' },
                   ],
                 })(
                   <InputItem
                     clear
-                    placeholder='请输入工程单价'
+                    placeholder='请输入单价'
                     extra='¥'
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader='数量'>
+              <List className={`${style['input-form-list']}`} renderHeader={() => `总数${unitPrice[priceWay] ? '(' + unitPrice[priceWay] + '数)' : ''}`}>
                 {getFieldDecorator('valuation_quantity', {
                   rules: [
-                    { required: true, message: '请输入数量' },
+                    { required: true, message: '请输入总数' },
                   ],
                 })(
                   <InputItem
                     clear
-                    placeholder='请输入数量'
+                    placeholder='请输入总数'
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '付款方式'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '结算方式'}>
                 {getFieldDecorator('payment_method')(
                   <div>
                     {
@@ -598,7 +576,7 @@ class PushNormalOrder extends Component {
                   </div>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '工资发放方式'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '付款方式'}>
                 {getFieldDecorator('salary_payment_way')(
                   <div>
                     {
@@ -621,7 +599,7 @@ class PushNormalOrder extends Component {
                 {getFieldDecorator('assign_type')(
                   <div>
                     {
-                      assignTypeRadio.map((item, index, ary) => {
+                      rightWrongRadio.map((item, index, ary) => {
                         return (
                           <Radio
                             key={item.value}
@@ -636,17 +614,8 @@ class PushNormalOrder extends Component {
                   </div>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '履约担保总额(元)(非必填)'}>
-                {getFieldDecorator('deposit_rate')(
-                  <InputItem
-                    clear
-                    placeholder='请输入履约担保总额'
-                    extra='¥'
-                  ></InputItem>
-                )}
-              </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '保证金比例（单位：%）(非必填)'}>
-                {getFieldDecorator('guarantee_amount')(
+                {getFieldDecorator('deposit_rate')(
                   <InputItem
                     clear
                     placeholder='请输入保证金比例'

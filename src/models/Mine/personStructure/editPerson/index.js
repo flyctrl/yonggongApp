@@ -8,6 +8,7 @@ import api from 'Util/api'
 import SelectDepart from '../selectDepart'
 import { rightWrongRadio } from 'Contants/fieldmodel'
 import { createForm } from 'rc-form'
+import 'antd-mobile/lib/calendar/style/css'
 import style from 'Src/models/PushOrder/form.css'
 
 const now = new Date()
@@ -110,11 +111,12 @@ class AddPerson extends Component {
   }
   onHandleSubmit() {
     let validateAry = ['username', 'realname', 'mobile']
+    let uid = getQueryString('uid')
     const { typeRadioVal, selectGroupId } = this.state
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
-        let newData = { type: typeRadioVal, groupId: selectGroupId }
+        let newData = { type: typeRadioVal, groupId: selectGroupId, uid: uid }
         let postData = { ...values, ...newData }
         const data = await api.Mine.department.editPerson(postData) || false
         if (data) {

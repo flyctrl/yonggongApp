@@ -24,6 +24,14 @@
   border-top: 1PX solid #ddd;
 }
 
+:global(.nodata) {
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  font-size: 14px;
+  color: #313F48;
+}
+
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
   html:not([data-scale]) :global(.my-top-border) {
     position: relative;

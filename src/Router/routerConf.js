@@ -5,14 +5,15 @@
 * @Last Modified time: 2018-08-14 22:02:16
 */
 import React from 'react'
+import { Icon } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import Loadable from 'react-loadable'
 
 function MyLoadingComponent({ error, pastDelay }) {
   if (error) {
-    return <div>网络异常，请重新加载！</div>
+    return <div style={{ width: '100%', height: '400px', lineHeight: '400px', textAlign: 'center' }}>网络异常，请重新加载！</div>
   } else if (pastDelay) {
-    return <div>Loading...</div>
+    return <div style={{ width: '100%', height: '400px', lineHeight: '400px', textAlign: 'center' }}><Icon type='loading' /></div>
   } else {
     return null
   }
@@ -268,6 +269,10 @@ const ChatBox = Loadable({ // 聊天框
 })
 const UserInfo = Loadable({ // 用户信息
   loader: () => import(/* webpackChunkName: "userinfo" */ '../models/Message/userInfo'),
+  loading: MyLoadingComponent
+})
+const ShowInfoDetail = Loadable({
+  loader: () => import(/* webpackChunkName: "showinfodetail" */ '../models/Message/showDetail'),
   loading: MyLoadingComponent
 })
 
@@ -780,6 +785,14 @@ const routes = [
     showMenu: false,
     animated: false,
     title: '用户信息'
+  }, {
+    path: urls.SHOWINFODETAIL,
+    exact: true,
+    component: ShowInfoDetail,
+    parent: 'Message',
+    showMenu: false,
+    animated: false,
+    title: '详情页'
   }
 ]
 
