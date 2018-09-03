@@ -259,6 +259,7 @@ class WorkOrder extends Component {
 
   onEndReached = async (event) => {
     let { page, isLoading } = this.state
+    console.log('isLoading', isLoading)
     if (isLoading) {
       return false
     }
@@ -266,11 +267,17 @@ class WorkOrder extends Component {
     console.log('reach end', event)
     this.setState({ isLoading: true })
     const data = await this.genData(newPage) || []
+    console.log('data', data)
+    console.log('this.rData', this.rData)
     this.rData = [...this.rData, ...data]
+    console.log('this.rdata2', this.rData)
+    console.log('dataSource', this.state.dataSource)
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(this.rData),
       isLoading: false,
       page: newPage
+    }, () => {
+      console.log('dataSource2', this.state.dataSource)
     })
   }
 

@@ -39,6 +39,11 @@ class Company extends Component {
       Toast.loading('上传中...', 0)
       let formData = new FormData()
       formData.append('image', images[0].file)
+      if (name === 'licenseImg') {
+        formData.append('type', 4)
+      } else {
+        formData.append('type', 5)
+      }
       const data = await api.Common.uploadImg(formData) || {}
       console.log(data)
       if (data.path) {

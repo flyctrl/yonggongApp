@@ -49,7 +49,7 @@ class EletAgreement extends Component {
           leftTitle1='返回'
         />
         <Content className={style['argee-content']}>
-          <div>
+          <div style={{ width: '100%', height: '100%', overflowY: 'auto' }}>
             { contractDetail &&
               contractDetail.map((item, index) => { return <img key={`${index}-${item.id}`} style={{ width: '100%' }} src={item} /> })
             }

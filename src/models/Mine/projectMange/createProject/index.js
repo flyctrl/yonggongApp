@@ -34,23 +34,24 @@ class CreateProject extends Component {
     }
   }
 
-  delUploadList(ev) {
-    console.log(ev)
+  delUploadList = async (param) => {
     const { fileList } = this.state
     let newFileList = []
     fileList.map((item) => {
-      if (item.uid !== ev) {
+      if (item.path !== param['path']) {
         newFileList.push(item)
       }
     })
-    console.log(newFileList)
-    this.setState({
-      fileList: newFileList
-    })
+    const data = await api.Common.delAttch({
+      path: param['path']
+    }) || false
+    if (data) {
+      this.setState({
+        fileList: newFileList
+      })
+    }
   }
 
-  componentDidMount() {
-  }
   onHandleSubmit = () => { // 提交数据
     let validateAry = ['prj_name', 'prj_win_bid_unit', 'bid_deposit', 'prj_build_unit', 'construction_place']
     const { fileList } = this.state
@@ -89,14 +90,8 @@ class CreateProject extends Component {
       action: api.Common.uploadFile,
       data: { type: 3 },
       multiple: false,
-      beforeUpload(file) {
-        console.log('beforeUpload', file.name)
-      },
-      onStart: (file) => {
-        console.log('onStart', file.name)
-      },
       onSuccess: (file) => {
-        console.log('onSuccess', file)
+        Toast.hide()
         if (file['code'] === 0) {
           this.setState(({ fileList }) => ({
             fileList: [...fileList, file['data']],
@@ -107,11 +102,8 @@ class CreateProject extends Component {
           Toast.fail(file['msg'], 1)
         }
       },
-      onProgress(step, file) {
-        console.log('onProgress', Math.round(step.percent), file.name)
-      },
-      onError(err) {
-        console.log('onError', err)
+      beforeUpload(file) {
+        Toast.loading('上传中...', 0)
       }
     }
     return (
@@ -260,7 +252,7 @@ class CreateProject extends Component {
                   {
                     fileList.map((item, index, ary) => {
                       return (
-                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={this.delUploadList.bind(this, item.uid)}>&#10005;</i></li>
+                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={() => { this.delUploadList(item) }}>&#10005;</i></li>
                       )
                     })
                   }
