@@ -87,7 +87,7 @@ export default {
       return Fetch('/common/verify/code', params)
     },
     loginout(params) { // 退出
-      return FetchSave(prefix + '/logout', params, 'get')
+      return FetchSave(prefix + '/logout', params)
     },
     refresh(params) { // 刷新token
       return Fetch(prefix + '/refresh', params)

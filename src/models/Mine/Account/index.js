@@ -22,7 +22,7 @@ class Account extends Component {
   getAmount = async () => {
     const data = await api.Mine.account.myAccount() || false
     this.setState({
-      moneyA: data['usable_amount'],
+      moneyA: data['amount'],
       moneyB: data['total_freeze_amount']
     })
   }

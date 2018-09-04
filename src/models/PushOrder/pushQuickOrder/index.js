@@ -217,7 +217,7 @@ class PushQuickOrder extends Component {
     this.getProjectList()
   }
   onHandleNext = () => {
-    let validateAry = ['prj_id', 'construction_place', 'startWorkDate', 'endWorkDate', 'time1', 'time2', 'time3', 'time4', 'construct_ids', 'people_number', 'valuation_unit', 'valuation_unit_price', 'valuation_quantity']
+    let validateAry = ['title', 'prj_id', 'construction_place', 'startWorkDate', 'endWorkDate', 'time1', 'time2', 'time3', 'time4', 'construct_ids', 'people_number', 'valuation_unit', 'valuation_unit_price', 'valuation_quantity', 'description']
     const { fileList, settleRadioVal, paymodeRadioVal, assignRadioVal, startLowerTime, startUpperTime, endLowerTime, endUpperTime } = this.state
     let postFile = []
     fileList.map((item, index, ary) => {
@@ -290,6 +290,11 @@ class PushQuickOrder extends Component {
         />
         <Content>
           <div className={style['show-order-box']}>
+            <List renderHeader={() => '标题'}>
+              {
+                postData['title']
+              }
+            </List>
             <List renderHeader={() => '项目名称'}>
               {
                 proData.find((item) => {
@@ -440,6 +445,18 @@ class PushQuickOrder extends Component {
           />
           <Content>
             <form className={style['pushOrderForm']}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '标题'}>
+                {getFieldDecorator('title', {
+                  rules: [
+                    { required: true, message: '请输入标题' },
+                  ],
+                })(
+                  <InputItem
+                    clear
+                    placeholder='请输入标题'
+                  ></InputItem>
+                )}
+              </List>
               <List className={`${style['input-form-list']} ${proSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '项目名称'}>
                 {getFieldDecorator('prj_id', {
                   rules: [
@@ -721,8 +738,13 @@ class PushQuickOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={style['textarea-form-list']} renderHeader={() => '描述（非必填）'}>
-                {getFieldDecorator('description')(
+              <List className={style['textarea-form-list']} renderHeader={() => '描述(至少50字)'}>
+                {getFieldDecorator('description', {
+                  rules: [
+                    { required: true, message: '请输入描述' },
+                    { pattern: /^.{50,1000}$/, message: '描述字数不足，至少50字' }
+                  ],
+                })(
                   <TextareaItem
                     placeholder='请输入...'
                     rows={5}

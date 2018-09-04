@@ -276,7 +276,7 @@ class PushQuickOrder extends Component {
     this.getNaturalList('company')
   }
   onHandleNext = () => {
-    let validateAry = ['prj_id', 'construction_place', 'construct_ids', 'bid_end_time', 'startWorkDate', 'endWorkDate']
+    let validateAry = ['title', 'prj_id', 'construction_place', 'construct_ids', 'bid_end_time', 'startWorkDate', 'endWorkDate', 'description']
     const { fileList, paymodeRadioVal, settleRadioVal, tenderWayRadioVal, assignRadioVal, startLowerTime, startUpperTime, endLowerTime, endUpperTime } = this.state
     if (tenderWayRadioVal === 'A') {
       validateAry.push('tender_amount')
@@ -352,6 +352,11 @@ class PushQuickOrder extends Component {
         />
         <Content>
           <div className={style['show-order-box']}>
+            <List renderHeader={() => '标题'}>
+              {
+                postData['title']
+              }
+            </List>
             <List renderHeader={() => '项目名称'}>
               {
                 proData.find((item) => {
@@ -528,6 +533,18 @@ class PushQuickOrder extends Component {
           />
           <Content>
             <form className={style['pushOrderForm']}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '标题'}>
+                {getFieldDecorator('title', {
+                  rules: [
+                    { required: true, message: '请输入标题' },
+                  ],
+                })(
+                  <InputItem
+                    clear
+                    placeholder='请输入标题'
+                  ></InputItem>
+                )}
+              </List>
               <List className={`${style['input-form-list']} ${proSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '项目名称'}>
                 {getFieldDecorator('prj_id', {
                   rules: [
@@ -804,8 +821,13 @@ class PushQuickOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={style['textarea-form-list']} renderHeader={() => '招标公告正文（非必填）'}>
-                {getFieldDecorator('description')(
+              <List className={style['textarea-form-list']} renderHeader={() => '招标公告正文(至少50字)'}>
+                {getFieldDecorator('description', {
+                  rules: [
+                    { required: true, message: '请输入招标公告正文' },
+                    { pattern: /^.{50,1000}$/, message: '招标公告正文，至少50字' }
+                  ],
+                })(
                   <TextareaItem
                     placeholder='请输入...'
                     rows={5}
