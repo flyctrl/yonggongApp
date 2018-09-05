@@ -112,7 +112,7 @@ class WorkOrder extends Component {
   }
 
   handleChange = (tab, index) => { // 二级Tab点击事件
-    console.log(tab, index)
+    // console.log(tab, index)
     this.setState({
       status: tab.status,
       subIndex: index
