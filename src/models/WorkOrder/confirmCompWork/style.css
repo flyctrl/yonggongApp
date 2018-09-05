@@ -39,6 +39,12 @@ html .comp-list :global(.am-button:before) {
     }
     & .contrl-btn {
       float: right;
+      & .status {
+        height: 58px;
+        line-height: 58px;
+        color: #666;
+        font-size: 12px;
+      }
       & .win-btn {
         width: 64px;
         height: 24px;

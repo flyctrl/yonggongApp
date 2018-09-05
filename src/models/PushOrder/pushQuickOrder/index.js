@@ -151,17 +151,22 @@ class PushQuickOrder extends Component {
     })
   }
 
-  delUploadList(ev) {
+  delUploadList = async (param) => {
     const { fileList } = this.state
     let newFileList = []
     fileList.map((item) => {
-      if (item.uid !== ev) {
+      if (item.path !== param['path']) {
         newFileList.push(item)
       }
     })
-    this.setState({
-      fileList: newFileList
-    })
+    const data = await api.Common.delAttch({
+      path: param['path']
+    }) || false
+    if (data) {
+      this.setState({
+        fileList: newFileList
+      })
+    }
   }
 
   getProjectList = async () => { // 获取项目
@@ -212,7 +217,7 @@ class PushQuickOrder extends Component {
     this.getProjectList()
   }
   onHandleNext = () => {
-    let validateAry = ['prj_id', 'construction_place', 'startWorkDate', 'endWorkDate', 'time1', 'time2', 'time3', 'time4', 'construct_ids', 'people_number', 'valuation_unit', 'valuation_unit_price', 'valuation_quantity']
+    let validateAry = ['title', 'prj_id', 'construction_place', 'startWorkDate', 'endWorkDate', 'time1', 'time2', 'time3', 'time4', 'construct_ids', 'people_number', 'valuation_unit', 'valuation_unit_price', 'valuation_quantity', 'description']
     const { fileList, settleRadioVal, paymodeRadioVal, assignRadioVal, startLowerTime, startUpperTime, endLowerTime, endUpperTime } = this.state
     let postFile = []
     fileList.map((item, index, ary) => {
@@ -235,7 +240,7 @@ class PushQuickOrder extends Component {
           end_upper_time: endUpperTime,
           attend_time_config: [
             [values['time1'] + ':' + values['time2'], values['time3'] + ':' + values['time4']],
-            [values['time5'] || '' + ':' + values['time6'] || '', values['time7'] || '' + ':' + values['time8'] || '']
+            [(values['time5'] ? values['time5'] : '') + ':' + (values['time6'] ? values['time6'] : ''), (values['time7'] ? values['time7'] : '') + ':' + (values['time8'] ? values['time8'] : '')]
           ],
           worksheet_type: 3
         }
@@ -285,6 +290,11 @@ class PushQuickOrder extends Component {
         />
         <Content>
           <div className={style['show-order-box']}>
+            <List renderHeader={() => '标题'}>
+              {
+                postData['title']
+              }
+            </List>
             <List renderHeader={() => '项目名称'}>
               {
                 proData.find((item) => {
@@ -355,12 +365,17 @@ class PushQuickOrder extends Component {
             </List>
             <List renderHeader={() => '违约金'}>
               {
-                `${postData['penalty']}`
+                postData['penalty'] ? postData['penalty'] : ''
               }
             </List>
             <List renderHeader={() => '是否指派'}>
               {
                 postData['assign_type'] === 1 ? '邀请' : '公开'
+              }
+            </List>
+            <List renderHeader={() => '考勤时间'}>
+              {
+                `${postData['time1']}:${postData['time2']}~${postData['time3']}:${postData['time4']}  ${postData['time5'] ? (postData['time5'] + ':') : ''}${postData['time6'] ? postData['time6'] : ''}${postData['time7'] ? ('~' + postData['time7'] + ':') : ''}${postData['time8'] ? postData['time8'] : ''}`
               }
             </List>
             <List className={style['remark-desc']} renderHeader={() => '需求描述'}>
@@ -396,6 +411,7 @@ class PushQuickOrder extends Component {
       data: { type: 3 },
       multiple: false,
       onSuccess: (file) => {
+        Toast.hide()
         if (file['code'] === 0) {
           this.setState(({ fileList }) => ({
             fileList: [...fileList, file['data']],
@@ -403,6 +419,9 @@ class PushQuickOrder extends Component {
         } else {
           Toast.fail(file['msg'], 1)
         }
+      },
+      beforeUpload(file) {
+        Toast.loading('上传中...', 0)
       }
     }
     return (
@@ -426,6 +445,18 @@ class PushQuickOrder extends Component {
           />
           <Content>
             <form className={style['pushOrderForm']}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '标题'}>
+                {getFieldDecorator('title', {
+                  rules: [
+                    { required: true, message: '请输入标题' },
+                  ],
+                })(
+                  <InputItem
+                    clear
+                    placeholder='请输入标题'
+                  ></InputItem>
+                )}
+              </List>
               <List className={`${style['input-form-list']} ${proSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '项目名称'}>
                 {getFieldDecorator('prj_id', {
                   rules: [
@@ -616,7 +647,7 @@ class PushQuickOrder extends Component {
                   </Picker>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader='工程单价'>
+              <List className={`${style['input-form-list']}`}>
                 {getFieldDecorator('valuation_unit_price', {
                   rules: [
                     { required: true, message: '请输入工程单价' },
@@ -629,7 +660,7 @@ class PushQuickOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader='数量'>
+              <List className={`${style['input-form-list']}`}>
                 {getFieldDecorator('valuation_quantity', {
                   rules: [
                     { required: true, message: '请输入数量' },
@@ -707,8 +738,13 @@ class PushQuickOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={style['textarea-form-list']} renderHeader={() => '描述（非必填）'}>
-                {getFieldDecorator('description')(
+              <List className={style['textarea-form-list']} renderHeader={() => '描述(至少50字)'}>
+                {getFieldDecorator('description', {
+                  rules: [
+                    { required: true, message: '请输入描述' },
+                    { pattern: /^.{50,1000}$/, message: '描述字数不足，至少50字' }
+                  ],
+                })(
                   <TextareaItem
                     placeholder='请输入...'
                     rows={5}
@@ -726,7 +762,7 @@ class PushQuickOrder extends Component {
                   {
                     fileList.map((item, index, ary) => {
                       return (
-                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={this.delUploadList.bind(this, item.uid)}>&#10005;</i></li>
+                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={() => { this.delUploadList(item) }}>&#10005;</i></li>
                       )
                     })
                   }

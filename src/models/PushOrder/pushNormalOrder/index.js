@@ -159,17 +159,22 @@ class PushNormalOrder extends Component {
     })
   }
 
-  delUploadList(ev) {
+  delUploadList = async (param) => {
     const { fileList } = this.state
     let newFileList = []
     fileList.map((item) => {
-      if (item.uid !== ev) {
+      if (item.path !== param['path']) {
         newFileList.push(item)
       }
     })
-    this.setState({
-      fileList: newFileList
-    })
+    const data = await api.Common.delAttch({
+      path: param['path']
+    }) || false
+    if (data) {
+      this.setState({
+        fileList: newFileList
+      })
+    }
   }
 
   getProjectList = async () => { // 获取项目
@@ -229,7 +234,7 @@ class PushNormalOrder extends Component {
     this.getNaturalList()
   }
   onHandleNext = () => {
-    let validateAry = ['prj_id', 'construction_place', 'startWorkDate', 'endWorkDate', 'construct_ids', 'valuation_unit', 'valuation_unit_price', 'valuation_quantity']
+    let validateAry = ['title', 'prj_id', 'construction_place', 'startWorkDate', 'endWorkDate', 'construct_ids', 'valuation_unit', 'valuation_unit_price', 'valuation_quantity', 'description']
     const { fileList, settleRadioVal, paymodeRadioVal, assignRadioVal, startLowerTime, startUpperTime, endLowerTime, endUpperTime } = this.state
     let postFile = []
     fileList.map((item, index, ary) => {
@@ -298,6 +303,11 @@ class PushNormalOrder extends Component {
         />
         <Content>
           <div className={style['show-order-box']}>
+            <List renderHeader={() => '标题'}>
+              {
+                postData['title']
+              }
+            </List>
             <List renderHeader={() => '项目名称'}>
               {
                 proData.find((item) => {
@@ -334,7 +344,7 @@ class PushNormalOrder extends Component {
             </List>
             <List renderHeader={() => '资质要求'}>
               {
-                naturalData.length !== 0 ? naturalData.find((item) => {
+                naturalData.length !== 0 && postData['aptitude_id_list'] ? naturalData.find((item) => {
                   return item.value === postData['aptitude_id_list'][0]
                 })['label'] : ''
               }
@@ -370,17 +380,17 @@ class PushNormalOrder extends Component {
             </List>
             <List renderHeader={() => '履约担保总额'}>
               {
-                `${postData['guarantee_amount']} 元`
+                postData['guarantee_amount'] ? postData['guarantee_amount'] + '元' : ''
               }
             </List>
             <List renderHeader={() => '履约担保比例'}>
               {
-                `${postData['deposit_rate']} %`
+                postData['deposit_rate'] ? postData['deposit_rate'] + '%' : ''
               }
             </List>
             <List renderHeader={() => '违约金'}>
               {
-                `${postData['penalty']}`
+                postData['penalty'] ? postData['penalty'] : ''
               }
             </List>
             <List renderHeader={() => '是否指派'}>
@@ -421,6 +431,7 @@ class PushNormalOrder extends Component {
       data: { type: 3 },
       multiple: false,
       onSuccess: (file) => {
+        Toast.hide()
         if (file['code'] === 0) {
           this.setState(({ fileList }) => ({
             fileList: [...fileList, file['data']],
@@ -428,6 +439,9 @@ class PushNormalOrder extends Component {
         } else {
           Toast.fail(file['msg'], 1)
         }
+      },
+      beforeUpload(file) {
+        Toast.loading('上传中...', 0)
       }
     }
     return (
@@ -451,6 +465,18 @@ class PushNormalOrder extends Component {
           />
           <Content>
             <form className={style['pushOrderForm']}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '标题'}>
+                {getFieldDecorator('title', {
+                  rules: [
+                    { required: true, message: '请输入标题' },
+                  ],
+                })(
+                  <InputItem
+                    clear
+                    placeholder='请输入标题'
+                  ></InputItem>
+                )}
+              </List>
               <List className={`${style['input-form-list']} ${proSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '项目名称'}>
                 {getFieldDecorator('prj_id', {
                   rules: [
@@ -637,7 +663,7 @@ class PushNormalOrder extends Component {
                 )}
               </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '履约担保总额(元)(非必填)'}>
-                {getFieldDecorator('deposit_rate')(
+                {getFieldDecorator('guarantee_amount')(
                   <InputItem
                     clear
                     placeholder='请输入履约担保总额'
@@ -646,7 +672,7 @@ class PushNormalOrder extends Component {
                 )}
               </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '保证金比例（单位：%）(非必填)'}>
-                {getFieldDecorator('guarantee_amount')(
+                {getFieldDecorator('deposit_rate')(
                   <InputItem
                     clear
                     placeholder='请输入保证金比例'
@@ -663,8 +689,13 @@ class PushNormalOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={style['textarea-form-list']} renderHeader={() => '描述（非必填）'}>
-                {getFieldDecorator('description')(
+              <List className={style['textarea-form-list']} renderHeader={() => '描述(至少50字)'}>
+                {getFieldDecorator('description', {
+                  rules: [
+                    { required: true, message: '请输入描述' },
+                    { pattern: /^.{50,1000}$/, message: '描述字数不足，至少50字' }
+                  ],
+                })(
                   <TextareaItem
                     placeholder='请输入...'
                     rows={5}
@@ -682,7 +713,7 @@ class PushNormalOrder extends Component {
                   {
                     fileList.map((item, index, ary) => {
                       return (
-                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={this.delUploadList.bind(this, item.uid)}>&#10005;</i></li>
+                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={() => { this.delUploadList(item) }}>&#10005;</i></li>
                       )
                     })
                   }

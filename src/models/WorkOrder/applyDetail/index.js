@@ -67,11 +67,11 @@ class ApplyDetail extends Component {
           leftClick1={() => {
             history.push(urls.WORKORDER)
           }}
-          rightClick={() => {
-            history.push(urls.APPLYRECORD)
-          }}
+          // rightClick={() => {
+          //   history.push(urls.APPLYRECORD)
+          // }}
           title='审批详情'
-          rightTitle='审批记录'
+          // rightTitle='审批记录'
           leftIcon='icon-back'
           leftTitle1='返回'
         />
@@ -80,7 +80,7 @@ class ApplyDetail extends Component {
             <ul className={style['applyinfo-list']}>
               <li className='my-bottom-border'><span>项目名称</span>{dataSource['prj_name']}</li>
               <li className='my-bottom-border'><span>施工地址</span>{dataSource['construction_place']}</li>
-              <li className='my-bottom-border'><span>施工开始时间</span>{`${dataSource['start_lower_time']} ~ ${dataSource['start_upper_time']} (共${dataSource['time_limit_day']}天)`}</li>
+              <li className='my-bottom-border'><span>施工开始时间</span>{`${dataSource['start_lower_time'] || ''} ~ ${dataSource['start_upper_time'] || ''}`}</li>
               <li className='my-bottom-border'><span>计价方式</span>{priceModeData[dataSource['valuation_way']]}</li>
               <li className='my-bottom-border'><span>总数</span>{dataSource['valuation_quantity']}</li>
               <li className='my-bottom-border'><span>单价（单位：元）</span>{dataSource['valuation_unit_price']}</li>
@@ -92,7 +92,9 @@ class ApplyDetail extends Component {
               <li className='my-bottom-border'><span>资质要求</span>无</li>
               <li className='my-bottom-border'><span>附件</span>无</li>
             </ul>
-            <div className={style['lookpat-box']}><a onClick={this.handleLookpat} className={style['lookpat-btn']}>查看电子合同</a></div>
+            {
+              // <div className={style['lookpat-box']}><a onClick={this.handleLookpat} className={style['lookpat-btn']}>查看电子合同</a></div>
+            }
             <div className={style['control-btn']}>
               <Button onClick={this.handleReject} type='primary'>驳  回</Button>
               <Button onClick={this.handleReview} type='primary'>通  过</Button>

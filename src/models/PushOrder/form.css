@@ -25,9 +25,6 @@ html:not([data-scale]) .show-order-box :global(.am-list-body div:not(:last-child
   height: 0;
 }
 
-:global(.am-calendar .content) {
-  z-index: 1200;
-}
 .pushOrderForm {
   width: 328px;
   margin: 0 auto;

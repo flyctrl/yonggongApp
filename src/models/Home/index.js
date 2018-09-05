@@ -10,7 +10,6 @@ import { Header, Content } from 'Components'
 import { Flex, WingBlank, Carousel } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import NewIcon from 'Components/NewIcon'
-import history from 'Util/history'
 import homeimg from 'Src/assets/homimg.png'
 import style from './style.css'
 import api from 'Util/api'
@@ -56,18 +55,21 @@ class Home extends Component {
   }
 
   handlePushNormalOrder = () => {
-    history.push(urls.PUSHNORMALORDER)
+    this.props.match.history.push(urls.PUSHNORMALORDER)
   }
   handlePushQuickOrder = () => {
-    history.push(urls.PUSHQUICKORDER)
+    this.props.match.history.push(urls.PUSHQUICKORDER)
   }
   handlePushBidOrder = () => {
-    history.push(urls.PUSHBIDORDER)
+    this.props.match.history.push(urls.PUSHBIDORDER)
   }
   handleClickSysDetail = (e) => {
     let id = e.currentTarget.getAttribute('data-id')
     // id.split('$$')[]
-    history.push(`${urls.SYSTEMESSDETAIL}?id=${id}`)
+    this.props.match.history.push(`${urls.SYSTEMESSDETAIL}?id=${id}`)
+  }
+  handleMessage = () => {
+    this.props.match.history.push(urls.MESSAGE)
   }
   render() {
     const { sysInforms, companyDetail, todoList } = this.state
@@ -78,6 +80,7 @@ class Home extends Component {
             className={style['usr-home-header']}
             title={companyDetail.name}
             rightTitle={<NewIcon className={style['message-icon']} type='icon-messageTz' />}
+            rightClick={this.handleMessage}
           />
           <Content>
             <div className={style['home-silder']}>

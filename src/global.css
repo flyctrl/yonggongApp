@@ -10,6 +10,9 @@
   left: 0;
   right: 0;
   bottom: 50px;
+  & :global(.am-calendar .content) {
+    z-index: 1200;
+  }
 }
 
 :global(.pageBox) {
@@ -18,11 +21,15 @@
   left: 0;
   right: 0;
   bottom: 0;
+  & :global(.am-calendar .content) {
+    z-index: 1200;
+  }
 }
 :global(.my-top-border) {
   position: relative;
   border-top: 1PX solid #ddd;
 }
+
 
 :global(.nodata) {
   height: 100px;

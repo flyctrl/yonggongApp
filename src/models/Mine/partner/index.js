@@ -66,7 +66,7 @@ class Partner extends Component {
                         <NewIcon type='icon-phone' />
                       </footer>
                     </li>)
-                  }) : <div>{isLoading ? '无合作方' : ''}</div>
+                  }) : <div className='nodata'>{isLoading ? '暂无数据' : ''}</div>
               }
             </ul>
           </div>

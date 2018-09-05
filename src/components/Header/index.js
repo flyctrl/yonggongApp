@@ -12,7 +12,9 @@ class Header extends Component {
   render() {
     const { title, titleClick, leftIcon, leftTitle1, leftClick1, leftClick2, leftTitle2, rightIcon, rightTitle, rightClick, searchTitle, onSearchSubmit, noLine, cancelText, autoFocusInst, onSearchFocus, onSearchCancel } = this.props
     return <div className={classnames(style.header, this.props.className)}>
-      {isIphoneX ? <div className={style['fix-iphoneX-top']}/> : null}
+      {
+        isIphoneX ? <div className={style['fix-iphoneX-top']}/> : null
+      }
       <NavBar
         mode='light'
         className={`${style['nav-bar']} ${noLine ? '' : 'my-bottom-border'}`}

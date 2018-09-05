@@ -19,7 +19,6 @@ class MainLayout extends Component {
       animated: false
     }
     this.goBack = this.goBack.bind(this)
-    this.showMenu = this.showMenu.bind(this)
   }
   componentWillReceiveProps(nextProps) {
     console.log('layout:', nextProps.location.pathname)
@@ -39,7 +38,7 @@ class MainLayout extends Component {
       title: rtObj['title']
     })
   }
-  showMenu() {
+  showMenu = () => {
     const { routes } = this.props
     if (this.state.isMenuPage) {
       return (

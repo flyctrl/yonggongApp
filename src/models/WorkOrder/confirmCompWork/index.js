@@ -42,7 +42,7 @@ class BeginList extends Component {
     }
   }
   handleSubmit = async (event) => {
-    let id = event.target.parentElement.id
+    let id = event.currentTarget.getAttribute('data-id')
     let ordersubmitid = id.split('&&')[0]
     let worksheetorderid = id.split('&&')[1]
     this.controlBtn({
@@ -52,7 +52,7 @@ class BeginList extends Component {
     })
   }
   handleRefusal = async (event) => {
-    let id = event.target.parentElement.id
+    let id = event.currentTarget.getAttribute('data-id')
     let ordersubmitid = id.split('&&')[0]
     let worksheetorderid = id.split('&&')[1]
     this.controlBtn({
@@ -60,6 +60,18 @@ class BeginList extends Component {
       order_submit_id: ordersubmitid,
       type: 2
     })
+  }
+  showlistStatus = (item) => { // 状态按钮
+    if (item['status'] === 1) { // 已确认
+      return <div className={style['status']}>已确认</div>
+    } else if (item['status'] === 2) { // 已驳回
+      return <div className={style['status']}>驳回</div>
+    } else {
+      return <div>
+        <Button onClick={this.handleSubmit} data-id={`${item['id']}&&${item['worksheet_order_id']}`} type='primary' className={style['win-btn']}>确认</Button>
+        <Button data-id={`${item['id']}&&${item['worksheet_order_id']}`} onClick={this.handleRefusal} className={style['fail-btn']}>驳回</Button>
+      </div>
+    }
   }
   showList = (dataSource) => {
     console.log(dataSource)
@@ -73,8 +85,9 @@ class BeginList extends Component {
             <p>{item['created_at']}</p>
           </div>
           <div className={style['contrl-btn']}>
-            <Button onClick={this.handleSubmit} id={`${item['id']}&&${item['worksheet_order_id']}`} type='primary' className={style['win-btn']}>确认</Button>
-            <Button id={`${item['id']}&&${item['worksheet_order_id']}`} onClick={this.handleRefusal} className={style['fail-btn']}>驳回</Button>
+            {
+              this.showlistStatus(item)
+            }
           </div>
         </li>
       })

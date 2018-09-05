@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2018-08-30 10:03:32
+* @Last Modified time: 2018-09-02 13:26:10
 */
 import storage from '../utils/storage'
 import axios from 'axios'
@@ -38,7 +38,10 @@ fetcher.interceptors.response.use(function (response) {
   } else if (response.data.code === 10011) { // token过期
     let refreshToken = storage.get('refreshToken')
     axios.post(baseUrl + '/employ/refresh', { refresh_token: refreshToken }).then(function(res) {
-      console.log(res.data.data.access_token)
+      console.log(res)
+      if (res.data.code === 10012) {
+        window.location.href = '/Login/login'
+      }
       storage.set('Authorization', 'Bearer ' + res.data.data.access_token)
       storage.set('refreshToken', res.data.data.refresh_token)
       window.location.reload()

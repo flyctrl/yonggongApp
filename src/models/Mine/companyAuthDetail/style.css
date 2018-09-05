@@ -4,7 +4,13 @@ html .aptide :global(.am-list-body::after) {
 html .img-list :global(.am-list-body::after) {
   bottom: -5px;
 }
+
+.comp-content {
+  overflow-y: auto;
+  height: 100%;
+}
 .aptide-order-box {
+  height: 100%;
   & .aptide {
     &:global(.am-list) {
       height: 80px;

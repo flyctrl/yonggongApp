@@ -71,6 +71,9 @@ export default {
     },
     getUnitlist(params) { // 获取计价列表
       return Fetch(prefix + '/worksheet/list/valuation_unit', params, 'get')
+    },
+    delAttch(params) { // 删除附件
+      return FetchSave('/common/attach/delete', params)
     }
   },
   auth: {
@@ -84,7 +87,7 @@ export default {
       return Fetch('/common/verify/code', params)
     },
     loginout(params) { // 退出
-      return FetchSave(prefix + '/logout', params, 'get')
+      return FetchSave(prefix + '/logout', params)
     },
     refresh(params) { // 刷新token
       return Fetch(prefix + '/refresh', params)
@@ -316,7 +319,7 @@ export default {
       return Fetch(prefix + '/message/sys/show', params, 'get')
     },
     getTodayTodo(params) { // 获取今日代办
-      return Fetch(prefix + '/company/list/todo', params, 'get')
+      return Fetch(prefix + '/user_todo/list', params, 'get')
     }
   },
   Message: { // 消息

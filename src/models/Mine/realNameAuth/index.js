@@ -32,14 +32,17 @@ class RealNameAuth extends Component {
   }
   uploadImg = async (images, name) => {
     if (images[0]) {
+      Toast.loading('上传中...', 0)
       let formData = new FormData()
       formData.append('image', images[0].file)
+      formData.append('type', 5)
       const data = await api.Common.uploadImg(formData) || {}
       if (data.path) {
         images[0].path = data.path
       } else {
         images = []
       }
+      Toast.hide()
       this.setImgstate(images, name)
     } else {
       this.setImgstate(images, name)
