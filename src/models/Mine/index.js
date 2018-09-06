@@ -85,7 +85,7 @@ const menuRouter = {
   8: urls.ENGINREALITY,
   9: urls.PARTNER,
   10: urls.PERSONSTRUCTURE,
-  11: urls.FEEDBACK
+  11: `${urls.FEEDBACK}?url=MINE`
 }
 class Mine extends Component {
   constructor(props) {

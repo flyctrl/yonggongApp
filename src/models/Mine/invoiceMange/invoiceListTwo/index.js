@@ -69,7 +69,7 @@ class InvoiceListTwo extends Component {
                     </nav>
                   </li>
                 })
-                : <li className='nodata'>{ isLoading ? '暂无数据' : ''}</li>
+                : <div className='nodata'>{ isLoading ? '暂无数据' : ''}</div>
             }
             {/* <li>
               <section>
