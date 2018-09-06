@@ -94,6 +94,9 @@ export default {
     },
     realName(params) { // 实名认证
       return FetchSave(prefix + '/user/identity', params)
+    },
+    vailPaypwd(params) { // 提现验证密码
+      return Fetch('/user/withdraw/validate', params)
     }
   },
   PushOrder: {
