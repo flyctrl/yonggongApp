@@ -54,7 +54,7 @@ class RestPwd extends Component {
         } else if (type === '2') { // 重置密码
           let data = await api.auth.reset(values) || false
           if (data) {
-            this.props.match.history.push(urls.HOME)
+            this.props.match.history.push(urls.LOGIN)
             Toast.success('修改密码成功')
           }
         }

@@ -4,6 +4,7 @@ import { createForm } from 'rc-form'
 import { Header, Content } from 'Components'
 import history from 'Util/history'
 import * as urls from 'Contants/urls'
+import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import style from './style.css'
 
@@ -36,7 +37,7 @@ class FeedBack extends Component {
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
-            history.push(urls.MINE)
+            history.push(urls[tooler.getQueryString('url')])
           }}
           rightTitle='提交'
           rightClick={this.onSubmit}
