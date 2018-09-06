@@ -15,7 +15,7 @@ const Brief = Item.Brief
 const RadioItem = Radio.RadioItem
 class WithdrawCash extends Component {
   state = {
-    amount: '',
+    amount: 0,
     hasError: false,
     cashValue: '',
     showlist: false,

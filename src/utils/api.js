@@ -307,8 +307,8 @@ export default {
         return Fetch(prefix + '/worksheetOrder/attend/list', params)
       }
     },
-    feedback: (params) => {
-      return FetchSave(prefix + '/user/feedback', params)
+    feedback: (params) => { // 问题反馈
+      return FetchSave('/common/feedback', params)
     }
   },
   Home: {
