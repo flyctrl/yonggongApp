@@ -22,18 +22,27 @@ class Message extends Component {
     this.state = {
       noticeList: [],
       tobeList: [],
+      isload: true
     }
   }
   getNoticeList = async () => {
+    this.setState({
+      isload: true
+    })
     const data = await api.Message.getNoticeList({}) || false
     this.setState({
       noticeList: data['list'],
+      isload: false
     })
   }
   getTobeDoneList = async () => {
+    this.setState({
+      isload: true
+    })
     const data = await api.Home.getTodayTodo({}) || false
     this.setState({
       tobeList: data['list'],
+      isload: false
     })
   }
   componentDidMount() {
@@ -54,7 +63,7 @@ class Message extends Component {
     }
   }
   render() {
-    let { noticeList, tobeList } = this.state
+    let { noticeList, tobeList, isload } = this.state
     return (
       <div className={`${'contentBox'} ${style['message-content']}`}>
         <Content isHeader={false}>
@@ -65,7 +74,7 @@ class Message extends Component {
           >
             <div>
               {
-                noticeList.length !== 0 ? noticeList.map((item) => {
+                noticeList.length !== 0 && !isload ? noticeList.map((item) => {
                   return (
                     <div data-id={item['id']} key={item['id']} onClick={this.handleSysNotice} className={`${style['notice-box']} my-bottom-border`}>
                       <dl>
@@ -81,7 +90,7 @@ class Message extends Component {
                       </dl>
                     </div>
                   )
-                }) : <div className={'nodata'}>暂无消息</div>
+                }) : <div className={'nodata'}>{ noticeList.length === 0 && !isload ? '暂无数据' : '加载中...'}</div>
               }
               {
                 // <ul className={style['mesg-list']}>
@@ -97,7 +106,7 @@ class Message extends Component {
             </div>
             <div>
               {
-                tobeList.length !== 0 ? tobeList.map((item, index) => {
+                tobeList.length !== 0 && !isload ? tobeList.map((item, index) => {
                   return (
                     <div className={`${style['notice-box']} my-bottom-border`}>
                       <dl>
@@ -113,7 +122,7 @@ class Message extends Component {
                       </dl>
                     </div>
                   )
-                }) : <div className={'nodata'}>暂无待办事项</div>
+                }) : <div className={'nodata'}>{ tobeList.length === 0 && !isload ? '暂无数据' : '加载中...'}</div>
               }
             </div>
           </Tabs>

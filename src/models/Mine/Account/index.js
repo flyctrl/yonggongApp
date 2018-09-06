@@ -34,7 +34,7 @@ class Account extends Component {
   }
 
   handleDrawcash = async () => {
-    const data = await api.Common.getusrAllStatus({}) || false
+    const data = await api.Mine.companyAuth.getCompanyStuts({}) || false
     if (data) {
       if (data['is_bind_card'] === 1) {
         this.props.match.history.push(urls.ACCOUNTWITHDRAWCASH)

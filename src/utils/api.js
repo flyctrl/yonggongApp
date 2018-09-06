@@ -96,7 +96,7 @@ export default {
       return FetchSave(prefix + '/user/identity', params)
     },
     vailPaypwd(params) { // 提现验证密码
-      return Fetch('/user/withdraw/validate', params)
+      return Fetch(prefix + '/withdraw/validate', params)
     }
   },
   PushOrder: {

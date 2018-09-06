@@ -25,18 +25,24 @@
     z-index: 1200;
   }
 }
-:global(.my-top-border) {
-  position: relative;
-  border-top: 1PX solid #ddd;
-}
 
+input {
+  outline:none;
+  -webkit-appearance:none;
+  line-height: normal;
+}
 
 :global(.nodata) {
   height: 100px;
   line-height: 100px;
   text-align: center;
   font-size: 14px;
-  color: #313F48;
+  color: #888888;
+}
+
+:global(.my-top-border) {
+  position: relative;
+  border-top: 1PX solid #ddd;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
