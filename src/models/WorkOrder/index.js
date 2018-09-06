@@ -8,31 +8,27 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { Tabs, SegmentedControl, Button, PullToRefresh, ListView } from 'antd-mobile'
 import { Header, Content } from 'Components'
-import NewIcon from 'Components/NewIcon'
+// import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import style from './style.css'
-
+const defaultSource = new ListView.DataSource({
+  rowHasChanged: (row1, row2) => row1 !== row2,
+})
 class WorkOrder extends Component {
   constructor(props) {
     super(props)
-    const dataSource = new ListView.DataSource({
-      rowHasChanged: (row1, row2) => row1 !== row2,
-    })
     this.state = {
-      dataSource,
+      dataSource: defaultSource,
       refreshing: true,
       isLoading: true,
       height: document.documentElement.clientHeight,
-      useBodyScroll: false,
-      page: 1, // listview end
-      data: [],
       tabs: [{}],
       parentIndex: 0,
       subIndex: 0,
       worksheetType: 2,
       status: 1,
-      pageNos: 1,
+      pageIndex: 1,
       nodata: false
     }
   }
@@ -46,25 +42,28 @@ class WorkOrder extends Component {
     { title: '已失效', status: 6 },
     { title: '已完工', status: 7 }
   */
-  componentDidUpdate() {
-    if (this.state.useBodyScroll) {
-      document.body.style.overflow = 'auto'
-    } else {
-      document.body.style.overflow = 'hidden'
+  getdataTemp = async () => {
+    let { parentIndex } = this.state
+    const statusJson = {
+      '0': 2,
+      '1': 3,
+      '2': 1
     }
+    this.setState({ refreshing: true, isLoading: true })
+    this.getStatusList(statusJson[parentIndex.toString()])
+    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop
+    this.genData().then((rdata) => {
+      this.rData = rdata
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        height: hei,
+        refreshing: false,
+        isLoading: false,
+      })
+    })
   }
   componentDidMount() {
-    // this.genData()
-    // this.handleChange('', 0)
-    this.getStatusList(2)
-    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop
-    this.setState({
-      dataSource: this.state.dataSource.cloneWithRows([{}, {}, {}]),
-      height: hei,
-      refreshing: false,
-      isLoading: false,
-    })
-    this.onRefresh()
+    this.getdataTemp()
   }
 
   getStatusList = async (worktype) => { // 获取工单状态列表
@@ -85,39 +84,39 @@ class WorkOrder extends Component {
       this.setState({
         parentIndex: 0,
         worksheetType: 2,
-        status: 1
+        status: 1,
+        dataSource: defaultSource,
       }, () => {
-        this.getStatusList(2)
-        this.onRefresh()
+        this.getdataTemp()
       })
     } else if (index === 1) { // 快单
       this.setState({
         parentIndex: 1,
         worksheetType: 3,
-        status: 2
+        status: 2,
+        dataSource: defaultSource,
       }, () => {
-        this.getStatusList(3)
-        this.onRefresh()
+        this.getdataTemp()
       })
     } else if (index === 2) { // 劳务招标
       this.setState({
         parentIndex: 2,
         worksheetType: 1,
-        status: 1
+        status: 1,
+        dataSource: defaultSource,
       }, () => {
-        this.getStatusList(1)
-        this.onRefresh()
+        this.getdataTemp()
       })
     }
   }
 
   handleChange = (tab, index) => { // 二级Tab点击事件
-    // console.log(tab, index)
     this.setState({
       status: tab.status,
-      subIndex: index
+      subIndex: index,
+      dataSource: defaultSource
     }, () => {
-      this.onRefresh()
+      this.getdataTemp()
     })
   }
   handleDetail = (e) => { // 工单详情
@@ -134,13 +133,12 @@ class WorkOrder extends Component {
     this.props.match.history.push(urls.RECEPTNMRECORD + '?id=' + id)
   }
   handleConfirmWork = async (e) => { // 确认开工
-    // console.log(e.target.parentElement.id)
     let id = e.currentTarget.getAttribute('data-id')
     const data = await api.WorkOrder.confirmConstruct({
       worksheet_id: id
     }) || false
     if (data) {
-      this.onRefresh()
+      this.getdataTemp()
     }
   }
   handleCancelWork = async (e) => { // 取消开工
@@ -149,7 +147,7 @@ class WorkOrder extends Component {
       worksheet_id: id
     }) || false
     if (data) {
-      this.onRefresh()
+      this.getdataTemp()
     }
   }
   handleConfirmComp = (e) => { // 确认完工列表
@@ -166,7 +164,7 @@ class WorkOrder extends Component {
       worksheet_id: id
     }) || false
     if (data) {
-      this.onRefresh()
+      this.getdataTemp()
     }
   }
   handleSelectComp = () => { // 选择服务商
@@ -187,28 +185,11 @@ class WorkOrder extends Component {
     console.log('微信')
   }
 
-  pubrow = (rowData) => {
-    return (
-      <div>
-        <div className={style.title}><span className={style.left}>{`${rowData['prj_name']}`}</span><NewIcon type='icon-phone' /><NewIcon type='icon-message_pre' /></div>
-        <div data-id={rowData['id']} onClick={this.handleDetail} className={style.desc}>
-          <div className={style.ordernum}>工单号：{rowData['worksheet_no']}<span className={style.timeblock}>{rowData['created_at']}</span></div>
-          <div>单价：{rowData['valuation_unit_price']}元</div>
-          <div>预算：{rowData['valuation_amount']}元</div>
-          <div>开工日期：{`${rowData['start_lower_time']} ~ ${rowData['start_upper_time']}`}</div>
-          <div className={style.address}>施工地址：{rowData['construction_place']}</div>
-        </div>
-      </div>
-    )
-  }
-
+  // <NewIcon type='icon-phone' /><NewIcon type='icon-message_pre' />
   // 上拉更新新、下拉翻页
-  genData = async (page) => { // 获取列表数据
-    const { worksheetType, status, pageNos } = this.state
-    if (page > pageNos) {
-      return []
-    }
-    const data = await api.WorkOrder.WorkOrderList({ worksheet_type: worksheetType, status: status, page: page || 1, size: 10 }) || []
+  genData = async (page = 1) => { // 获取列表数据
+    const { worksheetType, status } = this.state
+    const data = await api.WorkOrder.WorkOrderList({ worksheet_type: worksheetType, status: status, page: page, size: 10 }) || []
     if (data['currPageNo'] === 1 && data['list'].length === 0) {
       document.body.style.overflow = 'hidden'
       this.setState({
@@ -220,24 +201,9 @@ class WorkOrder extends Component {
         nodata: false
       })
     }
-    this.setState({
-      pageNos: data['pageNos']
-    })
-    let dataList = data['list']
-    let newDataAry = []
-    if (dataList.length > 0) {
-      dataList.map((item, index, ary) => {
-        newDataAry.push({
-          ...item,
-          ...{
-            prj_name: item['ext']['prj_name'],
-            construction_place: item['ext']['construction_place']
-          }
-        })
-      })
-    }
-    return newDataAry
+    return await data['list']
   }
+
   onRefresh = async () => {
     let { parentIndex } = this.state
     const statusJson = {
@@ -245,42 +211,52 @@ class WorkOrder extends Component {
       '1': 3,
       '2': 1
     }
-    this.setState({ refreshing: true, isLoading: true })
+    this.setState({ refreshing: true, isLoading: true, pageIndex: 1 })
     this.getStatusList(statusJson[parentIndex.toString()])
-    this.rData = await this.genData() || []
-    console.log('onRefresh')
-    this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(this.rData),
-      refreshing: false,
-      isLoading: false,
-      // status: statusJson[parentIndex.toString()]
+    this.genData().then((rdata) => {
+      this.rData = rdata
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        refreshing: false,
+        isLoading: false
+      })
     })
+    console.log('onRefresh')
   }
 
   onEndReached = async (event) => {
-    let { page, isLoading } = this.state
-    console.log('isLoading', isLoading)
+    let { pageIndex, isLoading } = this.state
     if (isLoading) {
-      return false
+      return
     }
-    let newPage = page + 1
+    let newIndex = pageIndex + 1
     console.log('reach end', event)
     this.setState({ isLoading: true })
-    const data = await this.genData(newPage) || []
-    console.log('data', data)
-    console.log('this.rData', this.rData)
-    this.rData = [...this.rData, ...data]
-    console.log('this.rdata2', this.rData)
-    console.log('dataSource', this.state.dataSource)
-    this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(this.rData),
-      isLoading: false,
-      page: newPage
-    }, () => {
-      console.log('dataSource2', this.state.dataSource)
+    this.genData(newIndex).then((rdata) => {
+      this.rData = [...this.rData, ...rdata]
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        isLoading: false,
+        pageIndex: newIndex
+      })
     })
   }
-
+  subRows = (rowData) => {
+    return <div>
+      <div className={style.title}><span className={style.left}>{`${rowData['title']}`}</span></div>
+      <div data-id={rowData['id']} onClick={this.handleDetail} className={style.desc}>
+        <div>项目名称：{rowData['prj_name']}</div>
+        <div>工种：{
+          rowData['construct_content'].map((item, index) => {
+            return <em key={index} className={style['worktype']}>{item}</em>
+          })
+        }</div>
+        <div>起止日期：{`${rowData['start_lower_time']} ~ ${rowData['end_upper_time']}`}</div>
+        <div>单价：{`${rowData['valuation_unit_price']}  数量：${rowData['valuation_quantity']}`}</div>
+        <div className={style.address}>施工地址：{rowData['construction_place']}</div>
+      </div>
+    </div>
+  }
   render() {
     let { tabs, status, parentIndex, dataSource, isLoading, nodata, height, refreshing, subIndex } = this.state
     let newTabs = []
@@ -288,37 +264,26 @@ class WorkOrder extends Component {
       newTabs.push({ title: <div className={style['tabs-head']}><em>{item['qty']}</em><p>{item['title']}</p></div>, status: item['status'] })
     })
     const rows = (rowData, sectionID, rowID) => {
-      if (isLoading) {
-        return null
-      }
       if (status === 1) { // 待审批
         return (
           <div className={`${style.item}`} key={rowID}>
-            {this.pubrow(rowData)}
+            {this.subRows(rowData)}
             <div className={style.itemfooter}>
               <Button data-id={rowData['id']} onClick={this.handleApplyDetail} className={style.detailbtn}>审批详情</Button>
             </div>
           </div>
         )
       } else if (status === 2) { // 待接单
-        // return (
-        //   <div className={`${style.item}`} key={rowID}>
-        //     {this.pubrow(rowData)}
-        //     <div className={style.itemfooter}>
-        //       <Button onClick={this.handleSelectComp} className={style.detailbtn}>选择中标单位</Button>
-        //     </div>
-        //   </div>
-        // )
         if (parentIndex === 0 || parentIndex === 2) { // 普通工单、招标
           return (
             <div className={`${style.item}`} key={rowID}>
-              {this.pubrow(rowData)}
+              {this.subRows(rowData)}
             </div>
           )
         } else if (parentIndex === 1) { // 快单
           return (
             <div className={`${style.item}`} key={rowID}>
-              {this.pubrow(rowData)}
+              {this.subRows(rowData)}
               <div className={style.itemfooter}>
                 <Button data-id={rowData['id']} onClick={this.handleQuickReceptRecord} className={style.detailbtn}>查看接单记录</Button>
               </div>
@@ -328,26 +293,17 @@ class WorkOrder extends Component {
       } else if (status === 3) { // 待确认
         return (
           <div className={`${style.item}`} key={rowID}>
-            {this.pubrow(rowData)}
+            {this.subRows(rowData)}
             <div className={style.itemfooter}>
               <Button data-id={rowData['id']} onClick={this.handleConfirmNmOrder} className={style.detailbtn}>确 认</Button>
               <Button data-id={rowData['id']} onClick={this.handleNormalReceptRecord} className={style.detailbtn}>查看接单记录</Button>
             </div>
           </div>
         )
-        // return (
-        //   <div className={`${style.item}`} key={rowID}>
-        //     {this.pubrow(rowData)}
-        //     <div className={style.itemfooter}>
-        //       <Button className={style.detailbtn}>取消开工</Button>
-        //       <Button className={style.detailbtn}>确认开工</Button>
-        //     </div>
-        //   </div>
-        // )
       } else if (status === 4) { // 待开工
         return (
           <div className={`${style.item}`} key={rowID}>
-            {this.pubrow(rowData)}
+            {this.subRows(rowData)}
             <div className={style.itemfooter}>
               <Button data-id={rowData['id']} onClick={this.handleCancelWork} className={style.detailbtn}>取消开工</Button>
               <Button data-id={rowData['id']} onClick={this.handleConfirmWork} className={style.detailbtn}>确认开工</Button>
@@ -358,7 +314,7 @@ class WorkOrder extends Component {
         if (parentIndex === 1) { // 快单
           return (
             <div className={`${style.item}`} key={rowID}>
-              {this.pubrow(rowData)}
+              {this.subRows(rowData)}
               <div className={style.itemfooter}>
                 <Button data-id={rowData['id']} onClick={this.handleConfirmComp} className={style.detailbtn}>确认完工列表</Button>
               </div>
@@ -367,7 +323,7 @@ class WorkOrder extends Component {
         } else {
           return (
             <div className={`${style.item}`} key={rowID}>
-              {this.pubrow(rowData)}
+              {this.subRows(rowData)}
               <div className={style.itemfooter}>
                 <Button data-id={rowData['id']} onClick={this.handleSettleList} className={style.detailbtn}>结算列表</Button>
                 <Button data-id={rowData['id']} onClick={this.handleBeginList} className={style.detailbtn}>开工列表</Button>
@@ -378,7 +334,7 @@ class WorkOrder extends Component {
       } else { // 其他状态
         return (
           <div className={`${style.item}`} key={rowID}>
-            {this.pubrow(rowData)}
+            {this.subRows(rowData)}
           </div>
         )
       }
@@ -412,7 +368,6 @@ class WorkOrder extends Component {
           <Tabs tabs={newTabs} onChange={this.handleChange} initialPage={0} page={subIndex} swipeable={false}>
             <div>
               <ListView
-                key={this.state.useBodyScroll ? '0' : '1'}
                 ref={(el) => {
                   this.lv = el
                 }}
@@ -422,8 +377,7 @@ class WorkOrder extends Component {
                 </div>)}
                 renderRow={rows}
                 renderSeparator={separator}
-                useBodyScroll={this.state.useBodyScroll}
-                style={this.state.useBodyScroll ? {} : {
+                style={{
                   height: height
                 }}
                 pullToRefresh={<PullToRefresh refreshing={refreshing} onRefresh={this.onRefresh} />}

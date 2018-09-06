@@ -18,28 +18,30 @@ class MyPush extends Component {
       dataList: [],
       type: 1,
       index: 0,
-      isloading: false
+      isloading: true
     }
   }
   componentWillMount() {
     this.getMyPush()
   }
   getMyPush = async(type = 1) => { // 获取我的发布列表
+    this.setState({
+      isloading: true
+    })
     const data = await api.WorkOrder.WorkOrderList({
       status: 0,
       worksheet_type: type
     }) || false
     this.setState({
       dataList: data['list'],
-      isloading: true
+      isloading: false
     })
   }
   handleChange = (tab, index) => { // tab点击事件
     let type = tab['status']
     this.setState({
       type,
-      index,
-      isloading: false
+      index
     })
     this.getMyPush(type)
   }
@@ -67,8 +69,8 @@ class MyPush extends Component {
             >
               <ul className={`${style['order-list']}`}>
                 {
-                  dataList.length !== 0 && isloading ? dataList.map((item, index) => {
-                    return <li className='my-bottom-border'>
+                  dataList.length !== 0 && !isloading ? dataList.map((item, index) => {
+                    return <li key={index} className='my-bottom-border'>
                       <em>{worksheetType[item['worksheet_type']]}</em>
                       <section>
                         <p>工单号：{item['worksheet_no']}</p>
@@ -76,7 +78,7 @@ class MyPush extends Component {
                       </section>
                       <a>{orderStatus[item['status']]}</a>
                     </li>
-                  }) : <div className='nodata'>{ dataList.length === 0 && isloading ? '暂无数据' : ''}</div>
+                  }) : <div className='nodata'>{ dataList.length === 0 && !isloading ? '暂无数据' : '加载中...'}</div>
                 }
               </ul>
             </Tabs>

@@ -7,7 +7,7 @@
 import React, { Component } from 'react'
 import { Header, Content } from 'Components'
 import * as urls from 'Contants/urls'
-import history from 'Util/history'
+import { worksheetType } from 'Contants/fieldmodel'
 import api from 'Util/api'
 import NewIcon from 'Components/NewIcon'
 import * as tooler from 'Contants/tooler'
@@ -41,9 +41,9 @@ class OrderDetail extends Component {
           leftClick1={() => {
             let url = tooler.getQueryString('url')
             if (url) {
-              history.push(urls[url])
+              this.props.match.history.push(urls[url])
             } else {
-              history.push(urls.HOME)
+              this.props.match.history.push(urls.HOME)
             }
           }}
           // rightClick={() => {
@@ -59,16 +59,24 @@ class OrderDetail extends Component {
             <div className={style['title']}>工单编号：{dataSource['worksheet_no']}</div>
             <div className={style['usr-info']}>
               <dl>
-                <dt><img src={dataSource['avatar']} /></dt>
+                <dt>
+                  <span>
+                    {
+                      worksheetType[dataSource['worksheet_type']]
+                    }
+                  </span>
+                </dt>
                 <dd className={style['usr-tel']}>{dataSource['prj_name']}</dd>
                 <dd className={style['push-time']}>发布于 {dataSource['created_at']}</dd>
               </dl>
               <div className={style['work-info']} style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical' }}>
-                {dataSource['description']}
+                {
+                  dataSource['description']
+                }
               </div>
               <div className={style['work-price']}>
                 <div className={`${style['work-price-l']}`}>
-                  <p>{dataSource['valuation_amount']}</p>
+                  <p>{dataSource['budget']}</p>
                   <div className={style['icon-btm']}>
                     <NewIcon type='icon-budget' className={style['icon']} />
                     预算
@@ -86,8 +94,20 @@ class OrderDetail extends Component {
             </div>
             <div className={style['work-detail-list']}>
               <dl>
-                <dt>工程概况</dt>
-                <dd>{dataSource['brief']}</dd>
+                <dt>具体需求</dt>
+                {
+                  dataSource['detail'] !== undefined ? dataSource['detail'].map((item, index) => {
+                    return <dd key={index}><strong>{item['label']}</strong>：{item['value']}</dd>
+                  }) : null
+                }
+              </dl>
+              <dl>
+                <dt>附件</dt>
+                {
+                  dataSource['attachment'] !== undefined ? dataSource['attachment'].map((item, index) => {
+                    return <dd className='my-bottom-border' key={index}><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a target='_blank' href={item['url']}>{item['name']}</a></dd>
+                  }) : null
+                }
               </dl>
             </div>
           </div>
