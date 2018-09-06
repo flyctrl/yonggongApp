@@ -97,6 +97,26 @@ const Mine = Loadable({ // 我的
   loader: () => import(/* webpackChunkName: "mine" */ '../models/Mine'),
   loading: MyLoadingComponent
 })
+const SetUp = Loadable({ // 我的设置
+  loader: () => import(/* webpackChunkName: "setup" */ '../models/Mine/SetUp'),
+  loading: MyLoadingComponent
+})
+const SetUpPayPwd = Loadable({ // 设置支付密码
+  loader: () => import(/* webpackChunkName: "setuppaypwd" */ '../models/Mine/SetUp/setPayPwd'),
+  loading: MyLoadingComponent
+})
+const SetUpSecurity = Loadable({ // 我的设置》账户与安全
+  loader: () => import(/* webpackChunkName: "setupsecurity" */ '../models/Mine/SetUp/security'),
+  loading: MyLoadingComponent
+})
+const SetUpAboutUs = Loadable({ // 我的设置》关于我们
+  loader: () => import(/* webpackChunkName: "setupaboutus" */ '../models/Mine/SetUp/aboutAs'),
+  loading: MyLoadingComponent
+})
+const SetUpIntrduce = Loadable({ // 我的设置》关于我们》功能介绍
+  loader: () => import(/* webpackChunkName: "setupintroduce" */ '../models/Mine/SetUp/introduce'),
+  loading: MyLoadingComponent
+})
 const MyPush = Loadable({ // 我的发布
   loader: () => import(/* webpackChunkName: "mypush" */ '../models/Mine/myPush'),
   loading: MyLoadingComponent
@@ -351,6 +371,46 @@ const routes = [
     animated: false,
     showMenu: true,
     title: '我的'
+  }, {
+    path: urls.SETUP,
+    exact: true,
+    component: SetUp,
+    parent: null,
+    animated: true,
+    showMenu: false,
+    title: '我的设置'
+  }, {
+    path: urls.SETPAYPWD,
+    exact: true,
+    component: SetUpPayPwd,
+    parent: null,
+    animated: true,
+    showMenu: false,
+    title: '设置支付密码'
+  }, {
+    path: urls.SETUPSECURITY,
+    exact: true,
+    component: SetUpSecurity,
+    parent: null,
+    animated: true,
+    showMenu: false,
+    title: '账户与安全'
+  }, {
+    path: urls.SETUPABOUTUS,
+    exact: true,
+    component: SetUpAboutUs,
+    parent: null,
+    animated: true,
+    showMenu: false,
+    title: '关于我们'
+  }, {
+    path: urls.SETUPINTRODUCE,
+    exact: true,
+    component: SetUpIntrduce,
+    parent: null,
+    animated: true,
+    showMenu: false,
+    title: '功能介绍'
   }, {
     path: urls.APPLYDETAIL,
     exact: true,

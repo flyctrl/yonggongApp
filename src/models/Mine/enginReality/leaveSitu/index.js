@@ -20,8 +20,7 @@ class LeaveSitu extends Component {
   }
   getMineDetail = async() => {
     let paramsData = tooler.parseURLParam()
-    let url = tooler.parseJsonUrl(paramsData)
-    console.log('13', url)
+    //  let url = tooler.parseJsonUrl(paramsData)
     const data = await api.Mine.engineeringLive.getEngDetail({ // 考勤详情
       end_date: paramsData.end_date,
       start_date: paramsData.start_date,

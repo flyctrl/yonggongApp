@@ -110,11 +110,8 @@ class Mine extends Component {
   handleSeeClick = () => {
     history.push(urls.USERINFO + '?url=MINE')
   }
-  handleRightclick = async () => {
-    const data = await api.auth.loginout({}) || false
-    if (data) {
-      window.location.href = '/Login/login'
-    }
+  handleRightclick = () => {
+    history.push(urls.SETUP)
   }
   render() {
     const { companyDetail } = this.state
@@ -122,7 +119,7 @@ class Mine extends Component {
       <div className='contentBox'>
         <Header
           title='我的'
-          rightTitle={<NewIcon className={style['message-icon']} type='icon-messageTz' />}
+          rightIcon='icon-settings'
           rightClick={this.handleRightclick}
         />
         <Content>

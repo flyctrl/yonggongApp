@@ -16,11 +16,10 @@ import { InputItem, Button, Toast, List } from 'antd-mobile'
 import { createForm } from 'rc-form'
 import { Content } from 'Components'
 import Timer from './timer'
-import api from 'Util/api'
 import style from './style.css'
 import logo from 'Src/assets/logo.png'
 import * as urls from 'Contants/urls'
-
+import api from 'Util/api'
 class ForgetPwd extends Component {
   constructor(props) {
     super(props)
@@ -30,14 +29,18 @@ class ForgetPwd extends Component {
     }
   }
   onSubmit = () => { // 表单提交
-    let validateAry = ['phone', 'code']
+    let validateAry = ['mobile', 'verify_code']
     const { getFieldError } = this.props.form
-    this.props.form.validateFields((error) => {
+    this.props.form.validateFields(async (error, values) => {
       if (!error) {
-        console.log(this.props.form.getFieldsValue())
+        let data = await api.auth.validationPsw(values) || false
+        if (data) {
+          this.props.match.history.push(`${urls.RESETPWD}?type=1&mobile=${values['mobile']}&codeVerify=${values['verify_code']}`)
+        }
       } else {
         for (let value of validateAry) {
           if (error[value]) {
+            console.log(error, 'error')
             Toast.fail(getFieldError(value), 1)
             return
           }
@@ -52,27 +55,26 @@ class ForgetPwd extends Component {
     })
   }
   async getCode() {
-    const phoneErr = this.props.form.getFieldError('phone')
-    const phone = this.props.form.getFieldValue('phone')
+    const phoneErr = this.props.form.getFieldError('mobile')
+    const phone = this.props.form.getFieldValue('mobile')
     if (phone === undefined || phone === '') {
       Toast.fail('请输入手机号码', 1)
     } else if (phoneErr !== undefined) {
       Toast.fail('请输入正确格式手机号码', 1)
     }
     if (phoneErr === undefined && phone !== undefined) {
-      this.setState({
-        codeDisabled: true
-      })
-      console.log(phone)
       const data = await api.auth.getcode({
         mobile: phone,
-        type: 2
+        type: 2,
+        app: 2
       }) || false
       if (data) {
+        console.log(1313)
         this.setState({
           codeDisabled: true
         })
       }
+      console.log(phone)
     }
   }
 
@@ -86,7 +88,7 @@ class ForgetPwd extends Component {
           <form className={style['registerForm']}>
             <List>
               <InputItem
-                {...getFieldProps('phone', {
+                {...getFieldProps('mobile', {
                   rules: [
                     { required: true, message: '请输入您的手机号/用户名' },
                     { pattern: /^(1[358479]\d{9})$/, message: '请输入正确格式的手机号码' }
@@ -95,16 +97,16 @@ class ForgetPwd extends Component {
                 clear
                 placeholder='手机号/用户名'
                 prefixListCls='register'
-                error={!!getFieldError('phone')}
+                error={!!getFieldError('mobile')}
                 onErrorClick={() => {
-                  Toast.fail(getFieldError('phone'), 1)
+                  Toast.fail(getFieldError('mobile'), 1)
                 }}
               ></InputItem>
             </List>
             <div className={style['codeBox']}>
               <List>
                 <InputItem
-                  {...getFieldProps('code', {
+                  {...getFieldProps('verify_code', {
                     rules: [
                       { required: true, message: '请输入验证码' },
                     ],
@@ -112,9 +114,9 @@ class ForgetPwd extends Component {
                   clear
                   placeholder='验证码'
                   prefixListCls='register'
-                  error={!!getFieldError('code')}
+                  error={!!getFieldError('verify_code')}
                   onErrorClick={() => {
-                    Toast.fail(getFieldError('code'), 1)
+                    Toast.fail(getFieldError('verify_code'), 1)
                   }}
                 >
                 </InputItem>

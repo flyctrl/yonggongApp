@@ -74,6 +74,12 @@ export default {
     },
     delAttch(params) { // 删除附件
       return FetchSave('/common/attach/delete', params)
+    },
+    user(params) { // 用户信息
+      return Fetch(prefix + '/user', params, 'get')
+    },
+    getEmployAllStatus(params) { // 获取企业所有状态
+      return Fetch(prefix + '/company/status', params, 'get')
     }
   },
   auth: {
@@ -94,6 +100,18 @@ export default {
     },
     realName(params) { // 实名认证
       return FetchSave(prefix + '/user/identity', params)
+    },
+    validationPsw(params) { // 校验验证码和手机号
+      return Fetch(prefix + '/verify', params)
+    },
+    forgetPsw(params) { // 忘记密码
+      return Fetch(prefix + '/reset', params)
+    },
+    reset(params) { // 重置密码
+      return Fetch(prefix + '/user/reset', params)
+    },
+    setPaypwd(params) { // 设置提现密码
+      return FetchSave(prefix + '/withdraw/password', params)
     },
     vailPaypwd(params) { // 提现验证密码
       return Fetch(prefix + '/withdraw/validate', params)
@@ -310,7 +328,7 @@ export default {
         return Fetch(prefix + '/worksheetOrder/attend/list', params)
       }
     },
-    feedback: (params) => { // 问题反馈
+    feedback: (params) => {
       return FetchSave('/common/feedback', params)
     }
   },

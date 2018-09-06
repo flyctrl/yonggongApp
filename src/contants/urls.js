@@ -31,6 +31,11 @@ export const CONFIRMCOMPWORK = `${WORKORDER}/confirmCompWork` // 确认完工列
 // 我的
 export const MINE = `${BASE_URL}/Mine`
 export const MYPUSH = `${MINE}/myPush` // 我的发布
+export const SETUP = `${MINE}/SetUp` // 我的设置
+export const SETPAYPWD = `${SETUP}/setPayPwd` // 设置支付密码
+export const SETUPSECURITY = `${MINE}/security` // 我的设置》账户与安全
+export const SETUPABOUTUS = `${MINE}/aboutUs` // 我的设置》关于我们
+export const SETUPINTRODUCE = `${MINE}/introduce` // 我的设置》关于我们>功能介
 
 export const ACCOUNT = `${MINE}/Account` // 我的账户
 export const ACCOUNTRECHARGE = `${ACCOUNT}/recharge` // 我的账户》充值

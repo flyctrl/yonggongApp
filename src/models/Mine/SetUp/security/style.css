@@ -1,0 +1,22 @@
+/**
+* @Author: baosheng
+* @Date: 2018-05-28 17:08:50
+* @Title: 账户与安全
+*/
+.security {
+  & :global(.am-list-item .am-list-line .am-list-content) {
+    height: 22px;
+    line-height: 22px;
+    color: rgba(49, 63, 72, 1);
+    font-size: 14px;
+    text-align: left;
+    font-family: PingFangSC-Regular;
+  }
+  & :global(.am-list-item .am-list-line .am-list-extra) {
+    height: 22px;
+    line-height: 22px;
+    color: rgba(138, 150, 160, 1);
+    font-size: 12px;
+    font-family: PingFangSC-Regular;
+  }
+}
