@@ -1,0 +1,15 @@
+
+.introduce {
+  & :global(.am-list-item .am-list-line .am-list-content) {
+    color: rgba(49, 63, 72, 1);
+    font-size: 14px;
+    text-align: left;
+    font-family: PingFangSC-Regular;
+    & :global(.am-list-brief) {
+      font-size: 11px
+    }
+  }
+  & :global(.am-list-item .am-list-line-multiple) {
+    padding: 8px 15px 8px 0;
+  }
+}

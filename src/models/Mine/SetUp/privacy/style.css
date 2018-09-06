@@ -1,0 +1,31 @@
+.privacy-content {
+  position: relative;
+  & :global(.am-list-item .am-list-line .am-list-content) {
+    height: 22px;
+    line-height: 22px;
+    color: rgba(49, 63, 72, 1);
+    font-size: 14px;
+    text-align: left;
+    font-family: PingFangSC-Regular;
+  }
+  & .shielding {
+    margin-top: 30px
+  }
+  & p{
+    position: absolute;
+    left: 13px;
+    height: 17px;
+    line-height: 17px;
+    color: rgba(138, 150, 160, 1);
+    font-size: 12px;
+    text-align: left;
+    font-family: PingFangSC-Regular;
+
+  }
+  & .privacy-recommended {
+      top:80px
+  }
+  & .privacy-shielding {
+    top:155px
+  }
+}

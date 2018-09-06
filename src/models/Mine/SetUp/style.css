@@ -1,0 +1,35 @@
+/**
+* @Author: baosheng
+* @Date: 2018-05-28 16:43:00
+* @Title: 我的设置
+*/
+.set-up {
+  & :global(.am-list-item .am-list-line .am-list-content) { 
+    height: 22px;
+    line-height: 22px;
+    color: rgba(49, 63, 72, 1);
+    font-size: 14px;
+    text-align: left;
+    font-family: PingFangSC-Regular;
+  }
+  & :global(.am-list-item .am-list-line .am-list-extra) {
+    font-size: 14px;
+    overflow: visible;
+  }
+  & .btn {
+    margin-top: 60px;
+    height: 48px;
+    line-height: 48px;
+    color: rgba(4, 103, 224, 1);
+    font-size: 15px;
+    font-family: PingFangSC-Regular;
+    border-radius: 0!important;
+    border-left: none!important;
+    border-right: none!important;
+    &:before {
+      border-radius: 0!important;
+      border-left: none!important;
+      border-right: none!important;
+    }
+  }
+}
