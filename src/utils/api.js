@@ -112,6 +112,9 @@ export default {
     },
     setPaypwd(params) { // 设置提现密码
       return FetchSave(prefix + '/withdraw/password', params)
+    },
+    vailPaypwd(params) { // 提现验证密码
+      return Fetch(prefix + '/withdraw/validate', params)
     }
   },
   PushOrder: {

@@ -4,7 +4,7 @@
  * @Title: 提现
  */
 import React, { Component } from 'react'
-import { List, InputItem, Toast, Button, Radio } from 'antd-mobile'
+import { List, InputItem, Toast, Button, Radio, Modal } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import { Header, Content } from 'Components'
@@ -13,6 +13,8 @@ import style from './style.css'
 const Item = List.Item
 const Brief = Item.Brief
 const RadioItem = Radio.RadioItem
+const prompt = Modal.prompt
+let promptInstance = null
 class WithdrawCash extends Component {
   state = {
     amount: '',
@@ -44,18 +46,47 @@ class WithdrawCash extends Component {
       cashValue: value
     })
   }
-  handleSubmit = async () => { // 提现确认按钮
-    console.log('onsubmit')
-    let { bankval, cashValue } = this.state
-    const data = await api.Mine.account.withdraw({
-      cardId: bankval['card_id'],
-      amount: cashValue
+  vaildatePwd = async (password) => {
+    const data = await api.auth.vailPaypwd({
+      password
     }) || false
     if (data) {
-      setTimeout(() => {
-        this.props.match.history.push(urls.ACCOUNT)
-      }, 400)
+      promptInstance.close()
+      let { bankval, cashValue } = this.state
+      const subdata = await api.Mine.account.withdraw({
+        cardId: bankval['card_id'],
+        amount: cashValue,
+        password
+      }) || false
+      if (subdata) {
+        setTimeout(() => {
+          this.props.match.history.push(urls.ACCOUNT)
+        }, 400)
+      }
     }
+  }
+  handleSubmit = async () => { // 提现确认按钮
+    console.log('onsubmit')
+    promptInstance = prompt(
+      '请输入提现密码',
+      null,
+      [
+        { text: '取消' },
+        { text: '提交', onPress: (password) => new Promise((resolve, reject) => {
+          if (password === '') {
+            Toast.fail('提现密码不能为空', 2)
+            return false
+          } else if (!/^\d{6}$/.test(password)) {
+            Toast.fail('提现密码为6位数字', 2)
+            return false
+          }
+          reject()
+          this.vaildatePwd(password)
+        }),
+        }
+      ],
+      'secure-text'
+    )
   }
   handleCashAll = () => { // 全部提现
     let { amount, bankval } = this.state
@@ -134,6 +165,7 @@ class WithdrawCash extends Component {
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {
+              promptInstance.close()
               this.props.match.history.push(urls.ACCOUNT)
             }}
           />

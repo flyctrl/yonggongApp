@@ -4,7 +4,7 @@
  * @Title: 我的账户
  */
 import React, { Component } from 'react'
-import { Button } from 'antd-mobile'
+import { Button, Toast } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
 import { addCommas } from 'Contants/tooler'
@@ -33,6 +33,17 @@ class Account extends Component {
     this.getAmount()
   }
 
+  handleDrawcash = async () => {
+    const data = await api.Common.getusrAllStatus({}) || false
+    if (data) {
+      if (data['is_bind_card'] === 1) {
+        this.props.match.history.push(urls.ACCOUNTWITHDRAWCASH)
+      } else {
+        Toast.fail('请先绑定银行卡', 2)
+      }
+    }
+  }
+
   render() {
     const { moneyA, moneyB } = this.state
     return <div className='pageBox'>
@@ -55,11 +66,9 @@ class Account extends Component {
           <div className={style.tip}>冻结金额 ¥{addCommas(moneyB)}元</div>
           <div className={style.btns}><Button className={style['reChange-btn']} type='primary' inline onClick={() => {
             this.props.match.history.push(urls.ACCOUNTRECHARGE)
-          }}>立即充值</Button><Button className={style['withdraw-cash-btn']} inline onClick={() => {
-            this.props.match.history.push(urls.ACCOUNTWITHDRAWCASH)
-          }}>提现</Button></div>
+          }}>立即充值</Button><Button className={style['withdraw-cash-btn']} inline onClick={this.handleDrawcash}>提现</Button></div>
         </div>
-        <div className={style['bindbtn-box']}><a onClick={this.handleBindCard} className={style['bindcard-btn']}>绑定银行卡</a></div>
+        <div className={style['bindbtn-box']}><a onClick={this.handleBindCard} className={style['bindcard-btn']}>+ 绑定银行卡</a></div>
       </Content>
     </div>
   }
