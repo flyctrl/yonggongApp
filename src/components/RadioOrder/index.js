@@ -74,7 +74,7 @@ class RadioOrder extends Component {
         <Content>
           <div className={style['radio-box']}>
             <List>
-              {data.length && isLoading
+              {data.length > 0 && isLoading
                 ? data.map((item, index) => (
                   <RadioItem key={`${item.id}-${item.worksheet_no}`} checked={value === item.id} onChange={() => this.onChange(item)}>
                     <dl>
@@ -86,7 +86,7 @@ class RadioOrder extends Component {
                       <dd>工资发放方式：{payModeRadio.map(list => { return list.value === item.salary_payment_way ? list.label : '' })}</dd>
                       <dd>施工地址：{item.ext.construction_place}</dd>
                     </dl>
-                  </RadioItem>)) : <div>{ isLoading ? '无工单' : ''}</div>
+                  </RadioItem>)) : <p className='nodata'>{data.length === 0 && isLoading ? '暂无数据' : '加载中...'}</p>
               }
             </List>
           </div>

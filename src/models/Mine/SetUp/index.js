@@ -16,7 +16,8 @@ class SetUp extends Component {
     super(props)
     this.state = {
       userInfo: {},
-      widthdraw: ''
+      widthdraw: '',
+      isLoading: true
     }
     this.handleSignOut = this.handleSignOut.bind(this)
   }
@@ -78,9 +79,9 @@ class SetUp extends Component {
       <Content>
         <div className={style['set-up']}>
           <List>
-            <Item extra={userInfo.uid || '加载中...'}>ID号</Item>
+            <Item extra={userInfo.uid || ''}>ID号</Item>
             <Item extra='已设置' onClick={() => this.props.match.history.push(`${urls.RESETPWD}?type=2`)} arrow='horizontal'>账户密码</Item>
-            <Item extra={ widthdraw && widthdraw !== '' ? '已设置' : (!widthdraw && widthdraw !== '') ? '未设置' : '加载中...'} arrow='horizontal' onClick={this.handleSetPaypwd}>提现密码</Item>
+            <Item extra={ widthdraw && widthdraw !== '' ? '已设置' : (!widthdraw && widthdraw !== '') ? '未设置' : ''} arrow='horizontal' onClick={this.handleSetPaypwd}>提现密码</Item>
             <Item onClick={() => this.props.match.history.push(`${urls.FEEDBACK}?url=SETUP`) } arrow='horizontal'>问题反馈</Item>
             <Item onClick={() => this.props.match.history.push(urls.SETUPABOUTUS) } arrow='horizontal'>关于我们</Item>
           </List>

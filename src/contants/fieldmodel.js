@@ -92,8 +92,9 @@ const tenderWayRadio = [
 ]
 
 const applyInvoice = { // 是否已申请开票
-  0: '申请开票',
-  1: '已申请'
+  0: '开票',
+  1: '已申请',
+  2: '已审核'
 }
 let invoiceStatus = { // 开票状态详情
   1: '申请中',

@@ -36,16 +36,19 @@ class InvoiceDetail extends Component {
     super(props)
     this.state = {
       fileList: [],
-      dataSource: {}
+      dataSource: {},
+      isLoading: true
     }
   }
   getProjectDetail = async () => {
     let id = tooler.getQueryString('id')
+    this.setState({ isLoading: true })
     const data = await api.Mine.invoiceMange.invoiceDetail({
       id
     }) || false
     this.setState({
-      dataSource: data
+      dataSource: data,
+      isLoading: false
     })
   }
   componentDidMount() {
@@ -64,7 +67,7 @@ class InvoiceDetail extends Component {
     history.push(`${urls.INVOICELISTTWO}`)
   }
   render() {
-    let { dataSource } = this.state
+    let { dataSource, isLoading } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -76,44 +79,47 @@ class InvoiceDetail extends Component {
           }}
         />
         <Content>
-          <div className={style['show-order-box']}>
-            <List renderHeader={() => '平台开票类型'}>
-              {valModeData[dataSource['platform_type']]}
-            </List>
-            <List renderHeader={() => '发票类型'}>
-              {totalRadio[dataSource['type']]}
-            </List>
-            <List renderHeader={() => '抬头类型'}>
-              {settleRadio[dataSource['title_type']]}
-            </List>
-            <List renderHeader={() => '抬头'}>
-              {dataSource['title']}
-            </List>
-            <List renderHeader={() => '发票金额（元）'}>
-              {dataSource['amount']}
-            </List>
-            <List renderHeader={() => '发票内容'}>
-              {dataSource['content']}
-            </List>
-            <List renderHeader={() => '税号'}>
-              {dataSource['tax_no']}
-            </List>
-            <List renderHeader={() => '开户行'}>
-              {dataSource['bank_name']}
-            </List>
-            <List renderHeader={() => '开票备注说明'}>
-              {dataSource['remark']}
-            </List>
-            <List renderHeader={() => '开票状态'}>
-              {
-                invoiceStatus[dataSource['status']]
-              }
-            </List>
-            <div className={styles['control-btn']}>
-              <Button onClick={this.handleApplyInvoice} data-type={3} type='primary'>驳  回</Button>
-              <Button onClick={this.handleApplyInvoice} data-type={2} type='primary'>通  过</Button>
+          { !isLoading
+            ? <div className={style['show-order-box']}>
+              <List renderHeader={() => '平台开票类型'}>
+                {valModeData[dataSource['platform_type']]}
+              </List>
+              <List renderHeader={() => '发票类型'}>
+                {totalRadio[dataSource['type']]}
+              </List>
+              <List renderHeader={() => '抬头类型'}>
+                {settleRadio[dataSource['title_type']]}
+              </List>
+              <List renderHeader={() => '抬头'}>
+                {dataSource['title']}
+              </List>
+              <List renderHeader={() => '发票金额（元）'}>
+                {dataSource['amount']}
+              </List>
+              <List renderHeader={() => '发票内容'}>
+                {dataSource['content']}
+              </List>
+              <List renderHeader={() => '税号'}>
+                {dataSource['tax_no']}
+              </List>
+              <List renderHeader={() => '开户行'}>
+                {dataSource['bank_name']}
+              </List>
+              <List renderHeader={() => '开票备注说明'}>
+                {dataSource['remark']}
+              </List>
+              <List renderHeader={() => '开票状态'}>
+                {
+                  invoiceStatus[dataSource['status']]
+                }
+              </List>
+              <div className={styles['control-btn']}>
+                <Button onClick={this.handleApplyInvoice} data-type={3} type='primary'>驳  回</Button>
+                <Button onClick={this.handleApplyInvoice} data-type={2} type='primary'>通  过</Button>
+              </div>
             </div>
-          </div>
+            : null
+          }
         </Content>
       </div>
     )

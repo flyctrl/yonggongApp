@@ -12,7 +12,8 @@ class LeaveSitu extends Component {
     super(props)
     this.state = {
       dataList: [],
-      urls: ''
+      urls: '',
+      isLoading: true
     }
   }
   handleUsrInfo = () => {
@@ -21,15 +22,19 @@ class LeaveSitu extends Component {
   getMineDetail = async() => {
     let paramsData = tooler.parseURLParam()
     //  let url = tooler.parseJsonUrl(paramsData)
+    this.setState({ isLoading: true })
     const data = await api.Mine.engineeringLive.getEngDetail({ // 考勤详情
       end_date: paramsData.end_date,
       start_date: paramsData.start_date,
       worksheet_id: paramsData.worksheet_id,
       attend_status: paramsData.attend_status
-    }) || false
-    this.setState({
-      dataList: data.list
-    })
+    }) || {}
+    if (data) {
+      this.setState({
+        dataList: data.list || {},
+        isLoading: false
+      })
+    }
   }
   componentDidMount() {
     // if (window.location.search) {
@@ -38,7 +43,7 @@ class LeaveSitu extends Component {
     this.getMineDetail()
   }
   render() {
-    const { dataList } = this.state
+    const { dataList, isLoading } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -52,7 +57,7 @@ class LeaveSitu extends Component {
         <Content>
           <ul className={style['leavesitu-list']}>
             {
-              dataList && dataList.map((item, index) => {
+              dataList.length !== 0 && !isLoading ? dataList.map((item, index) => {
                 return (<li key={index} onClick={this.handleUsrInfo} className='my-bottom-border'>
                   <img src={item.avatar} />
                   <section>
@@ -65,7 +70,7 @@ class LeaveSitu extends Component {
                     <a className={`${style['statu']} my-full-border`}>{item.created_at}</a>
                   </footer>
                 </li>)
-              })
+              }) : <div className='nodata'>{dataList.length === 0 && !isLoading ? '暂无数据' : ''}</div>
             }
             {/* <li onClick={this.handleUsrInfo} className='my-bottom-border'>
               <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
