@@ -6,7 +6,6 @@
 */
 import React, { Component } from 'react'
 import { Header, Content } from 'Components'
-import history from 'Util/history'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 // import agree from 'Src/assets/agree.png'
@@ -16,33 +15,33 @@ class EletAgreement extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      contractDetail: []
+      contractDetail: [],
+      isLoading: true
     }
   }
   componentWillMount() {
     this.getcontractDetail()
   }
   getcontractDetail = async (id) => {
+    this.setState({ isLoading: true })
     let contract = tooler.getQueryString('contract_no')
     const data = await api.Mine.contractMange.contractDetail({
       contract_no: contract
-    }) || false
-    this.setState({
-      contractDetail: data.img_list
-    })
+    }) || {}
+    if (data) {
+      this.setState({
+        contractDetail: data.img_list || [],
+        isLoading: false
+      })
+    }
   }
   render() {
-    const { contractDetail } = this.state
+    const { contractDetail, isLoading } = this.state
     return (
       <div className='pageBox'>
         <Header
           leftClick1={() => {
-            let url = tooler.getQueryString('url')
-            if (url) {
-              history.push(urls[url])
-            } else {
-              history.push(urls.HOME)
-            }
+            this.props.match.history.push(`${urls.CONTRACTMANGE}`)
           }}
           title='电子合同'
           leftIcon='icon-back'
@@ -50,8 +49,9 @@ class EletAgreement extends Component {
         />
         <Content className={style['argee-content']}>
           <div style={{ width: '100%', height: '100%', overflowY: 'auto' }}>
-            { contractDetail &&
-              contractDetail.map((item, index) => { return <img key={`${index}-${item.id}`} style={{ width: '100%' }} src={item} /> })
+            { contractDetail.length !== 0 && !isLoading
+              ? contractDetail.map((item, index) => { return <img key={`${index}-${item.id}`} style={{ width: '100%' }} src={item} /> })
+              : <p className='nodata'>{ contractDetail.length === 0 && !isLoading ? '暂无数据' : ''}</p>
             }
           </div>
         </Content>

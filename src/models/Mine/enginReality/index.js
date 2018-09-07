@@ -33,6 +33,7 @@ class EnginReality extends Component {
       dateShow: false,
       startTime: null,
       endTime: null,
+      isLoading: true,
       proId: '', // 项目id
       orderid: '', // 工单id
       worksheetNo: '', // 工单编号
@@ -44,20 +45,26 @@ class EnginReality extends Component {
     const proData = await api.Common.getProList({
       status: 1
     }) || false
-    this.setState({
-      proData
-    })
+    if (proData) {
+      this.setState({
+        proData
+      })
+    }
   }
   getEngList = async () => { // 获取考勤打卡统计
     const { orderid, startTime, endTime } = this.state
+    this.setState({ isLoading: true })
     const data = await api.Mine.engineeringLive.getEngList({
       worksheet_id: orderid,
       start_date: tooler.formatDate(startTime),
       end_date: tooler.formatDate(endTime)
-    }) || false
-    this.setState({
-      attendanceData: data
-    })
+    }) || []
+    if (data) {
+      this.setState({
+        attendanceData: data,
+        isLoading: false
+      })
+    }
   }
 
   onProChange = (val) => { // 选择项目
@@ -126,7 +133,7 @@ class EnginReality extends Component {
     this.getProjectList()
   }
   render() {
-    let { proSelect, proData, dateShow, startTime, endTime, showOrder, proId, worksheetNo, attendanceData } = this.state
+    let { proSelect, proData, dateShow, startTime, endTime, showOrder, proId, worksheetNo, attendanceData, isLoading } = this.state
     const { getFieldDecorator } = this.props.form
 
     return (
@@ -171,8 +178,8 @@ class EnginReality extends Component {
                   : null
               }
               <div className={style['engin-user']}>
-                <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
-                <span>刘德华</span>
+                {/* <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
+                <span>刘德华</span> */}
                 <a onClick={this.hanleShowCalendar}>{ startTime && endTime ? (new Date(startTime)).toLocaleDateString() + ' ~ ' + (new Date(endTime)).toLocaleDateString() : '请选择日期范围' } <Icon type='right' size='md' color=''/></a>
               </div>
               {/* <ul className={style['attend']}>
@@ -183,18 +190,18 @@ class EnginReality extends Component {
               </ul> */}
               <ul className={style['attend']}>
                 {
-                  attendanceData &&
-                  attendanceData.map(item => {
-                    return <li key={item.attend_status}
-                      onClick={this.handleLeavesitu}
-                      data-id={`${item['attend_status']}&${item.number}`}
-                      className='my-bottom-border'>
-                      <p>{attendanceList[item.attend_status]}
-                        { item.attend_status === 2 ? <span ><span>迟到</span><span>早退</span><span>未打卡</span></span> : null}
-                      </p><Icon type='right' size='md' color='#ccc'/>
-                      <em>{item.number}</em>
-                    </li>
-                  })
+                  attendanceData.length !== 0 && !isLoading
+                    ? attendanceData.map(item => {
+                      return <li key={item.attend_status}
+                        onClick={this.handleLeavesitu}
+                        data-id={`${item['attend_status']}&${item.number}`}
+                        className='my-bottom-border'>
+                        <p>{attendanceList[item.attend_status]}
+                          { item.attend_status === 2 ? <span ><span>迟到</span><span>早退</span><span>未打卡</span></span> : null}
+                        </p><Icon type='right' size='md' color='#ccc'/>
+                        <em>{item.number}</em>
+                      </li>
+                    }) : <div className='nodata'>{attendanceData.length === 0 && !isLoading ? '暂无数据' : ''}</div>
                 }
               </ul>
             </div>

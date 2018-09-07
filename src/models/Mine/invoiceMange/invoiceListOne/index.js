@@ -52,7 +52,8 @@ class InvoiceListOne extends Component {
                   return <li key={item.order_no}>
                     <section>
                       <p><span>工单编号：</span>{item.order_no}</p>
-                      <p><span>项目名称：</span>{item.prj_name}</p>
+                      <p><span>工单名称：</span>{item.worksheet_title}</p>
+                      <p><span>接包方：</span>{item.worker_name}</p>
                     </section>
                     <nav>
                       <Button type='ghost'
@@ -64,7 +65,7 @@ class InvoiceListOne extends Component {
                     </nav>
                   </li>
                 })
-                : <div className='nodata'>{ isLoading ? '暂无数据' : ''}</div>
+                : <div className='nodata'>{invoiceData.length === 0 && isLoading ? '暂无数据' : ''}</div>
             }
             {/* <li>
               <section>

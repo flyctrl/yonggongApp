@@ -300,7 +300,7 @@ export default {
     },
     contractMange: { // 合同管理
       contractList(params) { // 合同列表
-        return Fetch(prefix + '/contract/list/worksheet', params, 'get')
+        return Fetch(prefix + '/contract/list', params, 'get')
       },
       contractDetail(params) { // 合同详情
         return Fetch(prefix + '/contract/show', params, 'get')
