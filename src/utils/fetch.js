@@ -1,8 +1,9 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2018-09-02 13:26:10
+* @Last Modified time: 2018-09-07 10:06:35
 */
+import * as Loading from './load.js'
 import storage from '../utils/storage'
 import axios from 'axios'
 import { baseUrl } from './index'
@@ -16,6 +17,7 @@ let fetcher = axios.create({
     }
     return JSON.stringify(data)
   }],
+  showloading: true,
   headers: {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
@@ -23,6 +25,9 @@ let fetcher = axios.create({
 })
 
 fetcher.interceptors.request.use(function (config) {
+  if (config.showloading) {
+    Loading.showLoading()
+  }
   const Authorization = storage.get('Authorization')
   if (Authorization) {
     config.headers.Authorization = Authorization
@@ -33,6 +38,9 @@ fetcher.interceptors.request.use(function (config) {
 })
 
 fetcher.interceptors.response.use(function (response) {
+  if (response.config.showloading) {
+    Loading.hideLoading()
+  }
   if (response.data.code === 10013) { // 未登录
     window.location.href = '/Login/login'
   } else if (response.data.code === 10011) { // token过期

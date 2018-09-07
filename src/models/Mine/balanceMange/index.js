@@ -27,11 +27,15 @@ class BalanceMange extends Component {
     }) || []
     this.setState({
       dataSource: data['list'],
-      isloading: true,
-      status
+      isloading: true
     })
   }
   handleTabChange = (tab, index) => { // tab 点击事件
+    this.setState({
+      status: index,
+      dataSource: [],
+      isloading: false
+    })
     this.getBalanceList(index)
   }
   outBalance = (item = {}) => { // 未结算
@@ -145,7 +149,7 @@ class BalanceMange extends Component {
                       } else if (status === 3) { // 全部结算
                         return this.allBalance(item)
                       }
-                    }) : <div className={style['nodata']}>{ isloading ? '暂无数据' : '' }</div>
+                    }) : <div className={style['nodata']}>{ dataSource.length === 0 && isloading ? '暂无数据' : '' }</div>
                   }
                 </ul>
               </div>

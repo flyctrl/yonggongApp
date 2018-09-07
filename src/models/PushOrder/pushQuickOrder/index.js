@@ -183,15 +183,26 @@ class PushQuickOrder extends Component {
       type: 'skill,machine'
     }) || false
     this.setState({
-      // workTypeSelect: true,
       worktypeData
     })
   }
-  getWorkTypeChange = async (value, index) => { // 施工内容选择
+  getAptiude = async (catId) => { // 获取技能认证列表
+    const data = await api.Common.getSkillList({
+      catId
+    }) || []
+    if (data) {
+      this.setState({
+        professData: data
+      })
+    }
+  }
+  getWorkTypeChange = (value) => { // 施工内容选择
+    console.log('value', value)
     if (value[0] === 'skill') {
       this.setState({
         workTypeSelect: true
       })
+      this.getAptiude(value[1])
     } else {
       this.setState({
         workTypeSelect: false
@@ -215,6 +226,7 @@ class PushQuickOrder extends Component {
 
   componentDidMount() {
     this.getProjectList()
+    this.handleWorktype()
   }
   onHandleNext = () => {
     let validateAry = ['title', 'prj_id', 'construction_place', 'startWorkDate', 'endWorkDate', 'time1', 'time2', 'time3', 'time4', 'construct_ids', 'people_number', 'valuation_unit', 'valuation_unit_price', 'valuation_quantity', 'description']
@@ -262,10 +274,13 @@ class PushQuickOrder extends Component {
 
   onHandleSubmit = async () => { // 提交数据
     let { postData } = this.state
+    Toast.loading('提交中...', 0)
     const data = await api.PushOrder.workSheet(postData) || false
+    Toast.hide()
     if (data) {
-      Toast.success('发布成功')
-      this.props.match.history.push(urls.HOME)
+      Toast.success('发布成功', 1.5, () => {
+        this.props.match.history.push(urls.HOME)
+      })
     }
   }
 
@@ -606,7 +621,7 @@ class PushQuickOrder extends Component {
                   </div>
                 </div>
               </List>
-              <List onClick={this.handleWorktype} className={`${style['input-form-list']} ${workTypeSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '施工内容'}>
+              <List className={`${style['input-form-list']} ${workTypeSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '施工内容'}>
                 {getFieldDecorator('construct_ids', {
                   rules: [
                     { required: true, message: '请选择施工内容' },
@@ -636,14 +651,14 @@ class PushQuickOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List onClick={this.handleClickSing} className={`${style['input-form-list']} ${priceWaySelect ? style['selected-form-list'] : ''}`} renderHeader={() => '标的工作量'}>
+              <List className={`${style['input-form-list']} ${priceWaySelect ? style['selected-form-list'] : ''}`} renderHeader={() => '标的工作量'}>
                 {getFieldDecorator('valuation_unit', {
                   rules: [
                     { required: true, message: '请选择标的工作量' },
                   ],
                 })(
                   <Picker data={unitData} extra='请选择标的工作量' cols={1} onChange={this.onSingePriceChange}>
-                    <List.Item arrow='horizontal'></List.Item>
+                    <List.Item onClick={this.handleClickSing} arrow='horizontal'></List.Item>
                   </Picker>
                 )}
               </List>

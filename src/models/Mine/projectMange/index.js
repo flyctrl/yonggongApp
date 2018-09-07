@@ -30,12 +30,12 @@ class ProjectMange extends Component {
     this.getProjectlist()
   }
   handleTabsChange = (tabs, index) => {
-    this.getProjectlist(index)
     this.setState({
       tabIndex: index,
       dataSource: [],
       isloading: false
     })
+    this.getProjectlist(index)
   }
   handleCreateProject = () => {
     history.push(urls.CREATEPROJECT)

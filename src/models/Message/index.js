@@ -22,27 +22,27 @@ class Message extends Component {
     this.state = {
       noticeList: [],
       tobeList: [],
-      isload: true
+      isload: false
     }
   }
   getNoticeList = async () => {
     this.setState({
-      isload: true
+      isload: false
     })
     const data = await api.Message.getNoticeList({}) || false
     this.setState({
       noticeList: data['list'],
-      isload: false
+      isload: true
     })
   }
   getTobeDoneList = async () => {
     this.setState({
-      isload: true
+      isload: false
     })
     const data = await api.Home.getTodayTodo({}) || false
     this.setState({
       tobeList: data['list'],
-      isload: false
+      isload: true
     })
   }
   componentDidMount() {
@@ -74,7 +74,7 @@ class Message extends Component {
           >
             <div>
               {
-                noticeList.length !== 0 && !isload ? noticeList.map((item) => {
+                noticeList.length !== 0 && isload ? noticeList.map((item) => {
                   return (
                     <div data-id={item['id']} key={item['id']} onClick={this.handleSysNotice} className={`${style['notice-box']} my-bottom-border`}>
                       <dl>
@@ -90,7 +90,7 @@ class Message extends Component {
                       </dl>
                     </div>
                   )
-                }) : <div className={'nodata'}>{ noticeList.length === 0 && !isload ? '暂无数据' : '加载中...'}</div>
+                }) : <div className={'nodata'}>{ noticeList.length === 0 && isload ? '暂无数据' : ''}</div>
               }
               {
                 // <ul className={style['mesg-list']}>
@@ -106,7 +106,7 @@ class Message extends Component {
             </div>
             <div>
               {
-                tobeList.length !== 0 && !isload ? tobeList.map((item, index) => {
+                tobeList.length !== 0 && isload ? tobeList.map((item, index) => {
                   return (
                     <div className={`${style['notice-box']} my-bottom-border`}>
                       <dl>
@@ -122,7 +122,7 @@ class Message extends Component {
                       </dl>
                     </div>
                   )
-                }) : <div className={'nodata'}>{ tobeList.length === 0 && !isload ? '暂无数据' : '加载中...'}</div>
+                }) : <div className={'nodata'}>{ tobeList.length === 0 && isload ? '暂无数据' : ''}</div>
               }
             </div>
           </Tabs>

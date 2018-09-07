@@ -258,7 +258,7 @@ class WorkOrder extends Component {
     </div>
   }
   render() {
-    let { tabs, status, parentIndex, dataSource, isLoading, nodata, height, refreshing, subIndex } = this.state
+    let { tabs, status, parentIndex, dataSource, isLoading, nodata, refreshing, subIndex } = this.state
     let newTabs = []
     tabs.map((item) => {
       newTabs.push({ title: <div className={style['tabs-head']}><em>{item['qty']}</em><p>{item['title']}</p></div>, status: item['status'] })
@@ -366,25 +366,23 @@ class WorkOrder extends Component {
         <Content>
           <SegmentedControl className={style.segmented} selectedIndex={parentIndex} onChange={this.handleSegmentedChange} values={['工单', '快单', '劳务招标']}/>
           <Tabs tabs={newTabs} onChange={this.handleChange} initialPage={0} page={subIndex} swipeable={false}>
-            <div>
-              <ListView
-                ref={(el) => {
-                  this.lv = el
-                }}
-                dataSource={dataSource}
-                renderFooter={() => (<div className={style['render-footer']}>
-                  {footerShow()}
-                </div>)}
-                renderRow={rows}
-                renderSeparator={separator}
-                style={{
-                  height: height
-                }}
-                pullToRefresh={<PullToRefresh refreshing={refreshing} onRefresh={this.onRefresh} />}
-                onEndReached={this.onEndReached}
-                pageSize={10}
-              />
-            </div>
+            <ListView
+              ref={(el) => {
+                this.lv = el
+              }}
+              dataSource={dataSource}
+              renderFooter={() => (<div className={style['render-footer']}>
+                {footerShow()}
+              </div>)}
+              renderRow={rows}
+              renderSeparator={separator}
+              style={{
+                height: '100%'
+              }}
+              pullToRefresh={<PullToRefresh refreshing={refreshing} onRefresh={this.onRefresh} />}
+              onEndReached={this.onEndReached}
+              pageSize={10}
+            />
           </Tabs>
         </Content>
       </div>

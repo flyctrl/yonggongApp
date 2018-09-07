@@ -191,15 +191,25 @@ class PushNormalOrder extends Component {
       type: 'skill,machine'
     }) || false
     this.setState({
-      // workTypeSelect: true,
       worktypeData
     })
+  }
+  getAptiude = async (catId) => { // 获取技能认证列表
+    const data = await api.Common.getSkillList({
+      catId
+    }) || []
+    if (data) {
+      this.setState({
+        professData: data
+      })
+    }
   }
   getWorkTypeChange = async (value, index) => { // 施工内容选择
     if (value[0] === 'skill') {
       this.setState({
         workTypeSelect: true
       })
+      this.getAptiude(value[1])
     } else {
       this.setState({
         workTypeSelect: false
@@ -232,6 +242,7 @@ class PushNormalOrder extends Component {
   componentDidMount() {
     this.getProjectList()
     this.getNaturalList()
+    this.handleWorktype()
   }
   onHandleNext = () => {
     let validateAry = ['title', 'prj_id', 'construction_place', 'startWorkDate', 'endWorkDate', 'construct_ids', 'valuation_unit', 'valuation_unit_price', 'valuation_quantity', 'description']
@@ -275,10 +286,13 @@ class PushNormalOrder extends Component {
 
   onHandleSubmit = async () => { // 提交数据
     let { postData } = this.state
+    Toast.loading('提交中...', 0)
     const data = await api.PushOrder.workSheet(postData) || false
+    Toast.hide()
     if (data) {
-      Toast.success('发布成功')
-      this.props.match.history.push(urls.HOME)
+      Toast.success('发布成功', 1.5, () => {
+        this.props.match.history.push(urls.HOME)
+      })
     }
   }
 
@@ -544,7 +558,7 @@ class PushNormalOrder extends Component {
                   defaultDate={now}
                 />
               </List>
-              <List onClick={this.handleWorktype} className={`${style['input-form-list']} ${workTypeSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '施工内容'}>
+              <List className={`${style['input-form-list']} ${workTypeSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '施工内容'}>
                 {getFieldDecorator('construct_ids', {
                   rules: [
                     { required: true, message: '请选择施工内容' },

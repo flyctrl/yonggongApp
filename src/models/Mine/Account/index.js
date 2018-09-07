@@ -16,14 +16,19 @@ class Account extends Component {
     super(props)
     this.state = {
       moneyA: '',
-      moneyB: ''
+      moneyB: '',
+      isloading: false
     }
   }
   getAmount = async () => {
+    this.setState({
+      isloading: false
+    })
     const data = await api.Mine.account.myAccount() || false
     this.setState({
       moneyA: data['amount'],
-      moneyB: data['total_freeze_amount']
+      moneyB: data['total_freeze_amount'],
+      isloading: true
     })
   }
   handleBindCard = () => {
@@ -45,7 +50,7 @@ class Account extends Component {
   }
 
   render() {
-    const { moneyA, moneyB } = this.state
+    const { moneyA, moneyB, isloading } = this.state
     return <div className='pageBox'>
       <Header
         title='我的账户'
@@ -60,15 +65,19 @@ class Account extends Component {
         }}
       />
       <Content>
-        <div className={style.account}>
-          <div className={style.title}>账户余额（元）</div>
-          <div className={style.money}>{addCommas(moneyA)}</div>
-          <div className={style.tip}>冻结金额 ¥{addCommas(moneyB)}元</div>
-          <div className={style.btns}><Button className={style['reChange-btn']} type='primary' inline onClick={() => {
-            this.props.match.history.push(urls.ACCOUNTRECHARGE)
-          }}>立即充值</Button><Button className={style['withdraw-cash-btn']} inline onClick={this.handleDrawcash}>提现</Button></div>
-        </div>
-        <div className={style['bindbtn-box']}><a onClick={this.handleBindCard} className={style['bindcard-btn']}>+ 绑定银行卡</a></div>
+        {
+          isloading ? <div>
+            <div className={style.account}>
+              <div className={style.title}>账户余额（元）</div>
+              <div className={style.money}>{addCommas(moneyA)}</div>
+              <div className={style.tip}>冻结金额 ¥{addCommas(moneyB)}元</div>
+              <div className={style.btns}><Button className={style['reChange-btn']} type='primary' inline onClick={() => {
+                this.props.match.history.push(urls.ACCOUNTRECHARGE)
+              }}>立即充值</Button><Button className={style['withdraw-cash-btn']} inline onClick={this.handleDrawcash}>提现</Button></div>
+            </div>
+            <div className={style['bindbtn-box']}><a onClick={this.handleBindCard} className={style['bindcard-btn']}>+ 绑定银行卡</a></div>
+          </div> : null
+        }
       </Content>
     </div>
   }
