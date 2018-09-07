@@ -111,6 +111,9 @@ class AppMenu extends Component {
                         visible: !visible
                       })
                     } else {
+                      this.setState({
+                        visible: false
+                      })
                       history.push(item['path'], { title: item['title'] })
                     }
                   }}
