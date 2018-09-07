@@ -1,9 +1,9 @@
 import { Toast } from 'antd-mobile'
 let requestCount = 0
 
-export function showLoading() {
+export function showLoading(loadtitle) {
   if (requestCount === 0) {
-    Toast.loading('加载中...', 0)
+    Toast.loading(loadtitle, 0)
   }
   requestCount++
 }
