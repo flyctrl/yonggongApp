@@ -335,8 +335,8 @@ class PushQuickOrder extends Component {
     let { postData } = this.state
     Toast.loading('提交中...', 0)
     const data = await api.PushOrder.workSheet(postData) || false
-    Toast.hide()
     if (data) {
+      Toast.hide()
       Toast.success('发布成功', 1.5, () => {
         this.props.match.history.push(urls.HOME)
       })

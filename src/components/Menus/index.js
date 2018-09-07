@@ -6,6 +6,7 @@
 */
 import React, { Component } from 'react'
 import { TabBar } from 'antd-mobile'
+import NewIcon from 'Components/NewIcon'
 import history from 'Util/history'
 import * as urls from 'Contants/urls'
 import menuStyle from './style.css'
@@ -46,12 +47,12 @@ const data = [
   }
 ]
 let menuAry = []
-
 class AppMenu extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedTab: (history.location.pathname).slice(1) || 'Home'
+      selectedTab: (history.location.pathname).slice(1) || 'Home',
+      visible: false
     }
   }
 
@@ -75,6 +76,7 @@ class AppMenu extends Component {
   }
 
   render() {
+    let { visible, selectedTab } = this.state
     return (
       <div className={ isIphoneX ? menuStyle['tabBody-fix-iphoneX'] : menuStyle['tabBody'] }>
         {
@@ -98,14 +100,16 @@ class AppMenu extends Component {
                   selectedIcon={
                     item['title'] !== null ? <svg className={menuStyle['icon-menu']} aria-hidden='true'><use xlinkHref={item['onIcon']}></use></svg> : <svg className={menuStyle['bigicon-menu']} aria-hidden='true'><use xlinkHref={item['onIcon']}></use></svg>
                   }
-                  selected={this.state.selectedTab === (item['key'] || '/')}
+                  selected={selectedTab === (item['key'] || '/')}
                   onPress={() => {
                     this.setState({
                       selectedTab: item['key'],
                     })
                     this.props.onTouch(item['title'])
                     if (item['key'] === 'PushOrder') {
-                      console.log('pushorder')
+                      this.setState({
+                        visible: !visible
+                      })
                     } else {
                       history.push(item['path'], { title: item['title'] })
                     }
@@ -117,6 +121,14 @@ class AppMenu extends Component {
             })
           }
         </TabBar>
+        <div style={{ display: visible ? 'block' : 'none' }} className={`${menuStyle['menu-tip']} animated ${visible ? 'bounceInUp' : 'bounceOutDown'}`}>
+          <div className={menuStyle['tip-arrow']}></div>
+          <div className={menuStyle['tip-inner']}>
+            <a className='my-bottom-border' onClick={() => history.push(urls.PUSHNORMALORDER)}><NewIcon className={menuStyle['tipicon']} type='icon-gongdan' />发布工单</a>
+            <a className='my-bottom-border' onClick={() => history.push(urls.PUSHQUICKORDER)}><NewIcon className={menuStyle['tipicon']} type='icon-kuaisu' />发布快单</a>
+            <a onClick={() => history.push(urls.PUSHBIDORDER)}><NewIcon className={menuStyle['tipicon']} type='icon-zhaobiaopaimai' />发布招标</a>
+          </div>
+        </div>
       </div>
     )
   }

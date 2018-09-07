@@ -119,7 +119,7 @@ export default {
   },
   PushOrder: {
     workSheet(params) { // 发布工单/快单/招标
-      return FetchSave(prefix + '/worksheet/add', params, 'post')
+      return FetchSave(prefix + '/worksheet/add', params, 'post', { showloading: false })
     },
   },
   WorkOrder: {
