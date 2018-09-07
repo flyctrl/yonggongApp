@@ -48,7 +48,7 @@ const prefix = '/employ'
 export default {
   Common: {
     getProList(params) { // 获取项目列表
-      return Fetch(prefix + '/project/list/select', params)
+      return Fetch(prefix + '/project/list/select', params, 'get')
     },
     getAptitude(params) { // 获取工种列表和企业资质列表
       return Fetch('/common/aptitude', params, 'get')
@@ -61,7 +61,7 @@ export default {
     },
     uploadFile: baseUrl + '/common/attach/file',
     getOrderDetail(params) { // 获取工单详情
-      return Fetch(prefix + '/worksheet/detail', params)
+      return Fetch(prefix + '/worksheet/detail', params, 'get')
     },
     supportBank(params) { // 支持银行卡列表
       return Fetch('/common/bank/list', params, 'get')
@@ -124,13 +124,13 @@ export default {
   },
   WorkOrder: {
     WorkOrderList(params) { // 工单列表
-      return Fetch(prefix + '/worksheet/list', params)
+      return Fetch(prefix + '/worksheet/list', params, 'get')
     },
     getListByPro(params) { // 根据项目获取工单列表
-      return Fetch(prefix + '/worksheet/prj/list', params)
+      return Fetch(prefix + '/worksheet/prj/list', params, 'get')
     },
     getStatusList(params) { // 获取工单状态
-      return Fetch(prefix + '/worksheet/stat/status', params)
+      return Fetch(prefix + '/worksheet/stat/status', params, 'get')
     },
     confirmConstruct(params) { // 确认开工 快单、普通工单、招标
       return FetchSave(prefix + '/worksheet/confirmConstruct', params)
@@ -139,13 +139,13 @@ export default {
       return FetchSave(prefix + '/worksheet/cancel', params)
     },
     handleConfirmComp(params) { // 快单 确认完工列表
-      return Fetch(prefix + '/worksheetOrder/confirmList', params)
+      return Fetch(prefix + '/worksheetOrder/confirmList', params, 'get')
     },
     confirmQtReefusal(params) { // 确认和驳回 快单
       return FetchSave(prefix + '/worksheetOrder/confirm', params)
     },
     applyQtList(params) { // 快单接单记录
-      return Fetch(prefix + '/worksheetOrder/applyList', params)
+      return Fetch(prefix + '/worksheetOrder/applyList', params, 'get')
     },
     reviewOrder(params) { // 审批工单
       return FetchSave(prefix + '/worksheet/review', params)
@@ -157,13 +157,13 @@ export default {
       return FetchSave(prefix + '/worksheet/confirm', params)
     },
     confirmWorkList(params) { // 开工列表
-      return Fetch(prefix + '/worksheetOrder/confirmList', params)
+      return Fetch(prefix + '/worksheetOrder/confirmList', params, 'get')
     },
     confirmWorkOrderlist(params) { // 开工列表的确认
       return FetchSave(prefix + '/worksheetOrder/confirm', params)
     },
     settleList(params) { // 结算列表
-      return Fetch(prefix + '/worksheetOrder/settleList', params)
+      return Fetch(prefix + '/worksheetOrder/settleList', params, 'get')
     },
     confirmSettle(params) { // 结算确认
       return FetchSave(prefix + '/worksheetOrder/settle', params)
@@ -204,21 +204,21 @@ export default {
         return Fetch(prefix + '/project/list/select', params)
       },
       getProjectList(params) { // 项目列表
-        return Fetch(prefix + '/project/plist', params)
+        return Fetch(prefix + '/project/plist', params, 'get')
       },
       projectDetail(params) { // 项目详情
-        return Fetch(prefix + '/project/detail', params)
+        return Fetch(prefix + '/project/detail', params, 'get')
       }
     },
     balanceMange: { // 结算管理
       settleList(params) { // 结算列表
-        return Fetch(prefix + '/worksheetManage/settle', params)
+        return Fetch(prefix + '/worksheetManage/settle', params, 'get')
       },
       settleBalance(params) { // 结算
         return Fetch(prefix + '/worksheetOrder/settle', params)
       },
       settleDetail(params) { // 结算管理详情
-        return Fetch(prefix + '/worksheetManage/settleDetail', params)
+        return Fetch(prefix + '/worksheetManage/settleDetail', params, 'get')
       }
     },
     companyAuth: {
@@ -322,10 +322,10 @@ export default {
     },
     engineeringLive: { // 工程实况
       getEngList(params) { // 考勤打卡统计
-        return Fetch(prefix + '/worksheetOrder/attend/stat', params)
+        return Fetch(prefix + '/worksheetOrder/attend/stat', params, 'get')
       },
       getEngDetail(params) { // 考勤详情
-        return Fetch(prefix + '/worksheetOrder/attend/list', params)
+        return Fetch(prefix + '/worksheetOrder/attend/list', params, 'get')
       }
     },
     feedback: (params) => {
