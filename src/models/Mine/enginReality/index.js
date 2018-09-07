@@ -70,10 +70,13 @@ class EnginReality extends Component {
     }
   }
 
-  onProChange = (val) => { // 选择项目
+  onProChange = (val, index) => { // 选择项目
     this.setState({
       proSelect: true,
-      proId: val[0]
+      proId: val[0],
+      worksheetNo: '',
+      attendanceData: [],
+      isLoading: true
     })
   }
   handleChangeOrder = () => { // 选择工单
