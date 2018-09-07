@@ -70,7 +70,7 @@ class LeaveSitu extends Component {
                     <a className={`${style['statu']} my-full-border`}>{item.created_at}</a>
                   </footer>
                 </li>)
-              }) : <div className='nodata'>{dataList.length === 0 && !isLoading ? '暂无数据' : '加载中...'}</div>
+              }) : <div className='nodata'>{dataList.length === 0 && !isLoading ? '暂无数据' : ''}</div>
             }
             {/* <li onClick={this.handleUsrInfo} className='my-bottom-border'>
               <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />

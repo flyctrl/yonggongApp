@@ -33,7 +33,8 @@ class EnginReality extends Component {
       dateShow: false,
       startTime: null,
       endTime: null,
-      isLoading: true,
+      isLoading: true, // 考勤
+      isLoadProj: true, // 项目
       proId: '', // 项目id
       orderid: '', // 工单id
       worksheetNo: '', // 工单编号
@@ -42,12 +43,14 @@ class EnginReality extends Component {
     }
   }
   getProjectList = async () => { // 获取项目
+    this.setState({ isLoadProj: true })
     const proData = await api.Common.getProList({
       status: 1
     }) || false
     if (proData) {
       this.setState({
-        proData
+        proData,
+        isLoadProj: false
       })
     }
   }
@@ -133,7 +136,7 @@ class EnginReality extends Component {
     this.getProjectList()
   }
   render() {
-    let { proSelect, proData, dateShow, startTime, endTime, showOrder, proId, worksheetNo, attendanceData, isLoading } = this.state
+    let { proSelect, proData, dateShow, startTime, endTime, showOrder, proId, worksheetNo, attendanceData, isLoading, isLoadProj } = this.state
     const { getFieldDecorator } = this.props.form
 
     return (
@@ -148,63 +151,66 @@ class EnginReality extends Component {
             }}
           />
           <Content>
-            <div className={style['engin-reality']}>
-              <List className={`${style['input-form-list']} ${proSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '项目名称'}>
-                {/* <Picker extra='请选择项目' className='myPicker' onChange={this.onProChange} data={proData} cols={1}>
-                  <List.Item arrow='horizontal'></List.Item>
-                </Picker> */}
-                {getFieldDecorator('prj_id', {
-                  rules: [
-                    { required: true, message: '请选择项目' },
-                  ],
-                })(
-                  <Picker extra='请选择项目' className='myPicker' onChange={this.onProChange} data={proData} cols={1}>
+            { !isLoadProj
+              ? <div className={style['engin-reality']}>
+                <List className={`${style['input-form-list']} ${proSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '项目名称'}>
+                  {/* <Picker extra='请选择项目' className='myPicker' onChange={this.onProChange} data={proData} cols={1}>
                     <List.Item arrow='horizontal'></List.Item>
-                  </Picker>
-                )}
-              </List>
-              {
-                proSelect
-                  ? <List className={`${style['input-form-list']}`} renderHeader={() => '工单名称'}>
-                    <div onClick={this.handleChangeOrder}>
-                      <InputItem
-                        disabled
-                        value={ worksheetNo }
-                        placeholder='请选择工单名称'
-                      ></InputItem>
-                      <Icon type='right' color='#ccc' />
-                    </div>
-                  </List>
-                  : null
-              }
-              <div className={style['engin-user']}>
-                {/* <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
-                <span>刘德华</span> */}
-                <a onClick={this.hanleShowCalendar}>{ startTime && endTime ? (new Date(startTime)).toLocaleDateString() + ' ~ ' + (new Date(endTime)).toLocaleDateString() : '请选择日期范围' } <Icon type='right' size='md' color=''/></a>
-              </div>
-              {/* <ul className={style['attend']}>
-                <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>正常打卡</p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
-                <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>异常<span>迟到</span><span>早退</span><span>未打卡</span></p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
-                <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>外勤</p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
-                <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>加班</p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
-              </ul> */}
-              <ul className={style['attend']}>
+                  </Picker> */}
+                  {getFieldDecorator('prj_id', {
+                    rules: [
+                      { required: true, message: '请选择项目' },
+                    ],
+                  })(
+                    <Picker extra='请选择项目' className='myPicker' onChange={this.onProChange} data={proData} cols={1}>
+                      <List.Item arrow='horizontal'></List.Item>
+                    </Picker>
+                  )}
+                </List>
                 {
-                  attendanceData.length !== 0 && !isLoading
-                    ? attendanceData.map(item => {
-                      return <li key={item.attend_status}
-                        onClick={this.handleLeavesitu}
-                        data-id={`${item['attend_status']}&${item.number}`}
-                        className='my-bottom-border'>
-                        <p>{attendanceList[item.attend_status]}
-                          { item.attend_status === 2 ? <span ><span>迟到</span><span>早退</span><span>未打卡</span></span> : null}
-                        </p><Icon type='right' size='md' color='#ccc'/>
-                        <em>{item.number}</em>
-                      </li>
-                    }) : <div className='nodata'>{attendanceData.length === 0 && !isLoading ? '暂无数据' : ''}</div>
+                  proSelect
+                    ? <List className={`${style['input-form-list']}`} renderHeader={() => '工单名称'}>
+                      <div onClick={this.handleChangeOrder}>
+                        <InputItem
+                          disabled
+                          value={ worksheetNo }
+                          placeholder='请选择工单名称'
+                        ></InputItem>
+                        <Icon type='right' color='#ccc' />
+                      </div>
+                    </List>
+                    : null
                 }
-              </ul>
-            </div>
+                <div className={style['engin-user']}>
+                  {/* <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
+                  <span>刘德华</span> */}
+                  <a onClick={this.hanleShowCalendar}>{ startTime && endTime ? (new Date(startTime)).toLocaleDateString() + ' ~ ' + (new Date(endTime)).toLocaleDateString() : '请选择日期范围' } <Icon type='right' size='md' color=''/></a>
+                </div>
+                {/* <ul className={style['attend']}>
+                  <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>正常打卡</p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
+                  <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>异常<span>迟到</span><span>早退</span><span>未打卡</span></p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
+                  <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>外勤</p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
+                  <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>加班</p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
+                </ul> */}
+                <ul className={style['attend']}>
+                  {
+                    attendanceData.length !== 0 && !isLoading
+                      ? attendanceData.map(item => {
+                        return <li key={item.attend_status}
+                          onClick={this.handleLeavesitu}
+                          data-id={`${item['attend_status']}&${item.number}`}
+                          className='my-bottom-border'>
+                          <p>{attendanceList[item.attend_status]}
+                            { item.attend_status === 2 ? <span ><span>迟到</span><span>早退</span><span>未打卡</span></span> : null}
+                          </p><Icon type='right' size='md' color='#ccc'/>
+                          <em>{item.number}</em>
+                        </li>
+                      }) : <div className='nodata'>{attendanceData.length === 0 && !isLoading ? '暂无数据' : ''}</div>
+                  }
+                </ul>
+              </div>
+              : null
+            }
           </Content>
           <Calendar
             visible={dateShow}
