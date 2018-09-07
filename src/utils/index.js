@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
   baseUrl = 'http://yonggong.yaque365.com/api/'
   if (TEST) {
     console.log('in TEST')
-    baseUrl = 'https://yg-test.yaque365.com/'
+    baseUrl = 'https://yg-test.yaque365.com/api/'
   }
   if (PRE) {
     console.log('in PRE')

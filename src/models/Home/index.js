@@ -21,8 +21,6 @@ class Home extends Component {
       companyDetail: [],
       todoList: []
     }
-
-    this.handleClickGrid = this.handleClickGrid.bind(this)
   }
   componentWillMount() {
     this.getSystemInforms()
@@ -49,9 +47,6 @@ class Home extends Component {
     this.setState({
       todoList: data.list
     })
-  }
-  handleClickGrid(ele, index) {
-    console.log(index)
   }
 
   handlePushNormalOrder = () => {
