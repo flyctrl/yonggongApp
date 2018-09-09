@@ -39,6 +39,7 @@ class RestPwd extends Component {
     }
     const { getFieldError } = this.props.form
     this.props.form.validateFields(async (error, values) => {
+      Toast.loading('提交中...', 0)
       if (!error) {
         if (type === '1') { //  忘记密码
           let newValue = {
@@ -48,14 +49,18 @@ class RestPwd extends Component {
           }
           let data = await api.auth.forgetPsw(newValue) || false
           if (data) {
-            this.props.match.history.push(urls.LOGIN)
-            Toast.success('修改密码成功')
+            Toast.hide()
+            Toast.success('修改成功', 1.5, () => {
+              this.props.match.history.push(urls.LOGIN)
+            })
           }
         } else if (type === '2') { // 重置密码
           let data = await api.auth.reset(values) || false
           if (data) {
-            this.props.match.history.push(urls.LOGIN)
-            Toast.success('修改密码成功')
+            Toast.hide()
+            Toast.success('修改成功', 1.5, () => {
+              this.props.match.history.push(urls.LOGIN)
+            })
           }
         }
         // if (data) {

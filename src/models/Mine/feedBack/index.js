@@ -14,9 +14,13 @@ class FeedBack extends Component {
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
+        Toast.loading('提交中...', 0)
         const data = await api.Mine.feedback(values) || false
         if (data) {
-          this.props.match.history.push(urls.MINE)
+          Toast.hide()
+          Toast.success('提交成功', 1.5, () => {
+            this.props.match.history.push(urls.MINE)
+          })
         }
       } else {
         for (let value of validateAry) {
@@ -46,7 +50,11 @@ class FeedBack extends Component {
           <div className={style['feedback-form']}>
             <List>
               <TextareaItem
-                {...getFieldProps('content')}
+                {...getFieldProps('content', {
+                  rules: [
+                    { required: true, message: '请填写问题反馈' },
+                  ]
+                })}
                 placeholder='请输入问题反馈'
                 rows={10}
                 count={200}

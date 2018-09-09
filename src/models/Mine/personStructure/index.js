@@ -9,26 +9,31 @@ class PesrsonStructure extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      dataSource: []
+      dataSource: [],
+      isLoading: true
     }
   }
 
   getAllPerson = async () => { // 获取本部门下面的所有人
+    this.setState({ isLoading: true })
     const data = await api.Mine.department.getGroup({
       pid: 0,
       hasUser: 1
     }) || false
     let newData = []
-    data['user'].map((item) => {
-      newData.push(item)
-    })
-    data['group'].map((item) => {
-      item['userList'].map((subitem) => {
-        newData.push(subitem)
+    if (data) {
+      data['user'].map((item) => {
+        newData.push(item)
       })
-    })
+      data['group'].map((item) => {
+        item['userList'].map((subitem) => {
+          newData.push(subitem)
+        })
+      })
+    }
     this.setState({
-      dataSource: newData
+      dataSource: newData,
+      isLoading: false
     })
   }
   handleOrgant = (type) => {
@@ -48,7 +53,7 @@ class PesrsonStructure extends Component {
     this.getAllPerson()
   }
   render() {
-    let { dataSource } = this.state
+    let { dataSource, isLoading } = this.state
     return (
       <div className={`${style['structurePage']} pageBox`}>
         <Header
@@ -91,17 +96,19 @@ class PesrsonStructure extends Component {
               <dl>
                 <dt>部门人员</dt>
                 {
-                  dataSource.map((item, index) => {
-                    return <dd key={index} onClick={() => { this.handleClickPerson(item['uid']) }}>
-                      <img className={style['contact-img']} src={item['avatar']} />
-                      <div className={`${style['contact-info']} my-bottom-border`}>
-                        <div className={style['detail']}>
-                          <p>{item['username']}</p>
-                          <span>{item['mobile']}</span>
+                  dataSource.length > 0 && !isLoading
+                    ? dataSource.map((item, index) => {
+                      return <dd key={index} onClick={() => { this.handleClickPerson(item['uid']) }}>
+                        <img className={style['contact-img']} src={item['avatar']} />
+                        <div className={`${style['contact-info']} my-bottom-border`}>
+                          <div className={style['detail']}>
+                            <p>{item['username']}</p>
+                            <span>{item['mobile']}</span>
+                          </div>
                         </div>
-                      </div>
-                    </dd>
-                  })
+                      </dd>
+                    })
+                    : <p className='nodata'>{dataSource === 0 && !isLoading ? '暂无数据' : ''}</p>
                 }
               </dl>
             </section>

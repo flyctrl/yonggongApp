@@ -18,13 +18,16 @@ class ProjectMange extends Component {
     }
   }
   getProjectlist = async (status = 0) => {
+    this.setState({ isloading: false })
     const data = await api.Mine.projectMange.getProjectList({
       status
     }) || false
-    this.setState({
-      dataSource: data['list'],
-      isloading: true
-    })
+    if (data) {
+      this.setState({
+        dataSource: data['list'],
+        isloading: true
+      })
+    }
   }
   componentDidMount() {
     this.getProjectlist()

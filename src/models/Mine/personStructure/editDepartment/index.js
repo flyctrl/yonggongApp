@@ -14,7 +14,8 @@ class AddPerson extends Component {
     this.state = {
       showDepart: false,
       selectGroupId: '',
-      exitData: {}
+      exitData: {},
+      isLoading: true
     }
   }
   handleChangeDepart = () => {
@@ -39,14 +40,18 @@ class AddPerson extends Component {
   }
 
   getGroupInfo = async () => {
+    this.setState({ isLoading: true })
     let groupId = tooler.getQueryString('groupid')
     const exitData = await api.Mine.department.getGroupInfo({
       groupId
     }) || false
-    this.setState({
-      selectGroupId: exitData['pid'],
-      exitData
-    })
+    if (exitData) {
+      this.setState({
+        selectGroupId: exitData['pid'],
+        exitData,
+        isLoading: false
+      })
+    }
   }
 
   onHandleSubmit() {
@@ -56,12 +61,16 @@ class AddPerson extends Component {
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
+        Toast.loading('提交中...', 0)
         let newData = { pid: selectGroupId, groupId: groupId }
         let postData = { ...values, ...newData }
         console.log(postData)
         const data = await api.Mine.department.editGroup(postData) || false
         if (data) {
-          this.props.match.history.push(urls.ORGANTSTRUCT)
+          Toast.hide()
+          Toast.success('修改成功', 1.5, () => {
+            this.props.match.history.push(urls.ORGANTSTRUCT)
+          })
         }
       } else {
         for (let value of validateAry) {
@@ -79,7 +88,7 @@ class AddPerson extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form
-    const { showDepart, exitData } = this.state
+    const { showDepart, exitData, isLoading } = this.state
     return (
       <div>
         <div style={{ display: showDepart ? 'none' : 'block' }} className='pageBox'>
@@ -97,51 +106,55 @@ class AddPerson extends Component {
               }}
             />
             <Content>
-              <form className={style['pushOrderForm']}>
-                <List className={`${style['input-form-list']}`} renderHeader={() => '上级部门(非必填)'}>
-                  <div onClick={this.handleChangeDepart}>
-                    {
-                      getFieldDecorator('pid', {
-                        initialValue: exitData['group_parent_name']
-                      })(
-                        <InputItem
-                          className={style['text-abled']}
-                          disabled
-                          placeholder='请选择'
-                        ></InputItem>
-                      )
-                    }
-                    <Icon type='right' color='#ccc' />
-                  </div>
-                </List>
-                <List className={`${style['input-form-list']}`} renderHeader={() => '部门名称'}>
-                  {
-                    getFieldDecorator('name', {
-                      rules: [
-                        { required: true, message: '请输入部门名称' },
-                      ],
-                      initialValue: exitData['group_name']
-                    })(
-                      <InputItem
-                        clear
-                        placeholder='请输入部门名称'
-                      ></InputItem>
-                    )
-                  }
-                </List>
-                <List className={`${style['input-form-list']}`} renderHeader={() => '部门描述(非必填)'}>
-                  {
-                    getFieldDecorator('description', {
-                      initialValue: exitData['description']
-                    })(
-                      <InputItem
-                        clear
-                        placeholder='请输入部门描述'
-                      ></InputItem>
-                    )
-                  }
-                </List>
-              </form>
+              {
+                !isLoading
+                  ? <form className={style['pushOrderForm']}>
+                    <List className={`${style['input-form-list']}`} renderHeader={() => '上级部门(非必填)'}>
+                      <div onClick={this.handleChangeDepart}>
+                        {
+                          getFieldDecorator('pid', {
+                            initialValue: exitData['group_parent_name']
+                          })(
+                            <InputItem
+                              className={style['text-abled']}
+                              disabled
+                              placeholder='请选择'
+                            ></InputItem>
+                          )
+                        }
+                        <Icon type='right' color='#ccc' />
+                      </div>
+                    </List>
+                    <List className={`${style['input-form-list']}`} renderHeader={() => '部门名称'}>
+                      {
+                        getFieldDecorator('name', {
+                          rules: [
+                            { required: true, message: '请输入部门名称' },
+                          ],
+                          initialValue: exitData['group_name']
+                        })(
+                          <InputItem
+                            clear
+                            placeholder='请输入部门名称'
+                          ></InputItem>
+                        )
+                      }
+                    </List>
+                    <List className={`${style['input-form-list']}`} renderHeader={() => '部门描述(非必填)'}>
+                      {
+                        getFieldDecorator('description', {
+                          initialValue: exitData['description']
+                        })(
+                          <InputItem
+                            clear
+                            placeholder='请输入部门描述'
+                          ></InputItem>
+                        )
+                      }
+                    </List>
+                  </form>
+                  : null
+              }
             </Content>
           </div>
         </div>

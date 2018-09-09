@@ -10,18 +10,22 @@ class PesrsonDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      dataSource: {}
+      dataSource: {},
+      isLoading: true
     }
   }
   getPersonDetail = async () => {
+    this.setState({ isLoading: true })
     let uid = tooler.getQueryString('uid')
     const data = await api.Mine.department.getPersonInfo({
       uid
     }) || false
-    this.setState({
-      dataSource: data
-    })
-    console.log(data)
+    if (data) {
+      this.setState({
+        dataSource: data,
+        isLoading: false
+      })
+    }
   }
   componentDidMount() {
     this.getPersonDetail()
@@ -42,20 +46,20 @@ class PesrsonDetail extends Component {
         {
           entrydate ? <dd className='my-bottom-border'>
             <span>生日</span>
-            <p>{entrydate}</p>
+            <p>{birthday}</p>
           </dd> : null
         }
         {
           birthday ? <dd className='my-bottom-border'>
             <span>入职时间</span>
-            <p>{birthday}</p>
+            <p>{entrydate}</p>
           </dd> : null
         }
       </dl>)
     }
   }
   render() {
-    const { dataSource } = this.state
+    const { dataSource, isLoading } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -77,31 +81,35 @@ class PesrsonDetail extends Component {
           }}
         />
         <Content>
-          <div className={style['person-detail']}>
-            <header className='my-bottom-border'>
-              <span>{dataSource['realname']}</span>
-              {dataSource['is_owner'] === 1 ? <em>主管</em> : null}
-              {
-                // <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
-              }
-            </header>
-            <dl>
-              <dt className='my-bottom-border'>
-                部门信息 {dataSource['group_name'] ? `(${dataSource['group_name']})` : null}
-              </dt>
-              <dd className='my-bottom-border'>
-                <span>用户名</span>
-                <p>{dataSource['username']}</p>
-              </dd>
-              <dd className='my-bottom-border'>
-                <span>电话</span>
-                <p>{dataSource['mobile']}</p>
-              </dd>
-            </dl>
-            {
-              this.showInfo(dataSource)
-            }
-          </div>
+          {
+            !isLoading
+              ? <div className={style['person-detail']}>
+                <header className='my-bottom-border'>
+                  <span>{dataSource['realname']}</span>
+                  {dataSource['is_owner'] === 1 ? <em>主管</em> : null}
+                  {
+                    // <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
+                  }
+                </header>
+                <dl>
+                  <dt className='my-bottom-border'>
+                    部门信息 {dataSource['group_name'] ? `(${dataSource['group_name']})` : null}
+                  </dt>
+                  <dd className='my-bottom-border'>
+                    <span>用户名</span>
+                    <p>{dataSource['username']}</p>
+                  </dd>
+                  <dd className='my-bottom-border'>
+                    <span>电话</span>
+                    <p>{dataSource['mobile']}</p>
+                  </dd>
+                </dl>
+                {
+                  this.showInfo(dataSource)
+                }
+              </div>
+              : null
+          }
         </Content>
       </div>
     )

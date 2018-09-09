@@ -67,7 +67,7 @@ export default {
       return Fetch('/common/bank/list', params, 'get')
     },
     uploadImg(params) { // 图片上传
-      return FetchSave('/common/attach/image', params, 'post', { 'Content-Type': 'multipart/form-data' })
+      return FetchSave('/common/attach/image', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false })
     },
     getUnitlist(params) { // 获取计价列表
       return Fetch(prefix + '/worksheet/list/valuation_unit', params, 'get')
@@ -84,34 +84,34 @@ export default {
   },
   auth: {
     login(params) { // 登录
-      return Fetch(prefix + '/login', params)
+      return Fetch(prefix + '/login', params, 'post', { loadtitle: '登录中...' })
     },
     register(params) { // 注册
-      return Fetch(prefix + '/register', params)
+      return Fetch(prefix + '/register', params, 'post', { showloading: false })
     },
     getcode(params) { // 短信验证码
       return Fetch('/common/verify/code', params)
     },
     loginout(params) { // 退出
-      return FetchSave(prefix + '/logout', params)
+      return FetchSave(prefix + '/logout', params, 'post', { showloading: false })
     },
     refresh(params) { // 刷新token
       return Fetch(prefix + '/refresh', params)
     },
     realName(params) { // 实名认证
-      return FetchSave(prefix + '/user/identity', params)
+      return FetchSave(prefix + '/user/identity', params, 'post', { showloading: false })
     },
     validationPsw(params) { // 校验验证码和手机号
       return Fetch(prefix + '/verify', params)
     },
     forgetPsw(params) { // 忘记密码
-      return Fetch(prefix + '/reset', params)
+      return Fetch(prefix + '/reset', params, 'post', { showloading: false })
     },
     reset(params) { // 重置密码
-      return Fetch(prefix + '/user/reset', params)
+      return Fetch(prefix + '/user/reset', params, 'post', { showloading: false })
     },
     setPaypwd(params) { // 设置提现密码
-      return FetchSave(prefix + '/withdraw/password', params)
+      return FetchSave(prefix + '/withdraw/password', params, 'post', { showloading: false })
     },
     vailPaypwd(params) { // 提现验证密码
       return Fetch(prefix + '/withdraw/validate', params)
@@ -184,7 +184,7 @@ export default {
         return Fetch(prefix + '/user_cash/list', params, 'get')
       },
       bindBinkcard(params) { // 绑定银行卡
-        return Fetch(prefix + '/bank', params)
+        return Fetch(prefix + '/bank', params, 'post', { showloading: false })
       },
       getbindBinkcard(params) { // 获取已绑定银行卡列表
         return Fetch(prefix + '/bank', params, 'get')
@@ -193,12 +193,12 @@ export default {
         return Fetch(prefix + '/bank/default', params, 'get')
       },
       withdraw(params) { // 提现
-        return FetchSave(prefix + '/withdraw', params)
+        return FetchSave(prefix + '/withdraw', params, 'post', { showloading: false })
       }
     },
     projectMange: { // 项目管理
       createProject(params) { // 创建项目
-        return FetchSave(prefix + '/project/add', params)
+        return FetchSave(prefix + '/project/add', params, 'post', { showloading: false })
       },
       projectList(params) { // 项目列表(发布工单时)
         return Fetch(prefix + '/project/list/select', params)
@@ -215,7 +215,7 @@ export default {
         return Fetch(prefix + '/worksheetManage/settle', params, 'get')
       },
       settleBalance(params) { // 结算
-        return Fetch(prefix + '/worksheetOrder/settle', params)
+        return Fetch(prefix + '/worksheetOrder/settle', params, 'post', { showloading: false })
       },
       settleDetail(params) { // 结算管理详情
         return Fetch(prefix + '/worksheetManage/settleDetail', params, 'get')
@@ -237,7 +237,7 @@ export default {
         return Fetch(prefix + '/invoice/list/worksheet', params, 'get')
       },
       applyInvoice(params) { // 代收申请发票
-        return FetchSave(prefix + '/invoice/apply', params, 'post')
+        return FetchSave(prefix + '/invoice/apply', params, 'post', { showloading: false })
       },
       invoiceListTwo(params) { // 代开 发票管理
         return Fetch(prefix + '/invoice/list/grant', params, 'get')
@@ -246,7 +246,7 @@ export default {
         return Fetch(prefix + '/invoice/show', params, 'get')
       },
       applyInvoices(params) { // 代开 申请发票
-        return FetchSave(prefix + '/invoice/grant', params)
+        return FetchSave(prefix + '/invoice/grant', params, 'post', { showloading: false })
       },
       applyInvoicePlatform(params) { // 申请发票可选平台
         return Fetch(prefix + '/invoice/apply/platform', params, 'get')
@@ -271,13 +271,13 @@ export default {
         return Fetch(prefix + '/group/info', params, 'get')
       },
       addGroup(params) { // 添加部门
-        return FetchSave(prefix + '/group', params)
+        return FetchSave(prefix + '/group', params, 'post', { showloading: false })
       },
       deleteGroup(params) { // 删除部门
-        return FetchSave(prefix + '/group/del', params)
+        return FetchSave(prefix + '/group/del', params, 'post', { showloading: false })
       },
       editGroup(params) { // 修改部门
-        return FetchSave(prefix + '/group/edit', params)
+        return FetchSave(prefix + '/group/edit', params, 'post', { showloading: false })
       },
       getGroupInfo(params) { // 获取部门详情
         return Fetch(prefix + '/group/show', params, 'get')
@@ -286,13 +286,13 @@ export default {
         return Fetch(prefix + '/user/info', params, 'get')
       },
       addPerson(params) { // 添加人员
-        return FetchSave(prefix + '/company/user', params)
+        return FetchSave(prefix + '/company/user', params, 'post', { showloading: false })
       },
       editPerson(params) { // 修改人员
-        return FetchSave(prefix + '/company/user/edit', params)
+        return FetchSave(prefix + '/company/user/edit', params, 'post', { showloading: false })
       },
       delPerson(params) { // 删除人员
-        return FetchSave(prefix + '/company/user/del', params)
+        return FetchSave(prefix + '/company/user/del', params, 'post', { showloading: false })
       },
       getPersonInfo(params) { // 获取用户详情(组织架构)
         return Fetch(prefix + '/company/user', params, 'get')
@@ -317,7 +317,7 @@ export default {
         return Fetch(prefix + '/partner', params, 'get')
       },
       addPartnerList(params) { // 添加 列表
-        return FetchSave(prefix + '/partner', params)
+        return FetchSave(prefix + '/partner', params, 'post', { showloading: false })
       },
     },
     engineeringLive: { // 工程实况
@@ -329,7 +329,7 @@ export default {
       }
     },
     feedback: (params) => {
-      return FetchSave('/common/feedback', params)
+      return FetchSave('/common/feedback', params, 'post', { showloading: false })
     }
   },
   Home: {

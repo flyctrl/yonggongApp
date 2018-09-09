@@ -42,13 +42,16 @@ class AddPartner extends Component {
     })
   }
   handleSubmit = async (newData) => {
+    Toast.loading('提交中...', 0)
     const data = await api.Mine.partnerMange.addPartnerList(newData) || false
     if (data) {
-      Toast.success('发布成功')
       this.props.form.resetFields()
-      history.push(urls.PARTNER)
       this.setState({
         radioVaule: 1
+      })
+      Toast.hide()
+      Toast.success('添加成功', 1.5, () => {
+        this.props.match.history.push(urls.PARTNER)
       })
     }
   }

@@ -43,12 +43,16 @@ class AddPerson extends Component {
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
+        Toast.loading('提交中...', 0)
         let newData = { pid: selectGroupId }
         let postData = { ...values, ...newData }
         console.log(postData)
         const data = await api.Mine.department.addGroup(postData) || false
         if (data) {
-          this.props.match.history.push(urls.ORGANTSTRUCT)
+          Toast.hide()
+          Toast.success('添加成功', 1.5, () => {
+            this.props.match.history.push(urls.ORGANTSTRUCT)
+          })
         }
       } else {
         for (let value of validateAry) {

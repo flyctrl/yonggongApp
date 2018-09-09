@@ -47,12 +47,17 @@ class ApplyInvoice extends Component {
   }
   pushInvoiceList = async(postData) => {
     let orderNo = tooler.parseURLParam()
-    await api.Mine.invoiceMange.applyInvoice({ // 申请开票
+    Toast.loading('提交中...', 0)
+    let data = await api.Mine.invoiceMange.applyInvoice({ // 申请开票
       ...postData,
       order_no: orderNo.order_no
     }) || false
-
-    history.push(urls.INVOICEMANGE)
+    if (data) {
+      Toast.hide()
+      Toast.success('申请成功', 1.5, () => {
+        this.props.match.history.push(urls.INVOICEMANGE)
+      })
+    }
   }
   onHandleNext = () => {
     let { valModeDataValue, totalRadioValue, settleRadioValue } = this.state

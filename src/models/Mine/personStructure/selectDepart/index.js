@@ -14,6 +14,7 @@ class SelectDepart extends Component {
       value: '',
       jsonVal: {},
       groupData: [],
+      isLoading: true
     }
   }
   static defaultProps = {
@@ -21,13 +22,17 @@ class SelectDepart extends Component {
     onClickSure: () => {}
   }
   getDepartment = async (pid = 0, hasUser = 0) => {
+    this.setState({ isLoading: true })
     const data = await api.Mine.department.getGroup({
       pid,
       hasUser
     }) || false
-    this.setState({
-      groupData: data['group']
-    })
+    if (data) {
+      this.setState({
+        groupData: data['group'],
+        isLoading: false
+      })
+    }
   }
   selectDepart = (groupId, hasChild) => {
     if (hasChild === 0) {
@@ -47,7 +52,7 @@ class SelectDepart extends Component {
     })
   }
   render() {
-    let { jsonVal, groupData, value } = this.state
+    let { jsonVal, groupData, value, isLoading } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -79,12 +84,12 @@ class SelectDepart extends Component {
           // </header>
           }
           <List className={style['depart-tree']}>
-            {groupData.map(i => (
+            {groupData.length > 0 && !isLoading ? groupData.map(i => (
               <RadioItem key={i.groupId} checked={value === i.groupId} onChange={() => this.onChange(i)}>
                 {i.name}
                 <a className={style['departbtn']} onClick={() => { this.selectDepart(i.groupId, i.hasChild) }}><NewIcon type='icon-depart' /></a>
               </RadioItem>
-            ))}
+            )) : <div className='nodata'>{groupData.length === 0 && !isLoading ? '暂无数据' : ''}</div>}
           </List>
         </Content>
       </div>

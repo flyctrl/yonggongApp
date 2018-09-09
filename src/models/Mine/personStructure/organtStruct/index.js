@@ -14,19 +14,29 @@ class OrgantStruct extends Component {
       userData: [],
       groupData: [],
       backAry: [0],
-      currentId: 0
+      currentId: 0,
+      userLoading: true,
+      groupLoading: true
     }
   }
   getStruct = async (pid = 0, hasUser = 1) => {
+    this.setState({
+      userLoading: true,
+      groupLoading: true
+    })
     const data = await api.Mine.department.getGroup({
       pid,
       hasUser
     }) || false
-    this.setState({
-      userData: data['user'],
-      groupData: data['group'],
-      currentId: pid
-    })
+    if (data) {
+      this.setState({
+        userData: data['user'],
+        groupData: data['group'],
+        currentId: pid,
+        userLoading: false,
+        groupLoading: false
+      })
+    }
     console.log(data)
   }
   componentDidMount() {
@@ -115,7 +125,7 @@ class OrgantStruct extends Component {
     }
   }
   render() {
-    let { userData, groupData } = this.state
+    let { userData, groupData, userLoading, groupLoading } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -131,8 +141,8 @@ class OrgantStruct extends Component {
         <Content>
           <div className={style['organt-list']}>
             <List>
-              {
-                userData.map((item) => {
+              {userData.length > 0 && !userLoading
+                ? userData.map((item) => {
                   return (
                     <SwipeAction
                       key={item['uid']}
@@ -162,10 +172,10 @@ class OrgantStruct extends Component {
                       </ul>
                     </SwipeAction>
                   )
-                })
+                }) : <div className='nodata'>{userData.length === 0 && !userLoading ? '暂无人员数据' : ''}</div>
               }
-              {
-                groupData.map((item) => {
+              {groupData.length > 0 && !groupLoading
+                ? groupData.map((item) => {
                   return (
                     <SwipeAction
                       key={item['groupId']}
@@ -187,7 +197,7 @@ class OrgantStruct extends Component {
                       <Item extra={item['userCount']} arrow={item['userCount'] !== 0 ? 'horizontal' : 'none' } onClick={() => { this.handleShowOrgan(item['groupId'], item['hasChild'], item['userCount']) }}>{item['name']}</Item>
                     </SwipeAction>
                   )
-                })
+                }) : <div className='nodata'>{groupData.length === 0 && !groupLoading ? '暂无部门数据' : ''}</div>
               }
             </List>
           </div>
