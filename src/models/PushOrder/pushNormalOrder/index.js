@@ -353,14 +353,14 @@ class PushNormalOrder extends Component {
               {
                 professData.length !== 0 && postData['professional_level'] !== '' ? professData.find((item) => {
                   return item.value === postData['professional_level']
-                })['label'] : ''
+                })['label'] : ' '
               }
             </List>
             <List renderHeader={() => '资质要求'}>
               {
                 naturalData.length !== 0 && postData['aptitude_id_list'] ? naturalData.find((item) => {
                   return item.value === postData['aptitude_id_list'][0]
-                })['label'] : ''
+                })['label'] : ' '
               }
             </List>
             <List renderHeader={() => '标的工作量'}>
@@ -394,17 +394,17 @@ class PushNormalOrder extends Component {
             </List>
             <List renderHeader={() => '履约担保总额'}>
               {
-                postData['guarantee_amount'] ? postData['guarantee_amount'] + '元' : ''
+                postData['guarantee_amount'] ? postData['guarantee_amount'] + '元' : ' '
               }
             </List>
             <List renderHeader={() => '履约担保比例'}>
               {
-                postData['deposit_rate'] ? postData['deposit_rate'] + '%' : ''
+                postData['deposit_rate'] ? postData['deposit_rate'] + '%' : ' '
               }
             </List>
             <List renderHeader={() => '违约金'}>
               {
-                postData['penalty'] ? postData['penalty'] : ''
+                postData['penalty'] ? postData['penalty'] : ' '
               }
             </List>
             <List renderHeader={() => '是否指派'}>

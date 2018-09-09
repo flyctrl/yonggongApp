@@ -396,14 +396,14 @@ class PushQuickOrder extends Component {
               {
                 professData.length !== 0 && postData['professional_level'] ? professData.find((item) => {
                   return item.value === postData['professional_level'][0]
-                })['label'] : ''
+                })['label'] : ' '
               }
             </List>
             <List renderHeader={() => '标的工作量'}>
               {
                 postData['valuation_unit'] !== '' ? unitData.find((item) => {
                   return item.value === postData['valuation_unit']
-                })['label'] : ''
+                })['label'] : ' '
               }
             </List>
             <List renderHeader={() => '投标截止时间'}>
@@ -424,7 +424,7 @@ class PushQuickOrder extends Component {
             </List>
             <List renderHeader={() => '违约金'}>
               {
-                postData['penalty'] ? postData['penalty'] : ''
+                postData['penalty'] ? postData['penalty'] : ' '
               }
             </List>
             <List renderHeader={() => '工资发放方式'}>
@@ -450,30 +450,30 @@ class PushQuickOrder extends Component {
               {
                 naturalData.length !== 0 && postData['aptitude_id_list'] ? naturalData.find((item) => {
                   return item.value === postData['aptitude_id_list'][0]
-                })['label'] : ''
+                })['label'] : ' '
               }
             </List>
             <List renderHeader={() => '投标保证金'}>
-              {postData['bid_deposit']}元
+              {postData['bid_deposit'] ? postData['bid_deposit'] + '元' : ' '}
             </List>
             <List renderHeader={() => '招标担保金'}>
-              {postData['tender_deposit']}元
+              {postData['tender_deposit'] ? postData['tender_deposit'] + '元' : ' '}
             </List>
             <List renderHeader={() => '履约担保总额'}>
               {
-                postData['guarantee_amount'] ? postData['guarantee_amount'] + '元' : ''
+                postData['guarantee_amount'] ? postData['guarantee_amount'] + '元' : ' '
               }
             </List>
             <List renderHeader={() => '履约担保比例'}>
               {
-                postData['deposit_rate'] ? postData['deposit_rate'] + '%' : ''
+                postData['deposit_rate'] ? postData['deposit_rate'] + '%' : ' '
               }
             </List>
             <List renderHeader={() => '联系人'}>
-              {postData['tender_contract']}元
+              {postData['tender_contract'] || ' '}
             </List>
             <List renderHeader={() => '联系方式'}>
-              {postData['tender_contract_way']}元
+              {postData['tender_contract_way'] || ' '}
             </List>
             <List renderHeader={() => '是否指派'}>
               {

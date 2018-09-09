@@ -55,25 +55,25 @@ class ProjectDetail extends Component {
                   {dataSource['prj_name']}
                 </List>
                 <List renderHeader={() => '项目编号'}>
-                  {dataSource['project_no']}
+                  {dataSource['project_no'] || ' '}
                 </List>
                 <List renderHeader={() => '施工许可证编号'}>
-                  {dataSource['licence_no']}
+                  {dataSource['licence_no'] || ' '}
                 </List>
                 <List renderHeader={() => '建设单位'}>
                   {dataSource['prj_build_unit']}
                 </List>
                 <List renderHeader={() => '施工单位'}>
-                  {dataSource['prj_construct_unit']}
+                  {dataSource['prj_construct_unit'] || ' '}
                 </List>
                 <List renderHeader={() => '施工单位统一社会信用代码'}>
-                  {dataSource['prj_construct_unit_code']}
+                  {dataSource['prj_construct_unit_code'] || ' '}
                 </List>
                 <List renderHeader={() => '项目施工金额'}>
-                  {dataSource['construction_amount']}元
+                  {dataSource['construction_amount'] || ' '}
                 </List>
                 <List renderHeader={() => '项目施工面积'}>
-                  {dataSource['construction_area']} 平方米
+                  {dataSource['construction_area'] || ' '} 平方米
                 </List>
                 <List renderHeader={() => '项目施工地址'}>
                   {dataSource['construction_place']}
@@ -87,10 +87,10 @@ class ProjectDetail extends Component {
                   {dataSource['prj_win_bid_unit']}
                 </List>
                 <List renderHeader={() => '中标通知书编号'}>
-                  {dataSource['prj_win_bid_notice_no']}
+                  {dataSource['prj_win_bid_notice_no'] || ' '}
                 </List>
                 <List className={style['remark-desc']} renderHeader={() => '项目概括'}>
-                  {dataSource['prj_brief']}
+                  {dataSource['prj_brief'] || ' '}
                 </List>
                 <List className={`${style['attch-list']} my-bottom-border`} renderHeader={() => '附件'}>
                   <ul className={style['file-list']}>

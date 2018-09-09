@@ -389,7 +389,7 @@ class PushQuickOrder extends Component {
               {
                 professData.length !== 0 && postData['professional_level'] !== '' ? professData.find((item) => {
                   return item.value === postData['professional_level']
-                })['label'] : ''
+                })['label'] : ' '
               }
             </List>
             <List renderHeader={() => '标的工作量'}>
@@ -428,7 +428,7 @@ class PushQuickOrder extends Component {
             </List>
             <List renderHeader={() => '违约金'}>
               {
-                postData['penalty'] ? postData['penalty'] : ''
+                postData['penalty'] ? postData['penalty'] : ' '
               }
             </List>
             <List renderHeader={() => '是否指派'}>
