@@ -17,16 +17,21 @@ class OrderDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      dataSource: {}
+      dataSource: {},
+      isLoading: false
     }
   }
   getOrderDetail = async () => {
+    this.setState({
+      isLoading: false
+    })
     const data = await api.Common.getOrderDetail({
       worksheet_id: tooler.getQueryString('id')
     }) || false
     if (data) {
       this.setState({
-        dataSource: data
+        dataSource: data,
+        isLoading: true
       })
     }
   }
@@ -34,7 +39,7 @@ class OrderDetail extends Component {
     this.getOrderDetail()
   }
   render() {
-    let { dataSource } = this.state
+    let { dataSource, isLoading } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -55,62 +60,64 @@ class OrderDetail extends Component {
           // rightTitle='查看电子合同'
         />
         <Content>
-          <div className={style['work-detail-content']}>
-            <div className={style['title']}>工单编号：{dataSource['worksheet_no']}</div>
-            <div className={style['usr-info']}>
-              <dl>
-                <dt>
-                  <span>
-                    {
-                      worksheetType[dataSource['worksheet_type']]
-                    }
-                  </span>
-                </dt>
-                <dd className={style['usr-tel']}>{dataSource['prj_name']}</dd>
-                <dd className={style['push-time']}>发布于 {dataSource['created_at']}</dd>
-              </dl>
-              <div className={style['work-info']} style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical' }}>
-                {
-                  dataSource['description']
-                }
-              </div>
-              <div className={style['work-price']}>
-                <div className={`${style['work-price-l']}`}>
-                  <p>{dataSource['budget']}</p>
-                  <div className={style['icon-btm']}>
-                    <NewIcon type='icon-budget' className={style['icon']} />
-                    预算
+          {
+            isLoading ? <div className={style['work-detail-content']}>
+              <div className={style['title']}>工单编号：{dataSource['worksheet_no']}</div>
+              <div className={style['usr-info']}>
+                <dl>
+                  <dt>
+                    <span>
+                      {
+                        worksheetType[dataSource['worksheet_type']]
+                      }
+                    </span>
+                  </dt>
+                  <dd className={style['usr-tel']}>{dataSource['prj_name']}</dd>
+                  <dd className={style['push-time']}>发布于 {dataSource['created_at']}</dd>
+                </dl>
+                <div className={style['work-info']} style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical' }}>
+                  {
+                    dataSource['description']
+                  }
+                </div>
+                <div className={style['work-price']}>
+                  <div className={`${style['work-price-l']}`}>
+                    <p>{dataSource['budget']}</p>
+                    <div className={style['icon-btm']}>
+                      <NewIcon type='icon-budget' className={style['icon']} />
+                      预算
+                    </div>
+                  </div>
+                  <div className={`${style['work-price-m']} my-right-border`}></div>
+                  <div className={style['work-price-r']}>
+                    <p>{dataSource['time_limit_day']}天</p>
+                    <div className={style['icon-btm']}>
+                      <NewIcon type='icon-constructionPeriod' className={style['icon']} />
+                      工期
+                    </div>
                   </div>
                 </div>
-                <div className={`${style['work-price-m']} my-right-border`}></div>
-                <div className={style['work-price-r']}>
-                  <p>{dataSource['time_limit_day']}天</p>
-                  <div className={style['icon-btm']}>
-                    <NewIcon type='icon-constructionPeriod' className={style['icon']} />
-                    工期
-                  </div>
-                </div>
               </div>
-            </div>
-            <div className={style['work-detail-list']}>
-              <dl>
-                <dt>具体需求</dt>
-                {
-                  dataSource['detail'] !== undefined ? dataSource['detail'].map((item, index) => {
-                    return <dd key={index}><strong>{item['label']}</strong>：{item['value']}</dd>
-                  }) : null
-                }
-              </dl>
-              <dl>
-                <dt>附件</dt>
-                {
-                  dataSource['attachment'] !== undefined ? dataSource['attachment'].map((item, index) => {
-                    return <dd className='my-bottom-border' key={index}><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a target='_blank' href={item['url']}>{item['name']}</a></dd>
-                  }) : null
-                }
-              </dl>
-            </div>
-          </div>
+              <div className={style['work-detail-list']}>
+                <dl>
+                  <dt>具体需求</dt>
+                  {
+                    dataSource['detail'] !== undefined ? dataSource['detail'].map((item, index) => {
+                      return <dd key={index}><strong>{item['label']}</strong>：{item['value']}</dd>
+                    }) : null
+                  }
+                </dl>
+                <dl>
+                  <dt>附件</dt>
+                  {
+                    dataSource['attachment'] !== undefined ? dataSource['attachment'].map((item, index) => {
+                      return <dd className='my-bottom-border' key={index}><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a target='_blank' href={item['url']}>{item['name']}</a></dd>
+                    }) : null
+                  }
+                </dl>
+              </div>
+            </div> : null
+          }
         </Content>
       </div>
     )

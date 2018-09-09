@@ -445,8 +445,9 @@ class PushNormalOrder extends Component {
       data: { type: 3 },
       multiple: false,
       onSuccess: (file) => {
-        Toast.hide()
         if (file['code'] === 0) {
+          Toast.hide()
+          Toast.success('上传成功', 1)
           this.setState(({ fileList }) => ({
             fileList: [...fileList, file['data']],
           }))

@@ -114,6 +114,7 @@
       margin-top: 3px;
       background: #fff;
       font-family: PingFangSC-Regular;
+      min-height: 337px;
       & dl {
         &:nth-child(2) {
           margin-top: 20px;
