@@ -82,7 +82,7 @@ class CompanyAuthDetail extends Component {
                 {dataSource['company_credit_code']}
               </List>
               <List renderHeader={() => '法人手机号'}>
-                {dataSource['company_card_no']}
+                {dataSource['company_mobile']}
               </List>
               <List className={ownStyle['img-list']} renderHeader={() => '营业执照'}>
                 <img src={dataSource['company_license']} />

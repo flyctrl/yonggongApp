@@ -15,6 +15,11 @@ import style from './style.css'
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
 })
+const statusJson = {
+  '0': 2,
+  '1': 3,
+  '2': 1
+}
 class WorkOrder extends Component {
   constructor(props) {
     super(props)
@@ -44,11 +49,6 @@ class WorkOrder extends Component {
   */
   getdataTemp = async () => {
     let { parentIndex } = this.state
-    const statusJson = {
-      '0': 2,
-      '1': 3,
-      '2': 1
-    }
     this.setState({ refreshing: true, isLoading: true })
     this.getStatusList(statusJson[parentIndex.toString()])
     const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop
@@ -206,11 +206,6 @@ class WorkOrder extends Component {
 
   onRefresh = async () => {
     let { parentIndex } = this.state
-    const statusJson = {
-      '0': 2,
-      '1': 3,
-      '2': 1
-    }
     this.setState({ refreshing: true, isLoading: true, pageIndex: 1 })
     this.getStatusList(statusJson[parentIndex.toString()])
     this.genData().then((rdata) => {
@@ -366,23 +361,23 @@ class WorkOrder extends Component {
         <Content>
           <SegmentedControl className={style.segmented} selectedIndex={parentIndex} onChange={this.handleSegmentedChange} values={['工单', '快单', '劳务招标']}/>
           <Tabs tabs={newTabs} onChange={this.handleChange} initialPage={0} page={subIndex} swipeable={false}>
-            <ListView
-              ref={(el) => {
-                this.lv = el
-              }}
-              dataSource={dataSource}
-              renderFooter={() => (<div className={style['render-footer']}>
-                {footerShow()}
-              </div>)}
-              renderRow={rows}
-              renderSeparator={separator}
-              style={{
-                height: '100%'
-              }}
-              pullToRefresh={<PullToRefresh refreshing={refreshing} onRefresh={this.onRefresh} />}
-              onEndReached={this.onEndReached}
-              pageSize={10}
-            />
+            <div style={{ width: '100%', height: '100%', position: 'absolute', left: subIndex * 100 + '%' }}>
+              <ListView
+                ref={(el) => {
+                  this.lv = el
+                }}
+                dataSource={dataSource}
+                renderFooter={() => (<div className={style['render-footer']}>
+                  {footerShow()}
+                </div>)}
+                renderRow={rows}
+                renderSeparator={separator}
+                style={{ height: '100%' }}
+                pullToRefresh={<PullToRefresh refreshing={refreshing} onRefresh={this.onRefresh} />}
+                onEndReached={this.onEndReached}
+                pageSize={10}
+              />
+            </div>
           </Tabs>
         </Content>
       </div>

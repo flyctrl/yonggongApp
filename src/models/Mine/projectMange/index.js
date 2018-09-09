@@ -77,7 +77,10 @@ class ProjectMange extends Component {
                       return (<li key={item['id']} data-id={item['id']} onClick={this.handleDetail} className='my-bottom-border'>
                         <section>
                           <h4>{item['prj_name']}</h4>
-                          <p><span>{item['construction_amount']}元</span><em>{item['construction_area']}㎡</em></p>
+                          {
+                            // <p><span>{item['construction_amount']}元</span><em>{item['construction_area']}㎡</em></p>
+                          }
+                          <p className='ellipsis'>施工地址：{item['construction_place']}</p>
                           <time>{item['created_at']}</time>
                         </section>
                         <a>{projectStatus[item['status']]['title']}</a>

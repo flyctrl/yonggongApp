@@ -351,7 +351,7 @@ class PushNormalOrder extends Component {
             </List>
             <List renderHeader={() => '技能认证'}>
               {
-                professData.length !== 0 ? professData.find((item) => {
+                professData.length !== 0 && postData['professional_level'] !== '' ? professData.find((item) => {
                   return item.value === postData['professional_level']
                 })['label'] : ''
               }
