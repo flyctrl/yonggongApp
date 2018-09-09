@@ -104,11 +104,15 @@ class AddPerson extends Component {
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
+        Toast.loading('提交中...', 0)
         let newData = { type: typeRadioVal, groupId: selectGroupId }
         let postData = { ...values, ...newData }
         const data = await api.Mine.department.addPerson(postData) || false
         if (data) {
-          this.props.match.history.push(urls.PERSONSTRUCTURE)
+          Toast.hide()
+          Toast.success('添加成功', 1.5, () => {
+            this.props.match.history.push(urls.PERSONSTRUCTURE)
+          })
         }
       } else {
         for (let value of validateAry) {

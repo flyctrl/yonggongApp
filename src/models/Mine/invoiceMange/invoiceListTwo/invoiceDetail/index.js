@@ -21,7 +21,7 @@ const settleRadio = {
 }
 
 import React, { Component } from 'react'
-import { List, Button } from 'antd-mobile'
+import { List, Button, Toast } from 'antd-mobile'
 import { Header, Content } from 'Components'
 // import NewIcon from 'Components/NewIcon'
 import history from 'Util/history'
@@ -58,13 +58,18 @@ class InvoiceDetail extends Component {
     let { dataSource } = this.state
     let status = e.currentTarget.getAttribute('data-type')
     let id = tooler.getQueryString('id')
+    Toast.loading('提交中...', 0)
     const data = await api.Mine.invoiceMange.applyInvoices({
       id,
       status,
       grant_remark: dataSource['grant_remark'] || ''
     }) || false
-    console.log(data)
-    history.push(`${urls.INVOICELISTTWO}`)
+    if (data) {
+      Toast.hide()
+      Toast.success('操作成功', 1.5, () => {
+        this.props.match.history.push(urls.INVOICELISTTWO)
+      })
+    }
   }
   render() {
     let { dataSource, isLoading } = this.state

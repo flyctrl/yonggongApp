@@ -25,11 +25,15 @@ class RestPwd extends Component {
     const { getFieldError } = this.props.form
     this.props.form.validateFields(async (error, values) => {
       if (!error) {
+        Toast.loading('提交中...', 0)
         const data = api.auth.setPaypwd({
           ...values
         }) || false
         if (data) {
+          Toast.hide()
+          // Toast.success('设置成功', 1.5, () => {
           this.props.match.history.push(urls.SETUP)
+          // })
         }
       } else {
         for (let value of validateAry) {

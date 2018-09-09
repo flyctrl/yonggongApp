@@ -11,22 +11,32 @@ class OrgantStruct extends Component {
     super(props)
     this.state = {
       userData: [],
-      groupData: []
+      groupData: [],
+      userLoading: true,
+      groupLoading: true
     }
   }
   getStruct = async () => {
-    const data = await api.Mine.department.getMyDepart({}) || false
     this.setState({
-      userData: data['user'],
-      groupData: data['group']
+      userLoading: true,
+      groupLoading: true
     })
+    const data = await api.Mine.department.getMyDepart({}) || false
+    if (data) {
+      this.setState({
+        userData: data['user'],
+        groupData: data['group'],
+        userLoading: false,
+        groupLoading: false
+      })
+    }
   }
   componentDidMount() {
     this.getStruct()
   }
 
   render() {
-    let { userData, groupData } = this.state
+    let { userData, groupData, userLoading, groupLoading } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -40,8 +50,8 @@ class OrgantStruct extends Component {
         <Content>
           <div className={style['organt-list']}>
             <List>
-              {
-                userData.map((item) => {
+              {userData.length > 0 && !userLoading
+                ? userData.map((item) => {
                   return <ul key={item['uid']}>
                     <li className='my-bottom-border'>
                       <img src={item['avatar']} />
@@ -51,12 +61,12 @@ class OrgantStruct extends Component {
                       }
                     </li>
                   </ul>
-                })
+                }) : <div className='nodata'>{userData.length === 0 && !userLoading ? '暂无人员数据' : ''}</div>
               }
-              {
-                groupData.map((item) => {
+              {groupData.length > 0 && !groupLoading
+                ? groupData.map((item) => {
                   return <Item key={item['groupId']} extra={item['userCount']} arrow={ 'none' } >{item['name']}</Item>
-                })
+                }) : <div className='nodata'>{groupData.length === 0 && !groupLoading ? '暂无部门数据' : ''}</div>
               }
             </List>
           </div>

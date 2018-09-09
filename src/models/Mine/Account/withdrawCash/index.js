@@ -47,6 +47,7 @@ class WithdrawCash extends Component {
     })
   }
   vaildatePwd = async (password) => {
+    Toast.loading('提交中...', 0)
     const data = await api.auth.vailPaypwd({
       password
     }) || false
@@ -60,7 +61,10 @@ class WithdrawCash extends Component {
       }) || false
       if (subdata) {
         setTimeout(() => {
-          this.props.match.history.push(urls.ACCOUNT)
+          Toast.hide()
+          Toast.success('提现成功', 1.5, () => {
+            this.props.match.history.push(urls.ACCOUNT)
+          })
         }, 400)
       }
     }

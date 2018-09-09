@@ -15,7 +15,7 @@ import logo from 'Src/assets/logo.png'
 import storage from 'Util/storage'
 import api from 'Util/api'
 import * as urls from 'Contants/urls'
-import history from 'Util/history'
+// import history from 'Util/history'
 
 class Register extends Component {
   constructor(props) {
@@ -30,6 +30,7 @@ class Register extends Component {
     const { getFieldError } = this.props.form
     this.props.form.validateFields(async (error, values) => {
       if (!error) {
+        Toast.loading('提交中...', 0)
         let newValues = { ...values, ...{ 'user_type': 1 }}
         console.log(newValues)
         const data = await api.auth.register(newValues) || false
@@ -37,7 +38,10 @@ class Register extends Component {
           storage.set('Authorization', 'Bearer ' + data['access_token'])
           storage.set('uid', data['uid'])
           storage.set('username', data['username'])
-          history.push(urls.HOME)
+          Toast.hide()
+          Toast.success('注册成功', 1.5, () => {
+            this.props.match.history.push(urls.HOME)
+          })
         }
       } else {
         for (let value of validateAry) {

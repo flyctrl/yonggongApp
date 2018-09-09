@@ -42,6 +42,13 @@ class EnginReality extends Component {
 
     }
   }
+  componentWillMount () {
+    this.getProjectList()
+    let toolers = tooler.parseURLParam()
+    if (JSON.stringify(toolers) !== '{}') {
+      this.setState({ ...toolers, proData: [{ value: toolers['proId'], label: decodeURI(toolers['proLabel']) }] })
+    }
+  }
   getProjectList = async () => { // 获取项目
     this.setState({ isLoadProj: true })
     const proData = await api.Common.getProList({
@@ -71,12 +78,20 @@ class EnginReality extends Component {
   }
 
   onProChange = (val, index) => { // 选择项目
+    let { proData } = this.state
+    let proLabel
+    for (const i of proData) {
+      if (i['value'] === val[0]) {
+        proLabel = encodeURI(i['label'])
+      }
+    }
     this.setState({
       proSelect: true,
       proId: val[0],
       worksheetNo: '',
       attendanceData: [],
-      isLoading: true
+      isLoading: true,
+      proLabel
     })
   }
   handleChangeOrder = () => { // 选择工单
@@ -127,21 +142,17 @@ class EnginReality extends Component {
     })
   }
   handleLeavesitu = (e) => {
-    let { orderid, startTime, endTime, worksheetNo } = this.state
+    let { orderid, startTime, endTime, worksheetNo, proId, proLabel } = this.state
     let data = e.currentTarget.getAttribute('data-id').split('&')
     let id = data[0]
     let num = data[1]
     if (num > 0) {
-      history.push(`${urls.LEAVESITU}?worksheet_id=${orderid}&worksheetNo=${worksheetNo}&attend_status=${id}&start_date=${tooler.formatDate(startTime)}&end_date=${tooler.formatDate(endTime)}`)
+      history.push(`${urls.LEAVESITU}?worksheet_id=${orderid}&worksheetNo=${worksheetNo}&attend_status=${id}&startTime=${tooler.formatDate(startTime)}&endTime=${tooler.formatDate(endTime)}&proLabel=${proLabel}&proId=${proId}`)
     }
-  }
-  componentDidMount() {
-    this.getProjectList()
   }
   render() {
     let { proSelect, proData, dateShow, startTime, endTime, showOrder, proId, worksheetNo, attendanceData, isLoading, isLoadProj } = this.state
     const { getFieldDecorator } = this.props.form
-
     return (
       <div>
         <div style={{ display: showOrder ? 'none' : 'block' }} className='pageBox'>
@@ -162,7 +173,7 @@ class EnginReality extends Component {
                   </Picker> */}
                   {getFieldDecorator('prj_id', {
                     rules: [
-                      { required: true, message: '请选择项目' },
+                      { required: true, message: '请选择项目' }
                     ],
                   })(
                     <Picker extra='请选择项目' className='myPicker' onChange={this.onProChange} data={proData} cols={1}>

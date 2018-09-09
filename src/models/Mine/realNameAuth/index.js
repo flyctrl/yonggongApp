@@ -57,12 +57,16 @@ class RealNameAuth extends Component {
     const { validateFields, getFieldError } = this.props.form
     validateFields(async (err, value) => {
       if (!err) {
+        Toast.loading('提交中...', 0)
         let newData = { card_back: value['card_back'][0]['path'], card_front: value['card_front'][0]['path'] }
         const data = await api.auth.realName({
           ...value, ...newData
         }) || false
         if (data) {
-          this.props.match.history.push(urls.MINE)
+          Toast.hide()
+          Toast.success('申请成功', 1.5, () => {
+            this.props.match.history.push(urls.MINE)
+          })
         }
       } else {
         const validateErr = validateAry.find(item => err[item])
