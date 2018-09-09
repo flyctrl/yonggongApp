@@ -120,36 +120,15 @@ html:not([data-scale]) .show-order-box :global(.am-list-body div:not(:last-child
     }
     
     &.sminput-form-list {
-      height: 112px;
+      height: auto;
       & :global(.am-list-body) {
-        & .daoicon {
+        overflow: hidden;
+        width: 100%;
+        height: auto;
+        &>div {
           float: left;
-          height: 44px;
-          line-height: 44px;
-          margin: 0 3%;
-        }
-        & .timeinput-item {
-          width: 45%;
-          float: left;
-          & em {
-            float: left;
-            height: 44px;
-            line-height: 44px;
-            margin:0 1.5%;
-          }
-          & :global(.am-list-item) {
-            float: left;
-            width: 45%;
-            & :global(.am-input-control) {
-              & input {
-                width: 100%;
-                text-align: center;
-                &:global(::placeholder) {
-                  text-align: center;
-                }
-              }
-            }
-          }
+          width: 100%;
+          margin-top: 4px;
         }
       }
     }

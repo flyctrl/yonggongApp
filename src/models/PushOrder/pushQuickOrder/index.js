@@ -47,6 +47,33 @@ let Calendar = Loadable({
     return <Calendar {...props}/>
   }
 })
+let attendData = (() => {
+  let hourAry = []
+  let minAry = []
+  for (let i = 0; i < 25; i++) {
+    i < 10 ? hourAry.push({
+      label: '0' + i + '时',
+      value: '0' + i
+    }) : hourAry.push({
+      label: i + '时',
+      value: i + ''
+    })
+  }
+  for (let j = 0; j < 61; j++) {
+    j < 10 ? minAry.push({
+      label: '0' + j + '分',
+      value: '0' + j
+    }) : minAry.push({
+      label: j + '分',
+      value: j + ''
+    })
+  }
+  return [hourAry, minAry, hourAry, minAry]
+})()
+let attendRadio = [
+  { label: '全天制考勤', value: 0 },
+  { label: '半天制考勤', value: 1 }
+]
 class PushQuickOrder extends Component {
   constructor(props) {
     super(props)
@@ -71,7 +98,8 @@ class PushQuickOrder extends Component {
       startUpperTime: null,
       endDateShow: false,
       endLowerTime: null,
-      endUpperTime: null
+      endUpperTime: null,
+      attendRadioVal: 0
     }
   }
 
@@ -210,6 +238,17 @@ class PushQuickOrder extends Component {
     }
   }
 
+  formatAttend = (label) => {
+    if (label.length > 0) {
+      return `${label[0]} : ${label[1]} ~ ${label[2]} : ${label[3]}`
+    }
+  }
+  onAttendChange = (value) => {
+    this.setState({
+      attendRadioVal: value
+    })
+  }
+
   handleClickSing = async () => { // 标的工作量点击
     const unitData = await api.Common.getUnitlist({}) || false
     this.setState({
@@ -229,14 +268,18 @@ class PushQuickOrder extends Component {
     this.handleWorktype()
   }
   onHandleNext = () => {
-    let validateAry = ['title', 'prj_id', 'construction_place', 'startWorkDate', 'endWorkDate', 'time1', 'time2', 'time3', 'time4', 'construct_ids', 'people_number', 'valuation_unit', 'valuation_unit_price', 'valuation_quantity', 'description']
-    const { fileList, settleRadioVal, paymodeRadioVal, assignRadioVal, startLowerTime, startUpperTime, endLowerTime, endUpperTime } = this.state
+    let validateAry = ['title', 'prj_id', 'construction_place', 'startWorkDate', 'endWorkDate', 'time1', 'construct_ids', 'people_number', 'valuation_unit', 'valuation_unit_price', 'valuation_quantity', 'description']
+    const { fileList, settleRadioVal, paymodeRadioVal, assignRadioVal, attendRadioVal, startLowerTime, startUpperTime, endLowerTime, endUpperTime } = this.state
+    if (attendRadioVal === 1) {
+      validateAry.splice(6, 0, 'time2')
+    }
     let postFile = []
     fileList.map((item, index, ary) => {
       postFile.push(item['path'])
     })
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, (error, values) => {
+      console.log('values', values)
       if (!error) {
         let newData = {
           prj_id: values['prj_id'][0],
@@ -246,13 +289,16 @@ class PushQuickOrder extends Component {
           payment_method: settleRadioVal,
           salary_payment_way: paymodeRadioVal,
           assign_type: assignRadioVal,
+          attend_type: attendRadioVal,
           start_lower_time: startLowerTime,
           start_upper_time: startUpperTime,
           end_lower_time: endLowerTime,
           end_upper_time: endUpperTime,
           attend_time_config: [
-            [values['time1'] + ':' + values['time2'], values['time3'] + ':' + values['time4']],
-            [(values['time5'] ? values['time5'] : '') + ':' + (values['time6'] ? values['time6'] : ''), (values['time7'] ? values['time7'] : '') + ':' + (values['time8'] ? values['time8'] : '')]
+            [values['time1'][0] + ':' + values['time1'][1],
+              values['time1'][2] + ':' + values['time1'][3]],
+            [(values['time2'] ? values['time2'][0] || '' : '') + ':' + (values['time2'] ? values['time2'][1] || '' : ''),
+              (values['time2'] ? values['time2'][2] || '' : '') + ':' + (values['time2'] ? values['time2'][3] || '' : '')]
           ],
           worksheet_type: 3
         }
@@ -276,8 +322,8 @@ class PushQuickOrder extends Component {
     let { postData } = this.state
     Toast.loading('提交中...', 0)
     const data = await api.PushOrder.workSheet(postData) || false
-    Toast.hide()
     if (data) {
+      Toast.hide()
       Toast.success('发布成功', 1.5, () => {
         this.props.match.history.push(urls.HOME)
       })
@@ -291,7 +337,9 @@ class PushQuickOrder extends Component {
   }
 
   showConfirmOrder = () => { // 工单确认
-    let { postData, proData, worktypeData, fileList, unitData, professData } = this.state
+    let { postData, proData, worktypeData, fileList, unitData, professData, attendRadioVal } = this.state
+    console.log('postData', postData)
+    console.log('professData', professData)
     if (proData === [] || worktypeData === []) return false
     return (
       <div className='pageBox'>
@@ -339,7 +387,7 @@ class PushQuickOrder extends Component {
             </List>
             <List renderHeader={() => '技能认证'}>
               {
-                professData.length !== 0 ? professData.find((item) => {
+                professData.length !== 0 && postData['professional_level'] !== '' ? professData.find((item) => {
                   return item.value === postData['professional_level']
                 })['label'] : ''
               }
@@ -390,7 +438,11 @@ class PushQuickOrder extends Component {
             </List>
             <List renderHeader={() => '考勤时间'}>
               {
-                `${postData['time1']}:${postData['time2']}~${postData['time3']}:${postData['time4']}  ${postData['time5'] ? (postData['time5'] + ':') : ''}${postData['time6'] ? postData['time6'] : ''}${postData['time7'] ? ('~' + postData['time7'] + ':') : ''}${postData['time8'] ? postData['time8'] : ''}`
+                `
+                  ${postData['time1'][0]}时${postData['time1'][1]}分 ~ ${postData['time1'][2]}时${postData['time1'][3]}分  
+                  ${
+                    postData['time2'] && !!attendRadioVal ? postData['time2'][0] + '时' : ''}${postData['time2'] && !!attendRadioVal ? postData['time2'][1] + '分 ~ ' : ''}${postData['time2'] && !!attendRadioVal ? postData['time2'][2] + '时' : ''}${postData['time2'] && !!attendRadioVal ? postData['time2'][3] + '分' : ''}
+                `
               }
             </List>
             <List className={style['remark-desc']} renderHeader={() => '需求描述'}>
@@ -420,7 +472,7 @@ class PushQuickOrder extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form
-    const { fileList, proData, worktypeData, isEdit, postData, proSelect, workTypeSelect, unitData, priceWaySelect, professSelect, professData, settleRadioVal, paymodeRadioVal, assignRadioVal, startDateShow, endDateShow } = this.state
+    const { fileList, proData, worktypeData, isEdit, postData, proSelect, workTypeSelect, unitData, priceWaySelect, professSelect, professData, settleRadioVal, paymodeRadioVal, assignRadioVal, startDateShow, endDateShow, attendRadioVal } = this.state
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
@@ -540,86 +592,39 @@ class PushQuickOrder extends Component {
                 />
               </List>
               <List className={`${style['input-form-list']} ${style['sminput-form-list']}`} renderHeader={() => '考勤时间'}>
-                <div>
-                  <div className={style['timeinput-item']}>
-                    {getFieldDecorator('time1', {
-                      rules: [
-                        { required: true, message: '请输入考勤时间' },
-                      ],
-                    })(
-                      <InputItem
-                        clear
-                        placeholder='时'
-                      ></InputItem>
-                    )}
-                    <em>:</em>
-                    {getFieldDecorator('time2', {
-                      rules: [
-                        { required: true, message: '请输入考勤时间' },
-                      ],
-                    })(
-                      <InputItem
-                        clear
-                        placeholder='分'
-                      ></InputItem>
-                    )}
-                  </div>
-                  <div className={style['daoicon']}>~</div>
-                  <div className={style['timeinput-item']}>
-                    {getFieldDecorator('time3', {
-                      rules: [
-                        { required: true, message: '请输入考勤时间' },
-                      ],
-                    })(
-                      <InputItem
-                        clear
-                        placeholder='时'
-                      ></InputItem>
-                    )}
-                    <em>:</em>
-                    {getFieldDecorator('time4', {
-                      rules: [
-                        { required: true, message: '请输入考勤时间' },
-                      ],
-                    })(
-                      <InputItem
-                        clear
-                        placeholder='分'
-                      ></InputItem>
-                    )}
-                  </div>
-                  <div className={style['timeinput-item']}>
-                    {getFieldDecorator('time5')(
-                      <InputItem
-                        clear
-                        placeholder='时'
-                      ></InputItem>
-                    )}
-                    <em>:</em>
-                    {getFieldDecorator('time6')(
-                      <InputItem
-                        clear
-                        placeholder='分'
-                      ></InputItem>
-                    )}
-                  </div>
-                  <div className={style['daoicon']}>~</div>
-                  <div className={style['timeinput-item']}>
-                    {getFieldDecorator('time7')(
-                      <InputItem
-                        clear
-                        placeholder='时'
-                      ></InputItem>
-                    )}
-                    <em>:</em>
-                    {getFieldDecorator('time8')(
-                      <InputItem
-                        clear
-                        placeholder='分'
-                      ></InputItem>
-                    )}
-                  </div>
-                </div>
+                {
+                  attendRadio.map((item, index, ary) => {
+                    return (
+                      <Radio
+                        key={item.value}
+                        checked={attendRadioVal === item.value}
+                        name='attend_type'
+                        className={style['pro-radio']}
+                        onChange={() => this.onAttendChange(item.value)}
+                      >{item.label}</Radio>
+                    )
+                  })
+                }
+                {getFieldDecorator('time1', {
+                  rules: [
+                    { required: true, message: '请选择考勤时间' },
+                  ],
+                })(
+                  <Picker data={attendData} cascade={false} format={ label => this.formatAttend(label) } extra='请选择考勤时间' cols={4}>
+                    <List.Item arrow='horizontal'></List.Item>
+                  </Picker>
+                )}
+                {
+                  attendRadioVal === 1 ? getFieldDecorator('time2', {
+                    rules: [
+                      { required: !!attendRadioVal, message: '请选择考勤时间' },
+                    ],
+                  })(
+                    <Picker data={attendData} cascade={false} format={ label => this.formatAttend(label) } extra='请选择考勤时间' cols={4}>
+                      <List.Item arrow='horizontal'></List.Item>
+                    </Picker>
+                  ) : null
+                }
               </List>
               <List className={`${style['input-form-list']} ${workTypeSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '施工内容'}>
                 {getFieldDecorator('construct_ids', {

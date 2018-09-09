@@ -66,8 +66,8 @@ class CreateProject extends Component {
         let postData = { ...{ attachment: postFile }, ...values }
         console.log(postData)
         const data = await api.Mine.projectMange.createProject(postData) || false
-        Toast.hide()
         if (data) {
+          Toast.hide()
           Toast.success('发布成功', 1.5, () => {
             this.props.match.history.push(urls.PROJECTMANGE)
           })

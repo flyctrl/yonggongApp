@@ -17,6 +17,62 @@
   bottom: 0;
   left: 0;
   right: 0;
+  & .menu-tip {
+    display: block;
+    width: 130px;
+    height: 126px;
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    margin-left: -65px;
+    z-index: 1000;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.21);
+    background: #fff;
+    & .tip-arrow {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      bottom: -4px;
+      left: 50%;
+      margin-left: -4px;
+      border-radius: 1PX;
+      background-color: #fff;
+      transform: rotate(45deg);
+      z-index: 0;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.21);
+    }
+    & .tip-inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index: 10;
+      background-color: #fff;
+      border-radius: 3px;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.21);
+      overflow: hidden;
+      & a {
+        display: block;
+        height: 42px;
+        line-height: 42px;
+        text-align: center;
+        color: #313f48;
+        font-size: 14px;
+        vertical-align: middle;
+        &:last-child {
+          border-bottom: none;
+        }
+        & .tipicon {
+          width: 20px;
+          height: 20px;
+          margin-right: 3px;
+          vertical-align: middle;
+          margin-top: -2px;
+        }
+      }
+    }
+  }
 }
 
 .tabBody-fix-iphoneX {
@@ -92,7 +148,7 @@
   position: absolute;
   bottom: 0;
   height: 50px;
-};
+}
 
 .tabBody-fix-iphoneX :global(.am-tabs-pane-wrap-inactive),
 .tabBody :global(.am-tabs-pane-wrap-inactive) {
@@ -104,4 +160,86 @@
   display: block;
   height: 100%;
 }
+
+:global(.animated) {
+  -webkit-animation-duration: 300ms;
+  animation-duration: 300ms;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+}
+
+:global(.animated.infinite) {
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+@-webkit-keyframes bounceInUp {
+  from,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 2000px, 0);
+    transform: translate3d(0, 2000px, 0);
+  }
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes bounceInUp {
+  from,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 2000px, 0);
+    transform: translate3d(0, 2000px, 0);
+  }
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+:global(.bounceInUp) {
+  -webkit-animation-name: bounceInUp;
+  animation-name: bounceInUp;
+}
+
+@-webkit-keyframes bounceOutDown {
+  from {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  } to {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 2000px, 0);
+    transform: translate3d(0, 2000px, 0);
+  }
+}
+
+@keyframes bounceOutDown {
+  from {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  } to {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 2000px, 0);
+    transform: translate3d(0, 2000px, 0);
+  }
+}
+
+:global(.bounceOutDown) {
+  -webkit-animation-name: bounceOutDown;
+  animation-name: bounceOutDown;
+}
+
 
