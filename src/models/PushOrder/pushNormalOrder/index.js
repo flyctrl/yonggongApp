@@ -692,11 +692,11 @@ class PushNormalOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={style['textarea-form-list']} renderHeader={() => '描述(至少50字)'}>
+              <List className={style['textarea-form-list']} renderHeader={() => '描述(至少30字)'}>
                 {getFieldDecorator('description', {
                   rules: [
                     { required: true, message: '请输入描述' },
-                    { pattern: /^.{50,1000}$/, message: '描述字数不足，至少50字' }
+                    { pattern: /^.{30,1000}$/, message: '描述字数不足，至少30字' }
                   ],
                 })(
                   <TextareaItem

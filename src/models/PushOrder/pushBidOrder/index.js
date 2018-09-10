@@ -292,7 +292,9 @@ class PushQuickOrder extends Component {
     if (tenderWayRadioVal === 'A') {
       validateAry.push('tender_amount')
     } else if (tenderWayRadioVal === 'B') {
+      validateAry.push('valuation_quantity')
       validateAry.push('valuation_unit')
+      validateAry.push('valuation_unit_price')
     }
     let postFile = []
     fileList.map((item, index, ary) => {
@@ -305,7 +307,9 @@ class PushQuickOrder extends Component {
         let newData = {
           prj_id: values['prj_id'][0],
           construct_ids: values['construct_ids'][1],
+          valuation_quantity: values['valuation_quantity'] !== undefined ? values['valuation_quantity'][0] : '',
           valuation_unit: values['valuation_unit'] !== undefined ? values['valuation_unit'][0] : '',
+          valuation_unit_price: values['valuation_unit_price'] !== undefined ? values['valuation_unit_price'][0] : '',
           start_lower_time: startLowerTime,
           start_upper_time: startUpperTime,
           end_lower_time: endLowerTime,
@@ -406,6 +410,14 @@ class PushQuickOrder extends Component {
                 })['label'] : ' '
               }
             </List>
+            {
+              postData['valuation_quantity'] ? <List renderHeader={() => '数量'}>{postData['valuation_quantity']}</List> : null
+            }
+            <List renderHeader={() => { return tenderJson[tenderWayRadioVal] }}>
+              {
+                tenderWayRadioVal === 'A' ? (postData['tender_amount'] ? postData['tender_amount'] + '元' : '') : (postData['valuation_unit_price'] ? postData['valuation_unit_price'] + '元' : '')
+              }
+            </List>
             <List renderHeader={() => '投标截止时间'}>
               {postData['bid_end_time']}
             </List>
@@ -424,7 +436,7 @@ class PushQuickOrder extends Component {
             </List>
             <List renderHeader={() => '违约金'}>
               {
-                postData['penalty'] ? postData['penalty'] : ' '
+                postData['penalty'] ? postData['penalty'] + '元' : ' '
               }
             </List>
             <List renderHeader={() => '工资发放方式'}>
@@ -439,11 +451,6 @@ class PushQuickOrder extends Component {
                 tenderWayRadio.find((item) => {
                   return item.value === postData['tender_way']
                 })['label']
-              }
-            </List>
-            <List renderHeader={() => { return tenderJson[tenderWayRadioVal] }}>
-              {
-                postData['tender_amount'] ? postData['tender_amount'] : ''
               }
             </List>
             <List renderHeader={() => '资质要求'}>
@@ -723,10 +730,22 @@ class PushQuickOrder extends Component {
                   </Picker>
                 )}
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => { return `${tenderWayRadioVal === 'A' ? (tenderJson[tenderWayRadioVal] + '(单位：元)') : (tenderJson[tenderWayRadioVal] + '(单位：元)(非必填)')}` }}>
-                {getFieldDecorator('tender_amount', {
+              <List style={{ display: tenderWayRadioVal === 'A' ? 'none' : 'block' }} renderHeader={() => '数量'} className={`${style['input-form-list']}`}>
+                {getFieldDecorator('valuation_quantity', {
                   rules: [
-                    { required: tenderWayRadioVal === 'A', message: '请输入' + tenderJson[tenderWayRadioVal] },
+                    { required: tenderWayRadioVal === 'B', message: '请输入数量' },
+                  ],
+                })(
+                  <InputItem
+                    clear
+                    placeholder='请输入数量'
+                  ></InputItem>
+                )}
+              </List>
+              <List className={`${style['input-form-list']}`} renderHeader={() => { return `${tenderWayRadioVal === 'A' ? (tenderJson[tenderWayRadioVal] + '(单位：元)') : (tenderJson[tenderWayRadioVal] + '(单位：元)')}` }}>
+                {getFieldDecorator(tenderWayRadioVal === 'A' ? 'tender_amount' : 'valuation_unit_price', {
+                  rules: [
+                    { required: true, message: '请输入' + tenderJson[tenderWayRadioVal] },
                   ],
                 })(
                   <InputItem
@@ -817,11 +836,11 @@ class PushQuickOrder extends Component {
                   ></InputItem>
                 )}
               </List>
-              <List className={style['textarea-form-list']} renderHeader={() => '招标公告正文(至少50字)'}>
+              <List className={style['textarea-form-list']} renderHeader={() => '招标公告正文(至少30字)'}>
                 {getFieldDecorator('description', {
                   rules: [
                     { required: true, message: '请输入招标公告正文' },
-                    { pattern: /^.{50,1000}$/, message: '招标公告正文，至少50字' }
+                    { pattern: /^.{30,1000}$/, message: '招标公告正文，至少30字' }
                   ],
                 })(
                   <TextareaItem

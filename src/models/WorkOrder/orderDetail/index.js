@@ -25,7 +25,7 @@ class OrderDetail extends Component {
     this.setState({
       isLoading: false
     })
-    const data = await api.Common.getOrderDetail({
+    const data = await api.WorkOrder.worksheetDetail({
       worksheet_id: tooler.getQueryString('id')
     }) || false
     if (data) {
@@ -72,7 +72,7 @@ class OrderDetail extends Component {
                       }
                     </span>
                   </dt>
-                  <dd className={style['usr-tel']}>{dataSource['prj_name']}</dd>
+                  <dd className={style['usr-tel']}>{dataSource['title']}</dd>
                   <dd className={style['push-time']}>发布于 {dataSource['created_at']}</dd>
                 </dl>
                 <div className={style['work-info']} style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical' }}>

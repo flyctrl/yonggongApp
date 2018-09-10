@@ -96,17 +96,17 @@ class ApplyDetail extends Component {
                 <li className='my-bottom-border'><span>指派类型</span>{dataSource['assign_type']}</li>
                 <li className='my-bottom-border'><span>履约担保总额</span>
                   {
-                    dataSource['guarantee_amount'] ? dataSource['guarantee_amount'] + '元' : ' '
+                    dataSource['guarantee_amount'] ? dataSource['guarantee_amount'] : ' '
                   }
                 </li>
                 <li className='my-bottom-border'><span>履约担保比例</span>
                   {
-                    dataSource['deposit_rate'] ? dataSource['deposit_rate'] + '%' : ' '
+                    dataSource['deposit_rate'] ? dataSource['deposit_rate'] : ' '
                   }
                 </li>
                 <li className='my-bottom-border'><span>违约金</span>
                   {
-                    dataSource['penalty'] ? dataSource['penalty'] + '元' : ' '
+                    dataSource['penalty'] ? dataSource['penalty'] : ' '
                   }
                 </li>
                 <li className='my-bottom-border'><span>支付方式</span>

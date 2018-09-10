@@ -28,10 +28,21 @@ html .comp-list :global(.am-button:before) {
         height: 40px;
         line-height: 40px;
         font-weight: normal;
+        &.h2-bid-amount {
+          height: 26px;
+          line-height: 26px;
+        }
       }
       & p {
-        color: rgba(146, 146, 146, 0.7);
+        color: #888888;
         font-size: 12px;
+        height: 22px;
+        line-height: 22px;
+      }
+      & .bid-amount {
+        display: block;
+        font-size: 12px;
+        color: rgba(48, 48, 48, 1);
         height: 18px;
         line-height: 18px;
         font-weight: 300;

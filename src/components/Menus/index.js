@@ -82,48 +82,50 @@ class AppMenu extends Component {
         {
           this.props.children
         }
-        <TabBar
-          unselectedTintColor='#949494'
-          tintColor='#33A3F4'
-          barTintColor='white'
-          noRenderContent={false}
-        >
-          {
-            data.map((item, index) => {
-              return (
-                <TabBar.Item
-                  title={item['title']}
-                  key={item['key']}
-                  icon={
-                    item['title'] !== null ? <svg className={menuStyle['icon-menu']} aria-hidden='true'><use xlinkHref={item['icon']}></use></svg> : <svg className={menuStyle['bigicon-menu']} aria-hidden='true'><use xlinkHref={item['icon']}></use></svg>
-                  }
-                  selectedIcon={
-                    item['title'] !== null ? <svg className={menuStyle['icon-menu']} aria-hidden='true'><use xlinkHref={item['onIcon']}></use></svg> : <svg className={menuStyle['bigicon-menu']} aria-hidden='true'><use xlinkHref={item['onIcon']}></use></svg>
-                  }
-                  selected={selectedTab === (item['key'] || '/')}
-                  onPress={() => {
-                    this.setState({
-                      selectedTab: item['key'],
-                    })
-                    this.props.onTouch(item['title'])
-                    if (item['key'] === 'PushOrder') {
-                      this.setState({
-                        visible: !visible
-                      })
-                    } else {
-                      this.setState({
-                        visible: false
-                      })
-                      history.push(item['path'], { title: item['title'] })
+        <div className={menuStyle['bottom-menu-box']}>
+          <TabBar
+            unselectedTintColor='#949494'
+            tintColor='#33A3F4'
+            barTintColor='white'
+            noRenderContent={false}
+          >
+            {
+              data.map((item, index) => {
+                return (
+                  <TabBar.Item
+                    title={item['title']}
+                    key={item['key']}
+                    icon={
+                      item['title'] !== null ? <svg className={menuStyle['icon-menu']} aria-hidden='true'><use xlinkHref={item['icon']}></use></svg> : <svg className={menuStyle['bigicon-menu']} aria-hidden='true'><use xlinkHref={item['icon']}></use></svg>
                     }
-                  }}
-                  data-touchfeedback={true}
-                >
-                </TabBar.Item>
-              )
-            })
-          }
-        </TabBar>
+                    selectedIcon={
+                      item['title'] !== null ? <svg className={menuStyle['icon-menu']} aria-hidden='true'><use xlinkHref={item['onIcon']}></use></svg> : <svg className={menuStyle['bigicon-menu']} aria-hidden='true'><use xlinkHref={item['onIcon']}></use></svg>
+                    }
+                    selected={selectedTab === (item['key'] || '/')}
+                    onPress={() => {
+                      this.setState({
+                        selectedTab: item['key'],
+                      })
+                      this.props.onTouch(item['title'])
+                      if (item['key'] === 'PushOrder') {
+                        this.setState({
+                          visible: !visible
+                        })
+                      } else {
+                        this.setState({
+                          visible: false
+                        })
+                        history.push(item['path'], { title: item['title'] })
+                      }
+                    }}
+                    data-touchfeedback={true}
+                  >
+                  </TabBar.Item>
+                )
+              })
+            }
+          </TabBar>
+        </div>
         <div style={{ display: visible ? 'block' : 'none' }} className={`${menuStyle['bottom-menu-tip']} animated ${visible ? 'bounceInUp' : 'bounceOutDown'}`}>
           <div className={menuStyle['tip-arrow']}></div>
           <div className={menuStyle['tip-inner']}>

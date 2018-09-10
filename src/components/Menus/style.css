@@ -113,11 +113,11 @@
   overflow: hidden;
 }
 
-.tabBody :global(.am-tab-bar-tab) {
+.tabBody .bottom-menu-box :global(.am-tab-bar-tab) {
   height: 100%;
 }
 
-.tabBody :global(.am-tab-bar-bar .am-tab-bar-tab-title) {
+.tabBody .bottom-menu-box :global(.am-tab-bar-bar .am-tab-bar-tab-title) {
   margin-top: 6px;
 }
 
@@ -125,8 +125,8 @@
   display: none;
 }
 
-.tabBody-fix-iphoneX :global(.tabBody .am-tab-bar-bar .am-tab-bar-tab),
-.tabBody :global(.tabBody .am-tab-bar-bar .am-tab-bar-tab) {
+.tabBody-fix-iphoneX .bottom-menu-box :global(.am-tab-bar-bar .am-tab-bar-tab),
+.tabBody .bottom-menu-box :global(.am-tab-bar-bar .am-tab-bar-tab) {
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   -webkit-transition: all .2s ease-in-out;
@@ -137,27 +137,27 @@
   touch-callout: none;
 }
 
-.tabBody-fix-iphoneX :global(.am-tab-bar-bar .am-tab-bar-tab.feedback),
-.tabBody :global(.am-tab-bar-bar .am-tab-bar-tab.feedback) {
+.tabBody-fix-iphoneX .bottom-menu-box :global(.am-tab-bar-bar .am-tab-bar-tab.feedback),
+.tabBody .bottom-menu-box :global(.am-tab-bar-bar .am-tab-bar-tab.feedback) {
   -webkit-transform: scale(0.86);
   transform: scale(0.86);
 }
 
-.tabBody-fix-iphoneX :global(.am-tab-bar),
-.tabBody :global(.am-tab-bar) {
+.tabBody-fix-iphoneX .bottom-menu-box :global(.am-tab-bar),
+.tabBody .bottom-menu-box :global(.am-tab-bar) {
   width: 100%;
   position: absolute;
   bottom: 0;
   height: 50px;
 }
 
-.tabBody-fix-iphoneX :global(.am-tabs-pane-wrap-inactive),
-.tabBody :global(.am-tabs-pane-wrap-inactive) {
+.tabBody-fix-iphoneX .bottom-menu-box :global(.am-tabs-pane-wrap-inactive),
+.tabBody .bottom-menu-box :global(.am-tabs-pane-wrap-inactive) {
   display: none;
 }
 
-.tabBody-fix-iphoneX :global(.am-tabs-pane-wrap-active),
-.tabBody :global(.am-tabs-pane-wrap-active) {
+.tabBody-fix-iphoneX .bottom-menu-box :global(.am-tabs-pane-wrap-active),
+.tabBody .bottom-menu-box :global(.am-tabs-pane-wrap-active) {
   display: block;
   height: 100%;
 }

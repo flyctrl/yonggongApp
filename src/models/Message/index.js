@@ -71,8 +71,9 @@ class Message extends Component {
             initalPage={0}
             tabBarBackgroundColor='#FAFAFA'
             onChange={this.handleTabChange}
+            animated={false}
           >
-            <div style={{ width: '100%', height: '100%', position: 'absolute', left: 0 }}>
+            <div>
               {
                 noticeList.length !== 0 && isload ? noticeList.map((item) => {
                   return (
@@ -104,7 +105,7 @@ class Message extends Component {
                 // </ul>
               }
             </div>
-            <div style={{ width: '100%', height: '100%', position: 'absolute', left: '100%' }}>
+            <div>
               {
                 tobeList.length !== 0 && isload ? tobeList.map((item, index) => {
                   return (

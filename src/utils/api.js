@@ -73,7 +73,7 @@ export default {
       return Fetch(prefix + '/worksheet/list/valuation_unit', params, 'get')
     },
     delAttch(params) { // 删除附件
-      return FetchSave('/common/attach/delete', params)
+      return FetchSave('/common/attach/delete', params, 'post', { showloading: false })
     },
     user(params) { // 用户信息
       return Fetch(prefix + '/user', params, 'get')
@@ -136,40 +136,43 @@ export default {
       return Fetch(prefix + '/worksheet/stat/status', params, 'get')
     },
     confirmConstruct(params) { // 确认开工 快单、普通工单、招标
-      return FetchSave(prefix + '/worksheet/confirmConstruct', params)
+      return FetchSave(prefix + '/worksheet/confirmConstruct', params, 'post', { showloading: false })
     },
     cancelConstruct(params) { // 取消开工 快单、普通工单、招标
-      return FetchSave(prefix + '/worksheet/cancel', params)
+      return FetchSave(prefix + '/worksheet/cancel', params, 'post', { showloading: false })
     },
     handleConfirmComp(params) { // 快单 确认完工列表
       return Fetch(prefix + '/worksheetOrder/confirmList', params, 'get')
     },
     confirmQtReefusal(params) { // 确认和驳回 快单
-      return FetchSave(prefix + '/worksheetOrder/confirm', params)
+      return FetchSave(prefix + '/worksheetOrder/confirm', params, 'post', { showloading: false })
     },
     applyQtList(params) { // 快单接单记录
       return Fetch(prefix + '/worksheetOrder/applyList', params, 'get')
     },
     reviewOrder(params) { // 审批工单
-      return FetchSave(prefix + '/worksheet/review', params)
+      return FetchSave(prefix + '/worksheet/review', params, 'post', { showloading: false })
     },
     confirmApplyRecord(params) { // 确认拒绝接单记录
-      return FetchSave(prefix + '/worksheet/confirmApplyRecord', params)
+      return FetchSave(prefix + '/worksheet/confirmApplyRecord', params, 'post', { showloading: false })
     },
     confirmOrder(params) { // 确认工单 普通工单、招标
-      return FetchSave(prefix + '/worksheet/confirm', params)
+      return FetchSave(prefix + '/worksheet/confirm', params, 'post', { showloading: false })
     },
     confirmWorkList(params) { // 开工列表
       return Fetch(prefix + '/worksheetOrder/confirmList', params, 'get')
     },
     confirmWorkOrderlist(params) { // 开工列表的确认
-      return FetchSave(prefix + '/worksheetOrder/confirm', params)
+      return FetchSave(prefix + '/worksheetOrder/confirm', params, 'post', { showloading: false })
     },
     settleList(params) { // 结算列表
       return Fetch(prefix + '/worksheetOrder/settleList', params, 'get')
     },
     confirmSettle(params) { // 结算确认
-      return FetchSave(prefix + '/worksheetOrder/settle', params)
+      return FetchSave(prefix + '/worksheetOrder/settle', params, 'post', { showloading: false })
+    },
+    worksheetDetail(params) { // 工单详情
+      return Fetch('/worksheet/show', params, 'get')
     }
   },
   Mine: { // 我的

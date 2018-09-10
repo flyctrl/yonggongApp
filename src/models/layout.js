@@ -42,24 +42,26 @@ class MainLayout extends Component {
     const { routes } = this.props
     if (this.state.isMenuPage) {
       return (
-        <AppMenu onTouch={this.touchMenu.bind(this)} path={this.state.path} routes={routes}>
-          {
-            routes.map((route, index) => {
-              return (
-                <Route
-                  key={index}
-                  animated={route.animated}
-                  path={route.path}
-                  exact={route.exact}
-                  parent={route.parent}
-                  render={(match) => {
-                    return <route.component match={match}/>
-                  }}
-                />
-              )
-            })
-          }
-        </AppMenu>
+        <div style={{ width: '100%', height: '100%' }}>
+          <AppMenu onTouch={this.touchMenu.bind(this)} path={this.state.path} routes={routes}>
+            {
+              routes.map((route, index) => {
+                return (
+                  <Route
+                    key={index}
+                    animated={route.animated}
+                    path={route.path}
+                    exact={route.exact}
+                    parent={route.parent}
+                    render={(match) => {
+                      return <route.component match={match}/>
+                    }}
+                  />
+                )
+              })
+            }
+          </AppMenu>
+        </div>
       )
     } else {
       return (

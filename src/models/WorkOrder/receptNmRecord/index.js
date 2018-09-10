@@ -63,7 +63,10 @@ class BeginList extends Component {
       return dataSource.map((item, index) => {
         return <li className='my-bottom-border' key={index}>
           <div className={style['comp-info']}>
-            <h2>{item['worker_name']}</h2>
+            <h2 className={item['show_bid_amount'] === 1 ? style['h2-bid-amount'] : ''}>{item['worker_name']}</h2>
+            {
+              item['show_bid_amount'] === 1 ? <span className={style['bid-amount']}>投标金额：{item['bid_amount']}</span> : null
+            }
             <p>{item['created_at']}</p>
           </div>
           <div className={style['contrl-btn']}>
