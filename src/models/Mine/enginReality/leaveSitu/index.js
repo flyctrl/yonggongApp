@@ -26,7 +26,7 @@ class LeaveSitu extends Component {
     const data = await api.Mine.engineeringLive.getEngDetail({ // 考勤详情
       end_date: paramsData.endTime,
       start_date: paramsData.startTime,
-      worksheet_id: paramsData.worksheet_id,
+      worksheet_id: paramsData.worksheetId,
       attend_status: paramsData.attend_status
     }) || {}
     if (data) {
