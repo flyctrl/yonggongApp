@@ -253,7 +253,7 @@ class WorkOrder extends Component {
     </div>
   }
   render() {
-    let { tabs, status, parentIndex, dataSource, isLoading, nodata, refreshing, subIndex } = this.state
+    let { tabs, status, parentIndex, dataSource, isLoading, nodata, refreshing, subIndex, height } = this.state
     let newTabs = []
     tabs.map((item) => {
       newTabs.push({ title: <div className={style['tabs-head']}><em>{item['qty']}</em><p>{item['title']}</p></div>, status: item['status'] })
@@ -361,7 +361,7 @@ class WorkOrder extends Component {
         <Content>
           <SegmentedControl className={style.segmented} selectedIndex={parentIndex} onChange={this.handleSegmentedChange} values={['工单', '快单', '劳务招标']}/>
           <Tabs tabs={newTabs} onChange={this.handleChange} initialPage={0} page={subIndex} swipeable={false}>
-            <div style={{ width: '100%', height: '100%', position: 'absolute', left: subIndex * 100 + '%' }}>
+            <div className={style['listview-list']} style={{ height: (height - 200) + 'px', left: subIndex * 100 + '%' }}>
               <ListView
                 ref={(el) => {
                   this.lv = el

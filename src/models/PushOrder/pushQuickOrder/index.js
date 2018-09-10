@@ -419,7 +419,7 @@ class PushQuickOrder extends Component {
                 })['label']
               }
             </List>
-            <List renderHeader={() => '付款方式'}>
+            <List renderHeader={() => '工资发放方式'}>
               {
                 payModeRadio.find((item) => {
                   return item.value === postData['salary_payment_way']
@@ -563,12 +563,6 @@ class PushQuickOrder extends Component {
                   )}
                   <Icon type='right' color='#ccc' />
                 </div>
-                <Calendar
-                  visible={startDateShow}
-                  onCancel={this.onStartDateCancel}
-                  onConfirm={this.onStartDateConfirm}
-                  defaultDate={now}
-                />
               </List>
               <List className={`${style['input-form-list']} ${startDateShow ? style['selected-form-list'] : ''}`} renderHeader={() => '竣工日期范围'}>
                 <div onClick={this.onEndDateChange}>
@@ -585,12 +579,6 @@ class PushQuickOrder extends Component {
                   )}
                   <Icon type='right' color='#ccc' />
                 </div>
-                <Calendar
-                  visible={endDateShow}
-                  onCancel={this.onEndDateCancel}
-                  onConfirm={this.onEndDateConfirm}
-                  defaultDate={now}
-                />
               </List>
               <List className={`${style['input-form-list']} ${style['sminput-form-list']}`} renderHeader={() => '考勤时间'}>
                 {
@@ -791,6 +779,18 @@ class PushQuickOrder extends Component {
               </List>
             </form>
           </Content>
+          <Calendar
+            visible={startDateShow}
+            onCancel={this.onStartDateCancel}
+            onConfirm={this.onStartDateConfirm}
+            defaultDate={now}
+          />
+          <Calendar
+            visible={endDateShow}
+            onCancel={this.onEndDateCancel}
+            onConfirm={this.onEndDateConfirm}
+            defaultDate={now}
+          />
         </div>
         <div style={{ display: !isEdit && postData ? 'block' : 'none' }}>
           {!isEdit && postData ? this.showConfirmOrder() : null}

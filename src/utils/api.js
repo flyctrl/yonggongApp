@@ -126,6 +126,9 @@ export default {
     WorkOrderList(params) { // 工单列表
       return Fetch(prefix + '/worksheet/list', params, 'get')
     },
+    showReview(params) { // 审批工单详情
+      return Fetch(prefix + '/worksheet/showReview', params, 'get')
+    },
     getListByPro(params) { // 根据项目获取工单列表
       return Fetch(prefix + '/worksheet/prj/list', params, 'get')
     },

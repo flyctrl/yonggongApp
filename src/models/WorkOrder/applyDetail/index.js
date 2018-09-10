@@ -6,12 +6,12 @@
 */
 import React, { Component } from 'react'
 import { Button } from 'antd-mobile'
-import { Header, Content } from 'Components'
+import { Header, Content, NewIcon } from 'Components'
 import history from 'Util/history'
 import * as urls from 'Contants/urls'
+import { worksheetType } from 'Contants/fieldmodel'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
-import { priceModeData, settleRadio, payModeRadio } from 'Contants/fieldmodel'
 import style from './style.css'
 
 class ApplyDetail extends Component {
@@ -29,7 +29,7 @@ class ApplyDetail extends Component {
     this.setState({
       isLoading: false
     })
-    const data = await api.Common.getOrderDetail({
+    const data = await api.WorkOrder.showReview({
       worksheet_id: id
     }) || false
     if (data) {
@@ -84,19 +84,58 @@ class ApplyDetail extends Component {
           {
             isLoading ? <div>
               <ul className={style['applyinfo-list']}>
+                <li className='my-bottom-border'><span>标题</span>{dataSource['title']}</li>
+                <li className='my-bottom-border'><span>工单类型</span>{worksheetType[dataSource['worksheet_type']]}</li>
                 <li className='my-bottom-border'><span>项目名称</span>{dataSource['prj_name']}</li>
                 <li className='my-bottom-border'><span>施工地址</span>{dataSource['construction_place']}</li>
-                <li className='my-bottom-border'><span>施工开始时间</span>{`${dataSource['start_lower_time'] || ''} ~ ${dataSource['start_upper_time'] || ''}`}</li>
-                <li className='my-bottom-border'><span>计价方式</span>{priceModeData[dataSource['valuation_way']]}</li>
-                <li className='my-bottom-border'><span>总数</span>{dataSource['valuation_quantity']}</li>
-                <li className='my-bottom-border'><span>单价（单位：元）</span>{dataSource['valuation_unit_price']}</li>
-                <li className='my-bottom-border'><span>结算方式</span>{settleRadio[dataSource['payment_method']]}</li>
-                <li className='my-bottom-border'><span>付款方式</span>{payModeRadio[dataSource['salary_payment_way']]}</li>
-                <li className='my-bottom-border'><span>保证金比例（单位:%）</span>{dataSource['deposit_rate']}</li>
-                <li className='my-bottom-border'><span>违约金（单位:元）</span>{dataSource['penalty']}</li>
-                <li className='my-bottom-border'><span>是否开票</span>{dataSource['invoice_support'] === 1 ? '是' : '否'}</li>
-                <li className='my-bottom-border'><span>资质要求</span>无</li>
-                <li className='my-bottom-border'><span>附件</span>无</li>
+                <li className='my-bottom-border'><span>开工时间</span>{`${dataSource['start_date']}`}</li>
+                <li className='my-bottom-border'><span>竣工时间</span>{`${dataSource['end_date']}`}</li>
+                <li className='my-bottom-border'><span>施工内容</span>{dataSource['construction_content']}</li>
+                <li className='my-bottom-border'><span>资质要求</span>{dataSource['qualification']}</li>
+                <li className='my-bottom-border'><span>技能要求</span>{dataSource['profession']}</li>
+                <li className='my-bottom-border'><span>指派类型</span>{dataSource['assign_type']}</li>
+                <li className='my-bottom-border'><span>履约担保总额</span>
+                  {
+                    dataSource['guarantee_amount'] ? dataSource['guarantee_amount'] + '元' : ' '
+                  }
+                </li>
+                <li className='my-bottom-border'><span>履约担保比例</span>
+                  {
+                    dataSource['deposit_rate'] ? dataSource['deposit_rate'] + '%' : ' '
+                  }
+                </li>
+                <li className='my-bottom-border'><span>违约金</span>
+                  {
+                    dataSource['penalty'] ? dataSource['penalty'] + '元' : ' '
+                  }
+                </li>
+                <li className='my-bottom-border'><span>支付方式</span>
+                  {
+                    dataSource['payment_method']
+                  }
+                </li>
+                <li className='my-bottom-border'><span>工资发放方式</span>
+                  {
+                    dataSource['salary_payment_way']
+                  }
+                </li>
+                {
+                  dataSource['extra'].map((item, index) => {
+                    return <li key={index} className='my-bottom-border'><span>{item['label']}</span>{item['value']}</li>
+                  })
+                }
+                <li className={`${style['apply-desc']} my-bottom-border`}><span>描述</span>
+                  {
+                    dataSource['description']
+                  }
+                </li>
+                <li className={`${style['apply-file']} my-bottom-border`}><span>附件</span>
+                  {
+                    dataSource['attachment'].map((item, index) => {
+                      return <p key={index} className='ellipsis'><NewIcon type='icon-paperclip'/>{item['name']}</p>
+                    })
+                  }
+                </li>
               </ul>
               {
                 // <div className={style['lookpat-box']}><a onClick={this.handleLookpat} className={style['lookpat-btn']}>查看电子合同</a></div>
