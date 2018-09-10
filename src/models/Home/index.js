@@ -19,7 +19,8 @@ class Home extends Component {
     this.state = {
       sysInforms: [],
       companyDetail: [],
-      todoList: []
+      todoList: [],
+      isLoading: true
     }
   }
   componentWillMount() {
@@ -42,11 +43,15 @@ class Home extends Component {
     })
   }
   getTodayTodo = async () => {
+    this.setState({ isLoading: true })
     const data = await api.Home.getTodayTodo({ // 获取今日代办列表
     }) || false
-    this.setState({
-      todoList: data.list
-    })
+    if (data) {
+      this.setState({
+        todoList: data.list || [],
+        isLoading: false
+      })
+    }
   }
 
   handlePushNormalOrder = () => {
@@ -67,7 +72,7 @@ class Home extends Component {
     this.props.match.history.push(urls.MESSAGE)
   }
   render() {
-    const { sysInforms, companyDetail, todoList } = this.state
+    const { sysInforms, companyDetail, todoList, isLoading } = this.state
     return (
       <div className='contentBox'>
         <div className={style['usr-home-content']}>
@@ -127,8 +132,8 @@ class Home extends Component {
             </div>
             <dl className={style['today-todo']}>
               <dt>今日待办</dt>
-              {
-                todoList && todoList.map(item => {
+              {todoList.length !== 0 && !isLoading
+                ? todoList.map(item => {
                   return (<dd key={item.id} className={'my-bottom-border'}>
                     <header>
                       {item.zh_status}
@@ -143,7 +148,7 @@ class Home extends Component {
                       {item.publish_time}
                     </footer>
                   </dd>)
-                })
+                }) : <p className='nodata'>{todoList.length === 0 && !isLoading ? '暂无数据' : ''}</p>
               }
               {/* <dd className={'my-bottom-border'}>
                 <header>

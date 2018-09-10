@@ -9,23 +9,28 @@ class SystemMessDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      sysInforms: {}
+      sysInforms: {},
+      isLoading: true
     }
   }
   componentWillMount() {
     this.handleSysMessage()
   }
   handleSysMessage = async() => {
+    this.setState({ isLoading: true })
     let id = tooler.parseURLParam()
     const data = await api.Home.getSystemMessDetail( // 获取系统通告
       id
     ) || false
-    this.setState({
-      sysInforms: data
-    })
+    if (data) {
+      this.setState({
+        sysInforms: data,
+        isLoading: false
+      })
+    }
   }
   render() {
-    const { sysInforms } = this.state
+    const { sysInforms, isLoading } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -37,16 +42,20 @@ class SystemMessDetail extends Component {
           }}
         />
         <Content>
-          <dl className={style['system-mess']}>
-            <dd className={'my-bottom-border'}>
-              <section>
-                <p>{sysInforms.content}</p>
-              </section>
-              <footer>
-                {sysInforms.created_at}
-              </footer>
-            </dd>
-          </dl>
+          {
+            !isLoading
+              ? <dl className={style['system-mess']}>
+                <dd className={'my-bottom-border'}>
+                  <section>
+                    <p>{sysInforms.content}</p>
+                  </section>
+                  <footer>
+                    {sysInforms.created_at}
+                  </footer>
+                </dd>
+              </dl>
+              : null
+          }
         </Content>
       </div>
     )
