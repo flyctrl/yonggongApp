@@ -16,6 +16,28 @@
       color: rgba(138, 150, 160, 1);
       padding-right: 20px;
     }
+    &.apply-desc {
+      height: auto;
+      padding-bottom: 10px;
+      line-height: 24px;
+      & span {
+        line-height: 46px;
+        display: block;
+      }
+    }
+    &.apply-file {
+      height: auto;
+      padding-bottom: 10px;
+      line-height: 24px;
+      color: #0467e0;
+      & svg {
+        margin-right: 5px;
+      }
+      & span {
+        line-height: 46px;
+        display: block;
+      }
+    }
   }
 }
 

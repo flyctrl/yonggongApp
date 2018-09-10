@@ -385,7 +385,7 @@ class PushNormalOrder extends Component {
                 })['label']
               }
             </List>
-            <List renderHeader={() => '付款方式'}>
+            <List renderHeader={() => '工资发放方式'}>
               {
                 payModeRadio.find((item) => {
                   return item.value === postData['salary_payment_way']
@@ -530,12 +530,6 @@ class PushNormalOrder extends Component {
                   )}
                   <Icon type='right' color='#ccc' />
                 </div>
-                <Calendar
-                  visible={startDateShow}
-                  onCancel={this.onStartDateCancel}
-                  onConfirm={this.onStartDateConfirm}
-                  defaultDate={now}
-                />
               </List>
               <List className={`${style['input-form-list']} ${startDateShow ? style['selected-form-list'] : ''}`} renderHeader={() => '竣工日期范围'}>
                 <div onClick={this.onEndDateChange}>
@@ -552,12 +546,6 @@ class PushNormalOrder extends Component {
                   )}
                   <Icon type='right' color='#ccc' />
                 </div>
-                <Calendar
-                  visible={endDateShow}
-                  onCancel={this.onEndDateCancel}
-                  onConfirm={this.onEndDateConfirm}
-                  defaultDate={now}
-                />
               </List>
               <List className={`${style['input-form-list']} ${workTypeSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '施工内容'}>
                 {getFieldDecorator('construct_ids', {
@@ -736,6 +724,18 @@ class PushNormalOrder extends Component {
               </List>
             </form>
           </Content>
+          <Calendar
+            visible={startDateShow}
+            onCancel={this.onStartDateCancel}
+            onConfirm={this.onStartDateConfirm}
+            defaultDate={now}
+          />
+          <Calendar
+            visible={endDateShow}
+            onCancel={this.onEndDateCancel}
+            onConfirm={this.onEndDateConfirm}
+            defaultDate={now}
+          />
         </div>
         <div style={{ display: !isEdit && postData ? 'block' : 'none' }}>
           {!isEdit && postData ? this.showConfirmOrder() : null}

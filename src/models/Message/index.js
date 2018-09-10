@@ -108,7 +108,7 @@ class Message extends Component {
               {
                 tobeList.length !== 0 && isload ? tobeList.map((item, index) => {
                   return (
-                    <div className={`${style['notice-box']} my-bottom-border`}>
+                    <div key={index} className={`${style['notice-box']} my-bottom-border`}>
                       <dl>
                         <dt>
                           <span className={style['tobedone']}>

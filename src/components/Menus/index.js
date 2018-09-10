@@ -124,7 +124,7 @@ class AppMenu extends Component {
             })
           }
         </TabBar>
-        <div style={{ display: visible ? 'block' : 'none' }} className={`${menuStyle['menu-tip']} animated ${visible ? 'bounceInUp' : 'bounceOutDown'}`}>
+        <div style={{ display: visible ? 'block' : 'none' }} className={`${menuStyle['bottom-menu-tip']} animated ${visible ? 'bounceInUp' : 'bounceOutDown'}`}>
           <div className={menuStyle['tip-arrow']}></div>
           <div className={menuStyle['tip-inner']}>
             <a className='my-bottom-border' onClick={() => history.push(urls.PUSHNORMALORDER)}><NewIcon className={menuStyle['tipicon']} type='icon-gongdan' />发布工单</a>

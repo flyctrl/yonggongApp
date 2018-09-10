@@ -660,13 +660,6 @@ class PushQuickOrder extends Component {
                   )}
                   <Icon type='right' color='#ccc' />
                 </div>
-                <Calendar
-                  type='one'
-                  visible={tenderDateShow}
-                  onCancel={this.onTenderDateCancel}
-                  onConfirm={this.onTenderDateConfirm}
-                  defaultDate={now}
-                />
               </List>
               <List className={`${style['input-form-list']} ${startDateShow ? style['selected-form-list'] : ''}`} renderHeader={() => '开工日期范围'}>
                 <div onClick={this.onStartDateChange}>
@@ -683,12 +676,6 @@ class PushQuickOrder extends Component {
                   )}
                   <Icon type='right' color='#ccc' />
                 </div>
-                <Calendar
-                  visible={startDateShow}
-                  onCancel={this.onStartDateCancel}
-                  onConfirm={this.onStartDateConfirm}
-                  defaultDate={now}
-                />
               </List>
               <List className={`${style['input-form-list']} ${startDateShow ? style['selected-form-list'] : ''}`} renderHeader={() => '竣工日期范围'}>
                 <div onClick={this.onEndDateChange}>
@@ -705,12 +692,6 @@ class PushQuickOrder extends Component {
                   )}
                   <Icon type='right' color='#ccc' />
                 </div>
-                <Calendar
-                  visible={endDateShow}
-                  onCancel={this.onEndDateCancel}
-                  onConfirm={this.onEndDateConfirm}
-                  defaultDate={now}
-                />
               </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '招标方式'}>
                 {getFieldDecorator('tender_way')(
@@ -868,6 +849,25 @@ class PushQuickOrder extends Component {
               </List>
             </form>
           </Content>
+          <Calendar
+            type='one'
+            visible={tenderDateShow}
+            onCancel={this.onTenderDateCancel}
+            onConfirm={this.onTenderDateConfirm}
+            defaultDate={now}
+          />
+          <Calendar
+            visible={startDateShow}
+            onCancel={this.onStartDateCancel}
+            onConfirm={this.onStartDateConfirm}
+            defaultDate={now}
+          />
+          <Calendar
+            visible={endDateShow}
+            onCancel={this.onEndDateCancel}
+            onConfirm={this.onEndDateConfirm}
+            defaultDate={now}
+          />
         </div>
         <div style={{ display: !isEdit && postData ? 'block' : 'none' }}>
           {!isEdit && postData ? this.showConfirmOrder() : null}
