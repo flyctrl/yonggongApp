@@ -332,7 +332,10 @@ export default {
       },
       getEngDetail(params) { // 考勤详情
         return Fetch(prefix + '/worksheetOrder/attend/list', params, 'get')
-      }
+      },
+      getworkSheetList(params) { // 获取工单列表
+        return Fetch(prefix + '/worksheet/attend/select', params, 'get')
+      },
     },
     feedback: (params) => {
       return FetchSave('/common/feedback', params, 'post', { showloading: false })

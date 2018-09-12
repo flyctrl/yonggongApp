@@ -67,7 +67,7 @@ class LeaveSitu extends Component {
                   <footer>
                     <span>{attendanceDetailStatus[item.status]}</span>
                     <span>{attendanceDetailType[item.type]}</span>
-                    <a className={`${style['statu']} my-full-border`}>{item.created_at}</a>
+                    <a className={`${style['statu']} my-full-border`}>{item.updated_at}</a>
                   </footer>
                 </li>)
               }) : <div className='nodata'>{dataList.length === 0 && !isLoading ? '暂无数据' : ''}</div>
