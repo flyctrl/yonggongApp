@@ -90,12 +90,12 @@ class ForgetPwd extends Component {
               <InputItem
                 {...getFieldProps('mobile', {
                   rules: [
-                    { required: true, message: '请输入您的手机号/用户名' },
+                    { required: true, message: '请输入您的手机号' },
                     { pattern: /^(1[358479]\d{9})$/, message: '请输入正确格式的手机号码' }
                   ],
                 })}
                 clear
-                placeholder='手机号/用户名'
+                placeholder='手机号'
                 prefixListCls='register'
                 error={!!getFieldError('mobile')}
                 onErrorClick={() => {
