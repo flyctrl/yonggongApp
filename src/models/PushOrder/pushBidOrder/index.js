@@ -73,7 +73,7 @@ class PushQuickOrder extends Component {
       settleRadioVal: 'A01',
       tenderWayRadioVal: 'A',
       paymodeRadioVal: 'A',
-      assignRadioVal: 1,
+      assignRadioVal: 0,
       worktypeData: [],
       workTypeSelect: false,
       professData: [],
@@ -289,13 +289,6 @@ class PushQuickOrder extends Component {
   onHandleNext = () => {
     let validateAry = ['title', 'prj_id', 'construction_place', 'construct_ids', 'bid_end_time', 'startWorkDate', 'endWorkDate', 'description']
     const { fileList, paymodeRadioVal, settleRadioVal, tenderWayRadioVal, assignRadioVal, startLowerTime, startUpperTime, endLowerTime, endUpperTime } = this.state
-    if (tenderWayRadioVal === 'A') {
-      validateAry.push('tender_amount')
-    } else if (tenderWayRadioVal === 'B') {
-      validateAry.push('valuation_quantity')
-      validateAry.push('valuation_unit')
-      validateAry.push('valuation_unit_price')
-    }
     let postFile = []
     fileList.map((item, index, ary) => {
       postFile.push(item['path'])
@@ -307,9 +300,9 @@ class PushQuickOrder extends Component {
         let newData = {
           prj_id: values['prj_id'][0],
           construct_ids: values['construct_ids'][1],
-          valuation_quantity: values['valuation_quantity'] !== undefined ? values['valuation_quantity'][0] : '',
+          valuation_quantity: values['valuation_quantity'] !== undefined ? values['valuation_quantity'] : '',
           valuation_unit: values['valuation_unit'] !== undefined ? values['valuation_unit'][0] : '',
-          valuation_unit_price: values['valuation_unit_price'] !== undefined ? values['valuation_unit_price'][0] : '',
+          valuation_unit_price: values['valuation_unit_price'] !== undefined ? values['valuation_unit_price'] : '',
           start_lower_time: startLowerTime,
           start_upper_time: startUpperTime,
           end_lower_time: endLowerTime,
@@ -720,22 +713,14 @@ class PushQuickOrder extends Component {
                 )}
               </List>
               <List style={{ display: tenderWayRadioVal === 'A' ? 'none' : 'block' }} onClick={this.handleClickSing} className={`${style['input-form-list']} ${priceWaySelect ? style['selected-form-list'] : ''}`} renderHeader={() => '标的工作量'}>
-                {getFieldDecorator('valuation_unit', {
-                  rules: [
-                    { required: tenderWayRadioVal === 'B', message: '请选择标的工作量' },
-                  ],
-                })(
+                {getFieldDecorator('valuation_unit')(
                   <Picker data={unitData} extra='请选择标的工作量' cols={1} onChange={this.onSingePriceChange}>
                     <List.Item arrow='horizontal'></List.Item>
                   </Picker>
                 )}
               </List>
               <List style={{ display: tenderWayRadioVal === 'A' ? 'none' : 'block' }} renderHeader={() => '数量'} className={`${style['input-form-list']}`}>
-                {getFieldDecorator('valuation_quantity', {
-                  rules: [
-                    { required: tenderWayRadioVal === 'B', message: '请输入数量' },
-                  ],
-                })(
+                {getFieldDecorator('valuation_quantity')(
                   <InputItem
                     clear
                     placeholder='请输入数量'
@@ -743,11 +728,7 @@ class PushQuickOrder extends Component {
                 )}
               </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => { return `${tenderWayRadioVal === 'A' ? (tenderJson[tenderWayRadioVal] + '(单位：元)') : (tenderJson[tenderWayRadioVal] + '(单位：元)')}` }}>
-                {getFieldDecorator(tenderWayRadioVal === 'A' ? 'tender_amount' : 'valuation_unit_price', {
-                  rules: [
-                    { required: true, message: '请输入' + tenderJson[tenderWayRadioVal] },
-                  ],
-                })(
+                {getFieldDecorator(tenderWayRadioVal === 'A' ? 'tender_amount' : 'valuation_unit_price')(
                   <InputItem
                     clear
                     placeholder={'请输入' + tenderJson[tenderWayRadioVal]}

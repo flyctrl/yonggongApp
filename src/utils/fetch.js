@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2018-09-07 13:45:52
+* @Last Modified time: 2018-09-11 20:22:06
 */
 import * as Loading from './load.js'
 import storage from '../utils/storage'

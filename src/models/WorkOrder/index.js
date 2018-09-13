@@ -51,7 +51,7 @@ class WorkOrder extends Component {
     let { parentIndex } = this.state
     this.setState({ refreshing: true, isLoading: true })
     this.getStatusList(statusJson[parentIndex.toString()])
-    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop
+    const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 80
     this.genData().then((rdata) => {
       this.rData = rdata
       this.setState({
@@ -253,7 +253,7 @@ class WorkOrder extends Component {
     </div>
   }
   render() {
-    let { tabs, status, parentIndex, dataSource, isLoading, nodata, refreshing, subIndex } = this.state
+    let { tabs, status, parentIndex, dataSource, isLoading, nodata, refreshing, subIndex, height } = this.state
     let newTabs = []
     tabs.map((item) => {
       newTabs.push({ title: <div className={style['tabs-head']}><em>{item['qty']}</em><p>{item['title']}</p></div>, status: item['status'] })
@@ -345,7 +345,7 @@ class WorkOrder extends Component {
     )
     const footerShow = () => {
       if (isLoading) {
-        return '加载中'
+        return null
       } else if (nodata) {
         return '暂无数据'
       } else {
@@ -361,21 +361,23 @@ class WorkOrder extends Component {
         <Content>
           <SegmentedControl className={style.segmented} selectedIndex={parentIndex} onChange={this.handleSegmentedChange} values={['工单', '快单', '劳务招标']}/>
           <Tabs tabs={newTabs} onChange={this.handleChange} initialPage={0} page={subIndex} swipeable={false}>
-            <ListView
-              ref={(el) => {
-                this.lv = el
-              }}
-              dataSource={dataSource}
-              renderFooter={() => (<div className={style['render-footer']}>
-                {footerShow()}
-              </div>)}
-              renderRow={rows}
-              renderSeparator={separator}
-              style={{ height: '100%' }}
-              pullToRefresh={<PullToRefresh refreshing={refreshing} onRefresh={this.onRefresh} />}
-              onEndReached={this.onEndReached}
-              pageSize={10}
-            />
+            <div style={{ width: '100%', height: '100%' }}>
+              <ListView
+                ref={(el) => {
+                  this.lv = el
+                }}
+                dataSource={dataSource}
+                renderFooter={() => (<div className={style['render-footer']}>
+                  {footerShow()}
+                </div>)}
+                renderRow={rows}
+                renderSeparator={separator}
+                style={{ height: height }}
+                pullToRefresh={<PullToRefresh refreshing={refreshing} onRefresh={this.onRefresh} />}
+                onEndReached={this.onEndReached}
+                pageSize={10}
+              />
+            </div>
           </Tabs>
         </Content>
       </div>

@@ -65,13 +65,12 @@ class Message extends Component {
   render() {
     let { noticeList, tobeList, isload } = this.state
     return (
-      <div className={`${'contentBox'} ${style['message-content']}`}>
+      <div className={`contentBox ${style['message-content']}`}>
         <Content isHeader={false}>
           <Tabs tabs={tabs}
             initalPage={0}
             tabBarBackgroundColor='#FAFAFA'
             onChange={this.handleTabChange}
-            animated={false}
           >
             <div>
               {

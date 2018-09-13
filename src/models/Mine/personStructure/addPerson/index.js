@@ -8,20 +8,19 @@ import api from 'Util/api'
 import SelectDepart from '../selectDepart'
 import { rightWrongRadio } from 'Contants/fieldmodel'
 import { createForm } from 'rc-form'
-import 'antd-mobile/lib/calendar/style/css'
+import 'antd-mobile/lib/date-picker/style/css'
 import style from 'Src/models/PushOrder/form.css'
 
-const now = new Date()
-let Calendar = Loadable({
+let DatePicker = Loadable({
   loader: () => import('antd-mobile'),
-  modules: ['./Calendar'],
+  modules: ['./DatePicker'],
   webpack: () => [require.resolveWeak('antd-mobile')],
   loading: () => {
     return null
   },
   render(loaded, props) {
-    let Calendar = loaded.Calendar
-    return <Calendar {...props}/>
+    let DatePicker = loaded.DatePicker
+    return <DatePicker {...props}/>
   }
 })
 class AddPerson extends Component {
@@ -33,7 +32,9 @@ class AddPerson extends Component {
       typeRadioVal: 0,
       selectGroupId: '',
       entryDateShow: false,
-      birthDateShow: false
+      birthDateShow: false,
+      entryDate: null,
+      birthDate: null
     }
   }
 
@@ -63,6 +64,7 @@ class AddPerson extends Component {
     })
   }
   onEntryDateChange = () => { // 入职时间选择
+    console.log('onEntryDateChange')
     this.setState({
       entryDateShow: true
     })
@@ -251,27 +253,52 @@ class AddPerson extends Component {
                     {
                       getFieldDecorator('entry_date')(
                         <InputItem
+                          disabled
                           className={style['text-abled']}
-                          clear
-                          placeholder='请输入入职时间'
+                          placeholder='请选择入职时间'
                         ></InputItem>
                       )
                     }
                     <Icon type='right' color='#ccc' />
                   </div>
+                  {
+                    entryDateShow ? <DatePicker
+                      minDate={new Date(1970, 1, 1, 0, 0, 0)}
+                      visible={entryDateShow}
+                      mode='date'
+                      title='请选择入职日期'
+                      onDismiss={this.onEntryDateCancel}
+                      onOk={this.onEntryDateConfirm}
+                      value={this.state.entryDate}
+                      onChange={date => this.setState({ entryDate: date })}
+                    /> : null
+                  }
                 </List>
                 <List className={`${style['input-form-list']}`} renderHeader={() => '生日(非必填)'}>
                   <div onClick={this.onBirthChange}>
                     {
                       getFieldDecorator('birthday')(
                         <InputItem
-                          clear
-                          placeholder='请输入生日'
+                          disabled
+                          className={style['text-abled']}
+                          placeholder='请选择生日'
                         ></InputItem>
                       )
                     }
                     <Icon type='right' color='#ccc' />
                   </div>
+                  {
+                    birthDateShow ? <DatePicker
+                      minDate={new Date(1940, 1, 1, 0, 0, 0)}
+                      visible={birthDateShow}
+                      mode='date'
+                      title='请选择生日'
+                      onDismiss={this.onBirthDateCancel}
+                      onOk={this.onBirthDateConfirm}
+                      value={this.state.birthDate}
+                      onChange={date => this.setState({ birthDate: date })}
+                    /> : null
+                  }
                 </List>
               </form>
             </Content>
@@ -279,24 +306,6 @@ class AddPerson extends Component {
         </div>
         {
           showDepart ? <SelectDepart onClickSure={this.onClickSure} onClickBack={this.onClickBack} /> : null
-        }
-        {
-          entryDateShow ? <Calendar
-            type='one'
-            visible={entryDateShow}
-            onCancel={this.onEntryDateCancel}
-            onConfirm={this.onEntryDateConfirm}
-            defaultDate={now}
-          /> : null
-        }
-        {
-          birthDateShow ? <Calendar
-            type='one'
-            visible={birthDateShow}
-            onCancel={this.onBirthDateCancel}
-            onConfirm={this.onBirthDateConfirm}
-            defaultDate={now}
-          /> : null
         }
       </div>
     )

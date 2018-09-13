@@ -8,7 +8,7 @@ let baseUrl = '/api'
 
 if (process.env.NODE_ENV === 'production') {
   console.log('in PRO')
-  baseUrl = 'http://yg.yaque365.com/api/'
+  baseUrl = 'https://yg.yaque365.com/api/'
   if (TEST) {
     console.log('in TEST')
     baseUrl = 'https://yg-test.yaque365.com/api/'

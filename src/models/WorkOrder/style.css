@@ -178,8 +178,8 @@ html .my-work-list :global(.am-button:before) {
   }
   & :global(.am-list-footer) {
     & .render-footer {
-      height: 60px;
-      line-height: 20px;
+      height: 100px;
+      line-height: 100px;
       text-align: center;
     }
   }

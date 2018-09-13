@@ -72,5 +72,15 @@ html .comp-list :global(.am-button:before) {
         font-weight: 300;
       }
     }
+    & .status-txt {
+      float: right;
+      color: #0467e0;
+      height: 76px;
+      line-height: 76px;
+      font-size: 14px;
+      & span {
+        color: #888888;
+      }
+    }
   }
 }

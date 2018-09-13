@@ -26,7 +26,7 @@ const settleRadio = [
 
 const payModeRadio = [
   { value: 'A', label: '直接付款' },
-  { value: 'B', label: '委托付款' }
+  // { value: 'B', label: '委托付款' }
 ]
 
 const rightWrongRadio = [
@@ -36,7 +36,7 @@ const rightWrongRadio = [
 
 const assignTypeRadio = [
   { value: 0, label: '公开' },
-  { value: 1, label: '邀请' }
+  // { value: 1, label: '邀请' }
 ]
 
 const projectStatus = [

@@ -20,9 +20,6 @@ class RealNameAuth extends Component {
     }
   }
 
-  componentDidMount() {
-  }
-
   setImgstate = (images, name) => {
     if (name === 'cardfrontImg') {
       this.setState({ cardfrontImg: images })
@@ -32,7 +29,6 @@ class RealNameAuth extends Component {
   }
   uploadImg = async (images, name) => {
     if (images[0]) {
-      Toast.loading('上传中...', 0)
       let formData = new FormData()
       formData.append('image', images[0].file)
       formData.append('type', 5)
@@ -42,7 +38,6 @@ class RealNameAuth extends Component {
       } else {
         images = []
       }
-      Toast.hide()
       this.setImgstate(images, name)
     } else {
       this.setImgstate(images, name)

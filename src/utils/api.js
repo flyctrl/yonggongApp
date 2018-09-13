@@ -67,7 +67,7 @@ export default {
       return Fetch('/common/bank/list', params, 'get')
     },
     uploadImg(params) { // 图片上传
-      return FetchSave('/common/attach/image', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false })
+      return FetchSave('/common/attach/image', params, 'post', { 'Content-Type': 'multipart/form-data', loadtitle: '上传中...' })
     },
     getUnitlist(params) { // 获取计价列表
       return Fetch(prefix + '/worksheet/list/valuation_unit', params, 'get')
@@ -172,7 +172,7 @@ export default {
       return FetchSave(prefix + '/worksheetOrder/settle', params, 'post', { showloading: false })
     },
     worksheetDetail(params) { // 工单详情
-      return Fetch('/worksheet/show', params, 'get')
+      return Fetch(prefix + '/worksheet/show', params, 'get')
     }
   },
   Mine: { // 我的

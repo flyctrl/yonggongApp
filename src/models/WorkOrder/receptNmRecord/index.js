@@ -55,6 +55,18 @@ class BeginList extends Component {
       type: 2
     })
   }
+  showStatus = (item) => {
+    if (item['status'] === 1) {
+      return <div className={style['contrl-btn']}>
+        <Button onClick={this.handleSubmit} data-id={`${item['id']}`} type='primary' className={style['win-btn']}>确认</Button>
+        <Button data-id={`${item['id']}`} onClick={this.handleRefusal} className={style['fail-btn']}>拒绝</Button>
+      </div>
+    } else if (item['status'] === 2) {
+      return <div className={style['status-txt']}>已确认</div>
+    } else if (item['status'] === 3) {
+      return <div className={style['status-txt']}><span>已拒绝</span></div>
+    }
+  }
   showList = (dataSource) => {
     console.log(dataSource)
     if (dataSource.length === 0 && this.state.isloading) {
@@ -69,10 +81,9 @@ class BeginList extends Component {
             }
             <p>{item['created_at']}</p>
           </div>
-          <div className={style['contrl-btn']}>
-            <Button onClick={this.handleSubmit} data-id={`${item['id']}`} type='primary' className={style['win-btn']}>确认</Button>
-            <Button data-id={`${item['id']}`} onClick={this.handleRefusal} className={style['fail-btn']}>拒绝</Button>
-          </div>
+          {
+            this.showStatus(item)
+          }
         </li>
       })
     }

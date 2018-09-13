@@ -36,7 +36,6 @@ class Company extends Component {
   uploadImg = async (images, name) => {
     console.log('images', images)
     if (images[0]) {
-      Toast.loading('上传中...', 0)
       let formData = new FormData()
       formData.append('image', images[0].file)
       if (name === 'licenseImg') {
@@ -45,7 +44,6 @@ class Company extends Component {
         formData.append('type', 5)
       }
       const data = await api.Common.uploadImg(formData) || {}
-      console.log(data)
       if (data.path) {
         images[0].path = data.path
       } else {

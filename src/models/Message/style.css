@@ -27,7 +27,8 @@ html .message-content :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab:
         font-size: 14px;
       }
       & :global(.am-tabs-default-bar-tab-active) {
-        color: #333;
+        color: #0467e0;
+        font-weight: bolder;
       }
       & :global(.am-tabs-default-bar-underline) {
         bottom: 5px;
