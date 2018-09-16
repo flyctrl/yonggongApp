@@ -350,6 +350,9 @@ export default {
     },
     getTodayTodo(params) { // 获取今日代办
       return Fetch(prefix + '/user_todo/list', params, 'get')
+    },
+    getBannerList(params) { // 获取banner
+      return Fetch('/common/banner/list', params, 'get')
     }
   },
   Message: { // 消息

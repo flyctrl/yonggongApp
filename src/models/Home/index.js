@@ -10,23 +10,25 @@ import { Header, Content } from 'Components'
 import { Flex, WingBlank, Carousel } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import NewIcon from 'Components/NewIcon'
-import homeimg from 'Src/assets/homimg.png'
 import style from './style.css'
 import api from 'Util/api'
 class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      bannerList: [],
       sysInforms: [],
       companyDetail: [],
       todoList: [],
-      isLoading: true
+      isLoading: true,
+      isBannerLoading: true
     }
   }
   componentWillMount() {
     this.getSystemInforms()
     this.getMineDetail()
     this.getTodayTodo()
+    this.getBannerList()
   }
   getMineDetail = async() => {
     const data = await api.Mine.checkDetails.info({ // 查看企业资料
@@ -53,7 +55,17 @@ class Home extends Component {
       })
     }
   }
-
+  getBannerList = async () => {
+    this.setState({ isBannerLoading: true })
+    const data = await api.Home.getBannerList({ // 获取banner
+    }) || false
+    if (data) {
+      this.setState({
+        bannerList: data.list || [],
+        isBannerLoading: false
+      })
+    }
+  }
   handlePushNormalOrder = () => {
     this.props.match.history.push(urls.PUSHNORMALORDER)
   }
@@ -72,7 +84,8 @@ class Home extends Component {
     this.props.match.history.push(urls.MESSAGE)
   }
   render() {
-    const { sysInforms, companyDetail, todoList, isLoading } = this.state
+    const { sysInforms, companyDetail, todoList, isLoading, bannerList } = this.state
+    console.log(bannerList, '123')
     return (
       <div className='contentBox'>
         <div className={style['usr-home-content']}>
@@ -84,7 +97,17 @@ class Home extends Component {
           />
           <Content>
             <div className={style['home-silder']}>
-              <img src={homeimg} />
+              {
+                bannerList.length !== 0 ? <div>
+                  <Carousel autoplay infinite>
+                    {
+                      bannerList.map(item => {
+                        return <img key={item['id']} src={item['url']}/>
+                      })
+                    }
+                  </Carousel>
+                </div> : null
+              }
             </div>
             <div className={style['flex-container']}>
               <Flex>
