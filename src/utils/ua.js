@@ -13,6 +13,7 @@ export const jcy = !!match
 export const jcyVersion = jcy && match[1]
 export const ios = iPad || iphone
 export const isIphoneX = /iphone/gi.test(navigator.userAgent) && (screen.height === 812 && screen.width === 375)
+export const ismobile = ua.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
 export default {
   ios,
   iphone,
@@ -21,5 +22,6 @@ export default {
   wx,
   jcy,
   jcyVersion,
-  isIphoneX
+  isIphoneX,
+  ismobile
 }

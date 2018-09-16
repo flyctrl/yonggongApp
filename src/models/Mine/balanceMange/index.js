@@ -4,7 +4,7 @@ import { Tabs, Button } from 'antd-mobile'
 import api from 'Util/api'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
-import { balanceType, worksheetType, orderStatus } from 'Contants/fieldmodel'
+import { balanceType, worksheetType, payOrderStatus } from 'Contants/fieldmodel'
 import history from 'Util/history'
 import style from './style.css'
 
@@ -45,14 +45,13 @@ class BalanceMange extends Component {
           <em>{worksheetType[item['worksheet_type']]}</em>
           <div className={style['info']}>
             <p><i>项目名称：</i>{item['worksheet_ext']['prj_name']}</p>
-            <p><i>工单状态：</i>{orderStatus[item['status']]}</p>
+            <p><i>工单状态：</i>{payOrderStatus[item['status']]}</p>
           </div>
           <span>未结算</span>
         </section>
         <footer className='my-bottom-border'>
           <div className={style['money-info']}>
             <p>应付款：<em>{tooler.addCommas(item['amount'])}元</em></p>
-            <span>（包含保证金：{tooler.addCommas(item['deposit'])}元）</span>
           </div>
           <div className={style['money-btn']}>
             <Button data-id={`${item['id']}&&${item['apply_record_id']}`} type='ghost'>去结算</Button>
@@ -68,14 +67,13 @@ class BalanceMange extends Component {
           <em>{worksheetType[item['worksheet_type']]}</em>
           <div className={style['info']}>
             <p><i>项目名称：</i>{item['worksheet_ext']['prj_name']}</p>
-            <p><i>工单状态：</i>{orderStatus[item['status']]}</p>
+            <p><i>工单状态：</i>{payOrderStatus[item['status']]}</p>
           </div>
           <span>部分结算</span>
         </section>
         <footer className='my-bottom-border'>
           <div className={style['money-info']}>
             <p>应付款：<em>{tooler.addCommas(item['amount'])}元</em></p>
-            <span>（包含保证金：{tooler.addCommas(item['deposit'])}元）</span>
           </div>
           <div className={style['money-btn']}>
             <Button data-id={`${item['id']}&&${item['apply_record_id']}`} type='ghost'>去结算</Button>
@@ -91,14 +89,13 @@ class BalanceMange extends Component {
           <em>{worksheetType[item['worksheet_type']]}</em>
           <div className={style['info']}>
             <p><i>项目名称：</i>{item['worksheet_ext']['prj_name']}</p>
-            <p><i>工单状态：</i>{orderStatus[item['status']]}</p>
+            <p><i>工单状态：</i>{payOrderStatus[item['status']]}</p>
           </div>
           <span>已结算</span>
         </section>
         <footer className='my-bottom-border'>
           <div className={style['money-info']}>
             <p>应付款：<em>{tooler.addCommas(item['amount'])}元</em></p>
-            <span>（包含保证金：{tooler.addCommas(item['deposit'])}元）</span>
           </div>
         </footer>
       </li>

@@ -45,8 +45,8 @@
         float: right;
         color: #ABB4BB;
         & p {
-          height: 24px;
-          line-height: 24px;
+          height: 38px;
+          line-height: 38px;
           font-size: 14px;
           & em {
             color: #0467E0;
@@ -62,7 +62,7 @@
       & .money-btn {
         float: right;
         height: 100%;
-        margin-right: 2px;
+        margin-right: 5px;
         & :global(.am-button-ghost) {
           height: 32px;
           line-height: 32px;

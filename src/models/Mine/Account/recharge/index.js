@@ -6,6 +6,7 @@
 import React, { Component } from 'react'
 import { List, InputItem, Toast, Button, Radio } from 'antd-mobile'
 import * as urls from 'Contants/urls'
+// import { ismobile } from 'Util/ua'
 import { Header, Content } from 'Components'
 import pingpp from 'pingpp-js'
 import api from 'Util/api'
@@ -15,9 +16,8 @@ import style from './style.css'
 
 const RadioItem = Radio.RadioItem
 const paywayJson = {
-  0: 'yeepay_wap',
-  99: 'wx_wap',
-  100: 'alipay_wap'
+  99: 'wx',
+  100: 'alipay'
 }
 class Rechange extends Component {
   constructor(props) {
@@ -27,9 +27,7 @@ class Rechange extends Component {
       hasError: false,
       value: '',
       checkval: 0,
-      payway: [
-        { value: 0, label: '招商银行', extra: '尾号8843', icon: <img src='https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1526905577349&di=a3da7639f5b20d172a5ceb18756d0ef5&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D2765035733%2C1282524408%26fm%3D214%26gp%3D0.jpg' /> }
-      ],
+      payway: [],
       otherway: [
         { value: 99, label: '微信支付', extra: '微信安全支付', icon: <NewIcon type='icon-weixinzhifu' /> },
         { value: 100, label: '支付宝支付', extra: '支付宝安全支付', icon: <NewIcon type='icon-zhifubao' /> },
@@ -66,17 +64,35 @@ class Rechange extends Component {
   handleRecharge = async () => {
     let { checkval, value } = this.state
     const data = await api.Mine.account.recharge({
-      channel: paywayJson[checkval],
-      amount: value
+      channel: paywayJson[checkval] ? paywayJson[checkval] : 'yeepay',
+      amount: value,
+      cardId: checkval
     }) || false
     if (data) {
       console.log(data)
-      pingpp.createPayment(data, function(result, err) {
-        // alert(JSON.stringify(result))
+      console.log(this.props.match)
+      if (paywayJson[checkval]) {
+        pingpp.createPayment(data, function(result, err) {
+          // alert(JSON.stringify(result))
+        })
+      } else {
+        window.location.href = data.url
+      }
+    }
+  }
+  getDefaultCard = async () => {
+    const data = await api.Mine.account.bindDefaultCard({}) || false
+    if (data) {
+      this.setState({
+        payway: [
+          { value: data['card_id'], label: data['bank_name'], extra: '尾号' + data['card_no_back'], icon: <img src={data['bank_logo']} /> }
+        ],
+        checkval: data['card_id']
       })
     }
   }
   componentDidMount() {
+    this.getDefaultCard()
     console.log(pingpp)
   }
 

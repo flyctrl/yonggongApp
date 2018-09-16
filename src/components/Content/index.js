@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { isIphoneX } from 'Util/ua'
+// import { isIphoneX } from 'Util/ua'
 import style from './style.css'
 import history from 'Util/history'
 import routes from 'Src/Router/routerConf'
@@ -40,17 +40,19 @@ class Content extends Component {
     let normalClass = ''
     let animateClass = ''
     if (this.props.isHeader) { // 有头部
-      if (isIphoneX) {
-        normalClass = style['marginTop83']
-      } else {
-        normalClass = style['marginTop45']
-      }
+      // if (isIphoneX) {
+      //   normalClass = style['marginTop83']
+      // } else {
+      //   normalClass = style['marginTop45']
+      // }
+      normalClass = style['marginTop45']
     } else { // 无头部
-      if (isIphoneX) {
-        normalClass = style['marginTop38']
-      } else {
-        normalClass = style['marginTop0']
-      }
+      // if (isIphoneX) {
+      //   normalClass = style['marginTop38']
+      // } else {
+      //   normalClass = style['marginTop0']
+      // }
+      normalClass = style['marginTop0']
     }
 
     if (this.state.isMenuPage && this.state.animated) { // 不是单页 有菜单

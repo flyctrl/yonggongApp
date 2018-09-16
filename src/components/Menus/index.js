@@ -10,7 +10,7 @@ import NewIcon from 'Components/NewIcon'
 import history from 'Util/history'
 import * as urls from 'Contants/urls'
 import menuStyle from './style.css'
-import { isIphoneX } from 'Util/ua'
+// import { isIphoneX } from 'Util/ua'
 import TouchFeedback from 'Util/touchFeedback.js'
 
 const data = [
@@ -57,7 +57,6 @@ class AppMenu extends Component {
   }
 
   componentWillMount() {
-    console.log('header:', history.location.pathname)
     data.map((value, index, ary) => {
       menuAry.push(value['key'])
     })
@@ -78,7 +77,7 @@ class AppMenu extends Component {
   render() {
     let { visible, selectedTab } = this.state
     return (
-      <div className={ isIphoneX ? menuStyle['tabBody-fix-iphoneX'] : menuStyle['tabBody'] }>
+      <div className={ menuStyle['tabBody'] }>
         {
           this.props.children
         }

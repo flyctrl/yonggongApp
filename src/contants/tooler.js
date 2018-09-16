@@ -5,6 +5,7 @@
 * @Last Modified time: 2018-06-02 17:04:01
 */
 import arrayTreeFilter from 'array-tree-filter'
+import history from 'Util/history'
 
 export const getSel = (value, optionsObj) => { // 根据键值筛选数结果数据中的对象，value:需要筛选树的value数据，optionsObj: 所在的树的数据
   if (!value) {
@@ -34,8 +35,8 @@ export const returnFloat = (number) => { // 金额加小数点，保留2位
 
 export const getQueryString = (name) => { // url转json
   let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
-  console.log(window.location.search)
-  let r = window.location.search.substr(1).match(reg)
+  console.log(history)
+  let r = history.location.search.substr(1).match(reg)
   if (r !== null) {
     return r[2]
   }

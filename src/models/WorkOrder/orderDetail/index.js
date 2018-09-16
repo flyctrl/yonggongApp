@@ -111,7 +111,7 @@ class OrderDetail extends Component {
                   <dt>附件</dt>
                   {
                     dataSource['attachment'] !== undefined ? dataSource['attachment'].map((item, index) => {
-                      return <dd className='my-bottom-border' key={index}><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a target='_blank' href={item['url']}>{item['name']}</a></dd>
+                      return <dd className='my-bottom-border' key={index}><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a href={item['url']} download={item['name']}>{item['name']}</a></dd>
                     }) : null
                   }
                 </dl>

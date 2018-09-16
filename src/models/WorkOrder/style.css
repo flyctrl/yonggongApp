@@ -134,6 +134,9 @@ html .my-work-list :global(.am-button:before) {
         margin-right: 5px;
         line-height: 12px;
       }
+      & .variable {
+        margin-right: 6px;
+      }
       & .address {
         & .icon {
           width: 24px;

@@ -1,12 +1,13 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2018-09-11 20:22:06
+* @Last Modified time: 2018-09-16 14:46:26
 */
 import * as Loading from './load.js'
 import storage from '../utils/storage'
 import axios from 'axios'
 import { baseUrl } from './index'
+import history from 'Util/history'
 
 let fetcher = axios.create({
   baseURL: baseUrl,
@@ -22,6 +23,7 @@ let fetcher = axios.create({
   headers: {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cach'
   }
 })
 
@@ -43,26 +45,27 @@ fetcher.interceptors.response.use(function (response) {
     Loading.hideLoading()
   }
   if (response.data.code === 10013) { // 未登录
-    window.location.href = '/Login/login'
+    history.push('/Login/login')
   } else if (response.data.code === 10011) { // token过期
     let refreshToken = storage.get('refreshToken')
     axios.post(baseUrl + '/employ/refresh', { refresh_token: refreshToken }).then(function(res) {
       console.log(res)
       if (res.data.code === 10012) {
-        window.location.href = '/Login/login'
+        history.push('/Login/login')
       }
       storage.set('Authorization', 'Bearer ' + res.data.data.access_token)
       storage.set('refreshToken', res.data.data.refresh_token)
-      window.location.reload()
+      // window.location.reload()
+      history.go(0)
     }).catch(function(err) {
       console.log(err)
     })
   } else if (response.data.code === 16020006) { // 实名认证 未通过
-    window.location.href = '/Mine/realNameAuth'
+    history.push('/Mine/realNameAuth')
   } else if (response.data.code === 16030001) { // 企业未认证 未提交认证
-    window.location.href = '/Mine/companyAuth'
+    history.push('/Mine/companyAuth')
   } else if (response.data.code === 16030007 || response.data.code === 16030006) { // 企业未认证 未通过
-    window.location.href = '/Mine/companyAuthDetail'
+    history.push('/Mine/companyAuthDetail')
   }
   return response.data
 }, function (error) {

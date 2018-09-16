@@ -247,7 +247,13 @@ class WorkOrder extends Component {
           })
         }</div>
         <div>起止日期：{`${rowData['start_lower_time']} ~ ${rowData['end_upper_time']}`}</div>
-        <div>单价：{`${rowData['valuation_unit_price']}  数量：${rowData['valuation_quantity']}`}</div>
+        <div>
+          {
+            rowData['variable'].map((item) => {
+              return <span className={style['variable']}>{item['label'] + ':' + item['value']}</span>
+            })
+          }
+        </div>
         <div className={style.address}>施工地址：{rowData['construction_place']}</div>
       </div>
     </div>

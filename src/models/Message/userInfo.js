@@ -6,7 +6,6 @@
 */
 import React, { Component } from 'react'
 // import { Icon } from 'antd-mobile'
-import history from 'Util/history'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
@@ -41,10 +40,10 @@ class UserInfo extends Component {
   // let { urls } = this.state
     let url = tooler.getQueryString('url')
     if (url) {
-      history.push(urls[url])
+      this.props.match.history.push(urls[url])
     } else {
       // history.push(urls.HOME)
-      this.props.onBack()
+      this.props.match.history.goBack()
     }
   }
   render() {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { NavBar, SearchBar } from 'antd-mobile'
 import style from './style.css'
-import { isIphoneX } from 'Util/ua'
+// import { isIphoneX } from 'Util/ua'
 import NewIcon from 'Components/NewIcon'
 import classnames from 'classnames'
 
@@ -13,7 +13,7 @@ class Header extends Component {
     const { title, titleClick, leftIcon, leftTitle1, leftClick1, leftClick2, leftTitle2, rightIcon, rightTitle, rightClick, searchTitle, onSearchSubmit, noLine, cancelText, autoFocusInst, onSearchFocus, onSearchCancel } = this.props
     return <div className={classnames(style.header, this.props.className)}>
       {
-        isIphoneX ? <div className={style['fix-iphoneX-top']}/> : null
+        // isIphoneX ? <div className={style['fix-iphoneX-top']}/> : null
       }
       <NavBar
         mode='light'

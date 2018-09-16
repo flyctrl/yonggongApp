@@ -67,6 +67,15 @@ const orderStatus = {
   7: '已完工',
 }
 
+const payOrderStatus = {
+  1: '待开工',
+  2: '施工中',
+  3: '待审核',
+  4: '已失效',
+  5: '待结算',
+  6: '已完成'
+}
+
 const attendanceList = { // 考勤打卡 统计
   1: '正常打卡',
   2: '异常',
@@ -118,5 +127,6 @@ export {
   assignTypeRadio,
   tenderWayRadio,
   applyInvoice,
-  invoiceStatus
+  invoiceStatus,
+  payOrderStatus
 }
