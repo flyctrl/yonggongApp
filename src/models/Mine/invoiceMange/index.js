@@ -19,13 +19,13 @@ class InvoiceMange extends Component {
         <Content>
           <ul className={style['invoice-list']}>
             <li onClick={() => { history.push(urls.INVOICELISTONE) }}>
-              <span>代收发票</span>
+              <span>待收发票</span>
               <nav >
                 <Icon type='right' size='md' color='#ccc'/>
               </nav>
             </li>
             <li onClick={() => { history.push(urls.INVOICELISTTWO) }}>
-              <span>代开发票</span>
+              <span>待开发票</span>
               <nav >
                 <Icon type='right' size='md' color='#ccc'/>
               </nav>

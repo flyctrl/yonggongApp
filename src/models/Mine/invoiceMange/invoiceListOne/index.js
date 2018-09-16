@@ -37,7 +37,7 @@ class InvoiceListOne extends Component {
     return (
       <div className={`${style['invoiceBox']} pageBox`}>
         <Header
-          title='代收发票管理'
+          title='待收发票管理'
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {

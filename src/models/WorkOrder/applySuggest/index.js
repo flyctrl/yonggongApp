@@ -30,13 +30,18 @@ class ApplySuggest extends Component {
       }
     })
   }
+  handleClick = () => {
+    let id = tooler.getQueryString('id')
+    this.props.match.history.push(`${urls.APPLYDETAIL}?id=${id}`)
+  }
   render() {
     const { getFieldDecorator } = this.props.form
     return (
       <div className='pageBox'>
         <Header
           leftClick1={() => {
-            history.push(urls.APPLYDETAIL)
+            // history.push(urls.APPLYDETAIL)
+            this.handleClick()
           }}
           rightClick={() => {
             this.handleSubmitReject()

@@ -27,7 +27,7 @@ html .leavesitu-list :global(.my-full-border:before) {
         line-height: 22px;
         font-size: 14px;
         color: #8A96A0;
-        margin-top: 4px;
+        margin-top: 8px;
       }
     }
     & footer {
@@ -37,7 +37,7 @@ html .leavesitu-list :global(.my-full-border:before) {
         height: 24px;
         line-height: 24px;
         padding: 0 10px;
-        margin-top: 14px;
+        margin-top: 5px;
         font-size: 12px;
         color: #0467E0;
       }

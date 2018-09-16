@@ -76,7 +76,7 @@ class InvoiceDetail extends Component {
     return (
       <div className='pageBox'>
         <Header
-          title='代开发票详情'
+          title='待开发票详情'
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
