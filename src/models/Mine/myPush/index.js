@@ -73,7 +73,7 @@ class MyPush extends Component {
                     return <li key={index} className='my-bottom-border'>
                       <em>{worksheetType[item['worksheet_type']]}</em>
                       <section>
-                        <p>工单号：{item['worksheet_no']}</p>
+                        <p>工单名称：{item['worksheet_no']}</p>
                         <p><span>开工日期：</span>{`${item['start_lower_time']} ~ ${item['start_upper_time']}`}</p>
                       </section>
                       <a>{orderStatus[item['status']]}</a>
