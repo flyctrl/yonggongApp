@@ -21,7 +21,7 @@ class CompanyAuthDetail extends Component {
     const data = await api.auth.RealNameDetail({}) || false
     if (data) {
       this.setState({
-        dataSource: data.data,
+        dataSource: data,
         isLoading: true
       })
     }
@@ -80,7 +80,7 @@ class CompanyAuthDetail extends Component {
               <List className={ownStyle['img-list']} renderHeader={() => '身份证正面'}>
                 <img src={dataSource['identity_card_front']} />
               </List>
-              <List className={ownStyle['img-list']} renderHeader={() => '身份证反面'}>
+              <List className={`${ownStyle['img-list']} ${ownStyle['img-list-last']}`} renderHeader={() => '身份证反面'}>
                 <img src={dataSource['identity_card_back']} />
               </List>
             </div> : null
