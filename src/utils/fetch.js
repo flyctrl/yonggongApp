@@ -62,6 +62,8 @@ fetcher.interceptors.response.use(function (response) {
     })
   } else if (response.data.code === 16020006) { // 实名认证 未通过
     history.push('/Mine/realNameAuth')
+  } else if (response.data.code === 16020012) { // 实名认证 审核中
+    history.push('/Mine/realNameDetail')
   } else if (response.data.code === 16030001) { // 企业未认证 未提交认证
     history.push('/Mine/companyAuth')
   } else if (response.data.code === 16030007 || response.data.code === 16030006) { // 企业未认证 未通过

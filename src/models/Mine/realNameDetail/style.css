@@ -1,0 +1,76 @@
+html .aptide :global(.am-list-body::after) {
+  height: 0;
+}
+html .img-list :global(.am-list-body::after) {
+  bottom: -5px;
+}
+
+.comp-content {
+  overflow-y: auto;
+  height: 100%;
+}
+.aptide-order-box {
+  height: 100%;
+  & .aptide {
+    &:global(.am-list) {
+      height: 80px;
+      & :global(.am-list-body) {
+        height: 80px;
+        text-align: center;
+        & p {
+          display: block;
+          font-size: 14px;
+          height: 36px;
+          line-height: 36px;
+        }
+      }
+    }
+    &:global(.am-list) {
+      & :global(.am-list-body) {
+        & .going {
+          & p {
+            color: #0467e0;
+          }
+        }
+        & .suced {
+          & p {
+            color: #0ed904;
+          }
+        }
+        & .failed {
+          & p {
+            color: #fb0404;
+          }
+          & :global(.am-button-small) {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 8px;
+            color: #0467e0;
+            border-color: #0467e0;
+          }
+        }
+      }
+    }
+  }
+  & .aptfailed {
+    &:global(.am-list) {
+      height: 110px;
+      & :global(.am-list-body) {
+        height: 110px;
+      }
+    }
+  }
+  & .img-list {
+    &:global(.am-list) {
+      height: auto;
+      & :global(.am-list-body) {
+        height: auto;
+        line-height: normal;
+        & img {
+          display: block;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
