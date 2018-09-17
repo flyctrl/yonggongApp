@@ -20,10 +20,12 @@ class InvoiceListOne extends Component {
     })
     const data = await api.Mine.invoiceMange.invoiceListOne({ // 代收发票
     }) || false
-    this.setState({
-      invoiceData: data.list,
-      isLoading: true
-    })
+    if (data) {
+      this.setState({
+        invoiceData: data.list,
+        isLoading: true
+      })
+    }
   }
   handleApplyInvoice = (e) => {
     let applyId = e.currentTarget.getAttribute('data-id')

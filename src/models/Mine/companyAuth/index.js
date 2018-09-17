@@ -60,7 +60,7 @@ class Company extends Component {
     this.uploadImg(img, name)
   }
   handleSubmit = () => {
-    const validateAry = ['name', 'legal', 'card_no', 'credit_code', 'mobile', 'license', 'card_front', 'card_back']
+    const validateAry = ['name', 'legal', 'card_no', 'address', 'credit_code', 'mobile', 'license', 'card_front', 'card_back']
     const { validateFields, getFieldError } = this.props.form
     validateFields(async (err, value) => {
       if (!err) {
@@ -123,6 +123,16 @@ class Company extends Component {
               }]
             })(
               <InputItem placeholder='请输入身份证号'/>
+            )}
+          </div>
+          <div className={`${style.input} my-bottom-border`}>
+            <div className={style['title']}>地址</div>
+            {getFieldDecorator('address', {
+              rules: [{
+                required: true, message: '请输入地址',
+              }]
+            })(
+              <InputItem placeholder='请输入地址'/>
             )}
           </div>
           <div className={`${style.input} my-bottom-border`}>

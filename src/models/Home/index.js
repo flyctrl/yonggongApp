@@ -85,7 +85,6 @@ class Home extends Component {
   }
   render() {
     const { sysInforms, companyDetail, todoList, isLoading, bannerList } = this.state
-    console.log(bannerList, '123')
     return (
       <div className='contentBox'>
         <div className={style['usr-home-content']}>

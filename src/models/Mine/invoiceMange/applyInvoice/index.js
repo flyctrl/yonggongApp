@@ -27,6 +27,7 @@ class ApplyInvoice extends Component {
       totalRadioValue: 1,
       settleRadioValue: 1,
       invoiceType: [],
+      isLoading: true
     }
     this.onHandleSubmit = this.onHandleSubmit.bind(this)
   }
@@ -37,13 +38,17 @@ class ApplyInvoice extends Component {
     })
   }
   getInvoiceList = async() => {
+    this.setState({ isLoading: true })
     let orderNo = tooler.parseURLParam()
     const data = await api.Mine.invoiceMange.applyInvoicePlatform({ // 可选发票申请平台
       order_no: orderNo.order_no
     }) || false
-    this.setState({
-      invoiceType: data
-    })
+    if (data) {
+      this.setState({
+        invoiceType: data,
+        isLoading: false
+      })
+    }
   }
   pushInvoiceList = async(postData) => {
     let orderNo = tooler.parseURLParam()
@@ -104,7 +109,7 @@ class ApplyInvoice extends Component {
   }
   render() {
     const { getFieldProps } = this.props.form
-    const { valModeDataValue, totalRadioValue, settleRadioValue, invoiceType } = this.state
+    const { valModeDataValue, totalRadioValue, settleRadioValue, invoiceType, isLoading } = this.state
     return (
       <div className='pageBox'>
         <div>
@@ -113,7 +118,7 @@ class ApplyInvoice extends Component {
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {
-              history.push(urls.INVOICEMANGE)
+              history.push(urls.INVOICELISTONE)
             }}
           />
           <Content>
@@ -243,7 +248,7 @@ class ApplyInvoice extends Component {
                 ></InputItem>
               </List>
               <List className={style['btn-form-list']}>
-                <Button onClick={this.onHandleNext} type='primary'>确认开票</Button>
+                <Button disabled={isLoading} onClick={this.onHandleNext} type='primary'>确认开票</Button>
               </List>
             </form>
           </Content>
