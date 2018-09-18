@@ -20,8 +20,8 @@ class SuccessPage extends Component {
   async componentDidMount() {
     let ordernum = tooler.getQueryString('ygOrderNo')
     // let payway = tooler.getQueryString('orderNO')
-    const data = await api.Mine.account.selectDetail({
-      ygOrderNo: ordernum
+    const data = await api.Common.getRechargeInfo({
+      orderNo: ordernum
     }) || false
     this.setState({
       orderDetail: data

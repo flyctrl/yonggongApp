@@ -80,6 +80,9 @@ export default {
     },
     getEmployAllStatus(params) { // 获取企业所有状态
       return Fetch(prefix + '/company/status', params, 'get')
+    },
+    getRechargeInfo(params) {
+      return Fetch('/common/recharge/info', params, 'get')
     }
   },
   auth: {
