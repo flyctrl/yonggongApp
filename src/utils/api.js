@@ -101,6 +101,9 @@ export default {
     realName(params) { // 实名认证
       return FetchSave(prefix + '/user/identity', params, 'post', { showloading: false })
     },
+    RealNameDetail(params) { // 实名认证详情
+      return Fetch(prefix + '/user/identity', params, 'get')
+    },
     validationPsw(params) { // 校验验证码和手机号
       return Fetch(prefix + '/verify', params)
     },

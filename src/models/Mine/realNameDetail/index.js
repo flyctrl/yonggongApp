@@ -11,21 +11,23 @@ class CompanyAuthDetail extends Component {
     super(props)
     this.state = {
       dataSource: {},
-      isloading: false
+      isLoading: false
     }
   }
   getAptitudeDetail = async () => {
     this.setState({
-      isloading: false
+      isLoading: false
     })
-    const data = await api.Mine.companyAuth.aptitudeDetail({}) || false
-    this.setState({
-      dataSource: data,
-      isloading: true
-    })
+    const data = await api.auth.RealNameDetail({}) || false
+    if (data) {
+      this.setState({
+        dataSource: data,
+        isLoading: true
+      })
+    }
   }
   handleRepeat = async () => {
-    this.props.match.history.push(urls.COMPANYAUTH)
+    this.props.match.history.push(urls.REALNAMEAUTH)
   }
   showStatus = (status, fialmsg = '') => {
     if (status === 0) {
@@ -50,11 +52,11 @@ class CompanyAuthDetail extends Component {
     this.getAptitudeDetail()
   }
   render() {
-    let { dataSource, isloading } = this.state
+    let { dataSource, isLoading } = this.state
     return (
       <div className='pageBox'>
         <Header
-          title='企业认证详情'
+          title='实名认证详情'
           leftIcon={dataSource['status'] === 1 ? 'icon-back' : ''}
           leftTitle1={dataSource['status'] === 1 ? '返回' : ''}
           leftClick1={() => {
@@ -63,38 +65,23 @@ class CompanyAuthDetail extends Component {
         />
         <Content className={ownStyle['comp-content']}>
           {
-            isloading ? <div className={`${style['show-order-box']} ${ownStyle['aptide-order-box']}`}>
+            isLoading ? <div className={`${style['show-order-box']} ${ownStyle['aptide-order-box']}`}>
               <List className={`${ownStyle['aptide']} ${dataSource['status'] === 2 ? ownStyle['aptfailed'] : ''}`}>
                 {
                   this.showStatus(dataSource['status'], dataSource['remark'])
                 }
               </List>
-              <List renderHeader={() => '企业名称'}>
-                {dataSource['company_name']}
-              </List>
-              <List renderHeader={() => '法人'}>
-                {dataSource['company_legal']}
+              <List renderHeader={() => '姓名'}>
+                {dataSource['identity_name']}
               </List>
               <List renderHeader={() => '身份证号码'}>
-                {dataSource['company_card_no']}
-              </List>
-              <List renderHeader={() => '统一社会信用代码'}>
-                {dataSource['company_credit_code']}
-              </List>
-              <List renderHeader={() => '法人手机号'}>
-                {dataSource['company_mobile']}
-              </List>
-              <List renderHeader={() => '法人地址'}>
-                {dataSource['company_address']}
-              </List>
-              <List className={ownStyle['img-list']} renderHeader={() => '营业执照'}>
-                <img src={dataSource['company_license']} />
+                {dataSource['identity_card_no']}
               </List>
               <List className={ownStyle['img-list']} renderHeader={() => '身份证正面'}>
-                <img src={dataSource['company_card_front']} />
+                <img src={dataSource['identity_card_front']} />
               </List>
               <List className={`${ownStyle['img-list']} ${ownStyle['img-list-last']}`} renderHeader={() => '身份证反面'}>
-                <img src={dataSource['company_card_back']} />
+                <img src={dataSource['identity_card_back']} />
               </List>
             </div> : null
           }

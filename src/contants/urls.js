@@ -48,6 +48,7 @@ export const BANKCARD = `${ACCOUNT}/bankCard` // 银行卡
 export const COMPANYAUTH = `${MINE}/companyAuth` // 企业认证
 export const REALNAMEAUTH = `${MINE}/realNameAuth` // 个人认证
 export const COMPANYAUTHDETAIL = `${MINE}/companyAuthDetail` // 企业认证详情
+export const REALNAMEAUTHDETAIL = `${MINE}/realNameDetail` // 个人认证详情
 export const INVOICEMANGE = `${MINE}/invoiceMange` // 发票管理
 export const INVOICELISTONE = `${INVOICEMANGE}/invoiceListOne` // 代收发票管理
 export const INVOICELISTTWO = `${INVOICEMANGE}/invoiceListTwo` // 代开发票管理

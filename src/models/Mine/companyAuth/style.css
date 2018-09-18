@@ -100,7 +100,7 @@
   & .submit {
     margin: 16px;
     font-size: 18px;
-    position: absolute !important;
+    /* position: absolute !important; */
     height: 47px;
     left: 0;
     right: 0;

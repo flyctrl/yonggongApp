@@ -76,7 +76,7 @@ html .img-list :global(.am-list-body::after) {
   & .img-list-last {
     &:global(.am-list) {
       & :global(.am-list-body) {
-          margin-bottom: 70px
+        margin-bottom: 70px;
       }
     }
   }
