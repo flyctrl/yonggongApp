@@ -1,152 +1,153 @@
 /**
  * @Author: baosheng
- * @Date: 2018-05-21 15:10:11
- * @Title: 充值
+ * @Date: 2018-05-22 10:46:29
+ * @Title: 提现
  */
 import React, { Component } from 'react'
-import { List, InputItem, Toast, Button, Radio } from 'antd-mobile'
+import { List, InputItem, Button, Radio } from 'antd-mobile'
 import * as urls from 'Contants/urls'
-// import { ismobile } from 'Util/ua'
-import { Header, Content } from 'Components'
-import pingpp from 'pingpp-js'
 import api from 'Util/api'
-import { addCommas } from 'Contants/tooler'
-import NewIcon from 'Components/NewIcon'
+import { Header, Content } from 'Components'
 import style from './style.css'
 
+const Item = List.Item
+const Brief = Item.Brief
 const RadioItem = Radio.RadioItem
-const paywayJson = {
-  99: 'wx',
-  100: 'alipay'
-}
-class Rechange extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      maxMoney: 500000,
-      hasError: false,
-      value: '',
-      checkval: 0,
-      payway: [],
-      otherway: [
-        { value: 99, label: '微信支付', extra: '微信安全支付', icon: <NewIcon type='icon-weixinzhifu' /> },
-        { value: 100, label: '支付宝支付', extra: '支付宝安全支付', icon: <NewIcon type='icon-zhifubao' /> },
-      ]
-    }
-  }
-  onErrorClick = () => {
-    if (this.state.hasError) {
-      Toast.info('超出最大金额')
-    }
+class WithdrawCash extends Component {
+  state = {
+    amount: '',
+    hasError: false,
+    cashValue: '',
+    showlist: false,
+    bankval: {},
+    banklist: []
   }
   onChange = (value) => {
-    if (value > this.state.maxMoney) {
+    if (Number(value) <= 0) {
       this.setState({
-        hasError: true,
-      }, () => {
-        Toast.info('超出最大金额')
+        cashValue: value,
+        hasError: false
       })
     } else {
       this.setState({
-        hasError: false,
+        cashValue: value,
+        hasError: true
       })
     }
-    this.setState({
-      value,
-    })
   }
-  onPaywayChange = (value) => {
-    this.setState({
-      checkval: value,
-    })
-  }
-
-  handleRecharge = async () => {
-    let { checkval, value } = this.state
+  handleSubmit = async () => { // 充值确认按钮
+    console.log('onsubmit')
+    let { bankval, cashValue } = this.state
     const data = await api.Mine.account.recharge({
-      channel: paywayJson[checkval] ? paywayJson[checkval] : 'yeepay',
-      amount: value,
-      cardId: checkval
+      channel: 'yeepay',
+      amount: cashValue,
+      cardId: bankval['card_id']
     }) || false
     if (data) {
-      console.log(data)
-      console.log(this.props.match)
-      if (paywayJson[checkval]) {
-        pingpp.createPayment(data, function(result, err) {
-          // alert(JSON.stringify(result))
-        })
-      } else {
-        window.location.href = data.url
-      }
+      window.location.href = data.url
     }
+  }
+  handleChangeBank = async () => { // 选择银行按钮
+    this.setState({
+      showlist: true
+    })
+    const data = await api.Mine.account.getbindBinkcard({}) || false
+    this.setState({
+      banklist: data
+    })
+    console.log(data)
   }
   getDefaultCard = async () => {
     const data = await api.Mine.account.bindDefaultCard({}) || false
-    if (data) {
-      this.setState({
-        payway: [
-          { value: data['card_id'], label: data['bank_name'], extra: '尾号' + data['card_no_back'], icon: <img src={data['bank_logo']} /> }
-        ],
-        checkval: data['card_id']
-      })
-    }
+    this.setState({
+      bankval: data,
+      amount: data['amount']
+    })
   }
   componentDidMount() {
+    // this.getBindCardlist()
     this.getDefaultCard()
-    console.log(pingpp)
   }
-
-  render() {
-    const { payway, otherway, checkval, maxMoney, hasError, value } = this.state
+  onChangeBankval = (value) => { // 选择银行列表
+    console.log(value)
+    this.setState({
+      bankval: value,
+      showlist: false,
+      cashValue: ''
+    })
+  }
+  closeShow = () => {
+    this.setState({
+      showlist: false
+    })
+  }
+  addBankCard = () => {
+    this.props.match.history.push(urls.BANKCARD)
+  }
+  showBankList = () => {
+    let { bankval, banklist } = this.state
     return <div className='pageBox'>
       <Header
-        title='充值'
+        title='选择银行'
         leftIcon='icon-back'
         leftTitle1='返回'
-        leftClick1={() => {
-          this.props.match.history.push(urls.ACCOUNT)
-        }}
+        leftClick1={this.closeShow}
+        rightTitle='添加银行卡'
+        rightClick={this.addBankCard}
       />
       <Content>
-        <div className={style.rechange}>
-          <List>
-            {payway.map(i => (
-              <RadioItem key={i.value} checked={checkval === i.value} onChange={() => this.onPaywayChange(i.value)}>
-                <div className={style['pay-icon']}>{i.icon}</div>
-                <div className={style['pay-info']}>
-                  <p>{i.label}</p>
-                  <em>{i.extra}</em>
-                </div>
-              </RadioItem>
-            ))}
-          </List>
-          <List className={style['other-way']} renderHeader={() => '其他支付方式'} >
-            {otherway.map(i => (
-              <RadioItem key={i.value} checked={checkval === i.value} onChange={() => this.onPaywayChange(i.value)}>
-                <div className={style['pay-icon']}>{i.icon}</div>
-                <div className={style['pay-info']}>
-                  <p>{i.label}</p>
-                  <em>{i.extra}</em>
-                </div>
-              </RadioItem>
-            ))}
-          </List>
-          <p className={style['max-money']}>该卡本次最多充值{addCommas(maxMoney)}元</p>
-          <InputItem
-            style={{ backgroundColor: '#EEE' }}
-            type='money'
-            placeholder='请输入充值金额'
-            moneyKeyboardAlign='left'
-            error={this.state.hasError}
-            onErrorClick={this.onErrorClick}
-            onChange={this.onChange}
-            value={this.state.value}
-          >金额</InputItem>
-          <Button type='primary' onClick={this.handleRecharge} className={!value || hasError ? style['disabled-btn'] : style['primary-btn']} disabled={!value || hasError}>下一步</Button>
-        </div>
+        <List className={style['banklist']}>
+          {banklist.map(i => (
+            <RadioItem key={i.card_id} checked={bankval.card_id === i.card_id} onChange={() => this.onChangeBankval(i)}>
+              <img src={i.bank_logo} /><div className={style['brief']}>{i.bank_name}<List.Item.Brief>尾号{i.card_no_back}</List.Item.Brief></div>
+            </RadioItem>
+          ))}
+        </List>
       </Content>
     </div>
   }
+
+  render() {
+    const { bankval, hasError, cashValue, showlist } = this.state
+    return (
+      <div>
+        <div className='pageBox' style={{ display: showlist ? 'none' : 'block' }}>
+          <Header
+            title='充值'
+            leftIcon='icon-back'
+            leftTitle1='返回'
+            leftClick1={() => {
+              this.props.match.history.push(urls.ACCOUNT)
+            }}
+          />
+          <Content>
+            <div className={`${style['withdraw-cash']} contentBox`}>
+              <Item
+                arrow='horizontal'
+                thumb={bankval['bank_logo']}
+                onClick={this.handleChangeBank}
+              >
+                <span className={style['title']}>{bankval['bank_name']}</span><Brief className={style['subtitle']}>尾号{bankval['card_no_back']}</Brief>
+              </Item>
+              <p className={style['title2']}>充值金额</p>
+              <InputItem
+                style={{ backgroundColor: '#fff' }}
+                type='digit'
+                placeholder='请输入充值金额'
+                onChange={this.onChange}
+                value={cashValue}
+              ><span className={style['money']}>¥</span></InputItem>
+              <Item className={style['account-money']}><span className={style['maxMoney']}></span></Item>
+              <Button type='primary' onClick={this.handleSubmit} className={ !hasError ? style['disabled-btn'] : style['primary-btn']} disabled={!hasError}>确认充值</Button>
+            </div>
+          </Content>
+        </div>
+        {
+          showlist && this.showBankList()
+        }
+      </div>
+    )
+  }
 }
 
-export default Rechange
+export default WithdrawCash

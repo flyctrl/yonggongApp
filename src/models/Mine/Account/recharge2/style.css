@@ -1,0 +1,81 @@
+/**
+* @Author: baosheng
+* @Date: 2018-05-21 17:42:54
+* @Title: 充值
+*/
+.rechange {
+  background-color: #f6f7f8;
+  height: 100%;
+  & :global(.am-radio.am-radio-checked .am-radio-inner:after) {
+    border-color: #0467E0;
+  }
+  & .other-way {
+    margin-top: 20px;
+  }
+  & :global(.am-list-content) {
+    overflow: hidden;
+    & .pay-icon {
+      float: left;
+      & svg, & img {
+        display: block;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        margin-top: 2px;
+        margin-right: 12px;
+      }
+    }
+    & .pay-info {
+      float: left;
+      & p {
+        height: 24px;
+        line-height: 24px;
+        color: #333;
+        font-size: 16px;
+      }
+      & em {
+        display: block;
+        height: 16px;
+        line-height: 16px;
+        color: #8a96a0;
+        font-size: 12px;
+      }
+    }
+  }
+  & :global(.am-list-thumb img) {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+  }
+  & :global(.am-list-thumb svg) {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+  }
+  & .max-money {
+    padding-left: 15px;
+    margin: 10px 0;
+    width: 181px;
+    height: 17px;
+    line-height: 17px;
+    color: rgba(138, 150, 160, 1);
+    font-size: 14px;
+    font-family: PingFangSC-Regular;
+  }
+  & .disabled-btn {
+    height: 46.94px;
+    line-height: 46.94px;
+    margin: 15px;
+    border-radius: 4.99px;
+    background-color: rgba(138, 150, 160, 1);
+    &:before {
+      display: none;
+    }
+  }
+  & .primary-btn {
+    height: 46.94px;
+    line-height: 46.94px;
+    margin: 15px;
+    border-radius: 4.99px;
+  }
+}

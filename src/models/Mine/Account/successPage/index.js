@@ -39,7 +39,9 @@ class SuccessPage extends Component {
             message='已提交申请，请耐心等待处理'
           />
           <div className={style['result-detail']}>
-            <Button onClick={this.handleBack} type='ghost' className={style['back-btn']}>返 回</Button>
+            {
+              window.cordova ? null : <Button onClick={this.handleBack} type='ghost' className={style['back-btn']}>返 回</Button>
+            }
           </div>
         </div>
       )
@@ -54,7 +56,9 @@ class SuccessPage extends Component {
             <p><em>金额：</em>{orderDetail['amount']}元</p>
             <p><em>时间：</em>{orderDetail['payed_at']}</p>
             <p><em>订单号：</em>{orderDetail['order_no']}</p>
-            <Button onClick={this.handleBack} type='ghost' className={style['back-btn']}>返 回</Button>
+            {
+              window.cordova ? null : <Button onClick={this.handleBack} type='ghost' className={style['back-btn']}>返 回</Button>
+            }
           </div>
         </div>
       )

@@ -33,16 +33,20 @@ class Home extends Component {
   getMineDetail = async() => {
     const data = await api.Mine.checkDetails.info({ // 查看企业资料
     }) || false
-    this.setState({
-      companyDetail: data
-    })
+    if (data) {
+      this.setState({
+        companyDetail: data
+      })
+    }
   }
   getSystemInforms = async () => {
     const data = await api.Home.getSystemInforms({ // 获取系统通告
     }) || false
-    this.setState({
-      sysInforms: data.list
-    })
+    if (data) {
+      this.setState({
+        sysInforms: data.list
+      })
+    }
   }
   getTodayTodo = async () => {
     this.setState({ isLoading: true })

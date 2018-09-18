@@ -1,66 +1,100 @@
 /**
 * @Author: baosheng
-* @Date: 2018-05-21 17:42:54
-* @Title: 充值
+* @Date: 2018-05-21 18:38:01
+* @Title: 提现
 */
-.rechange {
+.banklist {
+  & :global(.am-list-item) {
+    & :global(.am-list-line) {
+      & :global(.am-list-content) {
+          overflow: hidden;
+          line-height: 16px;
+          color: #313f48;
+          & img {
+            float: left;
+            width: 36px;
+            height: 36px;
+            margin-right: 10px;
+          }
+          & .brief {
+            float: left;
+            font-size: 16px;
+            & :global(.am-list-brief) {
+              font-size: 14px;
+              margin-top: 2px;
+            }
+          }
+      }
+    }
+  }
+  & :global(.am-radio.am-radio-checked .am-radio-inner:after) {
+    border-color: #0467e0;
+  }
+}
+
+.withdraw-cash {
   background-color: #f6f7f8;
   height: 100%;
-  & :global(.am-radio.am-radio-checked .am-radio-inner:after) {
-    border-color: #0467E0;
+  & .title {
+    height: 22px;
+    line-height: 22px;
+    color: rgba(49, 63, 72, 1);
+    font-size: 16px;
+    font-family: PingFangSC-Regular;
   }
-  & .other-way {
-    margin-top: 20px;
-  }
-  & :global(.am-list-content) {
-    overflow: hidden;
-    & .pay-icon {
-      float: left;
-      & svg, & img {
-        display: block;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        margin-top: 2px;
-        margin-right: 12px;
-      }
-    }
-    & .pay-info {
-      float: left;
-      & p {
-        height: 24px;
-        line-height: 24px;
-        color: #333;
-        font-size: 16px;
-      }
-      & em {
-        display: block;
-        height: 16px;
-        line-height: 16px;
-        color: #8a96a0;
-        font-size: 12px;
-      }
-    }
+  & .subtitle {
+    height: 21px;
+    line-height: 21px;
+    color: rgba(138, 150, 160, 1);
+    font-size: 15px;
+    font-family: PingFangSC-Regular;
   }
   & :global(.am-list-thumb img) {
-    width: 36px;
-    height: 36px;
+    width: 35.74px;
+    height: 35.94px;
     border-radius: 50%;
   }
-  & :global(.am-list-thumb svg) {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+  & .title2 {
+    height: 24px;
+    line-height: 24px;
+    padding: 15px;
+    color: rgba(49, 63, 72, 1);
+    margin-bottom: 0;
+    font-size: 16px;
+    font-family: PingFangSC-Regular;
+    background-color: #ffffff;
   }
-  & .max-money {
-    padding-left: 15px;
-    margin: 10px 0;
-    width: 181px;
-    height: 17px;
-    line-height: 17px;
+  & .account-money {
+    min-height: 22px;
+    padding-top: 20px;
+    & :global(.am-list-line) {
+      & :global(.am-list-content) {
+        padding: 0;
+      }
+    }
+  }
+  & .maxMoney {
+    height: 20px;
+    line-height: 20px;
     color: rgba(138, 150, 160, 1);
     font-size: 14px;
     font-family: PingFangSC-Regular;
+  }
+  & .money {
+    width: 39px;
+    height: 90px;
+    line-height: 90px;
+    color: rgba(49, 63, 72, 1);
+    font-size: 64px;
+    font-family: PingFang-SC-Regular;
+  }
+  & .extra {
+    height: 21px;
+    line-height: 21px;
+    color: rgba(4, 103, 224, 1);
+    font-size: 15px;
+    font-family: PingFangSC-Regular;
+
   }
   & .disabled-btn {
     height: 46.94px;
@@ -77,5 +111,8 @@
     line-height: 46.94px;
     margin: 15px;
     border-radius: 4.99px;
+  }
+  & :global(.am-list-line:after) {
+    display: none!important;
   }
 }

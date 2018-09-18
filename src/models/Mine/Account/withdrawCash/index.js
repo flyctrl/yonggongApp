@@ -169,7 +169,6 @@ class WithdrawCash extends Component {
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {
-              promptInstance.close()
               this.props.match.history.push(urls.ACCOUNT)
             }}
           />
@@ -184,8 +183,8 @@ class WithdrawCash extends Component {
               </Item>
               <p className={style['title2']}>提现金额</p>
               <InputItem
-                style={{ backgroundColor: '#EEE' }}
-                type='money'
+                style={{ backgroundColor: '#fff' }}
+                type='digit'
                 placeholder='请输入提现金额'
                 moneyKeyboardAlign='left'
                 error={this.state.hasError}
