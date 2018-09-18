@@ -13,7 +13,7 @@ import style from './style.css'
 const Item = List.Item
 const Brief = Item.Brief
 const RadioItem = Radio.RadioItem
-class WithdrawCash extends Component {
+class Rechange extends Component {
   state = {
     amount: '',
     hasError: false,
@@ -150,4 +150,4 @@ class WithdrawCash extends Component {
   }
 }
 
-export default WithdrawCash
+export default Rechange

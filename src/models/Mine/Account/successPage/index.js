@@ -18,10 +18,10 @@ class SuccessPage extends Component {
     history.push(urls.ACCOUNT)
   }
   async componentDidMount() {
-    let ordernum = tooler.getQueryString('orderNO')
+    let ordernum = tooler.getQueryString('ygOrderNo')
     // let payway = tooler.getQueryString('orderNO')
     const data = await api.Mine.account.selectDetail({
-      orderNo: ordernum
+      ygOrderNo: ordernum
     }) || false
     this.setState({
       orderDetail: data
