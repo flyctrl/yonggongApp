@@ -102,10 +102,10 @@ class Home extends Component {
             <div className={style['home-silder']}>
               {
                 bannerList.length !== 0 ? <div>
-                  <Carousel autoplay infinite>
+                  <Carousel autoplay infinite >
                     {
                       bannerList.map(item => {
-                        return <img key={item['id']} src={item['url']}/>
+                        return <div key={item['id']}><img src={item['url']}/></div>
                       })
                     }
                   </Carousel>
