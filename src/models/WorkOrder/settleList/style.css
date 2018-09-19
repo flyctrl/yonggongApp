@@ -28,6 +28,11 @@ html .comp-list :global(.am-button:before) {
         height: 40px;
         line-height: 40px;
         font-weight: normal;
+        & span {
+          color: #666;
+          font-size: 12px;
+          padding-left: 5px;
+        }
       }
       & p {
         color: rgba(146, 146, 146, 0.7);
