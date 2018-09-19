@@ -38,15 +38,30 @@ class Account extends Component {
     this.getAmount()
   }
 
-  handleDrawcash = async () => {
+  getStatus = async (type) => { // 1提现 2充值
     const data = await api.Mine.companyAuth.getCompanyStuts({}) || false
     if (data) {
       if (data['is_bind_card'] === 1) {
-        this.props.match.history.push(urls.ACCOUNTWITHDRAWCASH)
+        if (data['is_withdraw_password'] === 0) {
+          Toast.fail('请先设置交易密码', 2, () => {
+            this.props.match.history.push(urls.SETPAYPWD)
+          })
+        } else {
+          type === 1 ? this.props.match.history.push(urls.ACCOUNTWITHDRAWCASH) : this.props.match.history.push(urls.ACCOUNTRECHARGE)
+        }
       } else {
-        Toast.fail('请先绑定银行卡', 2)
+        Toast.fail('请先绑定银行卡', 2, () => {
+          this.props.match.history.push(urls.BANKCARD)
+        })
       }
     }
+  }
+  handleDrawcash = async () => {
+    this.getStatus(1)
+  }
+
+  handleRecharge = async () => {
+    this.getStatus(2)
   }
 
   render() {
@@ -71,9 +86,7 @@ class Account extends Component {
               <div className={style.title}>账户余额（元）</div>
               <div className={style.money}>{addCommas(moneyA)}</div>
               <div className={style.tip}>冻结金额 ¥{addCommas(moneyB)}元</div>
-              <div className={style.btns}><Button className={style['reChange-btn']} type='primary' inline onClick={() => {
-                this.props.match.history.push(urls.ACCOUNTRECHARGE)
-              }}>立即充值</Button><Button className={style['withdraw-cash-btn']} inline onClick={this.handleDrawcash}>提现</Button></div>
+              <div className={style.btns}><Button className={style['reChange-btn']} type='primary' inline onClick={this.handleRecharge}>立即充值</Button><Button className={style['withdraw-cash-btn']} inline onClick={this.handleDrawcash}>提现</Button></div>
             </div>
             <div className={style['bindbtn-box']}><a onClick={this.handleBindCard} className={style['bindcard-btn']}>+ 绑定银行卡</a></div>
           </div> : null
