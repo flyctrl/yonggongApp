@@ -1,0 +1,53 @@
+.notice-box {
+  padding: 12px;
+  height: 60px;
+  & dl {
+    overflow: hidden;
+    & dt {
+      float: left;
+      & span {
+        display: block;
+        width: 50px;
+        height: 50px;
+        line-height: 64px;
+        background: rgba(4, 103, 224, 1);
+        border-radius: 50%;
+        text-align: center;
+        & .notice-icon {
+          width: 30px;
+          height: 30px;
+        }
+        &.tobedone {
+          background: #fff;
+          line-height: 80px;
+          & .notice-icon {
+            width: 40px;
+            height: 40px;
+          }
+        }
+      }
+    }
+    & dd {
+      float: left;
+      width: 280px;
+      margin-left: 10px;
+      & p {
+        width: 100%;
+        font-size: 14px;
+        color: rgba(49, 63, 72, 1);
+        height: 30px;
+        line-height: 30px;
+        & em {
+          float: right;
+          font-style: normal;
+          font-size: 12px;
+          color: rgba(195, 205, 212, 1);
+        }
+      }
+      & span {
+        font-size: 12px;
+        color: rgba(138, 150, 160, 1);
+      }
+    }
+  }
+}

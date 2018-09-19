@@ -36,7 +36,7 @@ export const SETPAYPWD = `${SETUP}/setPayPwd` // 设置支付密码
 export const SETUPSECURITY = `${MINE}/security` // 我的设置》账户与安全
 export const SETUPABOUTUS = `${MINE}/aboutUs` // 我的设置》关于我们
 export const SETUPINTRODUCE = `${MINE}/introduce` // 我的设置》关于我们>功能介
-
+export const SETUPINTRODUCEINFO = `${SETUPINTRODUCE}/detail` // 我的设置》关于我们>功能介绍>详情
 export const ACCOUNT = `${MINE}/Account` // 我的账户
 export const ACCOUNTRECHARGE = `${ACCOUNT}/recharge` // 我的账户》充值
 export const ACCOUNTWITHDRAWCASH = `${ACCOUNT}/withdrawCash` // 我的账户》提现

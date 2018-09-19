@@ -117,6 +117,10 @@ const SetUpIntrduce = Loadable({ // 我的设置》关于我们》功能介绍
   loader: () => import(/* webpackChunkName: "setupintroduce" */ '../models/Mine/SetUp/introduce'),
   loading: MyLoadingComponent
 })
+const SetUpIntrduceInfo = Loadable({ // 我的设置》关于我们》功能介绍》详情
+  loader: () => import(/* webpackChunkName: "setupintroduceinfo" */ '../models/Mine/SetUp/introduce/detail'),
+  loading: MyLoadingComponent
+})
 const MyPush = Loadable({ // 我的发布
   loader: () => import(/* webpackChunkName: "mypush" */ '../models/Mine/myPush'),
   loading: MyLoadingComponent
@@ -415,6 +419,14 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '功能介绍'
+  }, {
+    path: urls.SETUPINTRODUCEINFO,
+    exact: true,
+    component: SetUpIntrduceInfo,
+    parent: null,
+    animated: true,
+    showMenu: false,
+    title: '功能详情'
   }, {
     path: urls.APPLYDETAIL,
     exact: true,

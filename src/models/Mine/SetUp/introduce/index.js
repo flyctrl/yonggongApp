@@ -17,8 +17,8 @@ class Introduce extends Component {
     super(props)
     this.state = {}
   }
-
-  componentDidMount() {
+  handleClick = () => {
+    this.props.match.history.push(urls.SETUPINTRODUCEINFO)
   }
   render() {
     return <div className='pageBox'>
@@ -33,7 +33,7 @@ class Introduce extends Component {
       <Content>
         <div className={style['introduce']}>
           <List>
-            <Item multipleLine onClick={() => {}} arrow='horizontal'>亚雀v1.1.1更新<Brief>03月29日</Brief></Item>
+            <Item multipleLine onClick={this.handleClick} arrow='horizontal'>亚雀v1.0.0更新<Brief>03月29日</Brief></Item>
           </List>
         </div>
       </Content>
