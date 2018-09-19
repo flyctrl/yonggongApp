@@ -40,7 +40,7 @@ class SuccessPage extends Component {
           />
           <div className={style['result-detail']}>
             {
-              window.cordova !== 'undefined' ? null : <Button onClick={this.handleBack} type='ghost' className={style['back-btn']}>返 回</Button>
+              window.cordova === undefined ? <Button onClick={this.handleBack} type='ghost' className={style['back-btn']}>返 回</Button> : null
             }
           </div>
         </div>
@@ -57,7 +57,7 @@ class SuccessPage extends Component {
             <p><em>时间：</em>{orderDetail['payed_at']}</p>
             <p><em>订单号：</em>{orderDetail['order_no']}</p>
             {
-              window.cordova !== 'undefined' ? null : <Button onClick={this.handleBack} type='ghost' className={style['back-btn']}>返 回</Button>
+              window.cordova === undefined ? <Button onClick={this.handleBack} type='ghost' className={style['back-btn']}>返 回</Button> : null
             }
           </div>
         </div>
