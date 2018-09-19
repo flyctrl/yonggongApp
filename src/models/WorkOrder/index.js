@@ -249,8 +249,8 @@ class WorkOrder extends Component {
         <div>起止日期：{`${rowData['start_lower_time']} ~ ${rowData['end_upper_time']}`}</div>
         <div>
           {
-            rowData['variable'].map((item) => {
-              return <span className={style['variable']}>{item['label'] + ':' + item['value']}</span>
+            rowData['variable'].map((item, index) => {
+              return <span key={index} className={style['variable']}>{item['label'] + ':' + item['value']}</span>
             })
           }
         </div>
@@ -296,7 +296,7 @@ class WorkOrder extends Component {
           <div className={`${style.item}`} key={rowID}>
             {this.subRows(rowData)}
             <div className={style.itemfooter}>
-              <Button data-id={rowData['id']} onClick={this.handleConfirmNmOrder} className={style.detailbtn}>确 认</Button>
+              {/* <Button data-id={rowData['id']} onClick={this.handleConfirmNmOrder} className={style.detailbtn}>确 认</Button> */}
               <Button data-id={rowData['id']} onClick={this.handleNormalReceptRecord} className={style.detailbtn}>查看接单记录</Button>
             </div>
           </div>
