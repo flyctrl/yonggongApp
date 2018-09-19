@@ -68,11 +68,11 @@ const menuData = [
     icon: 'icon-problemFeedback',
     type: 11
   },
-  {
-    title: '分享应用',
-    icon: 'icon-sharingApplication',
-    type: 12
-  }
+  // {
+  //   title: '分享应用',
+  //   icon: 'icon-sharingApplication',
+  //   type: 12
+  // }
 ]
 const menuRouter = {
   1: urls.MYPUSH,
