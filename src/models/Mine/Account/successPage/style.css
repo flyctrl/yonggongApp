@@ -1,4 +1,7 @@
 .result-page {
+  & :global(.am-result) {
+    padding-top: 100px;
+  }
   & .spe {
     width: 60px;
     height: 60px;
