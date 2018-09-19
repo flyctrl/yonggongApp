@@ -40,6 +40,7 @@ html .message-content :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab:
     & :global(.am-tabs-default-bar-content) {
       width: 40%;
       margin: 0 auto;
+      overflow: hidden;
     }
   }
 }
