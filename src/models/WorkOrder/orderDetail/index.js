@@ -129,7 +129,7 @@ class OrderDetail extends Component {
                     <dt>附件</dt>
                     {
                       dataSource['attachment'].map((item, index) => {
-                        return <dd className='my-bottom-border' key={index}><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a onClick={() => { Toast.info('请登录亚雀PC端下载', 1.5) }}>{item['name']}</a></dd>
+                        return <dd className='my-bottom-border' key={index}><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a target='_blank' href={item['url']}>{item['name']}</a></dd>
                       })
                     }
                   </dl> : null
