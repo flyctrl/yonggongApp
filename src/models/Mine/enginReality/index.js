@@ -279,7 +279,7 @@ class EnginReality extends Component {
             visible={dateShow}
             onCancel={this.handleDateCancel}
             onConfirm={this.handleDateConfirm}
-            // defaultDate={now}
+            defaultDate={new Date(startTime || new Date())}
             defaultValue={[new Date(startTime), new Date(endTime)]}
           />
         </div>
