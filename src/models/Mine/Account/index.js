@@ -42,12 +42,16 @@ class Account extends Component {
     const data = await api.Mine.companyAuth.getCompanyStuts({}) || false
     if (data) {
       if (data['is_bind_card'] === 1) {
-        if (data['is_withdraw_password'] === 0) {
-          Toast.fail('请先设置交易密码', 2, () => {
-            this.props.match.history.push(urls.SETPAYPWD)
-          })
+        if (type === 1) {
+          if (data['is_withdraw_password'] === 0) {
+            Toast.fail('请先设置提现密码', 2, () => {
+              this.props.match.history.push(urls.SETPAYPWD)
+            })
+          } else {
+            this.props.match.history.push(urls.ACCOUNTWITHDRAWCASH)
+          }
         } else {
-          type === 1 ? this.props.match.history.push(urls.ACCOUNTWITHDRAWCASH) : this.props.match.history.push(urls.ACCOUNTRECHARGE)
+          this.props.match.history.push(urls.ACCOUNTRECHARGE)
         }
       } else {
         Toast.fail('请先绑定银行卡', 2, () => {
