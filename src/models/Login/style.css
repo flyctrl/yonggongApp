@@ -51,45 +51,50 @@
   width: 254px;
   margin: 0 auto;
   margin-top: 30px;
-  & :global(.login-item) {
-    & :global(.login-line) {
-      position: relative;
-      & input {
-        display: block;
-        width: 100%;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 5px;
-        border: 1Px solid rgba(138, 150, 160, .5);
-        font-size: 12px;
-        margin: 0 auto;
-        margin-top: 10px;
-        text-indent: 15px;
-        &:global(::-webkit-input-placeholder) {
-          color: rgba(138, 150, 160, .5);
+  & :global(.am-list-body) {
+    border-top: none;
+    border-bottom: none;
+    & :global(.login-item) {
+      & :global(.login-line) {
+        position: relative;
+        & input {
+          display: block;
+          width: 100%;
+          height: 40px;
+          line-height: 40px;
+          border-radius: 5px;
+          border: 1Px solid rgba(138, 150, 160, .5);
+          font-size: 12px;
+          margin: 0 auto;
+          margin-top: 10px;
           text-indent: 15px;
+          &:global(::-webkit-input-placeholder) {
+            color: rgba(138, 150, 160, .5);
+            text-indent: 15px;
+          }
+        }
+        & :global(.am-input-clear) {
+          position: absolute;
+          top: 11px;
+          right: 5px;
+          width: 20px;
+          height: 20px;
+          display: block;
+          background: url(../../assets/close.png) no-repeat;
+          background-size: 100% 100%;
         }
       }
-      & :global(.am-input-clear) {
-        position: absolute;
-        top: 11px;
-        right: 5px;
-        width: 20px;
-        height: 20px;
-        display: block;
-        background: url(../../assets/close.png) no-repeat;
-        background-size: 100% 100%;
-      }
-    }
-
-    &:global(.am-input-error) {
-      & :global(.login-line) {
-        & input {
-          border-color: red;
+  
+      &:global(.am-input-error) {
+        & :global(.login-line) {
+          & input {
+            border-color: red;
+          }
         }
       }
     }
   }
+  
   & .forgetPwd {
     text-align: right;
     height: 60px;
@@ -132,43 +137,47 @@
   width: 250px;
   margin: 0 auto;
   margin-top: 20px;
-  & :global(.register-item) {
-    & :global(.register-line) {
-      position: relative;
-      & input {
-        border:none;
-        outline: none;
-        display: block;
-        width: 100%;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 5px;
-        border: 1Px solid rgba(138, 150, 160, .5);
-        font-size: 12px;
-        margin: 0 auto;
-        margin-top: 10px;
-        text-indent: 15px;
-        &:global(::-webkit-input-placeholder) {
-          color: rgba(138, 150, 160, .5);
+  & :global(.am-list-body) {
+    border-top: none;
+    border-bottom: none;
+    & :global(.register-item) {
+      & :global(.register-line) {
+        position: relative;
+        & input {
+          border:none;
+          outline: none;
+          display: block;
+          width: 100%;
+          height: 40px;
+          line-height: 40px;
+          border-radius: 5px;
+          border: 1Px solid rgba(138, 150, 160, .5);
+          font-size: 12px;
+          margin: 0 auto;
+          margin-top: 10px;
           text-indent: 15px;
+          &:global(::-webkit-input-placeholder) {
+            color: rgba(138, 150, 160, .5);
+            text-indent: 15px;
+          }
+        }
+        & :global(.am-input-clear) {
+          position: absolute;
+          top: 11px;
+          right: 5px;
+          width: 20px;
+          height: 20px;
+          display: block;
+          background: url(../../assets/close.png) no-repeat;
+          background-size: 100% 100%;
         }
       }
-      & :global(.am-input-clear) {
-        position: absolute;
-        top: 11px;
-        right: 5px;
-        width: 20px;
-        height: 20px;
-        display: block;
-        background: url(../../assets/close.png) no-repeat;
-        background-size: 100% 100%;
-      }
-    }
-
-    &:global(.am-input-error) {
-      & :global(.register-line) {
-        & input {
-          border-color: red;
+  
+      &:global(.am-input-error) {
+        & :global(.register-line) {
+          & input {
+            border-color: red;
+          }
         }
       }
     }
