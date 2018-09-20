@@ -64,7 +64,7 @@
     & .work-info {
       font-size: 15px;
       color: rgba(49, 63, 72, 1);
-      height: 44px;
+      height: auto;
       line-height: 22px;
       margin: 20px 0;
     }

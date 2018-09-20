@@ -118,7 +118,7 @@ class UserInfo extends Component {
                       <dt>地区编码</dt>
                       <dd>{ companyDetail.info ? companyDetail.info.region : '' }</dd>
                     </dl>
-                    <dl className={style['info-list']}>
+                    <dl className={`${style['info-list']} ${style['info-list-jyfw']}`}>
                       <dt>街道地址</dt>
                       <dd>{ companyDetail.info ? companyDetail.info.address : '' }</dd>
                     </dl>
