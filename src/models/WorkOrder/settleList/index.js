@@ -59,7 +59,8 @@ class SettleList extends Component {
       return dataSource.map((item, index) => {
         return <li className='my-bottom-border'>
           <div className={style['comp-info']}>
-            <h2>{item['worker_name']} <span className={style['comp-amount']}>{item['amount']}</span></h2>
+            <h2>{item['worker_name']}</h2>
+            <span>{item['amount']}</span>
             <p>{item['created_at']}</p>
           </div>
           <div className={style['contrl-btn']}>

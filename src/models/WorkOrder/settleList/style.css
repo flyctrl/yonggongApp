@@ -25,21 +25,23 @@ html .comp-list :global(.am-button:before) {
       & h2 {
         color: rgba(48, 48, 48, 1);
         font-size: 14px;
-        height: 40px;
-        line-height: 40px;
+        height: 30px;
+        line-height: 30px;
         font-weight: normal;
-        & span {
-          color: #666;
-          font-size: 12px;
-          padding-left: 5px;
-        }
       }
       & p {
         color: rgba(146, 146, 146, 0.7);
         font-size: 12px;
-        height: 18px;
-        line-height: 18px;
+        height: 20px;
+        line-height: 20px;
         font-weight: 300;
+      }
+      & span {
+        height: 20px;
+        line-height: 20px;
+        font-size: 12px;
+        color: #0467e0;
+        display: block;
       }
     }
     & .contrl-btn {
