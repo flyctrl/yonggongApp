@@ -7,7 +7,7 @@
 import React, { Component } from 'react'
 import { InputItem, Button, Toast, List } from 'antd-mobile'
 import { createForm } from 'rc-form'
-import * as urls from 'Contants/urls'
+// import * as urls from 'Contants/urls'
 import { Content, Header } from 'Components'
 import style from 'Src/models/Login/style.css'
 import api from 'Util/api'
@@ -26,14 +26,14 @@ class RestPwd extends Component {
     this.props.form.validateFields(async (error, values) => {
       if (!error) {
         Toast.loading('提交中...', 0)
-        const data = api.auth.setPaypwd({
+        const data = await api.auth.setPaypwd({
           ...values
         }) || false
         if (data) {
           Toast.hide()
-          // Toast.success('设置成功', 1.5, () => {
-          this.props.match.history.push(urls.SETUP)
-          // })
+          Toast.success('设置成功', 1.5, () => {
+            this.props.match.history.go(-1)
+          })
         }
       } else {
         for (let value of validateAry) {
@@ -70,7 +70,8 @@ class RestPwd extends Component {
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
-            this.props.match.history.push(urls.SETUP)
+            // this.props.match.history.push(urls.SETUP)
+            this.props.match.history.go(-1)
           }}
         />
         <Content>
