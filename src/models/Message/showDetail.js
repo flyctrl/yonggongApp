@@ -42,9 +42,7 @@ class ShowDetail extends Component {
           <div className={style['detail-box']}>
             <h2>{data['title']}</h2>
             <p className='my-bottom-border'>{data['created_at']}</p>
-            <div className={style['detail-content']}>
-              {data['content']}
-            </div>
+            <div dangerouslySetInnerHTML = {{ __html: data['content'] }} className={style['detail-content']}></div>
           </div>
         </Content>
       </div>
