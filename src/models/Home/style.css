@@ -130,6 +130,7 @@
       float: left;
       margin-left: 20px;
       margin-top: 18px;
+      width: 200px;
       & h2 {
         font-size: 14px;
         color: rgba(49, 63, 72, 1);
@@ -144,7 +145,7 @@
     }
     & footer {
       float: right;
-      margin-top: 23px;
+      margin-top: 21px;
       color: rgba(138, 150, 160, .7);
       font-size: 12px;
       margin-right: 10px;
