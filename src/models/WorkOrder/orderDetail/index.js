@@ -5,6 +5,7 @@
 * @Last Modified time: 2018-08-14 21:46:15
 */
 import React, { Component } from 'react'
+import { Toast } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import * as urls from 'Contants/urls'
 import { worksheetType } from 'Contants/fieldmodel'
@@ -35,6 +36,22 @@ class OrderDetail extends Component {
       })
     }
   }
+  // getDownload = (url, filename) => {
+  //   alert('getDownload')
+  //   alert(url)
+  //   window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
+  //     alert('打开的文件系统: ' + fs.name)
+  //     fs.root.getFile(filename, { create: true, exclusive: false }, function (fileEntry) {
+  //       alert(fileEntry)
+  //       console.log(fileEntry)
+  //       tooler.downLoadFile(fileEntry, url)
+  //     }, function(err) {
+  //       console.log(err)
+  //     })
+  //   }, function(error) {
+  //     console.log(error)
+  //   })
+  // }
   componentDidMount() {
     this.getOrderDetail()
   }
@@ -75,7 +92,7 @@ class OrderDetail extends Component {
                   <dd className={style['usr-tel']}>{dataSource['title']}</dd>
                   <dd className={style['push-time']}>发布于 {dataSource['created_at']}</dd>
                 </dl>
-                <div className={style['work-info']} style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical' }}>
+                <div className={style['work-info']}>
                   {
                     dataSource['description']
                   }
@@ -107,14 +124,16 @@ class OrderDetail extends Component {
                     }) : null
                   }
                 </dl>
-                <dl>
-                  <dt>附件</dt>
-                  {
-                    dataSource['attachment'] !== undefined ? dataSource['attachment'].map((item, index) => {
-                      return <dd className='my-bottom-border' key={index}><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a href={item['url']} download={item['name']}>{item['name']}</a></dd>
-                    }) : null
-                  }
-                </dl>
+                { dataSource['attachment'] !== undefined && dataSource['attachment'].length !== 0
+                  ? <dl>
+                    <dt>附件</dt>
+                    {
+                      dataSource['attachment'].map((item, index) => {
+                        return <dd className='my-bottom-border' key={index}><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a onClick={() => { Toast.info('请登录亚雀PC端下载', 1.5) }}>{item['name']}</a></dd>
+                      })
+                    }
+                  </dl> : null
+                }
               </div>
             </div> : null
           }
