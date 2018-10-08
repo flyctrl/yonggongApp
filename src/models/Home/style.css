@@ -15,7 +15,7 @@
   width: 100%;
   height: 160px;
   & :global(.slider-list) {
-    height: 100%!important;
+    height: 160px!important;
   }
   & img {
     display: block;
