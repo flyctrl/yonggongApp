@@ -74,6 +74,7 @@ export const ADDDEPARTMENT = `${MINE}/personStructure/addDepartment` // 添加�
 export const EDITDEPARTMENT = `${MINE}/personStructure/editDepartment` // 修改部门
 export const SELECTDEPART = `${MINE}/personStructure/selectDepart` // 选择部门
 export const FEEDBACK = `${MINE}/feedBack` // 问题反馈
+export const BANKCARDLIST = `${MINE}/bankcardList` // 银行卡
 
 export const LOGIN = `${BASE_URL}/Login/login` // 登录
 export const REGISTER = `${BASE_URL}/Login/register` // 注册

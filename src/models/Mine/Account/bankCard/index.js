@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { List, InputItem, Button, Picker, Toast } from 'antd-mobile'
 import { createForm } from 'rc-form'
 import { Header, Content } from 'Components'
-import * as urls from 'Contants/urls'
+// import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import style from './style.css'
 
@@ -63,7 +63,8 @@ class BankCard extends Component {
           // this.props.form.resetFields()
           Toast.hide()
           Toast.success('绑定成功', 1.5, () => {
-            this.props.match.history.push(urls.ACCOUNT)
+            // this.props.match.history.push(urls.ACCOUNT)
+            this.props.match.history.go(-1)
           })
         }
       } else {
@@ -86,7 +87,8 @@ class BankCard extends Component {
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
-            this.props.match.history.push(urls.ACCOUNT)
+            // this.props.match.history.push(urls.ACCOUNT)
+            this.props.match.history.go(-1)
           }}
         />
         <Content>

@@ -24,6 +24,11 @@ const menuData = [
     type: 2
   },
   {
+    title: '银行卡',
+    icon: 'icon-yinhangqia',
+    type: 13
+  },
+  {
     title: '企业认证',
     icon: 'icon-corporateApproval',
     type: 3
@@ -85,7 +90,8 @@ const menuRouter = {
   8: urls.ENGINREALITY,
   9: urls.PARTNER,
   10: urls.PERSONSTRUCTURE,
-  11: `${urls.FEEDBACK}?url=MINE`
+  11: `${urls.FEEDBACK}?url=MINE`,
+  13: urls.BANKCARDLIST
 }
 class Mine extends Component {
   constructor(props) {

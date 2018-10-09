@@ -1,0 +1,42 @@
+html:not([data-scale]) .banklist :global(.am-list-body::after) {
+  height: 0;
+}
+.banklist {
+  & :global(.am-list-item) {
+    & :global(.am-list-line) {
+      & :global(.am-list-content) {
+          overflow: hidden;
+          line-height: 16px;
+          color: #313f48;
+          & img {
+            float: left;
+            width: 36px;
+            height: 36px;
+            margin-right: 20px;
+          }
+          & .brief {
+            float: left;
+            font-size: 16px;
+            & :global(.am-list-brief) {
+              font-size: 14px;
+              margin-top: 2px;
+            }
+          }
+      }
+    }
+  }
+  & :global(.am-radio.am-radio-checked .am-radio-inner:after) {
+    border-color: #0467e0;
+  }
+}
+
+.addBankcardBtn {
+  height: 44px;
+  line-height: 44px;
+  border: 1px dashed #999;
+  width: 360px;
+  margin: 0 auto;
+  margin-top: 10px;
+  text-align: center;
+  color: #999;
+}

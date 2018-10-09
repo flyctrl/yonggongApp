@@ -269,6 +269,10 @@ const FeedBack = Loadable({ // 问题反馈
   loader: () => import(/* webpackChunkName: "feedback" */ '../models/Mine/feedBack'),
   loading: MyLoadingComponent
 })
+const BankcardList = Loadable({ // 银行卡
+  loader: () => import(/* webpackChunkName: "bankcardlist" */ '../models/Mine/bankcardList'),
+  loading: MyLoadingComponent
+})
 
 const Login = Loadable({ // 登录
   loader: () => import(/* webpackChunkName: "login" */ '../models/Login/login'),
@@ -813,6 +817,14 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '问题反馈'
+  }, {
+    path: urls.BANKCARDLIST,
+    exact: true,
+    component: BankcardList,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '银行卡'
   }, {
     path: urls.LOGIN,
     exact: true,

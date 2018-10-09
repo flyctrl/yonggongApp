@@ -53,17 +53,16 @@
   }
 }
 
+html:not([data-scale]) .bindbtn-box:global(.am-button-ghost::before) {
+  border-color: #0467e0;
+  border-style: dashed;
+}
 .bindbtn-box {
-  width: 100%;
-  text-align: center;
-  & .bindcard-btn {
-    display: inline-block;
+  width: 96%;
+  margin: 0 auto;
+  margin-top: 10px;
+  font-size: 14px;
+  &:global(.am-button-ghost) {
     color: #0467e0;
-    font-size: 14px;
-    margin: 0 auto;
-    margin-top: 30px;
   }
 }
-
-
-
