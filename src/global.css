@@ -97,8 +97,8 @@ input {
     left: 0;
     width: 100%;
     height: 1PX;
-    -webkit-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
   }
@@ -223,4 +223,14 @@ input {
 }
 :global(html:not([data-scale]) .am-list-body:after) {
   height: 0;
+}
+
+html:not([data-scale]) :global(.pageBox .am-list-body div:not(:last-child) .am-list-line::after) {
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+}
+
+html:not([data-scale]) :global(.contentBox .am-list-body div:not(:last-child) .am-list-line::after) {
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
 }
