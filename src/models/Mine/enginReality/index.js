@@ -176,7 +176,7 @@ class EnginReality extends Component {
     let id = data[0]
     // let num = data[1]
     // if (num > 0) {
-    history.push(`${urls.LEAVESITU}?worksheetId=${worksheetId}&attend_status=${id}&startTime=${tooler.formatDate(startTime)}&endTime=${tooler.formatDate(endTime)}&proId=${proId}`)
+    history.push(`${urls.LEAVESITU}?worksheetId=${worksheetId}&attend_status=${id}&startTime=${tooler.formatDate(new Date(startTime))}&endTime=${tooler.formatDate(new Date(endTime))}&proId=${proId}`)
     // }
   }
   render() {
