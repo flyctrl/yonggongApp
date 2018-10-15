@@ -10,7 +10,7 @@ class Timer extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      total: 60
+      total: 120
     }
     this.tick = this.tick.bind(this)
   }
