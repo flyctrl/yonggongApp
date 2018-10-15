@@ -7,6 +7,8 @@
 import fetch from 'Util/fetch'
 import { Toast } from 'antd-mobile'
 import { baseUrl } from 'Util/index'
+import { default as swal } from 'sweetalert2'
+import 'Util/api.css'
 
 // 获取数据类接口
 export const Fetch = (url, params, method = 'post', config) => {
@@ -18,10 +20,26 @@ export const Fetch = (url, params, method = 'post', config) => {
     if (res.code === 0) {
       return res.data || true
     } else {
-      Toast.fail(res.msg, 1)
+      if (res.alert === 0) {
+        return false
+      } else if (res.alert === 1 || res.alert === 3) {
+        Toast.fail(res.msg, 2)
+      } else if (res.alert === 2) {
+        Toast.hide()
+        swal({
+          text: res.msg,
+          allowOutsideClick: false,
+          confirmButtonText: '确 认',
+          width: '80%',
+          customClass: 'swalalert',
+          confirmButtonClass: 'alertSureBtn'
+        })
+      } else {
+        return false
+      }
     }
   }, (err) => {
-    Toast.fail(err.msg, 1)
+    Toast.fail(err.msg, 2)
   })
 }
 
@@ -36,10 +54,26 @@ export const FetchSave = (url, params, method = 'post', config) => {
       Toast.success(res.msg, 1)
       return res.data || true
     } else {
-      Toast.fail(res.msg, 1)
+      if (res.alert === 0) {
+        return false
+      } else if (res.alert === 1 || res.alert === 3) {
+        Toast.fail(res.msg, 2)
+      } else if (res.alert === 2) {
+        Toast.hide()
+        swal({
+          text: res.msg,
+          allowOutsideClick: false,
+          confirmButtonText: '确 认',
+          width: '80%',
+          customClass: 'swalalert',
+          confirmButtonClass: 'alertSureBtn'
+        })
+      } else {
+        return false
+      }
     }
   }, (err) => {
-    Toast.fail(err.msg, 1)
+    Toast.fail(err.msg, 2)
   })
 }
 

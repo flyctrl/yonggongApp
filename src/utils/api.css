@@ -1,0 +1,24 @@
+:global(.swalalert) {
+  font-size: 14px;
+}
+:global(.swal2-popup .swal2-styled.swal2-confirm.alertSureBtn) {
+  background: #0467e0;
+  height: 36px;
+  line-height: 36px;
+  width: 120px;
+}
+:global(.swal2-popup .swal2-styled) {
+  padding: 0.1em 2em;
+}
+:global(.swal2-popup .swal2-styled.swal2-confirm) {
+  font-size: 14px;
+}
+:global(.swal2-popup .swal2-actions:not(.swal2-loading) .swal2-styled:active) {
+  background-image: none;
+}
+:global(.swal2-popup .swal2-styled:focus) {
+  box-shadow: none;
+}
+:global(body.swal2-height-auto) {
+  height: 100% !important;
+}
