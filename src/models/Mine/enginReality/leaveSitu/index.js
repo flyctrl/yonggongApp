@@ -42,6 +42,15 @@ class LeaveSitu extends Component {
     // }
     this.getMineDetail()
   }
+  handleLeftClick = () => {
+    let { url } = this.state
+    if (window.location.href) {
+      url = window.location.href.split('?')[1]
+      history.push(`${urls.ENGINREALITY}?${url}`)
+    } else {
+      history.push(urls.ENGINREALITY)
+    }
+  }
   render() {
     const { dataList, isLoading } = this.state
     return (
@@ -50,9 +59,7 @@ class LeaveSitu extends Component {
           title='考勤情况'
           leftIcon='icon-back'
           leftTitle1='返回'
-          leftClick1={() => {
-            history.push(`${urls.ENGINREALITY}${window.location.search || ''}`)
-          }}
+          leftClick1={this.handleLeftClick}
         />
         <Content>
           <ul className={style['leavesitu-list']}>
