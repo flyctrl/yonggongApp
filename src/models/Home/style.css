@@ -135,12 +135,17 @@
         font-size: 14px;
         color: rgba(49, 63, 72, 1);
         font-weight: normal;
-        line-height: 24px;
-        margin-bottom: 2px
+        margin-bottom: 8px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
       }
       & p {
         color: rgba(138, 150, 160, .7);
         font-size: 12px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
       }
     }
     & footer {
