@@ -10,7 +10,6 @@ import { baseUrl } from 'Util/index'
 import { default as swal } from 'sweetalert2'
 import 'Util/api.css'
 
-let tipsLock = false
 // 获取数据类接口
 export const Fetch = (url, params, method = 'post', config) => {
   if (method === 'get') {
@@ -24,27 +23,17 @@ export const Fetch = (url, params, method = 'post', config) => {
       if (res.alert === 0) {
         return false
       } else if (res.alert === 1 || res.alert === 3) {
-        if (!tipsLock) {
-          Toast.fail(res.msg, 2)
-        }
-        if (res.code === 10011 || res.code === 10012 || res.code === 10013) {
-          tipsLock = true
-        }
+        Toast.fail(res.msg, 2)
       } else if (res.alert === 2) {
         Toast.hide()
-        if (!tipsLock) {
-          swal({
-            text: res.msg,
-            allowOutsideClick: false,
-            confirmButtonText: '确 认',
-            width: '80%',
-            customClass: 'swalalert',
-            confirmButtonClass: 'alertSureBtn'
-          })
-        }
-        if (res.code === 10011 || res.code === 10012 || res.code === 10013) {
-          tipsLock = true
-        }
+        swal({
+          text: res.msg,
+          allowOutsideClick: false,
+          confirmButtonText: '确 认',
+          width: '80%',
+          customClass: 'swalalert',
+          confirmButtonClass: 'alertSureBtn'
+        })
       } else {
         return false
       }
@@ -68,27 +57,17 @@ export const FetchSave = (url, params, method = 'post', config) => {
       if (res.alert === 0) {
         return false
       } else if (res.alert === 1 || res.alert === 3) {
-        if (!tipsLock) {
-          Toast.fail(res.msg, 2)
-        }
-        if (res.code === 10011 || res.code === 10012 || res.code === 10013) {
-          tipsLock = true
-        }
+        Toast.fail(res.msg, 2)
       } else if (res.alert === 2) {
         Toast.hide()
-        if (!tipsLock) {
-          swal({
-            text: res.msg,
-            allowOutsideClick: false,
-            confirmButtonText: '确 认',
-            width: '80%',
-            customClass: 'swalalert',
-            confirmButtonClass: 'alertSureBtn'
-          })
-        }
-        if (res.code === 10011 || res.code === 10012 || res.code === 10013) {
-          tipsLock = true
-        }
+        swal({
+          text: res.msg,
+          allowOutsideClick: false,
+          confirmButtonText: '确 认',
+          width: '80%',
+          customClass: 'swalalert',
+          confirmButtonClass: 'alertSureBtn'
+        })
       } else {
         return false
       }
@@ -104,6 +83,12 @@ export default {
   Common: {
     getProList(params) { // 获取项目列表
       return Fetch(prefix + '/project/list/select', params, 'get')
+    },
+    getWorktype(params) { // 获取工种
+      return Fetch('/common/work', params, 'get')
+    },
+    getWorkmachine(params) { // 获取机械
+      return Fetch('/common/machine', params, 'get')
     },
     getAptitude(params) { // 获取工种列表和企业资质列表
       return Fetch('/common/aptitude', params, 'get')

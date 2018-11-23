@@ -1,0 +1,59 @@
+.attend-header {
+  overflow: hidden;
+  background: #fff;
+  & li {
+    width: 49.5%;
+    padding: 10px 0;
+    float: left;
+    text-align: center;
+    color: rgb(148, 148, 148);
+    font-size: 14px;
+    position: relative;
+    &:nth-child(1){
+      &::after {
+        content: '';
+        width: 1Px;
+        height: 20px;
+        background: #ddd;
+        display: block;
+        position: absolute;
+        top: 6px;
+        right: 0;
+      }
+    }
+    & svg {
+      width: 16px;
+      height: 8px;
+      vertical-align: middle;
+    }
+  }
+}
+
+.attend-list {
+  font-size: 12px;
+  & :global(.am-list-item img) {
+    display: block;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+  }
+  & :global(.am-list-content time) {
+    color: #b6b7b9;
+    font-size: 13px;
+  }
+  & .unusual :global(.am-list-line .am-list-extra){
+    color: #ff0000;
+  }
+  & .normal :global(.am-list-line .am-list-extra){
+    color: #02c102;
+  }
+}
+
+.attend-list :global(.am-list-item .am-list-line .am-list-extra) {
+  flex-basis: 64%;
+  font-size: 13px;
+}
+
+html:not([data-scale]) .attend-list :global(.am-list-body .am-list-item:last-child .am-list-line::after) {
+  height: 0;
+}

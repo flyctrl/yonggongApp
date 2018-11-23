@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2018-09-16 14:46:26
+* @Last Modified time: 2018-11-23 16:04:19
 */
 import * as Loading from './load.js'
 import storage from '../utils/storage'
@@ -23,7 +23,8 @@ let fetcher = axios.create({
   headers: {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
-    'Cache-Control': 'no-cach'
+    'Cache-Control': 'no-cach',
+    'Accept': 'application/x.yaque.v2+json'
   }
 })
 

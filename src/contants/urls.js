@@ -9,24 +9,23 @@ const BASE_URL = ``
 export const HOME = `${BASE_URL}/Home`
 export const SYSTEMESSDETAIL = `${HOME}/systemMessDetail` // 首页系统通知详情
 export const MESSAGE = `${BASE_URL}/Message`
-export const WORKORDER = `${BASE_URL}/WorkOrder` // 工单列表
+export const WORKLISTMANAGE = `${BASE_URL}/WorkListManage` // 工单列表
 
 export const PUSHNORMALORDER = `${BASE_URL}/PushOrder/pushNormalOrder` // 发布普通工单
-export const PUSHQUICKORDER = `${BASE_URL}/PushOrder/pushQuickOrder` // 发布快单
+export const PUSHQUICKORDER = `${BASE_URL}/PushWorkOrder/quickOrder` // 发布快单
+export const SELECTCLASSIFY = `${PUSHQUICKORDER}/classify` // 选择分类
+export const CLASSIFYLIST = `${PUSHQUICKORDER}/classifyList` // 分类列表
+export const PUSHQUICKORDERFORM = `${PUSHQUICKORDER}/formBox` // 发布快单form
 export const PUSHBIDORDER = `${BASE_URL}/PushOrder/pushBidOrder` // 发布招标
 
 // 工单
-export const APPLYDETAIL = `${WORKORDER}/applyDetail` // 审批详情
-export const APPLYRECORD = `${WORKORDER}/applyRecord` // 审批记录
-export const ORDERDETAIL = `${WORKORDER}/orderDetail` // 工单详情
-export const ELETAGREEMENT = `${WORKORDER}/eletAgreement` // 电子合同
-export const APPLYSUGGEST = `${WORKORDER}/applySuggest` // 审批意见
-export const SELECTCOMP = `${WORKORDER}/selectComp` // 选择中标单位
-export const BEGINLIST = `${WORKORDER}/beginList` // 开工列表
-export const SETTLELIST = `${WORKORDER}/settleList` // 结算列表
-export const RECEPTQKRECORD = `${WORKORDER}/receptQkRecord` // 查看接单记录 快单
-export const RECEPTNMRECORD = `${WORKORDER}/receptNmRecord` // 查看接单记录 普通工单
-export const CONFIRMCOMPWORK = `${WORKORDER}/confirmCompWork` // 确认完工列表
+export const WORKLISTDETAIL = `${WORKLISTMANAGE}/worklistDetail` // 工单详情
+export const ACCESSRECORD = `${WORKLISTMANAGE}/accessRecord` // 接单记录
+export const SETTLERECORD = `${WORKLISTMANAGE}/settleRecord` // 结算记录
+export const ATTENDRECORD = `${WORKLISTMANAGE}/attendRecord` // 考勤记录
+export const SENDSTARTWORKRECORD = `${WORKLISTMANAGE}/sendStartWorkRecord` // 开工记录 我发的
+export const ORDERSTARTWORKRECORD = `${WORKLISTMANAGE}/orderStartWorkRecord` // 开工记录 我接的
+export const ATTENDDETAIL = `${WORKLISTMANAGE}/attendRecord/detail` // 考勤详情
 
 // 我的
 export const MINE = `${BASE_URL}/Mine`
@@ -55,6 +54,7 @@ export const INVOICELISTTWO = `${INVOICEMANGE}/invoiceListTwo` // 代开发票�
 export const INVOICELISTTWODETAIL = `${INVOICELISTTWO}/detail` // 代开发票详情
 export const APPLYINVOICE = `${MINE}/invoiceMange/applyInvoice` // 申请发票
 export const CONTRACTMANGE = `${MINE}/contractMange` // 合同管理
+export const ELETAGREEMENT = `${CONTRACTMANGE}/contractMange/eletAgreement` // 电子合同
 export const PROJECTMANGE = `${MINE}/projectMange` // 项目管理
 export const PROJECTDETAIL = `${MINE}/projectMange/projectDetail` // 项目详情
 export const CREATEPROJECT = `${MINE}/projectMange/createProject` // 创建项目

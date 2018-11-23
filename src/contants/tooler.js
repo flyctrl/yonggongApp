@@ -7,6 +7,7 @@
 import arrayTreeFilter from 'array-tree-filter'
 import history from 'Util/history'
 
+const DATE_REGEXP = new RegExp('(\\d{4})-(\\d{2})-(\\d{2})([T\\s](\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{3}))?)?.*')
 export const getSel = (value, optionsObj) => { // 根据键值筛选数结果数据中的对象，value:需要筛选树的value数据，optionsObj: 所在的树的数据
   if (!value) {
     return ''
@@ -123,4 +124,17 @@ export const formatDate = function (date) {
   let d = date.getDate()
   d = d < 10 ? ('0' + d) : d
   return y + '-' + m + '-' + d
+}
+
+export const stringToDate = (dateString) => { // 字符串转Date类型
+  if (DATE_REGEXP.test(dateString)) {
+    let timestamp = dateString.replace(DATE_REGEXP, function($all, $year, $month, $day, $part1, $hour, $minute, $second, $part2, $milliscond) {
+      let date = new Date($year, ($month - 1), $day, $hour || '00', $minute || '00', $second || '00', $milliscond || '00')
+      return date.getTime()
+    })
+    let date = new Date()
+    date.setTime(timestamp)
+    return date
+  }
+  return null
 }

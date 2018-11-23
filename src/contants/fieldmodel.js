@@ -57,15 +57,29 @@ const worksheetType = {
   2: '工单',
   3: '快单'
 }
-const orderStatus = {
-  1: '待审批',
-  2: '待接单',
-  3: '待确认',
-  4: '待开工',
-  5: '施工中',
-  6: '已失效',
-  7: '已完工',
-}
+
+const worksheetStatus = [
+  { title: '待审批', status: 1 },
+  { title: '待接单', status: 2 },
+  { title: '待开工', status: 3 },
+  { title: '施工中', status: 4 },
+  { title: '已失效', status: 5 },
+  { title: '已完成', status: 6 }
+]
+
+const orderStatus = [
+  { title: '待开工', status: 1 },
+  { title: '开工中', status: 2 },
+  { title: '完工', status: 3 },
+  { title: '已失效', status: 4 }
+]
+
+const workplanStatus = [
+  { title: '待开工', status: 1 },
+  { title: '开工中', status: 2 },
+  { title: '完工待确认', status: 3 },
+  { title: '已完工', status: 4 }
+]
 
 const payOrderStatus = {
   1: '待开工',
@@ -128,5 +142,7 @@ export {
   tenderWayRadio,
   applyInvoice,
   invoiceStatus,
-  payOrderStatus
+  payOrderStatus,
+  worksheetStatus,
+  workplanStatus
 }

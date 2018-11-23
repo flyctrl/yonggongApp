@@ -30,8 +30,8 @@ const Message = Loadable({ // 消息
   loader: () => import(/* webpackChunkName: "message" */ '../models/Message'),
   loading: MyLoadingComponent
 })
-const WorkOrder = Loadable({ // 工单
-  loader: () => import(/* webpackChunkName: "workorder" */ '../models/WorkOrder'),
+const WorkListManage = Loadable({ // 工单列表
+  loader: () => import(/* webpackChunkName: "worklistmanage" */ '../models/WorkListManage'),
   loading: MyLoadingComponent
 })
 
@@ -40,7 +40,19 @@ const PushNormalOrder = Loadable({ // 发布普通工单
   loading: MyLoadingComponent
 })
 const PushQuickOrder = Loadable({ // 发布快单
-  loader: () => import(/* webpackChunkName: "pushquickorder" */ '../models/PushOrder/pushQuickOrder'),
+  loader: () => import(/* webpackChunkName: "pushquickorder" */ '../models/PushWorkOrder/quickOrder'),
+  loading: MyLoadingComponent
+})
+const SelectClassify = Loadable({
+  loader: () => import(/* webpackChunkName: "SelectClassify" */ '../models/PushWorkOrder/quickOrder/classify'),
+  loading: MyLoadingComponent
+})
+const ClassifyList = Loadable({
+  loader: () => import(/* webpackChunkName: "ClassifyList" */ '../models/PushWorkOrder/quickOrder/classifyList'),
+  loading: MyLoadingComponent
+})
+const PushQuickOrderForm = Loadable({
+  loader: () => import(/* webpackChunkName: "PushQuickOrderForm" */ '../models/PushWorkOrder/quickOrder/formBox'),
   loading: MyLoadingComponent
 })
 const PushBidOrder = Loadable({ // 发布招标
@@ -48,48 +60,32 @@ const PushBidOrder = Loadable({ // 发布招标
   loading: MyLoadingComponent
 })
 
-const ApplyDetail = Loadable({ // 审批详情
-  loader: () => import(/* webpackChunkName: "applydetail" */ '../models/WorkOrder/applyDetail'),
+const WorkListDetail = Loadable({ // 工单详情
+  loader: () => import(/* webpackChunkName: "worklistdetail" */ '../models/WorkListManage/worklistDetail'),
   loading: MyLoadingComponent
 })
-const ApplyRecord = Loadable({ // 审批记录
-  loader: () => import(/* webpackChunkName: "applyrecord" */ '../models/WorkOrder/applyRecord'),
+const AccessRecord = Loadable({ // 接单记录
+  loader: () => import(/* webpackChunkName: "accessrecord" */ '../models/WorkListManage/accessRecord'),
   loading: MyLoadingComponent
 })
-const OrderDetail = Loadable({ // 工单详情
-  loader: () => import(/* webpackChunkName: "orderdetail" */ '../models/WorkOrder/orderDetail'),
+const SettleRecord = Loadable({ // 结算记录
+  loader: () => import(/* webpackChunkName: "settlerecord" */ '../models/WorkListManage/settleRecord'),
   loading: MyLoadingComponent
 })
-const EletAgreement = Loadable({ // 电子合同
-  loader: () => import(/* webpackChunkName: "eletagreement" */ '../models/WorkOrder/eletAgreement'),
+const AttendRecord = Loadable({ // 考勤记录
+  loader: () => import(/* webpackChunkName: "attendrecord" */ '../models/WorkListManage/attendRecord'),
   loading: MyLoadingComponent
 })
-const ApplySuggest = Loadable({ // 审批意见
-  loader: () => import(/* webpackChunkName: "applysuggest" */ '../models/WorkOrder/applySuggest'),
+const SendStartWorkRecord = Loadable({ // 开工记录 我发的
+  loader: () => import(/* webpackChunkName: "sendStartWorkRecord" */ '../models/WorkListManage/sendStartWorkRecord'),
   loading: MyLoadingComponent
 })
-const SelectComp = Loadable({ // 选择中标单位
-  loader: () => import(/* webpackChunkName: "selectcomp" */ '../models/WorkOrder/selectComp'),
+const OrderStartWorkRecord = Loadable({ // 开工记录 我接的
+  loader: () => import(/* webpackChunkName: "orderStartWorkRecord" */ '../models/WorkListManage/orderStartWorkRecord'),
   loading: MyLoadingComponent
 })
-const BeginList = Loadable({ // 开工列表
-  loader: () => import(/* webpackChunkName: "beginlist" */ '../models/WorkOrder/beginList'),
-  loading: MyLoadingComponent
-})
-const SettleList = Loadable({ // 结算列表
-  loader: () => import(/* webpackChunkName: "settlelist" */ '../models/WorkOrder/settleList'),
-  loading: MyLoadingComponent
-})
-const ReceptQkRecord = Loadable({ // 接单记录 快单
-  loader: () => import(/* webpackChunkName: "receptqkrecord" */ '../models/WorkOrder/receptQkRecord'),
-  loading: MyLoadingComponent
-})
-const ReceptNmRecord = Loadable({ // 接单记录 普通工单
-  loader: () => import(/* webpackChunkName: "receptnmrecord" */ '../models/WorkOrder/receptNmRecord'),
-  loading: MyLoadingComponent
-})
-const ConfirmCompWork = Loadable({ // 确认完工列表
-  loader: () => import(/* webpackChunkName: "confirmcompwork" */ '../models/WorkOrder/confirmCompWork'),
+const AttendDetail = Loadable({ // 考勤详情
+  loader: () => import(/* webpackChunkName: "attenddetail" */ '../models/WorkListManage/attendRecord/detail'),
   loading: MyLoadingComponent
 })
 
@@ -191,6 +187,10 @@ const ApplyInvoice = Loadable({ // 申请发票
 })
 const ContractMange = Loadable({ // 合同管理
   loader: () => import(/* webpackChunkName: "contractmange" */ '../models/Mine/contractMange'),
+  loading: MyLoadingComponent
+})
+const EletAgreement = Loadable({ // 电子合同
+  loader: () => import(/* webpackChunkName: "eletagreement" */ '../models/Mine/contractMange/eletAgreement'),
   loading: MyLoadingComponent
 })
 const ProjectMange = Loadable({ // 项目管理
@@ -336,13 +336,13 @@ const routes = [
     animated: false,
     title: '系统'
   }, {
-    path: urls.WORKORDER,
+    path: urls.WORKLISTMANAGE,
     exact: true,
-    component: WorkOrder,
+    component: WorkListManage,
     parent: null,
     animated: false,
     showMenu: true,
-    title: '工单'
+    title: '工单列表'
   }, {
     path: urls.PUSHNORMALORDER,
     exact: true,
@@ -359,6 +359,30 @@ const routes = [
     showMenu: false,
     animated: false,
     title: '发布快单'
+  }, {
+    path: urls.SELECTCLASSIFY,
+    exact: true,
+    component: SelectClassify,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '选择分类'
+  }, {
+    path: urls.CLASSIFYLIST,
+    exact: true,
+    component: ClassifyList,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '分类列表'
+  }, {
+    path: urls.PUSHQUICKORDERFORM,
+    exact: true,
+    component: PushQuickOrderForm,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '发布工单'
   }, {
     path: urls.PUSHBIDORDER,
     exact: true,
@@ -432,93 +456,61 @@ const routes = [
     showMenu: false,
     title: '功能详情'
   }, {
-    path: urls.APPLYDETAIL,
+    path: urls.WORKLISTDETAIL,
     exact: true,
-    component: ApplyDetail,
-    parent: 'WorkOrder',
-    animated: true,
+    component: WorkListDetail,
+    parent: null,
     showMenu: false,
-    title: '审批详情'
-  }, {
-    path: urls.APPLYRECORD,
-    exact: true,
-    component: ApplyRecord,
-    parent: 'ApplyDetail',
     animated: true,
-    showMenu: false,
-    title: '审批记录'
-  }, {
-    path: urls.ORDERDETAIL,
-    exact: true,
-    component: OrderDetail,
-    parent: 'WorkOrder',
-    animated: true,
-    showMenu: false,
     title: '工单详情'
   }, {
-    path: urls.ELETAGREEMENT,
+    path: urls.ACCESSRECORD,
     exact: true,
-    component: EletAgreement,
+    component: AccessRecord,
     parent: null,
-    animated: true,
     showMenu: false,
-    title: '电子合同'
-  }, {
-    path: urls.APPLYSUGGEST,
-    exact: true,
-    component: ApplySuggest,
-    parent: 'ApplyDetail',
     animated: true,
-    showMenu: false,
-    title: '审批意见'
-  }, {
-    path: urls.SELECTCOMP,
-    exact: true,
-    component: SelectComp,
-    parent: 'WorkOrder',
-    animated: true,
-    showMenu: true,
-    title: '选择中标单位'
-  }, {
-    path: urls.BEGINLIST,
-    exact: true,
-    component: BeginList,
-    parent: 'WorkOrder',
-    animated: true,
-    showMenu: true,
-    title: '开工列表'
-  }, {
-    path: urls.SETTLELIST,
-    exact: true,
-    component: SettleList,
-    parent: 'WorkOrder',
-    animated: true,
-    showMenu: true,
-    title: '结算列表'
-  }, {
-    path: urls.RECEPTQKRECORD,
-    exact: true,
-    component: ReceptQkRecord,
-    parent: 'WorkOrder',
-    animated: true,
-    showMenu: true,
     title: '接单记录'
   }, {
-    path: urls.RECEPTNMRECORD,
+    path: urls.SETTLERECORD,
     exact: true,
-    component: ReceptNmRecord,
-    parent: 'WorkOrder',
+    component: SettleRecord,
+    parent: null,
+    showMenu: false,
     animated: true,
-    showMenu: true,
-    title: '接单记录'
+    title: '结算记录'
   }, {
-    path: urls.CONFIRMCOMPWORK,
+    path: urls.ATTENDRECORD,
     exact: true,
-    component: ConfirmCompWork,
-    parent: 'WorkOrder',
+    component: AttendRecord,
+    parent: null,
+    showMenu: false,
     animated: true,
-    showMenu: true,
-    title: '确认完工列表'
+    title: '考勤记录'
+  }, {
+    path: urls.SENDSTARTWORKRECORD,
+    exact: true,
+    component: SendStartWorkRecord,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '开工记录'
+  }, {
+    path: urls.ORDERSTARTWORKRECORD,
+    exact: true,
+    component: OrderStartWorkRecord,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '开工记录'
+  }, {
+    path: urls.ATTENDDETAIL,
+    exact: true,
+    component: AttendDetail,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '考勤详情'
   }, {
     path: urls.MYPUSH,
     exact: true,
@@ -665,6 +657,14 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '合同管理'
+  }, {
+    path: urls.ELETAGREEMENT,
+    exact: true,
+    component: EletAgreement,
+    parent: null,
+    animated: true,
+    showMenu: false,
+    title: '电子合同'
   }, {
     path: urls.PROJECTMANGE,
     exact: true,

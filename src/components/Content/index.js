@@ -65,7 +65,7 @@ class Content extends Component {
       animateClass = style['bounceInRight']
     }
     return (
-      <div className={`${normalClass} animated ${animateClass} ${this.props.className}`}>
+      <div className={`${normalClass} animated ${animateClass} ${this.props.className}`} style={this.props.style}>
         {this.props.children}
       </div>
     )

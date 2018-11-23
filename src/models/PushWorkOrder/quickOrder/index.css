@@ -1,0 +1,32 @@
+.select-class-list {
+  margin-top: 15px;
+  & :global(.am-list-item .am-list-line .am-list-extra) {
+    flex-basis: 66%;
+  }
+}
+
+.settle-type-list {
+  margin-top: 10px;
+}
+
+.classnext-step-btn {
+  margin-top: 40px;
+  & :global(.am-button-primary) {
+    background: #0467e0;
+  }
+}
+
+.icon-class-haiwai {
+  width: 16px;
+  height: 16px;
+}
+
+.asterisk {
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+  width: 16px;
+  text-align: center;
+  color: #db1818;
+  vertical-align: middle;
+}

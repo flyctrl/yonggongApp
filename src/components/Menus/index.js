@@ -21,8 +21,8 @@ const data = [
     onIcon: '#icon-home_pre',
     title: '首页'
   }, {
-    path: urls.WORKORDER,
-    key: 'WorkOrder',
+    path: urls.WORKLISTMANAGE,
+    key: 'WorkListManage',
     icon: '#icon-workbench',
     onIcon: '#icon-workbench_pre',
     title: '工单'
