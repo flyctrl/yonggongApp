@@ -78,7 +78,7 @@ class MyPush extends Component {
                       </section>
                       <a>{orderStatus[item['status']]}</a>
                     </li>
-                  }) : <div className='nodata'>{ dataList.length === 0 && !isloading ? '暂无数据' : '加载中...'}</div>
+                  }) : <div className='nodata'>{ dataList.length === 0 && !isloading ? '暂无数据' : ''}</div>
                 }
               </ul>
             </Tabs>
