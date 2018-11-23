@@ -10,6 +10,7 @@ import { baseUrl } from 'Util/index'
 import { default as swal } from 'sweetalert2'
 import 'Util/api.css'
 
+let tipsLock = false
 // 获取数据类接口
 export const Fetch = (url, params, method = 'post', config) => {
   if (method === 'get') {
@@ -23,17 +24,27 @@ export const Fetch = (url, params, method = 'post', config) => {
       if (res.alert === 0) {
         return false
       } else if (res.alert === 1 || res.alert === 3) {
-        Toast.fail(res.msg, 2)
+        if (!tipsLock) {
+          Toast.fail(res.msg, 2)
+        }
+        if (res.code === 10011 || res.code === 10012 || res.code === 10013) {
+          tipsLock = true
+        }
       } else if (res.alert === 2) {
         Toast.hide()
-        swal({
-          text: res.msg,
-          allowOutsideClick: false,
-          confirmButtonText: '确 认',
-          width: '80%',
-          customClass: 'swalalert',
-          confirmButtonClass: 'alertSureBtn'
-        })
+        if (!tipsLock) {
+          swal({
+            text: res.msg,
+            allowOutsideClick: false,
+            confirmButtonText: '确 认',
+            width: '80%',
+            customClass: 'swalalert',
+            confirmButtonClass: 'alertSureBtn'
+          })
+        }
+        if (res.code === 10011 || res.code === 10012 || res.code === 10013) {
+          tipsLock = true
+        }
       } else {
         return false
       }
@@ -57,17 +68,27 @@ export const FetchSave = (url, params, method = 'post', config) => {
       if (res.alert === 0) {
         return false
       } else if (res.alert === 1 || res.alert === 3) {
-        Toast.fail(res.msg, 2)
+        if (!tipsLock) {
+          Toast.fail(res.msg, 2)
+        }
+        if (res.code === 10011 || res.code === 10012 || res.code === 10013) {
+          tipsLock = true
+        }
       } else if (res.alert === 2) {
         Toast.hide()
-        swal({
-          text: res.msg,
-          allowOutsideClick: false,
-          confirmButtonText: '确 认',
-          width: '80%',
-          customClass: 'swalalert',
-          confirmButtonClass: 'alertSureBtn'
-        })
+        if (!tipsLock) {
+          swal({
+            text: res.msg,
+            allowOutsideClick: false,
+            confirmButtonText: '确 认',
+            width: '80%',
+            customClass: 'swalalert',
+            confirmButtonClass: 'alertSureBtn'
+          })
+        }
+        if (res.code === 10011 || res.code === 10012 || res.code === 10013) {
+          tipsLock = true
+        }
       } else {
         return false
       }
