@@ -1,0 +1,21 @@
+html:not([data-scale]) .pushOrderForm :global(.am-list-body:nth-child(1)::before) {
+  left: 0
+}
+html:not([data-scale]) .pushOrderForm :global(.am-list-body::before) {
+  left: 0;
+}
+html:not([data-scale]) .pushOrderForm :global(.am-list-body::after) {
+  left:0;
+}
+.asterisk {
+  display: inline-block;
+  height: 44px;
+  line-height: 46px;
+  width: 16px;
+  text-align: center;
+  color: #db1818;
+  vertical-align: middle;
+}
+.pushOrderForm {
+  
+}

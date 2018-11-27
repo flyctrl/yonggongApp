@@ -1,13 +1,8 @@
-/*
-* @Author= chengbs
-* @Date=   2018-04-08 13=57=21
-* @Last Modified by=   chengbs
-* @Last Modified time= 2018-05-16 14=40=01
-*/
+
 import React, { Component } from 'react'
 // import { Link } from 'react-router-dom'
-import { Header, Content } from 'Components'
-import { Flex, WingBlank, Carousel } from 'antd-mobile'
+import { Content } from 'Components'
+import { Flex, WingBlank, Carousel, Icon } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import NewIcon from 'Components/NewIcon'
 import style from './style.css'
@@ -43,8 +38,12 @@ class Home extends Component {
     const data = await api.Home.getSystemInforms({ // 获取系统通告
     }) || false
     if (data) {
+      let newData = [...data['list']]
+      newData = newData.filter((item, index) => {
+        return index < 6
+      })
       this.setState({
-        sysInforms: data.list
+        sysInforms: newData
       })
     }
   }
@@ -64,8 +63,10 @@ class Home extends Component {
     const data = await api.Home.getBannerList({ // 获取banner
     }) || false
     if (data) {
+      let newData = [...data['list']]
+      newData = newData.filter((item, index) => index < 3)
       this.setState({
-        bannerList: data.list || [],
+        bannerList: newData,
         isBannerLoading: false
       })
     }
@@ -88,17 +89,17 @@ class Home extends Component {
     this.props.match.history.push(urls.MESSAGE)
   }
   render() {
-    const { sysInforms, companyDetail, todoList, isLoading, bannerList } = this.state
+    const { sysInforms, bannerList } = this.state
     return (
-      <div className='contentBox'>
+      <div className='contentBox antdgray'>
         <div className={style['usr-home-content']}>
-          <Header
+          {/* <Header
             className={style['usr-home-header']}
             title={companyDetail.name}
             rightTitle={<NewIcon className={style['message-icon']} type='icon-messageTz' />}
             rightClick={this.handleMessage}
-          />
-          <Content>
+          /> */}
+          <Content className={style['home-content']} style={{ top: 0 }}>
             <div className={style['home-silder']}>
               {
                 bannerList.length !== 0 ? <div>
@@ -134,9 +135,9 @@ class Home extends Component {
                 </Flex.Item>
               </Flex>
             </div>
-            <div className={`${style['notice-container']} my-top-border my-bottom-border`}>
+            <div className={`${style['notice-container']}`}>
               <NewIcon type='icon-Initials' className={style['notice-icon']} />
-              <span>系统通知</span>
+              {/* <span>系统通知</span> */}
               {
                 sysInforms.length !== 0 ? <WingBlank>
                   <Carousel className={style['my-carousel']}
@@ -149,47 +150,97 @@ class Home extends Component {
                   >
                     {
                       sysInforms.map(item => {
-                        return <div key={item.id} data-id={`${item['id']}`} onClick={this.handleClickSysDetail} className={style['v-item']}>{item.content}<em>{item.created_at}</em></div>
+                        return <div key={item.id} data-id={`${item['id']}`} onClick={this.handleClickSysDetail} className={style['v-item']}><p> <span></span>{item.content}</p><em>{item.created_at}</em></div>
                       })
                     }
                   </Carousel>
-                </WingBlank> : <div></div>
+                </WingBlank> : <div style={{ width: '100%' }}></div>
               }
+              <div className={style['home-more']}>更多<Icon type='right' size='lg' /></div>
             </div>
-            <dl className={style['today-todo']}>
-              <dt>今日待办</dt>
-              {todoList.length !== 0 && !isLoading
-                ? todoList.map(item => {
-                  return (<dd key={item.id} className={'my-bottom-border'}>
-                    <header>
-                      {item.zh_status}
-                      {/* <em></em> */}
-                      {/* <span>{}</span> */}
-                    </header>
-                    <section>
-                      <h2>{item.title}</h2>
-                      <p>{item.content}</p>
-                    </section>
-                    <footer>
-                      {item.publish_time}
-                    </footer>
-                  </dd>)
-                }) : <p className='nodata'>{todoList.length === 0 && !isLoading ? '暂无数据' : ''}</p>
-              }
-              {/* <dd className={'my-bottom-border'}>
-                <header>
-                  <em>1</em>
-                  <span>待审批</span>
-                </header>
-                <section>
-                  <h2>****项目招标</h2>
-                  <p>*****公司刚刚投标了，请您尽快审批。</p>
-                </section>
-                <footer>
-                  下午 2:23
-                </footer>
-              </dd> */}
-            </dl>
+            <div className={style['home-list']}>
+              <dl>
+                <dt className={`${style['home-head']} my-bottom-border`}><em></em>项目 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                <dd>
+                  <div >
+                    <span>100</span>
+                    <b>项目 (个)</b>
+                  </div>
+                  <div >
+                    <span>800</span>
+                    <b>工单 (个)</b>
+                  </div>
+                  <div>
+                    <span className={style['home-mark']}>200.00</span>
+                    <b>支出 (万元)</b>
+                  </div>
+                </dd>
+              </dl>
+              <dl>
+                <dt className={`${style['home-head']} my-bottom-border`}><em></em>工单 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                <dd>
+                  <div >
+                    <span>800</span>
+                    <b>待开工 (个)</b>
+                  </div>
+                  <div >
+                    <span>120</span>
+                    <b>施工中 (个)</b>
+                  </div>
+                  <div>
+                    <span className={style['home-mark']}>80</span>
+                    <b>完工 (个)</b>
+                  </div>
+                </dd>
+              </dl>
+              <dl>
+                <dt className={`${style['home-head']} my-bottom-border`}><em></em>结算 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                <dd>
+                  <div >
+                    <span>200.00</span>
+                    <b>代付款 (万元)
+                    </b>
+                  </div>
+                  <div>
+                    <span className={style['home-mark']}>200.00</span>
+                    <b>已付款 (万元)</b>
+                  </div>
+                </dd>
+              </dl>
+              <dl>
+                <dt className={`${style['home-head']} my-bottom-border`}><em></em>考勤 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                <dd>
+                  <div>
+                    <span>200</span>
+                    <b>正常
+                    </b>
+                  </div>
+                  <div>
+                    <span>120</span>
+                    <b>迟到</b>
+                  </div>
+                  <div>
+                    <span>120</span>
+                    <b>早退</b>
+                  </div>
+                  <div>
+                    <span>120</span>
+                    <b>缺卡</b>
+                  </div>
+                  <div>
+                    <span className={style['home-mark']}>120</span>
+                    <b>异常</b>
+                  </div>
+                </dd>
+              </dl>
+              <div className={style['home-footer']}>
+                <span></span>
+                <b></b>
+                <em>已经到我的底线了</em>
+                <b></b>
+                <span></span>
+              </div>
+            </div>
           </Content>
         </div>
       </div>
@@ -198,4 +249,3 @@ class Home extends Component {
 }
 
 export default Home
-

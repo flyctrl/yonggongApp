@@ -12,7 +12,7 @@ import { createForm } from 'rc-form'
 import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
-import style from './style.css'
+import style from 'Src/models/PushOrder/form.css'
 
 let Upload = Loadable({
   loader: () => import('rc-upload'),
@@ -87,7 +87,7 @@ class CreateProject extends Component {
   }
 
   render() {
-    const { getFieldDecorator, getFieldError } = this.props.form
+    const { getFieldDecorator } = this.props.form
     const { fileList } = this.state
     const uploaderProps = {
       action: api.Common.uploadFile,
@@ -111,9 +111,9 @@ class CreateProject extends Component {
     }
     return (
       <div>
-        <div className='pageBox gray'>
+        <div className='pageBox'>
           <Header
-            title='创建项目'
+            title='新建项目'
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {
@@ -130,20 +130,16 @@ class CreateProject extends Component {
           />
           <Content>
             <form className={style['pushOrderForm']}>
-              <List renderHeader={() => '项目信息'}>
+              <List className={`${style['input-form-list']}`} renderHeader={() => '项目名称'}>
                 {getFieldDecorator('prj_name', {
                   rules: [
                     { required: true, message: '请输入项目名称' },
-                    { pattern: /^.{1,30}$/, message: '项目字数1~30字' }
-                  ]
+                  ],
                 })(
                   <InputItem
-                    type='digit'
                     clear
-                    error={!!getFieldError('prj_name')}
-                    onErrorClick={() => this.onErrorClick('prj_name')}
                     placeholder='请输入项目名称'
-                  >项目名称<em className={style['asterisk']}>*</em></InputItem>
+                  ></InputItem>
                 )}
               </List>
               <List className={`${style['input-form-list']}`} renderHeader={() => '项目编号(非必填)'}>

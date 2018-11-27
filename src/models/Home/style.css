@@ -1,32 +1,23 @@
-/*
-* @Author: chengbs
-* @Date:   2018-05-16 17:57:28
-* @Last Modified by:   baosheng
-* @Last Modified time: 2018-08-14 10:20:50
-*/
-
-.message-icon {display: block;width: 20px;height: 20px;
-}
-.usr-home-header {
-  background: #ffffff;
-}
 
 .home-silder {
   width: 100%;
-  height: 160px;
+  height: 200px;
   & :global(.slider-list) {
-    height: 160px!important;
+    height: 200px!important;
   }
   & img {
     display: block;
     width: 100%;
-    height: 160px;
+    height: 200px;
   }
 }
 
 .flex-container {
-  margin: 0 28px;
-  margin-top: 16px;
+  background:white;
+  padding: 10px  0;
+  & :global(.am-flexbox-item:first-child) {
+    margin-left: 4px;
+  }
 }
 .pushtype-btn {
   width: 52px;
@@ -40,9 +31,9 @@
     margin: 0 auto;
   }
   & .pushtype-text {
-    color: rgba(48, 49, 48, 1.0);
+    color: #333333;
     text-align: center;
-    font-size: 13px;
+    font-size: 12px;
     height: 22px;
     line-height: 22px;
   }
@@ -50,126 +41,164 @@
 
 .notice-container {
   width: 100%;
-  height: 34px;
-  line-height: 34px;
-  margin-top: 18px;
+  height: 60px;
+  /* line-height: 34px; */
+  position: relative;
+  margin-top: 8px;
   overflow: hidden;
+  background:white;
   & .notice-icon {
     float: left;
-    width: 16px;
-    height: 16px;
-    margin-top: 9px;
-    margin-left: 32px;
-    margin-right: 24px;
+    width: 64px;
+    height: 34px;
+    margin-top: 12px;
   }
-  & span {
-    float: left;
-    height: 36px;
-    line-height: 36px;
+  & .home-more {
+    color: #666666;
+    position: absolute;
+    right:10px;
+    top:25px;
+    display: flex;
     font-size: 12px;
-    color: #313F48;
+    align-items: center;
+    & svg {
+      width: 13px;
+      height: 13px;
+    }
   }
   & :global(.am-wingblank) {
     float: left;
     width: 230px;
     margin-right: 8px;
+    margin-left:0px;
+    & :global(.slider-frame) {
+      height: 60px!important;
+      & :global(.slider-slide) {
+        height: 30px!important;
+      }
+    }
   }
   & .v-item {
-    height: 36px;
-    line-height: 36px;
+    height: 30px;
+    font-size: 13px;
+    color: #333333;
+    line-height: 30px;
+    & p {
+      line-height:30px;
+      & span {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: #434343;
+        display: inline-block;
+        margin-right: 5px;
+        vertical-align: middle;
+      }
+    float: left;
     padding-left: 10px;
-    color: #8A96A0;
-    font-size: 11px;
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family:SourceHanSansCN-Regular;
+    font-weight:400;
+    }
     & em {
       float: right;
     }
   }
 }
-
-.today-todo {
-  margin-top: 20px;
-  & dt {
-    height: 18px;
-    line-height: 18px;
-    font-size: 12px;
-    color: rgba(49, 63, 72, 1);
-    margin-bottom: 6px;
-    text-indent: 12px;
+.home-list {
+  padding: 15px;
+  background:white;
+  margin-top: 8px;
+  & dl {
+    box-shadow:0px 2px 9px 0px rgba(37,99,213,0.14);
+    border-radius:6px;
+    margin-bottom: 10px;
+    & dt {
+      box-sizing:border-box;
+      height: 40px;
+      line-height: 40px;
+      font-size:16px;
+      color:#333333;
+      font-family:SourceHanSansCN-Medium;
+      font-weight:500;
+      & em {
+        float: left;
+        width: 2px;
+        height: 40px;
+        display: block;
+        margin-right:6px;
+        background: #1298FC;
+        border-top-left-radius: 6px;
+      }
+      & div {
+        float: right;
+        margin-right:5px;
+        display: flex;
+        font-size: 12px;
+        align-items: center;
+        color: #999999;
+        & svg {
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+    & dd {
+      display: flex;
+      justify-content: space-around;
+      & div {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        text-align: center;
+        width: 50%;
+        height: 57px;
+        margin: 5px 0;
+        & span {
+          font-size:16px;
+          font-family:SourceHanSansCN-Medium;
+          font-weight:500;
+        }
+        & .home-mark{
+          color: #FA6B6D;
+        }
+        & b {
+          font-size:13px;
+          font-family:SourceHanSansCN-Regular;
+          font-weight:400;
+          color: #999999;
+        }
+      }
+    }
   }
-  & dd {
-    width: 100%;
-    height: 80px;
-    overflow: hidden;
-    & header {
-      float: left;
-      width: 50px;
-      height: 50px;
-      line-height: 50px;
-      margin-top: 10px;
-      margin-left: 8px;
-      text-align: center;
-      color: rgba(4, 103, 224, 1);
-      font-size: 12px;
-      /* & em {
-        display: block;
-        text-align: center;
-        color: rgba(4, 103, 224, 1);
-        font-size: 12px;
-        line-height: 50px;
-        margin-top: 10px;
-      } */
-      /* & span {
-        display: block;
-        text-align: center;
-        font-size: 12px;
-        color: rgba(135, 152, 164, .7);
-        line-height: 20px;
-      } */
+  & .home-footer {
+    font-size:12px;
+    font-family:SourceHanSansCN-Regular;
+    font-weight:400;
+    color: #999999;
+    justify-content: center;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    & span {
+      display:inline-block;
+      height: 2px;
+      width: 47px;
+      background: #DDDDDD;
+      border-radius:25px;
     }
-    & section {
-      float: left;
-      margin-left: 20px;
-      margin-top: 22px;
-      width: 200px;
-      & h2 {
-        font-size: 14px;
-        color: rgba(49, 63, 72, 1);
-        font-weight: normal;
-        margin-bottom: 8px;
-        overflow:hidden;
-        text-overflow:ellipsis;
-        white-space:nowrap;
-      }
-      & p {
-        color: rgba(138, 150, 160, .7);
-        font-size: 12px;
-        overflow:hidden;
-        text-overflow:ellipsis;
-        white-space:nowrap;
-      }
+    & em {
+      margin: 0 7px;
     }
-    & footer {
-      float: right;
-      margin-top: 21px;
-      color: rgba(138, 150, 160, .7);
-      font-size: 12px;
-      margin-right: 10px;
+    & b {
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: #DDDDDD;
+      margin: 0 2px;
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
