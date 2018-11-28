@@ -11,6 +11,9 @@ import history from 'Util/history'
 import * as urls from 'Contants/urls'
 import menuStyle from './style.css'
 // import { isIphoneX } from 'Util/ua'
+import normalorder from 'Src/assets/home/normalorder.png'
+import quickorder from 'Src/assets/home/quickorder.png'
+import initeorder from 'Src/assets/home/initeorder.png'
 import TouchFeedback from 'Util/touchFeedback.js'
 
 const data = [
@@ -73,7 +76,11 @@ class AppMenu extends Component {
   componentDidMount() {
     new TouchFeedback('.am-tabs-tab-bar-wrap')
   }
-
+  handleCloseMask = () => {
+    this.setState({
+      visible: false
+    })
+  }
   render() {
     let { visible, selectedTab } = this.state
     return (
@@ -85,7 +92,7 @@ class AppMenu extends Component {
           <TabBar
             unselectedTintColor='#949494'
             tintColor='#33A3F4'
-            barTintColor='white'
+            barTintColor='transparent'
             noRenderContent={false}
           >
             {
@@ -95,10 +102,10 @@ class AppMenu extends Component {
                     title={item['title']}
                     key={item['key']}
                     icon={
-                      item['title'] !== null ? <svg className={menuStyle['icon-menu']} aria-hidden='true'><use xlinkHref={item['icon']}></use></svg> : <svg className={menuStyle['bigicon-menu']} aria-hidden='true'><use xlinkHref={item['icon']}></use></svg>
+                      item['title'] !== null ? <svg className={menuStyle['icon-menu']} aria-hidden='true'><use xlinkHref={item['icon']}></use></svg> : <span className={menuStyle['pushorder-btn']}><NewIcon type='icon-add-default' /></span>
                     }
                     selectedIcon={
-                      item['title'] !== null ? <svg className={menuStyle['icon-menu']} aria-hidden='true'><use xlinkHref={item['onIcon']}></use></svg> : <svg className={menuStyle['bigicon-menu']} aria-hidden='true'><use xlinkHref={item['onIcon']}></use></svg>
+                      item['title'] !== null ? <svg className={menuStyle['icon-menu']} aria-hidden='true'><use xlinkHref={item['onIcon']}></use></svg> : <span className={menuStyle['pushorder-btn']}><NewIcon type='icon-add-default' /></span>
                     }
                     selected={selectedTab === (item['key'] || '/')}
                     onPress={() => {
@@ -126,12 +133,21 @@ class AppMenu extends Component {
           </TabBar>
         </div>
         <div style={{ display: visible ? 'block' : 'none' }} className={`${menuStyle['bottom-menu-tip']} animated ${visible ? 'bounceInUp' : 'bounceOutDown'}`}>
-          <div className={menuStyle['tip-arrow']}></div>
-          <div className={menuStyle['tip-inner']}>
-            <a className='my-bottom-border' onClick={() => history.push(urls.PUSHNORMALORDER)}><NewIcon className={menuStyle['tipicon']} type='icon-gongdan' />发布工单</a>
-            <a className='my-bottom-border' onClick={() => history.push(urls.PUSHQUICKORDER)}><NewIcon className={menuStyle['tipicon']} type='icon-kuaisu' />发布快单</a>
-            <a onClick={() => history.push(urls.PUSHBIDORDER)}><NewIcon className={menuStyle['tipicon']} type='icon-zhaobiaopaimai' />发布招标</a>
-          </div>
+          <ul className={menuStyle['pubsh-box']}>
+            <li onClick={() => history.push(urls.PUSHNORMALORDER)}>
+              <img src={normalorder} />
+              <span>发布工单</span>
+            </li>
+            <li onClick={() => history.push(urls.PUSHQUICKORDER)}>
+              <img src={quickorder} />
+              <span>发布快单</span>
+            </li>
+            <li onClick={() => history.push(urls.PUSHBIDORDER)}>
+              <img src={initeorder} />
+              <span>发布招标</span>
+            </li>
+          </ul>
+          <a className={menuStyle['close']} onClick={this.handleCloseMask}>&#10005;</a>
         </div>
       </div>
     )

@@ -1,5 +1,23 @@
 .map-box {
   height: 260px;
+  & .location {
+    position: absolute;
+    width: 38px;
+    height: 33px;
+    top: 260px;
+    right: 10px;
+    background: #fff;
+    border-radius: 5px;
+    z-index: 9999;
+    padding-top: 5px;
+    text-align: center;
+    box-shadow: #d2d1d1 2px 2px 2px 2px;
+    & svg {
+      width: 28px;
+      height: 28px;
+      color: #565454;
+    }
+  }
 }
 :global(.amap-zoomcontrol) {
   display: none;

@@ -1,0 +1,6 @@
+html:not([data-scale]) .classifylist :global(.am-list-body::after) {
+  height: 0;
+}
+html:not([data-scale]) .classifylist :global(.am-list-body::before) {
+  height: 0;
+}

@@ -5,11 +5,11 @@
 * @Last Modified time: 2018-07-01 20:13:26
 */
 import fetch from 'Util/fetch'
-import { Toast } from 'antd-mobile'
+import { Toast, Modal } from 'antd-mobile'
 import { baseUrl } from 'Util/index'
-import { default as swal } from 'sweetalert2'
 import 'Util/api.css'
 
+const alert = Modal.alert
 // 获取数据类接口
 export const Fetch = (url, params, method = 'post', config) => {
   if (method === 'get') {
@@ -26,14 +26,9 @@ export const Fetch = (url, params, method = 'post', config) => {
         Toast.fail(res.msg, 2)
       } else if (res.alert === 2) {
         Toast.hide()
-        swal({
-          text: res.msg,
-          allowOutsideClick: false,
-          confirmButtonText: '确 认',
-          width: '80%',
-          customClass: 'swalalert',
-          confirmButtonClass: 'alertSureBtn'
-        })
+        alert(res.msg, '', [
+          { text: '确认' }
+        ])
       } else {
         return false
       }
@@ -60,14 +55,9 @@ export const FetchSave = (url, params, method = 'post', config) => {
         Toast.fail(res.msg, 2)
       } else if (res.alert === 2) {
         Toast.hide()
-        swal({
-          text: res.msg,
-          allowOutsideClick: false,
-          confirmButtonText: '确 认',
-          width: '80%',
-          customClass: 'swalalert',
-          confirmButtonClass: 'alertSureBtn'
-        })
+        alert(res.msg, '', [
+          { text: '确认' }
+        ])
       } else {
         return false
       }

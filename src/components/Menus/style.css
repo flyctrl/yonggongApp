@@ -21,56 +21,47 @@
 
 .bottom-menu-tip {
   display: block;
-  width: 130px;
-  height: 126px;
   position: absolute;
-  bottom: 50px;
-  left: 50%;
-  margin-left: -65px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
   z-index: 1000;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.21);
-  background: #fff;
-  & .tip-arrow {
+  background:rgba(255,255,255,0.94);
+  & .close {
     position: absolute;
-    width: 8px;
-    height: 8px;
-    bottom: -4px;
+    bottom: 15px;
     left: 50%;
-    margin-left: -4px;
-    border-radius: 1PX;
-    background-color: #fff;
-    transform: rotate(45deg);
-    z-index: 0;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.21);
+    display: block;
+    width: 50px;
+    margin-left: -25px;
+    height: 50px;
+    font-size: 26px;
+    line-height: 50px;
+    text-align: center;
   }
-  & .tip-inner {
+  & .pubsh-box {
+    display: flex;
+    width: 90%;
+    justify-content: space-around;
     position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 10;
-    background-color: #fff;
-    border-radius: 3px;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.21);
-    overflow: hidden;
-    & a {
-      display: block;
-      height: 42px;
-      line-height: 42px;
-      text-align: center;
-      color: #313f48;
-      font-size: 14px;
-      vertical-align: middle;
-      &:last-child {
-        border-bottom: none;
+    top: 52%;
+    left: 50%;
+    margin-left: -45%;
+    & li {
+      height: 72px;
+      width: 50px;
+      & img {
+        display: block;
+        width: 50px;
+        height: 50px;
       }
-      & .tipicon {
-        width: 20px;
-        height: 20px;
-        margin-right: 3px;
-        vertical-align: middle;
-        margin-top: -2px;
+      & span {
+        display: block;
+        text-align: center;
+        color:rgba(51,51,51,1);
+        font-size: 12px;
+        margin-top: 10px;
       }
     }
   }
@@ -100,8 +91,8 @@
 }
 
 .icon-menu {
-  width: 19px;
-  height: 19px;
+  width: 25px;
+  height: 25px;
   fill: currentColor;
   overflow: hidden;
 }
@@ -113,12 +104,31 @@
   overflow: hidden;
 }
 
+.pushorder-btn {
+  display: block;
+  width:48px;
+  height:48px;
+  background:linear-gradient(0deg,rgba(17,145,241,1) 0%,rgba(91,185,255,1) 100%);
+  border-radius:50%;
+  margin-top: -2px;
+  margin-left: -2px;
+  & svg {
+    color: #fff;
+    width: 24px;
+    height: 24px;
+    margin-top: 11px;
+  }
+}
+
+html:not([data-scale]) .bottom-menu-box :global(.am-tab-bar-bar::before) {
+  height: 0;
+}
 .tabBody .bottom-menu-box :global(.am-tab-bar-tab) {
   height: 100%;
 }
 
 .tabBody .bottom-menu-box :global(.am-tab-bar-bar .am-tab-bar-tab-title) {
-  margin-top: 6px;
+  margin-top: 2px;
 }
 
 .none {
@@ -148,7 +158,9 @@
   width: 100%;
   position: absolute;
   bottom: 0;
-  height: 50px;
+  height: 56px;
+  background: url('../../assets/tab_back.png');
+  background-size: contain;
 }
 
 .tabBody-fix-iphoneX .bottom-menu-box :global(.am-tabs-pane-wrap-inactive),

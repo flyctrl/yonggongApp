@@ -1,0 +1,44 @@
+.result-content {
+  height: 170px;
+  background: #fff;
+  margin-top: 10px;
+  padding-top: 30px;
+  & :global(.am-icon-md) {
+    display: block;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+  }
+  & h2 {
+    font-size: 16px;
+    font-weight: normal;
+    text-align: center;
+    height: 40px;
+    margin-top: 10px;
+    line-height: 40px;
+  }
+  & p {
+    line-height: 30px;
+    height: 30px;
+    text-align: center;
+    color: #b6b5b5;
+  }
+}
+.result-btn {
+  padding: 20px 15px;
+  & :global(.am-button) {
+    font-size: 14px;
+    &:nth-child(1) {
+      background-color: #0467e0; 
+    }
+    &:nth-child(2) {
+      margin-top: 20px;
+    }
+    &:global(.am-button-ghost) {
+      color: #0467e0;
+    }
+  }
+}
+html:not([data-scale]) .result-btn :global(.am-button-primary::before) {
+  border-color: #0467e0;
+}

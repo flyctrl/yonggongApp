@@ -36,7 +36,23 @@ const WorkListManage = Loadable({ // 工单列表
 })
 
 const PushNormalOrder = Loadable({ // 发布普通工单
-  loader: () => import(/* webpackChunkName: "pushnormalorder" */ '../models/PushOrder/pushNormalOrder'),
+  loader: () => import(/* webpackChunkName: "pushnormalorder" */ '../models/PushWorkOrder/normalOrder'),
+  loading: MyLoadingComponent
+})
+const NormalSelectClassify = Loadable({
+  loader: () => import(/* webpackChunkName: "NormalSelectClassify" */ '../models/PushWorkOrder/normalOrder/classify'),
+  loading: MyLoadingComponent
+})
+const NormalClassifyList = Loadable({
+  loader: () => import(/* webpackChunkName: "NormalClassifyList" */ '../models/PushWorkOrder/normalOrder/classifyList'),
+  loading: MyLoadingComponent
+})
+const PushNormalOrderForm = Loadable({
+  loader: () => import(/* webpackChunkName: "PushNormalOrderForm" */ '../models/PushWorkOrder/normalOrder/formBox'),
+  loading: MyLoadingComponent
+})
+const NormalOrderResult = Loadable({ // 普通工单结果详情
+  loader: () => import(/* webpackChunkName: "normalorderresult" */ '../models/PushWorkOrder/normalOrder/result'),
   loading: MyLoadingComponent
 })
 const PushQuickOrder = Loadable({ // 发布快单
@@ -53,6 +69,10 @@ const ClassifyList = Loadable({
 })
 const PushQuickOrderForm = Loadable({
   loader: () => import(/* webpackChunkName: "PushQuickOrderForm" */ '../models/PushWorkOrder/quickOrder/formBox'),
+  loading: MyLoadingComponent
+})
+const QucikOrderResult = Loadable({ // 快单结果详情
+  loader: () => import(/* webpackChunkName: "qucikorderresult" */ '../models/PushWorkOrder/quickOrder/result'),
   loading: MyLoadingComponent
 })
 const PushBidOrder = Loadable({ // 发布招标
@@ -352,6 +372,38 @@ const routes = [
     animated: false,
     title: '发布工单'
   }, {
+    path: urls.NORMALSELECTCLASSIFY,
+    exact: true,
+    component: NormalSelectClassify,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '选择分类'
+  }, {
+    path: urls.NORMALCLASSIFYLIST,
+    exact: true,
+    component: NormalClassifyList,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '分类列表'
+  }, {
+    path: urls.PUSHNORMALORDERFORM,
+    exact: true,
+    component: PushNormalOrderForm,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '普通工单发布'
+  }, {
+    path: urls.NLORDERRESULT,
+    exact: true,
+    component: NormalOrderResult,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '普通工单结果详情'
+  }, {
     path: urls.PUSHQUICKORDER,
     exact: true,
     component: PushQuickOrder,
@@ -382,7 +434,15 @@ const routes = [
     parent: null,
     showMenu: false,
     animated: true,
-    title: '发布工单'
+    title: '快单发布'
+  }, {
+    path: urls.QKORDERRESULT,
+    exact: true,
+    component: QucikOrderResult,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '快单结果详情'
   }, {
     path: urls.PUSHBIDORDER,
     exact: true,
