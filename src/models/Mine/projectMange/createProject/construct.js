@@ -46,8 +46,6 @@ class Construct extends Component {
   render() {
     const { getFieldDecorator, getFieldError } = this.props.form
     let { unit, number } = this.state
-    console.log(unit, 'unit')
-    console.log(number, 'num')
     return (
       <div>
         <div className='pageBox gray'>

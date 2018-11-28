@@ -11,6 +11,7 @@ import style from './style.css'
 import Address from 'Components/Address'
 import Work from './work'
 import Construct from './construct'
+import Projetct from './proinfo'
 const Item = List.Item
 class CreateProject extends Component {
   constructor(props) {
@@ -31,6 +32,7 @@ class CreateProject extends Component {
       workUnit: '', // 施工单位名称
       workNum: '', // 施工单位编号
       workCode: '', // 统一社会代码
+      proText: '', // 项目概况
     }
   }
 
@@ -50,9 +52,9 @@ class CreateProject extends Component {
     })
   }
   handleSelectPro = () => { // 打开项目概况
-    // this.setState({
-    //   proShow: true
-    // })
+    this.setState({
+      proShow: true
+    })
   }
   closeAddress = () => { // 关闭地图
     this.setState({
@@ -67,6 +69,11 @@ class CreateProject extends Component {
   closeWork = () => { // 关闭施工信息
     this.setState({
       workShow: false
+    })
+  }
+  closeProject = () => { // 关闭项目概况
+    this.setState({
+      proShow: false
     })
   }
   submitAddress = (data) => { // 地图取值
@@ -107,9 +114,18 @@ class CreateProject extends Component {
       // licence_no: data['number']
     })
   }
+  submitProject = (data) => { // 项目概况
+    console.log(data, 'pro')
+    this.setState({
+      proText: data['info'],
+      proInfo: data['info'],
+      fileList: data['fileList'],
+      proShow: false
+    })
+  }
   onHandleSubmit = () => { // 提交数据
     let validateAry = ['prj_name', 'construction_place', 'prj_win_bid_unit', 'prj_construct_unit']
-    const { fileList } = this.state
+    const { fileList, constrNum, workCode, workNum, proText } = this.state
     let postFile = []
     fileList.map((item, index, ary) => {
       postFile.push(item['path'])
@@ -118,7 +134,7 @@ class CreateProject extends Component {
     Toast.loading('发布中...', 0)
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
-        let postData = { ...{ attachment: postFile }, ...values }
+        let postData = { ...{ attachment: postFile }, ...values, ...{ prj_win_bid_notice_no: constrNum, prj_construct_unit_code: workCode, licence_no: workNum, prj_brief: proText }}
         console.log(postData)
         const data = await api.Mine.projectMange.createProject(postData) || false
         if (data) {
@@ -144,7 +160,7 @@ class CreateProject extends Component {
   render() {
     const { getFieldDecorator, getFieldError, getFieldProps } = this.props.form
     let { address, workInfo, constructInfo, proInfo, mapShow, constructShow, workShow, proShow } = this.state
-    let { constrUnit, constrNum, workCode, workNum, workUnit } = this.state
+    let { constrUnit, constrNum, workCode, workNum, workUnit, proText, fileList } = this.state
     return (
       <div>
         <div className='pageBox gray' style={{ display: mapShow || constructShow || workShow || proShow ? 'none' : 'block' }}>
@@ -154,10 +170,6 @@ class CreateProject extends Component {
             leftTitle1='返回'
             leftClick1={() => {
               this.props.match.history.push(urls.PROJECTMANGE)
-            }}
-            rightTitle='提交'
-            rightClick={() => {
-              this.onHandleSubmit()
             }}
           />
           <Content>
@@ -254,7 +266,7 @@ class CreateProject extends Component {
                   </div>
                 </div>
               </List>
-              <div className={style['pro-btn']}>创建项目</div>
+              <div className={style['pro-btn']} onClick={this.onHandleSubmit}>创建项目</div>
             </form>
           </Content>
         </div>
@@ -266,6 +278,9 @@ class CreateProject extends Component {
         }
         {
           workShow ? <Work unit={workUnit} num={workNum} code={workCode} onClose={() => this.closeWork()} onSubmit={(workJson) => this.submitWork(workJson)}/> : null
+        }
+        {
+          proShow ? <Projetct info={proText} fileList={fileList} onClose={() => this.closeProject()} onSubmit={(proJson) => this.submitProject(proJson)}/> : null
         }
       </div>
     )

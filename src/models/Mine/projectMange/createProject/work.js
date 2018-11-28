@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react'
-import { List, InputItem } from 'antd-mobile'
+import { List, InputItem, Toast } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import { createForm } from 'rc-form'
 import style from './style.css'
@@ -8,42 +8,48 @@ import style from './style.css'
 class Work extends Component {
   constructor(props) {
     super(props)
+    let newProps = {
+      number: props.num,
+      unit: props.unit,
+      code: props.code
+    }
     this.state = {
+      number: newProps['number'],
+      unit: newProps['unit'],
+      code: newProps['code']
     }
   }
   onHandleSubmit = () => { // 提交数据
-    this.props.onSubmit({
-      unit: '嘻嘻嘻',
-      code: 456,
-      number: 5412121
+    let validateAry = ['prj_construct_unit', 'prj_construct_unit_code', 'licence_no']
+    const { getFieldError } = this.props.form
+    this.props.form.validateFields({ force: true }, async (error, values) => {
+      if (!error) {
+        let postData = { ...values }
+        console.log(postData)
+        this.setState({
+          unit: postData['prj_construct_unit'],
+          number: postData['licence_no'],
+          code: postData['prj_construct_unit_code']
+        })
+        this.props.onSubmit({
+          unit: postData['prj_construct_unit'],
+          number: postData['licence_no'],
+          code: postData['prj_construct_unit_code']
+        })
+      } else {
+        for (let value of validateAry) {
+          if (error[value]) {
+            Toast.fail(getFieldError(value), 1)
+            return
+          }
+        }
+      }
     })
-    // let validateAry = ['prj_win_bid_unit', 'prj_win_bid_notice_no']
-    // const { getFieldError } = this.props.form
-    // this.props.form.validateFields({ force: true }, async (error, values) => {
-    //   if (!error) {
-    //     let postData = { ...values }
-    //     console.log(postData)
-    //     this.setState({
-    //       unit: postData['prj_win_bid_unit'],
-    //       number: postData['prj_win_bid_notice_no']
-    //     })
-    //     this.props.onSubmit({
-    //       unit: postData['prj_win_bid_unit'],
-    //       number: postData['prj_win_bid_notice_no']
-    //     })
-    //   } else {
-    //     for (let value of validateAry) {
-    //       if (error[value]) {
-    //         Toast.fail(getFieldError(value), 1)
-    //         return
-    //       }
-    //     }
-    //   }
-    // })
   }
 
   render() {
     const { getFieldDecorator, getFieldError } = this.props.form
+    let { unit, number, code } = this.state
     return (
       <div>
         <div className='pageBox gray'>
@@ -59,6 +65,7 @@ class Work extends Component {
             <List renderHeader={() => '施工信息'}>
               <div>
                 {getFieldDecorator('prj_construct_unit', {
+                  initialValue: unit,
                   rules: [
                     { required: true, message: '请输入施工单位名称' },
                     { pattern: /^.{1,30}$/, message: '字数1~30字' }
@@ -74,6 +81,7 @@ class Work extends Component {
               </div>
               <div>
                 {getFieldDecorator('prj_construct_unit_code', {
+                  initialValue: code,
                   rules: [
                     { required: true, message: '统一社会信用代码' },
                     { pattern: /^.{1,30}$/, message: '字数1~30字' }
@@ -89,6 +97,7 @@ class Work extends Component {
               </div>
               <div>
                 {getFieldDecorator('licence_no', {
+                  initialValue: number,
                   rules: [
                     { required: true, message: '请输入施工许可证编号' },
                     { pattern: /^.{1,30}$/, message: '字数1~30字' }
