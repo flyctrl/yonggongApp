@@ -179,7 +179,7 @@ class SelectClass extends Component {
         <Content>
           <List renderHeader={() => '选择工单关联的项目信息'} className={style['select-class-list']}>
             <Picker data={district} cols={1} extra={proVal} onOk={this.handleProject}>
-              <Item arrow='horizontal'>项目<em className={style['asterisk']}>*</em></Item>
+              <Item arrow='horizontal' thumb={<NewIcon type='icon-xiangmuxiaoxi' className={style['icon-class-haiwai']} />}>项目<em className={style['asterisk']}>*</em></Item>
             </Picker>
           </List>
           <List renderHeader={() => '发布所需要的工种或机械'} className={style['select-class-list']}>

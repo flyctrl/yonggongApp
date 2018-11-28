@@ -12,13 +12,14 @@
 .classnext-step-btn {
   margin-top: 40px;
   & :global(.am-button-primary) {
-    background: #0467e0;
+    background: #1298FC;
   }
 }
 
 .icon-class-haiwai {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  color: #1298FC;
 }
 
 .asterisk {
