@@ -1,12 +1,7 @@
-html:not([data-scale]) .pushOrderForm :global(.am-list-body:nth-child(1)::before) {
-  left: 0
-}
-html:not([data-scale]) .pushOrderForm :global(.am-list-body::before) {
-  left: 0;
-}
-html:not([data-scale]) .pushOrderForm :global(.am-list-body::after) {
+
+/* html:not([data-scale]) .pushOrderForm :global(.am-list-body::after) {
   left:0;
-}
+} */
 .asterisk {
   display: inline-block;
   height: 44px;
@@ -18,4 +13,41 @@ html:not([data-scale]) .pushOrderForm :global(.am-list-body::after) {
 }
 .pushOrderForm {
   
+}
+html :global(.am-list-item .am-list-line .am-list-content) {
+  padding: 0;
+  width:120px;
+} 
+.input-ellipsis {
+  & :global(.am-list-item .am-list-line .am-list-content) {
+    padding: 0;
+  } 
+  & :global(.am-list-item .am-list-line .am-list-extra) {
+    flex-basis: 60%;
+    padding: 0;
+  }
+}
+
+html :global(.am-list-item ) {
+    & :global(.am-list-line) {
+       & :global(.am-input-label) {
+        width:120px;
+       }
+  }
+}
+
+
+.pro-btn {
+  width:328px;
+  height:40px;
+  background:rgba(0,152,245,1);
+  border-radius:3px;
+  font-size:15px;
+  font-family:SourceHanSansCN-Regular;
+  font-weight:400;
+  color:rgba(255,255,255,1);
+  text-align: center;
+  line-height: 40px;
+  margin-left:23px;
+  margin-top:30px;
 }

@@ -4,9 +4,13 @@ import React, { Component } from 'react'
 import { Content } from 'Components'
 import { Flex, WingBlank, Carousel, Icon } from 'antd-mobile'
 import * as urls from 'Contants/urls'
-import NewIcon from 'Components/NewIcon'
 import style from './style.css'
 import api from 'Util/api'
+import noticeicon from 'Src/assets/home/noticeicon.png'
+import initeorder from 'Src/assets/home/initeorder.png'
+import normalorder from 'Src/assets/home/normalorder.png'
+import quickorder from 'Src/assets/home/quickorder.png'
+import btmtxt from 'Src/assets/home/btmtxt.png'
 class Home extends Component {
   constructor(props) {
     super(props)
@@ -93,17 +97,11 @@ class Home extends Component {
     return (
       <div className='contentBox antdgray'>
         <div className={style['usr-home-content']}>
-          {/* <Header
-            className={style['usr-home-header']}
-            title={companyDetail.name}
-            rightTitle={<NewIcon className={style['message-icon']} type='icon-messageTz' />}
-            rightClick={this.handleMessage}
-          /> */}
           <Content className={style['home-content']} style={{ top: 0 }}>
             <div className={style['home-silder']}>
               {
                 bannerList.length !== 0 ? <div>
-                  <Carousel autoplay infinite >
+                  <Carousel autoplay infinite dots={false}>
                     {
                       bannerList.map(item => {
                         return <div key={item['id']}><img src={item['url']}/></div>
@@ -117,27 +115,26 @@ class Home extends Component {
               <Flex>
                 <Flex.Item>
                   <div onClick={this.handlePushNormalOrder} className={style['pushtype-btn']}>
-                    <NewIcon type='icon-publishWorkOrder' />
+                    <img src={normalorder} />
                     <div className={style['pushtype-text']}>发布工单</div>
                   </div>
                 </Flex.Item>
                 <Flex.Item>
                   <div onClick={this.handlePushQuickOrder} className={style['pushtype-btn']}>
-                    <NewIcon type='icon-fastSingle' />
+                    <img src={quickorder}/>
                     <div className={style['pushtype-text']}>发布快单</div>
                   </div>
                 </Flex.Item>
                 <Flex.Item>
                   <div onClick={this.handlePushBidOrder} className={style['pushtype-btn']}>
-                    <NewIcon type='icon-laborBidding' />
+                    <img src={initeorder}/>
                     <div className={style['pushtype-text']}>劳务招标</div>
                   </div>
                 </Flex.Item>
               </Flex>
             </div>
             <div className={`${style['notice-container']}`}>
-              <NewIcon type='icon-Initials' className={style['notice-icon']} />
-              {/* <span>系统通知</span> */}
+              <img src={noticeicon} />
               {
                 sysInforms.length !== 0 ? <WingBlank>
                   <Carousel className={style['my-carousel']}
@@ -234,11 +231,7 @@ class Home extends Component {
                 </dd>
               </dl>
               <div className={style['home-footer']}>
-                <span></span>
-                <b></b>
-                <em>已经到我的底线了</em>
-                <b></b>
-                <span></span>
+                <img src={btmtxt}/>
               </div>
             </div>
           </Content>

@@ -23,10 +23,10 @@
   width: 52px;
   height: 72px;
   margin-left: 26px;
-  & svg {
+  & img {
     display: block;
-    width: 48px;
-    height: 48px;
+    width: 49px;
+    height: 49px;
     border-radius: 24px;
     margin: 0 auto;
   }
@@ -47,11 +47,12 @@
   margin-top: 8px;
   overflow: hidden;
   background:white;
-  & .notice-icon {
+  & img {
     float: left;
-    width: 64px;
-    height: 34px;
-    margin-top: 12px;
+    width: 50px;
+    height: 45px;
+    margin-top: 8px;
+    margin-left: 15px;
   }
   & .home-more {
     color: #666666;
@@ -175,30 +176,14 @@
     }
   }
   & .home-footer {
-    font-size:12px;
-    font-family:SourceHanSansCN-Regular;
-    font-weight:400;
-    color: #999999;
     justify-content: center;
     height: 42px;
     display: flex;
     align-items: center;
-    & span {
-      display:inline-block;
-      height: 2px;
-      width: 47px;
-      background: #DDDDDD;
-      border-radius:25px;
-    }
-    & em {
-      margin: 0 7px;
-    }
-    & b {
-      width: 2px;
-      height: 2px;
-      border-radius: 50%;
-      background: #DDDDDD;
-      margin: 0 2px;
+    & img {
+      display: block;
+      width: 194px;
+      height: 10px;
     }
   }
 }

@@ -1,59 +1,114 @@
-/*
-* @Author: chengbs
-* @Date:   2018-04-08 16:18:37
-* @Last Modified by:   baosheng
-* @Last Modified time: 2018-07-07 20:23:56
-*/
+
 import React, { Component } from 'react'
-import { List, InputItem, TextareaItem, Toast } from 'antd-mobile'
-import Loadable from 'react-loadable'
+import { List, InputItem, Toast } from 'antd-mobile'
+// import Loadable from 'react-loadable'
 import { Header, Content } from 'Components'
 import { createForm } from 'rc-form'
-import NewIcon from 'Components/NewIcon'
+// import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import style from './style.css'
-
-let Upload = Loadable({
-  loader: () => import('rc-upload'),
-  loading: () => {
-    return null
-  },
-  render(loaded, props) {
-    let Upload = loaded.default
-    return <Upload {...props}/>
-  }
-})
-
+import Address from 'Components/Address'
+import Work from './work'
+import Construct from './construct'
+const Item = List.Item
 class CreateProject extends Component {
   constructor(props) {
     super(props)
     this.state = {
       fileList: [],
-      postData: null
+      postData: null,
+      mapShow: false,
+      constructShow: false,
+      workShow: false,
+      proShow: false,
+      address: '请选择施工地址',
+      constructInfo: '请输入中标信息',
+      workInfo: '请输入施工信息',
+      proInfo: '请输入项目概况',
+      constrUnit: '', // 中标单位名称
+      constrNum: '', // 中标通知书编号
+      workUnit: '', // 施工单位名称
+      workNum: '', // 施工单位编号
+      workCode: '', // 统一社会代码
     }
   }
 
-  delUploadList = async (param) => {
-    const { fileList } = this.state
-    let newFileList = []
-    fileList.map((item) => {
-      if (item.path !== param['path']) {
-        newFileList.push(item)
-      }
+  handleSelectMap = () => { // 打开地图
+    this.setState({
+      mapShow: true
     })
-    const data = await api.Common.delAttch({
-      path: param['path']
-    }) || false
-    if (data) {
-      this.setState({
-        fileList: newFileList
-      })
-    }
   }
-
+  handleSelectCon = () => { // 打开中标单位
+    this.setState({
+      constructShow: true
+    })
+  }
+  handleSelectWork = () => { // 打开施工单位
+    this.setState({
+      workShow: true
+    })
+  }
+  handleSelectPro = () => { // 打开项目概况
+    // this.setState({
+    //   proShow: true
+    // })
+  }
+  closeAddress = () => { // 关闭地图
+    this.setState({
+      mapShow: false
+    })
+  }
+  closeConstrct = () => { // 关闭中标信息
+    this.setState({
+      constructShow: false
+    })
+  }
+  closeWork = () => { // 关闭施工信息
+    this.setState({
+      workShow: false
+    })
+  }
+  submitAddress = (data) => { // 地图取值
+    console.log(data)
+    this.setState({
+      address: data['nowAddress'],
+      mapShow: false
+    })
+    this.props.form.setFieldsValue({
+      construction_place: data['nowAddress']
+    })
+  }
+  submitConstrct = (data) => { // 中标信息取值
+    console.log(data, 'con')
+    this.setState({
+      constructInfo: data['unit'],
+      constructShow: false,
+      constrUnit: data['unit'],
+      constrNum: data['number']
+    })
+    this.props.form.setFieldsValue({
+      prj_win_bid_unit: data['unit'],
+      // prj_win_bid_notice_no: data['number']
+    })
+  }
+  submitWork = (data) => { // 施工信息取值
+    console.log(data, 'work')
+    this.setState({
+      workInfo: data['unit'],
+      workShow: false,
+      workCode: data['code'],
+      workNum: data['number'],
+      workUnit: data['unit']
+    })
+    this.props.form.setFieldsValue({
+      prj_construct_unit: data['unit'],
+      // prj_construct_unit_code: data['code'],
+      // licence_no: data['number']
+    })
+  }
   onHandleSubmit = () => { // 提交数据
-    let validateAry = ['prj_name', 'prj_win_bid_unit', 'bid_deposit', 'prj_build_unit', 'construction_place']
+    let validateAry = ['prj_name', 'construction_place', 'prj_win_bid_unit', 'prj_construct_unit']
     const { fileList } = this.state
     let postFile = []
     fileList.map((item, index, ary) => {
@@ -87,40 +142,17 @@ class CreateProject extends Component {
   }
 
   render() {
-    const { getFieldDecorator, getFieldError } = this.props.form
-    const { fileList } = this.state
-    const uploaderProps = {
-      action: api.Common.uploadFile,
-      data: { type: 3 },
-      multiple: false,
-      onSuccess: (file) => {
-        Toast.hide()
-        if (file['code'] === 0) {
-          this.setState(({ fileList }) => ({
-            fileList: [...fileList, file['data']],
-          }), () => {
-            console.log(this.state.fileList[0].org_name)
-          })
-        } else {
-          Toast.fail(file['msg'], 1)
-        }
-      },
-      beforeUpload(file) {
-        Toast.loading('上传中...', 0)
-      }
-    }
+    const { getFieldDecorator, getFieldError, getFieldProps } = this.props.form
+    let { address, workInfo, constructInfo, proInfo, mapShow, constructShow, workShow, proShow } = this.state
+    let { constrUnit, constrNum, workCode, workNum, workUnit } = this.state
     return (
       <div>
-        <div className='pageBox gray'>
+        <div className='pageBox gray' style={{ display: mapShow || constructShow || workShow || proShow ? 'none' : 'block' }}>
           <Header
             title='创建项目'
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {
-              this.props.match.history.push(urls.PROJECTMANGE)
-            }}
-            leftTitle2='关闭'
-            leftClick2={() => {
               this.props.match.history.push(urls.PROJECTMANGE)
             }}
             rightTitle='提交'
@@ -131,146 +163,114 @@ class CreateProject extends Component {
           <Content>
             <form className={style['pushOrderForm']}>
               <List renderHeader={() => '项目信息'}>
-                {getFieldDecorator('prj_name', {
-                  rules: [
-                    { required: true, message: '请输入项目名称' },
-                    { pattern: /^.{1,30}$/, message: '项目字数1~30字' }
-                  ]
-                })(
-                  <InputItem
-                    type='digit'
-                    clear
-                    error={!!getFieldError('prj_name')}
-                    onErrorClick={() => this.onErrorClick('prj_name')}
-                    placeholder='请输入项目名称'
-                  >项目名称<em className={style['asterisk']}>*</em></InputItem>
-                )}
+                <div>
+                  {getFieldDecorator('prj_name', {
+                    rules: [
+                      { required: true, message: '请输入项目名称' },
+                      { pattern: /^.{1,30}$/, message: '项目字数1~30字' }
+                    ]
+                  })(
+                    <InputItem
+                      clear
+                      error={!!getFieldError('prj_name')}
+                      onErrorClick={() => this.onErrorClick('prj_name')}
+                      placeholder='请输入项目名称'
+                    >项目名称<em className={style['asterisk']}>*</em></InputItem>
+                  )}
+                </div>
+                <div>
+                  {getFieldDecorator('project_no')(
+                    <InputItem
+                      clear
+                      placeholder='请输入项目编号'
+                    >项目编号</InputItem>
+                  )}
+                </div>
+                <div>
+                  {getFieldDecorator('construction_amount')(
+                    <InputItem
+                      clear
+                      placeholder='请输入总投资'
+                    >总投资</InputItem>
+                  )}
+                </div>
+                <div>
+                  {getFieldDecorator('construction_area')(
+                    <InputItem
+                      clear
+                      placeholder='请输入总面积'
+                    >总面积</InputItem>
+                  )}
+                </div>
+                <div className={style['input-ellipsis']} onClick={this.handleSelectMap}>
+                  <Item arrow='horizontal' extra={getFieldError('construction_place') ? <div className='colorRed'>未选择</div> : address}>施工地址<em className={style['asterisk']}>*</em></Item>
+                  <div style={{ display: 'none' }}>
+                    <InputItem
+                      {...getFieldProps('construction_place', {
+                        rules: [
+                          { required: true, message: '请选择施工地址' }
+                        ],
+                      })}
+                    />
+                  </div>
+                </div>
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '项目编号(非必填)'}>
-                {getFieldDecorator('project_no')(
-                  <InputItem
-                    clear
-                    placeholder='请输入项目编号'
-                  ></InputItem>
-                )}
+              <List className={`${style['input-form-list']}`} renderHeader={() => '中标单位信息'}>
+                <div className={style['input-ellipsis']} onClick={this.handleSelectCon}>
+                  <Item arrow='horizontal' extra={getFieldError('prj_win_bid_unit') ? <div className='colorRed'>未选择</div> : constructInfo}>中标单位信息<em className={style['asterisk']}>*</em></Item>
+                  <div style={{ display: 'none' }}>
+                    <InputItem
+                      {...getFieldProps('prj_win_bid_unit', {
+                        rules: [
+                          { required: true, message: '请选择中标单位信息' }
+                        ],
+                      })}
+                    />
+                  </div>
+                </div>
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '中标单位'}>
-                {getFieldDecorator('prj_win_bid_unit', {
-                  rules: [
-                    { required: true, message: '请输入中标单位' },
-                  ],
-                })(
-                  <InputItem
-                    clear
-                    placeholder='请输入中标单位'
-                  ></InputItem>
-                )}
+              <List className={`${style['input-form-list']}`} renderHeader={() => '施工单位信息'}>
+                <div className={style['input-ellipsis']} onClick={this.handleSelectWork}>
+                  <Item arrow='horizontal' extra={getFieldError('prj_construct_unit') ? <div className='colorRed'>未选择</div> : workInfo}>施工单位信息<em className={style['asterisk']}>*</em></Item>
+                  <div style={{ display: 'none' }}>
+                    <InputItem
+                      {...getFieldProps('prj_construct_unit', {
+                        rules: [
+                          { required: true, message: '请选择中标单位信息' }
+                        ],
+                      })}
+                    />
+                  </div>
+                </div>
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '中标通知书编号(非必填)'}>
-                {getFieldDecorator('prj_win_bid_notice_no')(
-                  <InputItem
-                    clear
-                    placeholder='请输入中标通知书编号'
-                  ></InputItem>
-                )}
+              <List className={style['textarea-form-list']} renderHeader={() => '项目概况'}>
+                <div className={style['input-ellipsis']} onClick={this.handleSelectPro}>
+                  <Item arrow='horizontal' extra={getFieldError('prj_brief') ? <div className='colorRed'>未选择</div> : proInfo}>项目概况</Item>
+                  <div style={{ display: 'none' }}>
+                    <InputItem
+                      {...getFieldProps('prj_brief', {
+                      })}
+                    />
+                  </div>
+                </div>
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '施工单位(非必填)'}>
-                {getFieldDecorator('prj_construct_unit')(
-                  <InputItem
-                    clear
-                    placeholder='请输入施工单位'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '施工单位统一社会信用代码(非必填)'}>
-                {getFieldDecorator('prj_construct_unit_code')(
-                  <InputItem
-                    clear
-                    placeholder='请输入施工单位统一社会信用代码'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '建设单位'}>
-                {getFieldDecorator('prj_build_unit', {
-                  rules: [
-                    { required: true, message: '请输入建设单位' },
-                  ],
-                })(
-                  <InputItem
-                    clear
-                    placeholder='请输入建设单位'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '施工地址'}>
-                {getFieldDecorator('construction_place', {
-                  rules: [
-                    { required: true, message: '请输入施工地址' },
-                  ],
-                })(
-                  <InputItem
-                    clear
-                    placeholder='请输入施工地址'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '总投资（单位：元）(非必填)'}>
-                {getFieldDecorator('construction_amount')(
-                  <InputItem
-                    clear
-                    placeholder='请输入总投资'
-                    extra='¥'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '总面积（单位：平方米）(非必填)'}>
-                {getFieldDecorator('construction_area')(
-                  <InputItem
-                    clear
-                    placeholder='请输入总面积'
-                    extra='平方米'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '施工许可证编号（非必填）'}>
-                {getFieldDecorator('licence_no')(
-                  <InputItem
-                    clear
-                    placeholder='请输入施工许可证编号'
-                  ></InputItem>
-                )}
-              </List>
-              <List className={style['textarea-form-list']} renderHeader={() => '项目概况（非必填）'}>
-                {getFieldDecorator('prj_brief')(
-                  <TextareaItem
-                    placeholder='请输入...'
-                    rows={5}
-                    count={500}
-                    className='my-full-border'
-                  />
-                )}
-              </List>
-              <List>
-                <p className={style['push-title']}>项目附件</p>
-                {getFieldDecorator('files')(
-                  <Upload {...uploaderProps} ><NewIcon type='icon-upload' className={style['push-upload-icon']} /></Upload>
-                )}
-                <ul className={style['file-list']}>
-                  {
-                    fileList.map((item, index, ary) => {
-                      return (
-                        <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={() => { this.delUploadList(item) }}>&#10005;</i></li>
-                      )
-                    })
-                  }
-                </ul>
-              </List>
+              <div className={style['pro-btn']}>创建项目</div>
             </form>
           </Content>
         </div>
+        {
+          mapShow ? <Address title='施工地址' onClose={() => this.closeAddress()} onSubmit={(mapJson) => this.submitAddress(mapJson)} /> : null
+        }
+        {
+          constructShow ? <Construct unit={constrUnit} num={constrNum} onClose={() => this.closeConstrct()} onSubmit={(conJson) => this.submitConstrct(conJson)}/> : null
+        }
+        {
+          workShow ? <Work unit={workUnit} num={workNum} code={workCode} onClose={() => this.closeWork()} onSubmit={(workJson) => this.submitWork(workJson)}/> : null
+        }
       </div>
     )
   }
 }
 
 export default createForm()(CreateProject)
+
