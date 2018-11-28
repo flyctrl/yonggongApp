@@ -11,11 +11,16 @@ export const SYSTEMESSDETAIL = `${HOME}/systemMessDetail` // 首页系统通知�
 export const MESSAGE = `${BASE_URL}/Message`
 export const WORKLISTMANAGE = `${BASE_URL}/WorkListManage` // 工单列表
 
-export const PUSHNORMALORDER = `${BASE_URL}/PushOrder/pushNormalOrder` // 发布普通工单
+export const PUSHNORMALORDER = `${BASE_URL}/PushWorkOrder/normalOrder` // 发布普通工单
+export const NORMALSELECTCLASSIFY = `${PUSHNORMALORDER}/classify` // 选择分类
+export const NORMALCLASSIFYLIST = `${PUSHNORMALORDER}/classifyList` // 分类列表
+export const PUSHNORMALORDERFORM = `${PUSHNORMALORDER}/formBox` // 发布普通工单form
+export const NLORDERRESULT = `${PUSHNORMALORDER}/result` // 普通工单结果详情
 export const PUSHQUICKORDER = `${BASE_URL}/PushWorkOrder/quickOrder` // 发布快单
 export const SELECTCLASSIFY = `${PUSHQUICKORDER}/classify` // 选择分类
 export const CLASSIFYLIST = `${PUSHQUICKORDER}/classifyList` // 分类列表
 export const PUSHQUICKORDERFORM = `${PUSHQUICKORDER}/formBox` // 发布快单form
+export const QKORDERRESULT = `${PUSHQUICKORDER}/result` // 快单结果详情
 export const PUSHBIDORDER = `${BASE_URL}/PushOrder/pushBidOrder` // 发布招标
 
 // 工单

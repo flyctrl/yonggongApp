@@ -179,7 +179,7 @@ class FormBox extends Component {
     return <div>
       <div className='pageBox gray' style={{ display: mapShow ? 'none' : 'block' }}>
         <Header
-          title={remarkShow ? '工单备注' : '发布快单'}
+          title={remarkShow ? '工单备注' : '发布工单'}
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
@@ -188,7 +188,7 @@ class FormBox extends Component {
             } else {
               let { urlJson } = this.state
               console.log('parseurl:', tooler.parseJsonUrl(urlJson))
-              this.props.match.history.push(urls.PUSHQUICKORDER + '?' + tooler.parseJsonUrl(urlJson))
+              this.props.match.history.push(urls.PUSHNORMALORDER + '?' + tooler.parseJsonUrl(urlJson))
             }
           }}
           rightTitle={remarkShow ? '确认' : null}
