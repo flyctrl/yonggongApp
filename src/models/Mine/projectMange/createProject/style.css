@@ -1,0 +1,110 @@
+
+/* html:not([data-scale]) .pushOrderForm :global(.am-list-body::after) {
+  left:0;
+} */
+.asterisk {
+  display: inline-block;
+  height: 44px;
+  line-height: 46px;
+  width: 16px;
+  text-align: center;
+  color: #db1818;
+  vertical-align: middle;
+}
+html :global(.am-list-item .am-list-line .am-list-content) {
+  padding: 0;
+  width:120px;
+} 
+.input-ellipsis {
+  & :global(.am-list-item .am-list-line .am-list-content) {
+    padding: 0;
+  } 
+  & :global(.am-list-item .am-list-line .am-list-extra) {
+    flex-basis: 60%;
+    padding: 0;
+  }
+}
+
+html :global(.am-list-item ) {
+    & :global(.am-list-line) {
+       & :global(.am-input-label) {
+        width:120px;
+       }
+  }
+}
+
+
+.pro-btn {
+  width:328px;
+  height:40px;
+  background:rgba(0,152,245,1);
+  border-radius:3px;
+  font-size:15px;
+  font-family:SourceHanSansCN-Regular;
+  font-weight:400;
+  color:rgba(255,255,255,1);
+  text-align: center;
+  line-height: 40px;
+  margin-left:23px;
+  margin-top:30px;
+}
+
+html .push-form-upload :global(.am-list-body) {
+  background-color: transparent;
+  &::before {
+    height: 0;
+  }
+  &::after {
+    height: 0;
+  }
+}
+
+.push-form-upload {
+  padding-left: 20px;
+  & .push-title {
+    font-size: 14px;
+    color: #313f48;
+    height: 20px;
+    line-height: 20px;
+    margin-top: 10px;
+  }
+  & .push-upload-icon {
+    font-size: 60px;
+  }
+  & .file-list {
+    width: 320px;
+    margin-top: 10px;
+    -webkit-padding-start: 0;
+    & li {
+      height: 26px;
+      margin-bottom: 5px;
+      line-height: 26px;
+      overflow: hidden;
+      & .file-list-icon {
+        float: left;
+        width: 16px;
+        height: 16px;
+        margin-top: 5px;
+      }
+      & a {
+        float: left;
+        width: 280px;
+        line-height: 26px;
+        font-size: 14px;
+        margin-left: 5px;
+        color: #1890ff;
+        overflow:hidden;
+        white-space:nowrap;
+        -o-text-overflow:ellipsis;
+        text-overflow:ellipsis;
+      }
+      & i {
+        float: right;
+        width: 14px;
+        text-align: center;
+        font-style: normal;
+        color: #ccc;
+      }
+    }
+  }
+}
