@@ -48,8 +48,8 @@ export const parseJsonUrl = (ojson) => { // json对象转URL
   let s = ''
   let name = null
   let key = null
-  for (var p in ojson) {
-    if (!ojson[p]) { return null }
+  for (let p in ojson) {
+    if (typeof ojson[p] === undefined) { return null }
     if (ojson.hasOwnProperty(p)) { name = p }
     key = ojson[p]
     s += '&' + name + '=' + encodeURIComponent(key)

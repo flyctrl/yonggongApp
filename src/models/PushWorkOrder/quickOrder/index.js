@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Button, WingBlank, Radio, Picker } from 'antd-mobile'
+import { List, Button, WingBlank, Radio } from 'antd-mobile'
 import NewIcon from 'Components/NewIcon'
 import { Header, Content } from 'Components'
 import * as urls from 'Contants/urls'
@@ -7,7 +7,8 @@ import * as tooler from 'Contants/tooler'
 import style from './index.css'
 import Classify from './classify'
 import ClassifyList from './classifyList'
-import TeachList from './teachList/'
+import TeachList from './teachList'
+import ProjectList from './projectList'
 
 const Item = List.Item
 const RadioItem = Radio.RadioItem
@@ -17,16 +18,6 @@ const data = [{
 }, {
   label: '按量结算',
   value: 1
-}]
-const district = [{
-  label: '土木工程项目',
-  value: 1
-}, {
-  label: '水电工程项目',
-  value: 2
-}, {
-  label: '国家电网项目',
-  value: 3
 }]
 class SelectClass extends Component {
   constructor(props) {
@@ -93,14 +84,8 @@ class SelectClass extends Component {
     })
   }
   handleProject = (value) => { // 选择项目
-    console.log(value)
-    let newVal = district.filter((item) => {
-      return item['value'] === value[0]
-    })[0]
-    console.log(newVal)
     this.setState({
-      proId: newVal['value'],
-      proVal: newVal['label']
+      showIndex: 4
     })
   }
   handleSelectClassify = () => { // 选择分类
@@ -140,6 +125,13 @@ class SelectClass extends Component {
       teachVal: postJson['label']
     })
   }
+  projectListSubmit = (postJson) => {
+    this.setState({
+      showIndex: 0,
+      proId: postJson['value'].toString(),
+      proVal: postJson['label']
+    })
+  }
   handleNextStep = () => { // 下一步
     let { classifyId, proId, classifyVal, proVal } = this.state
     if (classifyId === '' || proId === '') {
@@ -161,7 +153,7 @@ class SelectClass extends Component {
     }
   }
   render() {
-    let { settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proVal, url } = this.state
+    let { settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, url } = this.state
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
         <Header
@@ -178,15 +170,13 @@ class SelectClass extends Component {
         />
         <Content>
           <List renderHeader={() => '选择工单关联的项目信息'} className={style['select-class-list']}>
-            <Picker data={district} cols={1} extra={proVal} onOk={this.handleProject}>
-              <Item arrow='horizontal' thumb={<NewIcon type='icon-xiangmuxiaoxi' className={style['icon-class-haiwai']} />}>项目<em className={style['asterisk']}>*</em></Item>
-            </Picker>
+            <Item extra={proVal} arrow='horizontal' onClick={this.handleProject} thumb={<NewIcon type='icon-xiangmuxiaoxi' className={style['icon-class-haiwai']} />}>项目<em className={style['asterisk']}>*</em></Item>
           </List>
           <List renderHeader={() => '发布所需要的工种或机械'} className={style['select-class-list']}>
             <Item extra={classifyVal} arrow='horizontal' onClick={this.handleSelectClassify} thumb={<NewIcon type='icon-haiwai' className={style['icon-class-haiwai']} />}>工种/机械<em className={style['asterisk']}>*</em></Item>
           </List>
           <List style={{ display: parentClassId === 'skill' && showtech === true ? 'block' : 'none' }} renderHeader={() => '技能要求只能允许满足相关技能要求的个人接单'} className={style['select-class-list']}>
-            <Item extra={teachVal} arrow='horizontal' onClick={this.handleSelectTech} thumb={<NewIcon type='icon-haiwai' className={style['icon-class-haiwai']} />}>技能要求</Item>
+            <Item extra={teachVal} arrow='horizontal' onClick={this.handleSelectTech} thumb={<NewIcon type='icon-jobHunting' className={style['icon-class-haiwai']} />}>技能要求</Item>
           </List>
           <List renderHeader={() => '选择计价方式'} className={`${style['select-class-list']} ${style['settle-type-list']}`}>
             {data.map(i => (
@@ -206,6 +196,9 @@ class SelectClass extends Component {
       }
       {
         showIndex === 3 ? <TeachList code={classifyId} onClose={() => this.closeDialog(0)} onSubmit={(postJson) => this.teachListSubmit(postJson)} /> : null
+      }
+      {
+        showIndex === 4 ? <ProjectList data={{ proId }} onClose={() => this.closeDialog(0)} onSubmit={(postJson) => this.projectListSubmit(postJson)} /> : null
       }
     </div>
   }

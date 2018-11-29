@@ -1,22 +1,6 @@
 html:not([data-scale]) .quickorder-form :global(.am-list-body::before) {
   height: 0;
 }
-.push-form {
-  & .vertical-line {
-    display: block;
-    height: 24px;
-    width: 1Px;
-    background: #ddd;
-    margin-left: 10px;
-  }
-  & :global(.am-list-item .am-list-line) {
-    padding-right: 8px;
-    & :global(.am-list-extra) {
-      flex-basis: 100%;
-      text-align: center;
-    }
-  }
-}
 
 .push-btn {
   height: 44px;

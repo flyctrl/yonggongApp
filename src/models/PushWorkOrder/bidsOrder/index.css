@@ -1,0 +1,103 @@
+.select-class-list {
+  margin-top: 10px;
+  & :global(.am-list-item .am-list-line .am-list-extra) {
+    flex-basis: 66%;
+  }
+  & :global(.am-list-header) {
+    padding-top: 10px;
+  }
+}
+
+.settle-type-list {
+  margin-top: 10px;
+}
+
+.classnext-step-btn {
+  margin-top: 20px;
+  & :global(.am-button-primary) {
+    background: #1298FC;
+  }
+}
+
+.icon-class-haiwai {
+  width: 18px;
+  height: 18px;
+  color: #1298FC;
+}
+
+.asterisk {
+  display: inline-block;
+  height: 30px;
+  line-height: 32px;
+  width: 16px;
+  text-align: center;
+  color: #db1818;
+  vertical-align: middle;
+}
+
+.list-radio {
+  & :global(.am-list-body) {
+    padding: 5px 15px;
+  }
+  & .pro-radio {
+    height: 34px;
+    line-height: 34px;
+    display: inline-block;
+    margin-right: 40px;
+    & :global(.am-radio) {
+      position: relative;
+      width: 10px;
+      height: 10px;
+      padding: 3px;
+      margin-right: 5px;
+      display: inline-block;
+      &::before {
+        content: "\0020";
+        overflow: hidden;
+        position: absolute;
+        box-sizing: border-box;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        border: 1px solid #c5c5ca;
+        transform-origin: 0 0;
+        border-radius: 50%;
+      }
+      &:global(.am-radio-checked) {
+        & :global(.am-radio-inner:after) {
+          width: 5px;
+          height: 10px;
+        }
+      }
+    }
+    & :global(.am-radio.am-radio-checked) {
+      &::before {
+        border-color: #108ee9;
+      }
+    }
+  }
+}
+
+@media (min--moz-device-pixel-ratio: 1.5) and (max--moz-device-pixel-ratio: 2.49), (-webkit-min-device-pixel-ratio: 1.5) and (-webkit-max-device-pixel-ratio: 2.49), (min-device-pixel-ratio: 1.5) and (max-device-pixel-ratio: 2.49), (min-resolution: 144dpi) and (max-resolution: 239dpi), (min-resolution: 1.5dppx) and (max-resolution: 2.49dppx) {
+  .list-radio {
+    & .pro-radio {
+      & :global(.am-radio::before) {
+        width: 200%;
+        height: 200%;
+        transform: scale(.5);
+      }
+    }
+  }
+}
+@media (min--moz-device-pixel-ratio: 2.5), (-webkit-min-device-pixel-ratio: 2.5), (min-device-pixel-ratio: 2.5), (min-resolution: 240dpi), (min-resolution: 2.5dppx) {
+  .list-radio {
+    & .pro-radio {
+      & :global(.am-radio::before) {
+        width: 300%;
+        height: 300%;
+        transform: scale(.33333);
+      }
+    }
+  }
+}
