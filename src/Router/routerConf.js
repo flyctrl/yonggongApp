@@ -177,6 +177,10 @@ const RealNameAuth = Loadable({ // 个人认证
   loader: () => import(/* webpackChunkName: "realnameauth" */ '../models/Mine/realNameAuth/'),
   loading: MyLoadingComponent
 })
+const RealNameAuthSuccess = Loadable({ // 个人认证成功页面
+  loader: () => import(/* webpackChunkName: "realnameauthsuccess" */ '../models/Mine/realNameAuth/success'),
+  loading: MyLoadingComponent
+})
 const RealNameAuthDetail = Loadable({ // 个人认证详情
   loader: () => import(/* webpackChunkName: "realnameauthdetail" */ '../models/Mine/realNameDetail'),
   loading: MyLoadingComponent
@@ -651,6 +655,14 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '个人认证'
+  }, {
+    path: urls.REALNAMEAUTHSUCCESS,
+    exact: true,
+    component: RealNameAuthSuccess,
+    parent: 'RealNameAuth',
+    animated: true,
+    showMenu: false,
+    title: '个人认证成功'
   }, {
     path: urls.REALNAMEAUTHDETAIL,
     exact: true,
