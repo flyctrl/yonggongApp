@@ -22,7 +22,7 @@ html:not([data-scale]) .quickorder-form :global(.am-list-body::before) {
   height: 44px;
   line-height: 44px;
   font-size: 16px;
-  background: #0467e0;
+  background: #0098F5;
   margin-top: 20px;
 }
 

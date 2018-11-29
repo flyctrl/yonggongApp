@@ -26,7 +26,7 @@ const settleRadio = [
 
 const payModeRadio = [
   { value: 'A', label: '直接付款' },
-  // { value: 'B', label: '委托付款' }
+  { value: 'B', label: '委托付款' }
 ]
 
 const rightWrongRadio = [
@@ -114,6 +114,14 @@ const tenderWayRadio = [
   { value: 'B', label: '竞价招标' }
 ]
 
+const receiveTypeRadio = [{
+  label: '个人',
+  value: 1
+}, {
+  label: '企业',
+  value: 2
+}]
+
 const applyInvoice = { // 是否已申请开票
   0: '开票',
   1: '已申请',
@@ -144,5 +152,6 @@ export {
   invoiceStatus,
   payOrderStatus,
   worksheetStatus,
-  workplanStatus
+  workplanStatus,
+  receiveTypeRadio
 }

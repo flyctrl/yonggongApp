@@ -39,14 +39,6 @@ const PushNormalOrder = Loadable({ // 发布普通工单
   loader: () => import(/* webpackChunkName: "pushnormalorder" */ '../models/PushWorkOrder/normalOrder'),
   loading: MyLoadingComponent
 })
-const NormalSelectClassify = Loadable({
-  loader: () => import(/* webpackChunkName: "NormalSelectClassify" */ '../models/PushWorkOrder/normalOrder/classify'),
-  loading: MyLoadingComponent
-})
-const NormalClassifyList = Loadable({
-  loader: () => import(/* webpackChunkName: "NormalClassifyList" */ '../models/PushWorkOrder/normalOrder/classifyList'),
-  loading: MyLoadingComponent
-})
 const PushNormalOrderForm = Loadable({
   loader: () => import(/* webpackChunkName: "PushNormalOrderForm" */ '../models/PushWorkOrder/normalOrder/formBox'),
   loading: MyLoadingComponent
@@ -59,14 +51,6 @@ const PushQuickOrder = Loadable({ // 发布快单
   loader: () => import(/* webpackChunkName: "pushquickorder" */ '../models/PushWorkOrder/quickOrder'),
   loading: MyLoadingComponent
 })
-const SelectClassify = Loadable({
-  loader: () => import(/* webpackChunkName: "SelectClassify" */ '../models/PushWorkOrder/quickOrder/classify'),
-  loading: MyLoadingComponent
-})
-const ClassifyList = Loadable({
-  loader: () => import(/* webpackChunkName: "ClassifyList" */ '../models/PushWorkOrder/quickOrder/classifyList'),
-  loading: MyLoadingComponent
-})
 const PushQuickOrderForm = Loadable({
   loader: () => import(/* webpackChunkName: "PushQuickOrderForm" */ '../models/PushWorkOrder/quickOrder/formBox'),
   loading: MyLoadingComponent
@@ -76,7 +60,15 @@ const QucikOrderResult = Loadable({ // 快单结果详情
   loading: MyLoadingComponent
 })
 const PushBidOrder = Loadable({ // 发布招标
-  loader: () => import(/* webpackChunkName: "pushbidorder" */ '../models/PushOrder/pushBidOrder'),
+  loader: () => import(/* webpackChunkName: "pushbidorder" */ '../models/PushWorkOrder/bidsOrder'),
+  loading: MyLoadingComponent
+})
+const PushBidsOrderForm = Loadable({
+  loader: () => import(/* webpackChunkName: "PushBidsOrderForm" */ '../models/PushWorkOrder/bidsOrder/formBox'),
+  loading: MyLoadingComponent
+})
+const BidsOrderResult = Loadable({ // 招标结果详情
+  loader: () => import(/* webpackChunkName: "bidsorderresult" */ '../models/PushWorkOrder/bidsOrder/result'),
   loading: MyLoadingComponent
 })
 
@@ -372,22 +364,6 @@ const routes = [
     animated: false,
     title: '发布工单'
   }, {
-    path: urls.NORMALSELECTCLASSIFY,
-    exact: true,
-    component: NormalSelectClassify,
-    parent: null,
-    showMenu: false,
-    animated: true,
-    title: '选择分类'
-  }, {
-    path: urls.NORMALCLASSIFYLIST,
-    exact: true,
-    component: NormalClassifyList,
-    parent: null,
-    showMenu: false,
-    animated: true,
-    title: '分类列表'
-  }, {
     path: urls.PUSHNORMALORDERFORM,
     exact: true,
     component: PushNormalOrderForm,
@@ -412,22 +388,6 @@ const routes = [
     animated: false,
     title: '发布快单'
   }, {
-    path: urls.SELECTCLASSIFY,
-    exact: true,
-    component: SelectClassify,
-    parent: null,
-    showMenu: false,
-    animated: true,
-    title: '选择分类'
-  }, {
-    path: urls.CLASSIFYLIST,
-    exact: true,
-    component: ClassifyList,
-    parent: null,
-    showMenu: false,
-    animated: true,
-    title: '分类列表'
-  }, {
     path: urls.PUSHQUICKORDERFORM,
     exact: true,
     component: PushQuickOrderForm,
@@ -451,6 +411,22 @@ const routes = [
     showMenu: false,
     animated: false,
     title: '发布招标'
+  }, {
+    path: urls.PUSHBIDSORDERFORM,
+    exact: true,
+    component: PushBidsOrderForm,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '招标发布'
+  }, {
+    path: urls.BIDORDERRESULT,
+    exact: true,
+    component: BidsOrderResult,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '招标结果详情'
   }, {
     path: urls.MESSAGE,
     exact: true,

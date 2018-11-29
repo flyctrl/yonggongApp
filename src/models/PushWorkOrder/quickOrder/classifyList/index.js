@@ -37,7 +37,7 @@ class ClassifyList extends Component {
     this.getdataTemp()
   }
   getdataTemp = () => {
-    const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 50
+    const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 60
     this.genData().then((rdata) => {
       this.rData = rdata
       this.setState({

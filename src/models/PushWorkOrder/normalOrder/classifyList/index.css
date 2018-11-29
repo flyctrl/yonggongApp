@@ -4,3 +4,6 @@ html:not([data-scale]) .classifylist :global(.am-list-body::after) {
 html:not([data-scale]) .classifylist :global(.am-list-body::before) {
   height: 0;
 }
+.classifylist {
+  overflow: hidden;
+}

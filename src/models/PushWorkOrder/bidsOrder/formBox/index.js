@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Toast, InputItem, Picker, Flex, DatePicker, TextareaItem, WingBlank, Button, WhiteSpace } from 'antd-mobile'
+import { List, Toast, InputItem, DatePicker, TextareaItem, WingBlank, Button, WhiteSpace } from 'antd-mobile'
 import Loadable from 'react-loadable'
 import { Header, Content } from 'Components'
 import * as urls from 'Contants/urls'
@@ -33,31 +33,11 @@ class FormBox extends Component {
       address: '请选择施工地址',
       addressObj: {},
       fileList: [],
-      valuationUnit: '',
-      chargeSizeData: [],
       urlJson: tooler.parseURLParam(),
       remark: ''
     }
   }
   componentDidMount() {
-    this.getValuationUnit()
-  }
-  getValuationUnit = async () => {
-    let { settleValue } = this.state.urlJson
-    let data = await api.Common.getUnitlist({
-      type: settleValue,
-      worksheet_type: 3
-    })
-    let newData = []
-    data.map(item => {
-      newData.push({
-        label: '元/' + item['label'],
-        value: item['value']
-      })
-    })
-    this.setState({
-      chargeSizeData: newData
-    })
   }
   handleRemarkClick = () => {
     this.setState({
@@ -125,7 +105,6 @@ class FormBox extends Component {
           ...{ worksheet_type: 3 },
           ...formJson,
           ...{ start_time: tooler.formatDate(formJson['start_time']), end_time: tooler.formatDate(formJson['end_time']) },
-          ...{ valuation_unit: formJson['valuation_unit'][0] },
           ...{ construct_ids: [classifyId] },
           ...{ coordinate: { lng: addressObj.position.lng, lat: addressObj.position.lat }},
           ...{ city_code: addressObj.position.cityCode },
@@ -148,9 +127,9 @@ class FormBox extends Component {
   }
   render() {
     const { getFieldProps, getFieldError, getFieldValue } = this.props.form
-    let { fileList, remarkShow, startDate, endDate, mapShow, address, valuationUnit, chargeSizeData, remark } = this.state
+    let { fileList, remarkShow, startDate, endDate, mapShow, address, remark } = this.state
     console.log('fileList:', fileList)
-    let { settleValue } = this.state.urlJson
+    let { bidwayId } = this.state.urlJson
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
@@ -170,16 +149,10 @@ class FormBox extends Component {
         Toast.loading('上传中...', 0)
       }
     }
-    let qtyUnit = ''
-    if (chargeSizeData.length !== 0 && valuationUnit !== '') {
-      qtyUnit = chargeSizeData.find(item => {
-        return item['value'] === valuationUnit[0]
-      })['label']
-    }
     return <div>
       <div className='pageBox gray' style={{ display: mapShow ? 'none' : 'block' }}>
         <Header
-          title={remarkShow ? '工单备注' : '发布工单'}
+          title={remarkShow ? '工单备注' : '发布招标'}
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
@@ -188,7 +161,7 @@ class FormBox extends Component {
             } else {
               let { urlJson } = this.state
               console.log('parseurl:', tooler.parseJsonUrl(urlJson))
-              this.props.match.history.push(urls.PUSHNORMALORDER + '?' + tooler.parseJsonUrl(urlJson))
+              this.props.match.history.push(urls.PUSHBIDORDER + '?' + tooler.parseJsonUrl(urlJson))
             }
           }}
           rightTitle={remarkShow ? '确认' : null}
@@ -199,116 +172,79 @@ class FormBox extends Component {
         />
         <Content className={style['quickorder-form']} style={{ display: remarkShow ? 'none' : 'block' }}>
           <List>
-            <div>
-              <InputItem
-                {...getFieldProps('title', {
+            <InputItem
+              {...getFieldProps('title', {
+                rules: [
+                  { required: true, message: '请输入标题' },
+                  { pattern: /^.{5,30}$/, message: '标题字数5~30字' }
+                ],
+              })}
+              clear
+              error={!!getFieldError('title')}
+              onErrorClick={() => this.onErrorClick('title')}
+              placeholder='请输入标题'
+            >标 题<em className={style['asterisk']}>*</em></InputItem>
+            {
+              bidwayId === 'A' ? <InputItem
+                {...getFieldProps('valuation_quantity', {
                   rules: [
-                    { required: true, message: '请输入标题' },
-                    { pattern: /^.{5,30}$/, message: '标题字数5~30字' }
-                  ],
-                })}
-                clear
-                error={!!getFieldError('title')}
-                onErrorClick={() => this.onErrorClick('title')}
-                placeholder='请输入标题'
-              >标 题<em className={style['asterisk']}>*</em></InputItem>
-            </div>
-            <div className={`${style['push-form']}`}>
-              <InputItem
-                {...getFieldProps('people_number', {
-                  rules: [
-                    { required: true, message: '请输入人数' },
-                    { pattern: /^[0-9]*[1-9][0-9]*$/, message: '人数格式错误' }
+                    { required: true, message: '请输入总价' },
+                    { pattern: /^[1-9]|([1-9][0-9]+)$/, message: '总价需要大于1' }
                   ],
                 })}
                 type='digit'
                 clear
-                error={!!getFieldError('people_number')}
-                onErrorClick={() => this.onErrorClick('people_number')}
-                placeholder='请输入人数'
-              >人 数<em className={style['asterisk']}>*</em></InputItem>
-              <Flex justify='between'>
-                <InputItem
-                  {...getFieldProps('valuation_unit_price', {
-                    rules: [
-                      { required: true, message: '请输入单价' },
-                      { pattern: /^[1-9]|([1-9][0-9]+)$/, message: '单价需要大于1元' }
-                    ],
-                  })}
-                  type='digit'
-                  clear
-                  error={!!getFieldError('valuation_unit_price')}
-                  onErrorClick={() => this.onErrorClick('valuation_unit_price')}
-                  placeholder='请输入单价'
-                >单 价<em className={style['asterisk']}>*</em></InputItem>
-                <span className={style['vertical-line']}></span>
-                <Picker
-                  className={style['charge-unit']}
-                  data={ chargeSizeData }
-                  extra={getFieldError('valuation_unit') ? <div className='colorRed'>未选择计价单位</div> : '请选择计价单位'}
-                  cols={1}
-                  value={ valuationUnit }
-                  onOk={ value => this.setState({ valuationUnit: value })}
-                  {...getFieldProps('valuation_unit', {
-                    rules: [
-                      { required: true, message: '请选择计价单位' }
-                    ],
-                    valuePropName: 'checked'
-                  })}
-                >
-                  <Item></Item>
-                </Picker>
-              </Flex>
-              {
-                settleValue === '1' ? <InputItem
-                  {...getFieldProps('valuation_quantity', {
-                    rules: [
-                      { required: true, message: '请输入工作总量' },
-                      { pattern: /^[1-9]|([1-9][0-9]+)$/, message: '工作总量需要大于1' }
-                    ],
-                  })}
-                  type='digit'
-                  extra={ qtyUnit ? qtyUnit.split('/')[1] : '' }
-                  clear
-                  error={!!getFieldError('valuation_quantity')}
-                  onErrorClick={() => this.onErrorClick('valuation_quantity')}
-                  placeholder='请输入工作总量'
-                >工作总量<em className={style['asterisk']}>*</em></InputItem> : null
-              }
-            </div>
-            <div>
-              <DatePicker
-                mode='date'
-                minDate={new Date()}
-                maxDate={endDate}
-                title='开工时间'
-                extra={getFieldError('start_time') ? <div className='colorRed'>未选择</div> : '请选择开工时间'}
-                value={startDate}
-                onOk={(date) => this.handleStartDate(date)}
-                {...getFieldProps('start_time', {
-                  rules: [
-                    { required: true, message: '请选择开工时间' }
-                  ],
-                })}
-              >
-                <Item arrow='horizontal'>开工时间<em className={style['asterisk']}>*</em></Item>
-              </DatePicker>
-              <DatePicker
-                mode='date'
-                minDate={startDate || new Date()}
-                title='结束时间'
-                extra={getFieldError('end_time') ? <div className='colorRed'>未选择</div> : '请选择结束时间'}
-                value={endDate}
-                onOk={(date) => this.handleEndDate(date)}
-                {...getFieldProps('end_time', {
-                  rules: [
-                    { required: true, message: '请选择结束时间' }
-                  ],
-                })}
-              >
-                <Item arrow='horizontal'>结束时间<em className={style['asterisk']}>*</em></Item>
-              </DatePicker>
-            </div>
+                error={!!getFieldError('valuation_quantity')}
+                onErrorClick={() => this.onErrorClick('valuation_quantity')}
+                placeholder='请输入总价'
+              >总价<em className={style['asterisk']}>*</em></InputItem> : null
+            }
+            <DatePicker
+              mode='date'
+              minDate={new Date()}
+              title='截标时间'
+              extra={getFieldError('start_time') ? <div className='colorRed'>未选择</div> : '请选择截标时间'}
+              value={startDate}
+              onOk={(date) => this.handleStartDate(date)}
+              {...getFieldProps('start_time', {
+                rules: [
+                  { required: true, message: '请选择截标时间' }
+                ],
+              })}
+            >
+              <Item arrow='horizontal'>截标时间<em className={style['asterisk']}>*</em></Item>
+            </DatePicker>
+            <DatePicker
+              mode='date'
+              minDate={new Date()}
+              maxDate={endDate}
+              title='开工时间'
+              extra={getFieldError('start_time') ? <div className='colorRed'>未选择</div> : '请选择开工时间'}
+              value={startDate}
+              onOk={(date) => this.handleStartDate(date)}
+              {...getFieldProps('start_time', {
+                rules: [
+                  { required: true, message: '请选择开工时间' }
+                ],
+              })}
+            >
+              <Item arrow='horizontal'>开工时间<em className={style['asterisk']}>*</em></Item>
+            </DatePicker>
+            <DatePicker
+              mode='date'
+              minDate={startDate || new Date()}
+              title='结束时间'
+              extra={getFieldError('end_time') ? <div className='colorRed'>未选择</div> : '请选择结束时间'}
+              value={endDate}
+              onOk={(date) => this.handleEndDate(date)}
+              {...getFieldProps('end_time', {
+                rules: [
+                  { required: true, message: '请选择结束时间' }
+                ],
+              })}
+            >
+              <Item arrow='horizontal'>结束时间<em className={style['asterisk']}>*</em></Item>
+            </DatePicker>
             <div className={style['input-ellipsis']} onClick={this.handleSelectMap}>
               <Item arrow='horizontal' extra={getFieldError('construction_place') ? <div className='colorRed'>未选择</div> : address}>施工地址<em className={style['asterisk']}>*</em></Item>
               <div style={{ display: 'none' }}>
@@ -321,11 +257,29 @@ class FormBox extends Component {
                 />
               </div>
             </div>
+            <InputItem
+              {...getFieldProps('contact')}
+              clear
+              error={!!getFieldError('contact')}
+              onErrorClick={() => this.onErrorClick('contact')}
+              placeholder='请输入联系人'
+            >联系人</InputItem>
+            <InputItem
+              {...getFieldProps('mobile', {
+                rules: [
+                  { pattern: /^1[345789]\d{9}$/, message: '手机号格式错误' }
+                ],
+              })}
+              clear
+              error={!!getFieldError('mobile')}
+              onErrorClick={() => this.onErrorClick('mobile')}
+              placeholder='请输入手机号'
+            >手机号</InputItem>
             <div className={style['input-ellipsis']} onClick={this.handleRemarkClick}>
               <Item arrow='horizontal' extra={remark}>工单备注</Item>
             </div>
           </List>
-          <WingBlank><Button onClick={this.onSubmit} className={style['push-btn']} type='primary'>发布工单</Button></WingBlank>
+          <WingBlank><Button onClick={this.onSubmit} className={style['push-btn']} type='primary'>发布招标</Button></WingBlank>
           <WhiteSpace />
         </Content>
         <Content style={{ display: remarkShow ? 'block' : 'none' }}>

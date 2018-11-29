@@ -2,23 +2,14 @@ import React, { Component } from 'react'
 import { List, Button, WingBlank, Radio, Picker } from 'antd-mobile'
 import NewIcon from 'Components/NewIcon'
 import { Header, Content } from 'Components'
+import { tenderWayRadio, receiveTypeRadio, payModeRadio } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './index.css'
-import Classify from './classify'
-import ClassifyList from './classifyList'
 import TeachList from './teachList'
 import ProjectList from './projectList'
 
 const Item = List.Item
-const RadioItem = Radio.RadioItem
-const data = [{
-  label: '按时间结算',
-  value: 2
-}, {
-  label: '按量结算',
-  value: 1
-}]
 const paymethod = [{
   label: '日',
   value: 1
@@ -37,81 +28,80 @@ class SelectClass extends Component {
     super(props)
     this.state = {
       showIndex: 0,
-      settleValue: 2,
+      receiveType: 1,
       proId: '',
       proVal: '请选择',
-      classifyVal: '请选择',
-      classifyId: '',
       paymethodId: '',
       paymethodVal: '请选择',
+      bidwayId: '',
+      bidwayVal: '请选择',
+      paymodeId: 'A',
+      paymodeVal: '直接付款',
       teachVal: '不限',
       teachId: '0',
-      parentClassId: 0,
-      constructType: '',
       showform: false,
       showtech: false,
       url: tooler.getQueryString('url')
     }
   }
   componentDidMount() {
-    let [classifyVal,
-      classifyId,
-      parentClassId,
+    let [
       teachVal,
       teachId,
-      settleValue,
-      constructType,
       proId,
       proVal,
       paymethodId,
-      paymethodVal
+      paymethodVal,
+      bidwayId,
+      bidwayVal,
+      paymodeId,
+      paymodeVal
     ] = [
-      decodeURIComponent(decodeURIComponent(tooler.getQueryString('classifyVal'))),
-      tooler.getQueryString('classifyId'),
-      tooler.getQueryString('parentClassId'),
       decodeURIComponent(decodeURIComponent(tooler.getQueryString('teachVal'))),
       tooler.getQueryString('teachId'),
-      parseInt(tooler.getQueryString('settleValue')),
-      tooler.getQueryString('constructType'),
       tooler.getQueryString('proId'),
       decodeURIComponent(decodeURIComponent(tooler.getQueryString('proVal'))),
       tooler.getQueryString('paymethodId'),
       decodeURIComponent(decodeURIComponent(tooler.getQueryString('paymethodVal'))),
+      tooler.getQueryString('bidwayId'),
+      decodeURIComponent(decodeURIComponent(tooler.getQueryString('bidwayVal'))),
+      tooler.getQueryString('paymodeId'),
+      decodeURIComponent(decodeURIComponent(tooler.getQueryString('paymodeVal'))),
     ]
     console.log('teachId:', teachId)
     if (teachId === null) {
       teachVal = '不限'
       teachId = '0'
     }
-    if (classifyVal && classifyId && proId && proVal && paymethodId && paymethodVal) {
+    if (proId && proVal && paymethodId && paymethodVal && bidwayId && bidwayVal && paymodeId && paymodeId && paymodeVal) {
       this.setState({
-        classifyVal,
-        classifyId,
         teachVal,
         teachId,
-        settleValue,
-        parentClassId,
-        constructType,
         proId,
         proVal,
         paymethodId,
-        paymethodVal
+        paymethodVal,
+        bidwayId,
+        bidwayVal,
+        paymodeId,
+        paymodeVal
       })
     }
-  }
-  onChange = (value) => {
-    this.setState({
-      settleValue: value
-    })
   }
   handleProject = (value) => { // 选择项目
     this.setState({
       showIndex: 4
     })
   }
-  handleSelectClassify = () => { // 选择分类
+  handleBidWay = (value) => { // 招标方式
+    console.log(value)
+    let newVal = tenderWayRadio.filter((item) => {
+      return item['value'] === value[0]
+    })[0]
+    console.log(newVal)
     this.setState({
-      showIndex: 1
+      bidwayId: newVal['value'],
+      bidwayVal: newVal['label']
     })
   }
   handlePayMethod = (value) => { // 选择结算方式
@@ -125,7 +115,18 @@ class SelectClass extends Component {
       paymethodVal: newVal['label']
     })
   }
-  handleSelectTech = () => {
+  handlePayMode = (value) => { // 付款方式
+    console.log(value)
+    let newVal = payModeRadio.filter((item) => {
+      return item['value'] === value[0]
+    })[0]
+    console.log(newVal)
+    this.setState({
+      paymodeId: newVal['value'],
+      paymodeVal: newVal['label']
+    })
+  }
+  handleSelectTech = () => { // 资质要求
     this.setState({
       showIndex: 3
     })
@@ -133,21 +134,6 @@ class SelectClass extends Component {
   closeDialog = (index) => {
     this.setState({
       showIndex: index
-    })
-  }
-  classifySubmit = (parentClassId) => {
-    this.setState({
-      showIndex: 2,
-      parentClassId
-    })
-  }
-  classListSubmit = (postJson) => {
-    this.setState({
-      showIndex: 0,
-      classifyId: postJson['value'],
-      classifyVal: postJson['label'],
-      constructType: postJson['construct_type'],
-      showtech: postJson['showtech']
     })
   }
   teachListSubmit = (postJson) => {
@@ -164,33 +150,39 @@ class SelectClass extends Component {
       proVal: postJson['label']
     })
   }
+  handleChangeType = (value) => { // 选择接单方类型
+    this.setState({
+      receiveType: value,
+      showtech: value === 2
+    })
+    console.log(value)
+  }
   handleNextStep = () => { // 下一步
-    let { classifyId, proId, classifyVal, proVal, paymethodId, paymethodVal } = this.state
-    if (classifyId === '' || proId === '' || paymethodId === '') {
+    let { teachVal, teachId, showtech, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal } = this.state
+    if (proId === '' || paymethodId === '' || bidwayId === '' || paymodeId === '') {
       this.setState({
-        classifyVal: classifyId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : classifyVal,
         proVal: proId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : proVal,
         paymethodVal: paymethodId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : paymethodVal,
+        bidwayVal: bidwayId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : bidwayVal,
+        paymodeVal: paymodeId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : paymodeVal
       })
     } else {
-      let { settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, proId, proVal } = this.state
-      if (parentClassId !== 'skill' || showtech === false) {
+      if (showtech === false) {
         teachId = 'null'
       }
-      let urlJson = { settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, proId, proVal, paymethodId, paymethodVal }
+      let urlJson = { teachVal, teachId, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal }
       console.log('urlJson:', urlJson)
       let skipurl = tooler.parseJsonUrl(urlJson)
       console.log('skipurl:', skipurl)
-      // this.props.match.history.push(urls.PUSHQUICKORDERFORM + '?settleId=' + settleValue + '&classifyId=' + classifyId + '&classifyVal=' + classifyVal + (url ? ('&url=' + url) : '') + (teachId !== '' ? ('&teachVal=' + teachVal + '&teachId=' + teachId) : ''))
-      this.props.match.history.push(urls.PUSHNORMALORDERFORM + '?' + skipurl)
+      this.props.match.history.push(urls.PUSHBIDSORDERFORM + '?' + skipurl)
     }
   }
   render() {
-    let { url, settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, paymethodVal } = this.state
+    let { url, showIndex, teachVal, showtech, proId, proVal, paymethodVal, bidwayVal, paymodeVal, receiveType } = this.state
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
         <Header
-          title='选择类别'
+          title='发布招标'
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
@@ -205,35 +197,44 @@ class SelectClass extends Component {
           <List renderHeader={() => '选择工单关联的项目信息'} className={style['select-class-list']}>
             <Item extra={proVal} arrow='horizontal' onClick={this.handleProject} thumb={<NewIcon type='icon-xiangmuxiaoxi' className={style['icon-class-haiwai']} />}>项目<em className={style['asterisk']}>*</em></Item>
           </List>
-          <List renderHeader={() => '发布所需要的工种或机械'} className={style['select-class-list']}>
-            <Item extra={classifyVal} arrow='horizontal' onClick={this.handleSelectClassify} thumb={<NewIcon type='icon-haiwai' className={style['icon-class-haiwai']} />}>工种/机械<em className={style['asterisk']}>*</em></Item>
+          <List className={style['list-radio']} renderHeader={() => '选择接单方类型'}>
+            {
+              receiveTypeRadio.map((item, index, ary) => {
+                return (
+                  <Radio
+                    key={item.value}
+                    checked={receiveType === item.value}
+                    name='salary_payment_way'
+                    className={style['pro-radio']}
+                    onChange={() => this.handleChangeType(item.value)}
+                  >{item.label}</Radio>
+                )
+              })
+            }
           </List>
-          <List style={{ display: parentClassId === 'skill' && showtech === true ? 'block' : 'none' }} renderHeader={() => '技能要求只能允许满足相关技能要求的个人接单'} className={style['select-class-list']}>
-            <Item extra={teachVal} arrow='horizontal' onClick={this.handleSelectTech} thumb={<NewIcon type='icon-jobHunting' className={style['icon-class-haiwai']} />}>技能要求</Item>
+          <List style={{ display: showtech === true ? 'block' : 'none' }} renderHeader={() => '资质要求只能允许满足相关资质要求的企业接单'} className={style['select-class-list']}>
+            <Item extra={teachVal} arrow='horizontal' onClick={this.handleSelectTech} thumb={<NewIcon type='icon-zizhizhengshu' className={style['icon-class-haiwai']} />}>资质要求</Item>
+          </List>
+          <List renderHeader={() => '选择招标方式'} className={style['select-class-list']}>
+            <Picker data={tenderWayRadio} cols={1} extra={bidwayVal} onOk={this.handleBidWay}>
+              <Item arrow='horizontal' thumb={<NewIcon type='icon-zhaobiaopaimai' className={style['icon-class-haiwai']} />}>招标方式<em className={style['asterisk']}>*</em></Item>
+            </Picker>
           </List>
           <List renderHeader={() => '选择结算方式'} className={style['select-class-list']}>
             <Picker data={paymethod} cols={1} extra={paymethodVal} onOk={this.handlePayMethod}>
               <Item arrow='horizontal' thumb={<NewIcon type='icon-settlemethod' className={style['icon-class-haiwai']} />}>结算方式<em className={style['asterisk']}>*</em></Item>
             </Picker>
           </List>
-          <List renderHeader={() => '选择计价方式'} className={`${style['select-class-list']} ${style['settle-type-list']}`}>
-            {data.map(i => (
-              <RadioItem key={i.value} checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
-                {i.label}
-              </RadioItem>
-            ))}
+          <List renderHeader={() => '默认为直接付款，代付模式为由接招标所转发出的工单都由发招标方来付款'} className={style['select-class-list']}>
+            <Picker data={payModeRadio} cols={1} extra={paymodeVal} onOk={this.handlePayMode}>
+              <Item arrow='horizontal' thumb={<NewIcon type='icon-daifukuan' className={style['icon-class-haiwai']} />}>支付方式</Item>
+            </Picker>
           </List>
           <WingBlank className={style['classnext-step-btn']}><Button type='primary' onClick={this.handleNextStep}>下一步</Button></WingBlank>
         </Content>
       </div>
       {
-        showIndex === 1 ? <Classify onClose={() => this.closeDialog(0)} onSubmit={(id) => this.classifySubmit(id)} /> : null
-      }
-      {
-        showIndex === 2 ? <ClassifyList id={parentClassId} onClose={() => this.closeDialog(1)} onSubmit={(postJson) => this.classListSubmit(postJson)} /> : null
-      }
-      {
-        showIndex === 3 ? <TeachList code={classifyId} onClose={() => this.closeDialog(0)} onSubmit={(postJson) => this.teachListSubmit(postJson)} /> : null
+        showIndex === 3 ? <TeachList onClose={() => this.closeDialog(0)} onSubmit={(postJson) => this.teachListSubmit(postJson)} /> : null
       }
       {
         showIndex === 4 ? <ProjectList data={{ proId }} onClose={() => this.closeDialog(0)} onSubmit={(postJson) => this.projectListSubmit(postJson)} /> : null
