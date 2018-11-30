@@ -146,7 +146,7 @@ export default {
     reset(params) { // 重置密码
       return Fetch(prefix + '/user/reset', params, 'post', { showloading: false })
     },
-    setPaypwd(params) { // 设置提现密码
+    setPaypwd(params) { // 设置支付密码
       return FetchSave(prefix + '/withdraw/password', params, 'post', { showloading: false })
     },
     vailPaypwd(params) { // 提现验证密码
@@ -212,6 +212,80 @@ export default {
     }
   },
   Mine: { // 我的
+    WorkOrderList: { // 我的工单
+      workorderList(params) { // 我的接单
+        return Fetch('/worksheetOrder/mine/list', params, 'get')
+      },
+      worksheetList(params) { // 我发布的
+        return Fetch('/worksheet/mine/list', params, 'get')
+      },
+      workOrderDetail(params) { // 工单详情 order_no
+        return Fetch('/worksheetOrder/worksheetDetail', params, 'get')
+      },
+      workSheetDetail(params) { // 工单详情 worksheet_no
+        return Fetch('/worksheet/detail', params, 'get')
+      },
+      worksheetApplyList(params) { // 接单记录
+        return Fetch('/worksheet/apply/list', params, 'get')
+      },
+      confirmQtReefusal(params) { // 接单记录-同意和拒绝
+        return FetchSave('/worksheet/confirm/apply', params)
+      },
+      settleRecordAccept(params) { // 我接的 - 结算记录
+        return Fetch('/worksheet/settle/accept', params, 'get')
+      },
+      settleRecordSend(params) { // 我发的 - 结算记录
+        return Fetch('/worksheet/settle/send', params, 'get')
+      },
+      workorderSubmit(params) { // 我的接单 确认完工
+        return FetchSave('/worksheetOrder/submit', params)
+      },
+      workorderApply(params) { // 我的接单 确认结算
+        return FetchSave('/worksheetOrder/settleApply', params)
+      },
+      startWork(params) { // 我的接单 开工
+        return FetchSave('/worksheetOrder/startWork', params, 'post', { showloading: false })
+      },
+      cancelWork(params) { // 我发的 取消开工
+        return FetchSave('/worksheet/cancel', params, 'post', { showloading: false })
+      },
+      finshedWork(params) { // 我的接单 完工
+        return FetchSave('/worksheetOrder/finishWork', params, 'post', { showloading: false })
+      },
+      sendWorkplanList(params) { // 开工记录 - 我发的
+        return Fetch('/workplan/list/to_confirm', params, 'get')
+      },
+      orderWorkplanList(params) { // 开工记录 - 我接的
+        return Fetch('/workplan/list/worker', params, 'get')
+      },
+      sendConfirmWork(params) { // 确认完工 - 开工记录 - 我发的
+        return FetchSave('/workplan/confirm', params, 'post', { showloading: false })
+      },
+      orderConfirmWork(params) { // 确认完工 - 开工记录 - 我接的
+        return FetchSave('/workplan/finish', params, 'post', { showloading: false })
+      },
+      attendStat(params) { // 考勤记录（我发的）
+        return Fetch('/worksheet/attend/stat', params, 'get')
+      },
+      attendDetail(params) { // 考勤打卡明细（我接的）
+        return Fetch('/worksheetOrder/attend/detail', params, 'get')
+      },
+      confirmConstruct(params) { // 确认开工 快单、普通工单、招标
+        return FetchSave('/worksheet/confirmConstruct', params)
+      },
+      cancelConstruct(params) { // 取消开工 快单、普通工单、招标
+        return FetchSave('/worksheet/cancel', params)
+      },
+      handleConfirmComp(params) { // 快单 确认完工列表
+        return Fetch('/worksheetOrder/confirmList', params, 'get')
+      },
+      getContractList(params) { // 合同列表
+        return Fetch('/contract/list/publish', params, 'get')
+      },
+      getContractDetail(params) { // 合同列表详情
+        return Fetch('/contract/show', params, 'get')
+      }
+    },
     account: {
       recharge(params) { // 创建充值订单
         return Fetch(prefix + '/recharge', params)

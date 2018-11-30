@@ -105,6 +105,18 @@ const Mine = Loadable({ // 我的
   loader: () => import(/* webpackChunkName: "mine" */ '../models/Mine'),
   loading: MyLoadingComponent
 })
+const ApplySettle = Loadable({ // 申请结算
+  loader: () => import(/* webpackChunkName: "applysettle" */ '../models/Mine/myorder/applySettle'),
+  loading: MyLoadingComponent
+})
+const ConfirmSettle = Loadable({ // 确认结算
+  loader: () => import(/* webpackChunkName: "confirmsettle" */ '../models/Mine/myorder/applySettle/confirmlist'),
+  loading: MyLoadingComponent
+})
+const SelectWorker = Loadable({ // 选择工人
+  loader: () => import(/* webpackChunkName: "selectworker" */ '../models/Mine/myorder/selectWorker'),
+  loading: MyLoadingComponent
+})
 const SetUp = Loadable({ // 我的设置
   loader: () => import(/* webpackChunkName: "setup" */ '../models/Mine/SetUp'),
   loading: MyLoadingComponent
@@ -443,6 +455,30 @@ const routes = [
     animated: false,
     showMenu: true,
     title: '我的'
+  }, {
+    path: urls.APPLYSETTLE,
+    exact: true,
+    component: ApplySettle,
+    parent: null,
+    animated: true,
+    showMenu: false,
+    title: '申请结算'
+  }, {
+    path: urls.CONFIRMSETTLE,
+    exact: true,
+    component: ConfirmSettle,
+    parent: null,
+    animated: true,
+    showMenu: false,
+    title: '确认结算'
+  }, {
+    path: urls.SELECTWORKER,
+    exact: true,
+    component: SelectWorker,
+    parent: null,
+    animated: true,
+    showMenu: false,
+    title: '选择工人'
   }, {
     path: urls.SETUP,
     exact: true,

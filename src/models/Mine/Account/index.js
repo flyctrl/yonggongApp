@@ -44,7 +44,7 @@ class Account extends Component {
       if (data['is_bind_card'] === 1) {
         if (type === 1) {
           if (data['is_withdraw_password'] === 0) {
-            Toast.fail('请先设置提现密码', 2, () => {
+            Toast.fail('请先设置支付密码', 2, () => {
               this.props.match.history.push(urls.SETPAYPWD)
             })
           } else {
