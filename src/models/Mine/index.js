@@ -73,11 +73,11 @@ const menuData = [
     icon: 'icon-problemFeedback',
     type: 11
   },
-  // {
-  //   title: '工人 管理',
-  //   icon: 'icon-sharingApplication',
-  //   type: 12
-  // }
+  {
+    title: '工人管理',
+    icon: 'icon-sharingApplication',
+    type: 12
+  }
 ]
 const menuRouter = {
   1: urls.MYPUSH,
@@ -91,6 +91,7 @@ const menuRouter = {
   9: urls.PARTNER,
   10: urls.PERSONSTRUCTURE,
   11: `${urls.FEEDBACK}?url=MINE`,
+  12: urls.WORKERMANGE,
   13: urls.BANKCARDLIST
 }
 class Mine extends Component {
