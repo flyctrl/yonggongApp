@@ -29,7 +29,6 @@ export const ATTENDRECORD = `${WORKLISTMANAGE}/attendRecord` // 考勤记录
 export const SENDSTARTWORKRECORD = `${WORKLISTMANAGE}/sendStartWorkRecord` // 开工记录 我发的
 export const ORDERSTARTWORKRECORD = `${WORKLISTMANAGE}/orderStartWorkRecord` // 开工记录 我接的
 export const ATTENDDETAIL = `${WORKLISTMANAGE}/attendRecord/detail` // 考勤详情
-
 // 我的
 export const MINE = `${BASE_URL}/Mine`
 export const MYPUSH = `${MINE}/myPush` // 我的发布
@@ -79,6 +78,8 @@ export const EDITDEPARTMENT = `${MINE}/personStructure/editDepartment` // 修改
 export const SELECTDEPART = `${MINE}/personStructure/selectDepart` // 选择部门
 export const FEEDBACK = `${MINE}/feedBack` // 问题反馈
 export const BANKCARDLIST = `${MINE}/bankcardList` // 银行卡
+export const WORKERMANGE = `${MINE}/list` // 工人管理
+export const CREATEWORKER = `${WORKERMANGE}/createWorker` // 添加工人
 
 export const LOGIN = `${BASE_URL}/Login/login` // 登录
 export const REGISTER = `${BASE_URL}/Login/register` // 注册

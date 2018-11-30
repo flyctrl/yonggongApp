@@ -74,7 +74,7 @@ const menuData = [
     type: 11
   },
   // {
-  //   title: '分享应用',
+  //   title: '工人 管理',
   //   icon: 'icon-sharingApplication',
   //   type: 12
   // }

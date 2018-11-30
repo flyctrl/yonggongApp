@@ -100,7 +100,6 @@ const AttendDetail = Loadable({ // 考勤详情
   loader: () => import(/* webpackChunkName: "attenddetail" */ '../models/WorkListManage/attendRecord/detail'),
   loading: MyLoadingComponent
 })
-
 const Mine = Loadable({ // 我的
   loader: () => import(/* webpackChunkName: "mine" */ '../models/Mine'),
   loading: MyLoadingComponent
@@ -287,6 +286,14 @@ const FeedBack = Loadable({ // 问题反馈
 })
 const BankcardList = Loadable({ // 银行卡
   loader: () => import(/* webpackChunkName: "bankcardlist" */ '../models/Mine/bankcardList'),
+  loading: MyLoadingComponent
+})
+const WorkerMange = Loadable({ // 工人管理
+  loader: () => import(/* webpackChunkName: "workermange" */ '../models/Mine/workerMange'),
+  loading: MyLoadingComponent
+})
+const CreateWorker = Loadable({ // 添加工人
+  loader: () => import(/* webpackChunkName: "createworker" */ '../models/Mine/workerMange/createWorker'),
   loading: MyLoadingComponent
 })
 
@@ -873,6 +880,22 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '银行卡'
+  }, {
+    path: urls.WORKERMANGE,
+    exact: true,
+    component: WorkerMange,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '工人管理'
+  }, {
+    path: urls.CREATEWORKER,
+    exact: true,
+    component: CreateWorker,
+    parent: 'WorkerMange',
+    animated: true,
+    showMenu: false,
+    title: '添加工人'
   }, {
     path: urls.LOGIN,
     exact: true,

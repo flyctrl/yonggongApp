@@ -28,6 +28,12 @@ html :global(.am-button){
 }
 .auth-form {
   margin-top: 20px; 
+  & :global(.am-list:nth-child(7)) {
+    color: red;
+    & :global(.am-input-label) {
+      width: 200px;
+    }
+  }
 }
 .auth-des {
   height:14px;
@@ -135,4 +141,25 @@ footer {
   font-weight:400;
   color:rgba(51,51,51,1);
   margin-bottom: 10px;
+}
+.auth-s-text {
+  width: 251px;
+  height:33px;
+  font-size:14px;
+  font-family:SourceHanSansCN-Regular;
+  font-weight:400;
+  color:rgba(136,136,136,1);
+  line-height:19px;
+  text-align: center;
+  margin-bottom: 30px;
+  margin-left:62px;
+}
+.auth-s-btn {
+  width:328px;
+  height:40px;
+  margin-left: 23px;
+  & :global(.am-button) {
+    background:rgba(0,152,245,1);
+    color:rgba(255,255,255,1);
+  }
 }
