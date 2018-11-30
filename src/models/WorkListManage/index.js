@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { SegmentedControl, Button, Badge, ListView, PullToRefresh, ActionSheet, Toast } from 'antd-mobile'
 import { Header, Content, NewIcon } from 'Components'
-import { worksheetType, worksheetStatus, orderStatus } from 'Contants/fieldmodel'
+import { worksheetStatus, orderStatus } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
@@ -277,7 +277,6 @@ class WorkListManage extends Component {
       if (parentIndex === 0) { // 快单
         return <dl key={rowData['id']} onClick={() => { this.handleShowDetail(rowData['worksheet_no']) }}>
           <dt className='my-bottom-border'>
-            <Badge className={`${style['typericon']} bule-full-border`} text={worksheetType[rowData['worksheet_type']]} />
             <p className='ellipsis'>{rowData['title']}</p>
             <Badge className={`${style['statusicon']} ${rowData['worksheet_status'] === 5 ? style['gray'] : style['orage']}`} text={
               worksheetStatus.find((item) => {
@@ -313,7 +312,6 @@ class WorkListManage extends Component {
       } else if (parentIndex === 1) { // 工单
         return <dl key={rowData['id']} onClick={() => this.handleShowDetail(rowData['order_no'])}>
           <dt className='my-bottom-border'>
-            <Badge className={`${style['typericon']} bule-full-border`} text={worksheetType[rowData['worksheet_type']]} />
             <p className='ellipsis'>{rowData['title']}</p>
             <Badge className={`${style['statusicon']} ${rowData['order_status'] === 4 ? style['gray'] : style['orage']}`} text={
               orderStatus.find((item) => {
@@ -348,7 +346,6 @@ class WorkListManage extends Component {
       } else if (parentIndex === 2) { // 招标
         return <dl key={rowData['id']} onClick={() => this.handleShowDetail(rowData['order_no'])}>
           <dt className='my-bottom-border'>
-            <Badge className={`${style['typericon']} bule-full-border`} text={worksheetType[rowData['worksheet_type']]} />
             <p className='ellipsis'>{rowData['title']}</p>
             <Badge className={`${style['statusicon']} ${rowData['order_status'] === 4 ? style['gray'] : style['orage']}`} text={
               orderStatus.find((item) => {
@@ -392,7 +389,7 @@ class WorkListManage extends Component {
         }}
       />
       <Content style={{ overflow: 'hidden' }}>
-        <SegmentedControl tintColor='#0098F5' className={style['segment-list']} selectedIndex={parentIndex} onChange={this.handleSegmentedChange} values={['快单', '工单', '招标']} />
+        <SegmentedControl prefixCls='toplist-tabs' selectedIndex={parentIndex} onChange={this.handleSegmentedChange} values={['快单', '工单', '招标']} />
         <div className={style['worklist-body']} style={{ height: '100%' }}>
           <ListView
             ref={(el) => {
