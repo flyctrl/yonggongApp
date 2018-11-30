@@ -197,7 +197,7 @@ class SelectClass extends Component {
             if (url) {
               this.props.match.history.push(urls[url])
             } else {
-              this.props.match.history.push(urls.HOME)
+              this.props.match.history.go(-1)
             }
           }}
         />

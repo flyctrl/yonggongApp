@@ -311,16 +311,25 @@ html:not([data-scale]) :global(.contentBox .am-list-body div:not(:last-child) .a
   }
 }
 
-:global(.am-modal-wrap .am-modal-title) {
-  font-size: 14px;
+:global(.am-modal-wrap) {
+  z-index: 1998!important;
+  & :global(.am-modal-title) {
+    font-size: 14px!important;
+  }
 }
 :global(.am-modal-wrap .am-modal-button-group-h .am-modal-button) {
-  color: #0467e0;
-  font-size: 14px;
+  color: #0467e0!important;
+  font-size: 14px!important;
+  &:global(:first-child) {
+    color: #333!important;
+  }
 }
 :global(.am-modal-wrap .am-modal-button-group-v .am-modal-button) {
-  color: #0467e0;
-  font-size: 14px;
+  color: #0467e0!important;
+  font-size: 14px!important;
+}
+:global(.am-modal-mask) {
+  z-index: 1998!important;
 }
 :global(.pageBox .am-list-item .am-input-control input) {
   font-size: 14px;

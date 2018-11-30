@@ -31,6 +31,9 @@ export const ORDERSTARTWORKRECORD = `${WORKLISTMANAGE}/orderStartWorkRecord` // 
 export const ATTENDDETAIL = `${WORKLISTMANAGE}/attendRecord/detail` // 考勤详情
 // 我的
 export const MINE = `${BASE_URL}/Mine`
+export const APPLYSETTLE = `${MINE}/myorder/applySettle` // 申请结算
+export const CONFIRMSETTLE = `${MINE}/myorder/applySettle/confirmlist` // 确认结算
+export const SELECTWORKER = `${MINE}/myorder/selectWorker` // 选择工人
 export const MYPUSH = `${MINE}/myPush` // 我的发布
 export const SETUP = `${MINE}/SetUp` // 我的设置
 export const SETPAYPWD = `${SETUP}/setPayPwd` // 设置支付密码

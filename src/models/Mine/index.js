@@ -5,16 +5,15 @@
 * @Last Modified time: 2018-08-12 15:03:15
 */
 import React, { Component } from 'react'
-import { Button } from 'antd-mobile'
-import { Header, Content } from 'Components'
+// import { Button } from 'antd-mobile'
+import { Content } from 'Components'
 import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
-import history from 'Util/history'
 import style from './style.css'
 import api from 'Util/api'
 const menuData = [
   {
-    title: '我的发布',
+    title: '我的订单',
     icon: 'icon-publishWorkOrder',
     type: 1
   },
@@ -25,7 +24,7 @@ const menuData = [
   },
   {
     title: '银行卡',
-    icon: 'icon-yinhangqia',
+    icon: 'icon-problemFeedback',
     type: 13
   },
   {
@@ -69,8 +68,8 @@ const menuData = [
     type: 10
   },
   {
-    title: '问题反馈',
-    icon: 'icon-problemFeedback',
+    title: '工人管理',
+    icon: 'icon-gongrenguanli',
     type: 11
   },
   {
@@ -111,29 +110,35 @@ class Mine extends Component {
     })
   }
   handleMenuClick(type) {
-    history.push(menuRouter[type])
+    this.props.match.history.push(menuRouter[type])
   }
 
   handleSeeClick = () => {
-    history.push(urls.USERINFO + '?url=MINE')
-  }
-  handleRightclick = () => {
-    history.push(urls.SETUP)
+    this.props.match.history.push(urls.USERINFO + '?url=MINE')
   }
   render() {
-    const { companyDetail } = this.state
+    let { companyDetail } = this.state
     return (
-      <div className='contentBox'>
-        <Header
-          title='我的'
-          rightIcon='icon-settings'
-          rightClick={this.handleRightclick}
-        />
-        <Content>
+      <div className='pageBox'>
+        <Content isHeader={false}>
           <div className={style['mine-header']}>
-            <h2>{ companyDetail ? companyDetail.name : ''}</h2>
-            <p>{ companyDetail ? companyDetail.description : ''}</p>
-            <div style={{ textAlign: 'right' }}><Button type='ghost' onClick={this.handleSeeClick} inline className='am-button-borderfix'>查看详情</Button></div>
+            <div className={style['company-set']}>
+              <a onClick={() => this.props.match.history.push(urls.SETUP)}><NewIcon type='icon-shezhi1' />设置</a>
+            </div>
+            <dl className={style['company-title']}>
+              <dt><img src='http://pic170.nipic.com/file/20180628/3803997_104151366083_2.jpg' /></dt>
+              <dd>
+                <h1>{ companyDetail ? companyDetail.name : ''}</h1>
+                { companyDetail ? <p><NewIcon type='icon-dianhua' />手机号码</p> : null}
+              </dd>
+            </dl>
+            <div className={style['company-detail']}>
+              <p>
+                <span>{ companyDetail ? companyDetail.name : ''}</span>
+                <a onClick={this.handleSeeClick}>公司详情>></a>
+              </p>
+              <content>{ companyDetail ? companyDetail.description : ''}</content>
+            </div>
           </div>
           <ul className={style['mine-btn-list']}>
             {

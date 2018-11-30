@@ -72,16 +72,16 @@ class WithdrawCash extends Component {
   handleSubmit = async () => { // 提现确认按钮
     console.log('onsubmit')
     promptInstance = prompt(
-      '请输入提现密码',
+      '请输入支付密码',
       null,
       [
         { text: '取消' },
         { text: '提交', onPress: (password) => new Promise((resolve, reject) => {
           if (password === '') {
-            Toast.fail('提现密码不能为空', 2)
+            Toast.fail('支付密码不能为空', 2)
             return false
           } else if (!/^\d{6}$/.test(password)) {
-            Toast.fail('提现密码为6位数字', 2)
+            Toast.fail('支付密码为6位数字', 2)
             return false
           }
           reject()

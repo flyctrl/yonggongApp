@@ -66,7 +66,7 @@ class RestPwd extends Component {
     return (
       <div className='pageBox'>
         <Header
-          title='设置提现密码'
+          title='设置支付密码'
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
@@ -76,12 +76,12 @@ class RestPwd extends Component {
         />
         <Content>
           <form className={style['registerForm']}>
-            <List renderHeader={() => '* 提现密码只能是6位数字'}>
+            <List renderHeader={() => '* 支付密码只能是6位数字'}>
               <InputItem
                 {...getFieldProps('password', {
                   rules: [
                     { required: true, message: '请输入您的密码' },
-                    { pattern: /\d{6}/, message: '提现密码只能是6位数字' },
+                    { pattern: /\d{6}/, message: '支付密码只能是6位数字' },
                     { validator: this.validateToNextPassword }
                   ],
                 })}
@@ -100,7 +100,7 @@ class RestPwd extends Component {
                 {...getFieldProps('confirm_password', {
                   rules: [
                     { required: true, message: '请输入您的确认密码' },
-                    { pattern: /\d{6}/, message: '提现密码只能是6位数字' },
+                    { pattern: /\d{6}/, message: '支付密码只能是6位数字' },
                     { validator: this.compareToFirstPassword }
                   ],
                 })}
