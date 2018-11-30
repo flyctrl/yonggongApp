@@ -81,8 +81,9 @@ export const EDITDEPARTMENT = `${MINE}/personStructure/editDepartment` // 修改
 export const SELECTDEPART = `${MINE}/personStructure/selectDepart` // 选择部门
 export const FEEDBACK = `${MINE}/feedBack` // 问题反馈
 export const BANKCARDLIST = `${MINE}/bankcardList` // 银行卡
-export const WORKERMANGE = `${MINE}/list` // 工人管理
+export const WORKERMANGE = `${MINE}/workList` // 工人管理
 export const CREATEWORKER = `${WORKERMANGE}/createWorker` // 添加工人
+export const CREATEWORKERSUCCESS = `${CREATEWORKER}/success` // 添加工人成功
 
 export const LOGIN = `${BASE_URL}/Login/login` // 登录
 export const REGISTER = `${BASE_URL}/Login/register` // 注册

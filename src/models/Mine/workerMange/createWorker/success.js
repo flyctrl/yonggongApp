@@ -8,10 +8,12 @@ import { Icon, Button } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
 import style from './style.css'
+import { getQueryString } from 'Contants/tooler'
 class RealNameAuth extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      isBack: getQueryString('isBack')
     }
   }
 
@@ -19,13 +21,18 @@ class RealNameAuth extends Component {
     this.props.match.history.push(urls['CREATEWORKER'])
   }
   render() {
+    let { isBack } = this.state
     return <div className='pageBox'>
       <Header
         title={'验证成功'}
         leftIcon='icon-back'
         leftTitle1='返回'
         leftClick1={() => {
-          this.props.match.history.push(urls['REALNAMEAUTH'])
+          if (isBack) {
+            this.props.match.history.push(urls['WORKERMANGE'])
+          } else {
+            this.props.match.history.push(urls['SELECTWORKER'])
+          }
         }}
       />
       <Content>

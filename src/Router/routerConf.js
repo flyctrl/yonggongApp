@@ -308,7 +308,10 @@ const CreateWorker = Loadable({ // 添加工人
   loader: () => import(/* webpackChunkName: "createworker" */ '../models/Mine/workerMange/createWorker'),
   loading: MyLoadingComponent
 })
-
+const CreateWorkerSuccess = Loadable({ // 添加工人成功
+  loader: () => import(/* webpackChunkName: "createworkersuccess" */ '../models/Mine/workerMange/createWorker/success'),
+  loading: MyLoadingComponent
+})
 const Login = Loadable({ // 登录
   loader: () => import(/* webpackChunkName: "login" */ '../models/Login/login'),
   loading: MyLoadingComponent
@@ -932,6 +935,14 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '添加工人'
+  }, {
+    path: urls.CREATEWORKERSUCCESS,
+    exact: true,
+    component: CreateWorkerSuccess,
+    parent: 'WorkerMange',
+    animated: true,
+    showMenu: false,
+    title: '添加工人成功'
   }, {
     path: urls.LOGIN,
     exact: true,

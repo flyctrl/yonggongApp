@@ -104,7 +104,7 @@ class CreateWorker extends Component {
               backFaceImg: file['data']['url'],
               stepNum: 3
             }))
-            this.props.match.history.push(urls['REALNAMEAUTHSUCCESS'])
+            this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?isBack=1`)
             return
           }
           if (isClickBack) { // 设置正面照
