@@ -4,7 +4,7 @@
  * @Title: 个人认证
  */
 import React, { Component } from 'react'
-import { Steps, Toast, Button, List } from 'antd-mobile'
+import { Steps, Toast, Button, List, InputItem } from 'antd-mobile'
 import { createForm } from 'rc-form'
 import api from 'Util/api'
 import * as urls from 'Contants/urls'
@@ -26,7 +26,7 @@ let Upload = Loadable({
   }
 })
 const Step = Steps.Step
-class RealNameAuth extends Component {
+class CreateWorker extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -39,18 +39,35 @@ class RealNameAuth extends Component {
       isSuccessBack: false, // 正面照是否成功
       isSuccessFront: false, // 反面照是否成功
       stepNum: 0, // 步骤数
-      isShowFace: false // 是否显示人脸识别页面
+      isShowFace: false, // 是否显示人脸识别页面
+      phone: '',
+      idCard: '',
+      token: ''
     }
   }
   handleSubmit = () => {
   }
   handleClickNext = () => { // 是否显示人脸识别页面
     let { isSuccessBack, isSuccessFront } = this.state
-    if (isSuccessBack && isSuccessFront) {
-      this.setState({
-        isShowFace: true
-      })
-    }
+    let { getFieldError } = this.props.form
+    let validateAry = ['phone']
+    this.props.form.validateFields({ force: true }, async (error, values) => {
+      if (!error) {
+        if (isSuccessBack && isSuccessFront) {
+          this.setState({
+            isShowFace: true,
+            phone: values['phone']
+          })
+        }
+      } else {
+        for (let value of validateAry) {
+          if (error[value]) {
+            Toast.fail(getFieldError(value), 1)
+            return
+          }
+        }
+      }
+    })
   }
   handleClick = () => { // 如果先点击反面照,报错
     let { isClickBack, isClickFront } = this.state
@@ -71,10 +88,11 @@ class RealNameAuth extends Component {
     })
   }
   render() {
-    let { backImg, frontImg, isClickBack, isClickFront, isSuccessFront, isSuccessBack, stepNum, isShowFace, backFaceImg } = this.state
+    const { getFieldDecorator, getFieldError } = this.props.form
+    let { backImg, frontImg, isClickBack, isClickFront, isSuccessFront, isSuccessBack, stepNum, isShowFace, backFaceImg, phone, idCard } = this.state
     const uploaderProps = {
       action: api.Common.uploadFile,
-      data: { type: 5, token: '12' },
+      data: { type: 5, token: '12', phone, idCard },
       multiple: false,
       onSuccess: (file) => {
         if (file['code'] === 0) {
@@ -86,7 +104,7 @@ class RealNameAuth extends Component {
               backFaceImg: file['data']['url'],
               stepNum: 3
             }))
-            this.props.match.history.push(urls['REALNAMEAUTHSUCCESS'])
+            this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?isBack=1`)
             return
           }
           if (isClickBack) { // 设置正面照
@@ -95,7 +113,8 @@ class RealNameAuth extends Component {
               frontImg: file['data']['url'],
               isClickFront: true,
               isClickBack: false,
-              isSuccessFront: true
+              isSuccessFront: true,
+              idCard: '12155121'
             }))
             return
           } else { // 设置反面照
@@ -127,7 +146,7 @@ class RealNameAuth extends Component {
               isShowFace: false
             })
           } else {
-            this.props.match.history.push(urls.MINE)
+            this.props.match.history.go(-1)
           }
         }}
       />
@@ -147,30 +166,45 @@ class RealNameAuth extends Component {
           </div>
           <div className={style['auth-des']} style={{ display: isSuccessBack || isSuccessFront ? 'block' : 'none' }}>请核对信息，若有误请点击重新上传</div>
           <div className={style['auth-form']} style={{ display: isSuccessFront ? 'block' : 'none' }}>
-            <List className={`${style['input-form-list']}`}>
+            <List >
               <Item extra={'张大喵'}>姓名</Item>
             </List>
-            <List className={`${style['input-form-list']}`}>
+            <List >
               <Item extra={'男'}>性别</Item>
             </List>
-            <List className={`${style['input-form-list']}`}>
+            <List >
               <Item extra={'汉'}>民族</Item>
             </List>
-            <List className={`${style['input-form-list']}`}>
+            <List >
               <Item extra={'1889-09-09'}>出生日期</Item>
             </List>
-            <List className={`${style['input-form-list']}`}>
+            <List >
               <Item extra={'410325188809094678'}>身份证号</Item>
             </List>
-            <List className={`${style['input-form-list']}`}>
+            <List >
               <Item extra={'浙江省杭州市西湖区西溪一号 蒋村花园'}>地址</Item>
+            </List>
+            <List >
+              { getFieldDecorator('phone', {
+                rules: [
+                  { required: true, message: '请输入手机号' },
+                  { pattern: /^[1][3,4,5,7,8][0-9]{9}$/, message: '格式错误' }
+                ]
+              })(
+                <InputItem
+                  clear
+                  error={!!getFieldError('phone')}
+                  onErrorClick={() => this.onErrorClick('phone')}
+                  placeholder='请输入手机号'
+                >手机号</InputItem>
+              )}
             </List>
           </div>
           <div style={{ display: isSuccessBack ? 'block' : 'none' }}>
-            <List className={`${style['input-form-list']}`}>
+            <List >
               <Item extra={'杭州公安总部'}>签发机关</Item>
             </List>
-            <List className={`${style['input-form-list']}`}>
+            <List >
               <Item extra={'2018.09.09-2038.09.09'}>有效期</Item>
             </List>
           </div>
@@ -203,4 +237,4 @@ class RealNameAuth extends Component {
   }
 }
 
-export default createForm()(RealNameAuth)
+export default createForm()(CreateWorker)

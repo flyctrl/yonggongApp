@@ -72,11 +72,6 @@ const menuData = [
     icon: 'icon-gongrenguanli',
     type: 11
   },
-  // {
-  //   title: '分享应用',
-  //   icon: 'icon-sharingApplication',
-  //   type: 12
-  // }
 ]
 const menuRouter = {
   1: urls.MYORDER,
@@ -89,7 +84,8 @@ const menuRouter = {
   8: urls.ENGINREALITY,
   9: urls.PARTNER,
   10: urls.PERSONSTRUCTURE,
-  11: `${urls.FEEDBACK}?url=MINE`,
+  // 11: `${urls.FEEDBACK}?url=MINE`,
+  11: urls.WORKERMANGE,
   13: urls.BANKCARDLIST
 }
 class Mine extends Component {

@@ -101,7 +101,7 @@ class Home extends Component {
             <div className={style['home-silder']}>
               {
                 bannerList.length !== 0 ? <div>
-                  <Carousel autoplay infinite dots={false}>
+                  <Carousel autoplay infinite dotActiveStyle={{ backgroundColor: '#1298FC' }} style={{ touchAction: 'none' }}>
                     {
                       bannerList.map(item => {
                         return <div key={item['id']}><img src={item['url']}/></div>

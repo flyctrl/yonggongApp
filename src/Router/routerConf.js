@@ -206,6 +206,10 @@ const RealNameAuth = Loadable({ // 个人认证
   loader: () => import(/* webpackChunkName: "realnameauth" */ '../models/Mine/realNameAuth/'),
   loading: MyLoadingComponent
 })
+const RealNameAuthSuccess = Loadable({ // 个人认证成功页面
+  loader: () => import(/* webpackChunkName: "realnameauthsuccess" */ '../models/Mine/realNameAuth/success'),
+  loading: MyLoadingComponent
+})
 const RealNameAuthDetail = Loadable({ // 个人认证详情
   loader: () => import(/* webpackChunkName: "realnameauthdetail" */ '../models/Mine/realNameDetail'),
   loading: MyLoadingComponent
@@ -322,7 +326,18 @@ const BankcardList = Loadable({ // 银行卡
   loader: () => import(/* webpackChunkName: "bankcardlist" */ '../models/Mine/bankcardList'),
   loading: MyLoadingComponent
 })
-
+const WorkerMange = Loadable({ // 工人管理
+  loader: () => import(/* webpackChunkName: "workermange" */ '../models/Mine/workerMange'),
+  loading: MyLoadingComponent
+})
+const CreateWorker = Loadable({ // 添加工人
+  loader: () => import(/* webpackChunkName: "createworker" */ '../models/Mine/workerMange/createWorker'),
+  loading: MyLoadingComponent
+})
+const CreateWorkerSuccess = Loadable({ // 添加工人成功
+  loader: () => import(/* webpackChunkName: "createworkersuccess" */ '../models/Mine/workerMange/createWorker/success'),
+  loading: MyLoadingComponent
+})
 const Login = Loadable({ // 登录
   loader: () => import(/* webpackChunkName: "login" */ '../models/Login/login'),
   loading: MyLoadingComponent
@@ -737,6 +752,14 @@ const routes = [
     showMenu: false,
     title: '个人认证'
   }, {
+    path: urls.REALNAMEAUTHSUCCESS,
+    exact: true,
+    component: RealNameAuthSuccess,
+    parent: 'RealNameAuth',
+    animated: true,
+    showMenu: false,
+    title: '个人认证成功'
+  }, {
     path: urls.REALNAMEAUTHDETAIL,
     exact: true,
     component: RealNameAuthDetail,
@@ -970,6 +993,30 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '银行卡'
+  }, {
+    path: urls.WORKERMANGE,
+    exact: true,
+    component: WorkerMange,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '工人管理'
+  }, {
+    path: urls.CREATEWORKER,
+    exact: true,
+    component: CreateWorker,
+    parent: 'WorkerMange',
+    animated: true,
+    showMenu: false,
+    title: '添加工人'
+  }, {
+    path: urls.CREATEWORKERSUCCESS,
+    exact: true,
+    component: CreateWorkerSuccess,
+    parent: 'WorkerMange',
+    animated: true,
+    showMenu: false,
+    title: '添加工人成功'
   }, {
     path: urls.LOGIN,
     exact: true,

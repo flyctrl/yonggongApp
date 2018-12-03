@@ -1,7 +1,4 @@
 
-/* html:not([data-scale]) .pushOrderForm :global(.am-list-body::after) {
-  left:0;
-} */
 .asterisk {
   display: inline-block;
   height: 44px;
@@ -22,6 +19,11 @@ html :global(.am-list-item .am-list-line .am-list-content) {
   & :global(.am-list-item .am-list-line .am-list-extra) {
     flex-basis: 60%;
     padding: 0;
+  }
+  & :global(.am-list-item) {
+    & :global(.am-list-line) {
+      border-bottom: none!important;
+    }
   }
 }
 

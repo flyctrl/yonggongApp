@@ -1,0 +1,38 @@
+.box {
+  background: #fff;
+  margin-top: 15px;
+  font-family:SourceHanSansCN-Regular;
+  font-weight:400;
+    & dl {
+      padding: 15px;
+      height: 60px;
+      & dt {
+        float: left;
+          & img {
+            width: 60px;
+            height: 60px;
+            display: block;
+          }
+      }
+      & dd {
+        float: left;
+        width: 250px;
+        margin-left: 10px;
+        & em {
+          font-size: 16px;
+          color: #333333;
+        }
+        & p {
+          width: 100%;
+          font-size: 14px;
+          color: #999999;
+          height: 30px;
+          line-height: 30px;
+        }
+        & span {
+          font-size: 14px;
+          color: #999999;
+        }
+      }
+  }
+}

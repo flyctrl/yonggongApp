@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-// import { List } from 'antd-mobile'
+import { List } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import { Header, Content } from 'Components'
 import style from './style.css'
-import zhongguo from 'Src/assets/card/zhongguo.png'
-import nongye from 'Src/assets/card/nongye.png'
+
 class BankcardList extends Component {
   constructor(props) {
     super(props)
@@ -28,35 +27,24 @@ class BankcardList extends Component {
     this.props.match.history.push(urls.BANKCARD)
   }
   componentDidMount() {
-    // this.showBankList()
+    this.showBankList()
   }
   render() {
+    const { banklist, isloading } = this.state
     return <div className='pageBox'>
       <Header
         title='银行卡'
         leftIcon='icon-back'
         leftTitle1='返回'
-        leftClick1={() => { this.props.match.history.go(-1) }}
-        rightIcon='icon-add-default'
-        rightClick={this.addBankCard}
+        leftClick1={() => { this.props.match.history.push(urls.MINE) }}
       />
       <Content>
-        <div className={style['card-list']}>
-          <img src={zhongguo}/>
-          <span>
-            中国银行
-          </span>
-          <b>储蓄卡</b>
-          <p>****   ****    ****    6509</p>
-        </div>
-        <div className={style['card-list']}>
-          <img src={nongye}/>
-          <span>
-            农业银行
-          </span>
-          <b>储蓄卡</b>
-          <p>****   ****    ****    6509</p>
-        </div>
+        {isloading ? <List className={style['banklist']}>
+          {banklist.map(i => (
+            <List.Item key={i}><img src={i.bank_logo} /><div className={style['brief']}>{i.bank_name}<List.Item.Brief>尾号{i.card_no_back}</List.Item.Brief></div></List.Item>
+          ))}
+          <div onClick={this.addBankCard} className={style['addBankcardBtn']}>+ 添加银行卡</div>
+        </List> : null}
       </Content>
     </div>
   }

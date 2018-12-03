@@ -1,8 +1,15 @@
 html .bind-bankcard :global(.am-list-body::before) {
   height: 0;
 }
+.bindcard-btn {
+  & :global(.am-button){
+    background-color: #0098F5;
+    margin-top: 30px;
+    width: 328px;
+    margin-left: 24px;
+  }
+}
 .bind-bankcard {
-  padding: 15px;
   & :global(.am-list-item) {
     & :global(.am-input-label.am-input-label-5) {
       color: #313F48;
@@ -33,9 +40,5 @@ html .bind-bankcard :global(.am-list-body::before) {
         }
       }
     }
-  }
-  & .bindcard-btn {
-    background-color: #0467E0;
-    margin-top: 30px;
   }
 }
