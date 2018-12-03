@@ -19,64 +19,29 @@ const data = [{
   label: '按量结算',
   value: 1
 }]
+const settleId = parseInt(tooler.getQueryString('settleValue'))
 class SelectClass extends Component {
   constructor(props) {
     super(props)
     this.state = {
       showIndex: 0,
-      proId: '',
-      proVal: '请选择',
-      settleValue: 2,
-      classifyVal: '请选择',
-      classifyId: '',
-      teachVal: '不限',
-      teachId: '0',
-      parentClassId: 0,
-      constructType: '',
+      proId: tooler.getQueryString('proId') || '',
+      proVal: tooler.getQueryString('proVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('proVal'))) : '请选择',
+      settleValue: parseInt(tooler.getQueryString('settleValue')) || 2,
+      classifyVal: tooler.getQueryString('classifyVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('classifyVal'))) : '请选择',
+      classifyId: tooler.getQueryString('classifyId') || '',
+      teachVal: tooler.getQueryString('teachVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('teachVal'))) : '不限',
+      teachId: tooler.getQueryString('teachId') || '0',
+      parentClassId: tooler.getQueryString('parentClassId') || 0,
+      constructType: tooler.getQueryString('constructType') || '',
       showform: false,
       showtech: false,
-      url: tooler.getQueryString('url')
+      url: tooler.getQueryString('url'),
+      orderno: tooler.getQueryString('orderno') || ''
     }
   }
   componentDidMount() {
-    let [classifyVal,
-      classifyId,
-      parentClassId,
-      teachVal,
-      teachId,
-      settleValue,
-      constructType,
-      proId,
-      proVal
-    ] = [
-      decodeURIComponent(decodeURIComponent(tooler.getQueryString('classifyVal'))),
-      tooler.getQueryString('classifyId'),
-      tooler.getQueryString('parentClassId'),
-      decodeURIComponent(decodeURIComponent(tooler.getQueryString('teachVal'))),
-      tooler.getQueryString('teachId'),
-      parseInt(tooler.getQueryString('settleValue')),
-      tooler.getQueryString('constructType'),
-      tooler.getQueryString('proId'),
-      decodeURIComponent(decodeURIComponent(tooler.getQueryString('proVal'))),
-    ]
-    console.log('teachId:', teachId)
-    if (teachId === null) {
-      teachVal = '不限'
-      teachId = '0'
-    }
-    if (classifyVal && classifyId && proId && proVal) {
-      this.setState({
-        classifyVal,
-        classifyId,
-        teachVal,
-        teachId,
-        settleValue,
-        parentClassId,
-        constructType,
-        proId,
-        proVal
-      })
-    }
+    console.log(decodeURIComponent(decodeURIComponent(tooler.getQueryString('proVal'))))
   }
   onChange = (value) => {
     this.setState({
@@ -153,7 +118,8 @@ class SelectClass extends Component {
     }
   }
   render() {
-    let { settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, url } = this.state
+    console.log(this.state)
+    let { orderno, settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, url } = this.state
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
         <Header
@@ -170,17 +136,21 @@ class SelectClass extends Component {
         />
         <Content>
           <List renderHeader={() => '选择工单关联的项目信息'} className={style['select-class-list']}>
-            <Item extra={proVal} arrow='horizontal' onClick={this.handleProject} thumb={<NewIcon type='icon-xiangmuxiaoxi' className={style['icon-class-haiwai']} />}>项目<em className={style['asterisk']}>*</em></Item>
+            <Item extra={proVal} arrow={orderno !== '' ? '' : 'horizontal'} onClick={() => {
+              orderno !== '' ? null : this.handleProject()
+            }} thumb={<NewIcon type='icon-xiangmuxiaoxi' className={style['icon-class-haiwai']} />}>项目<em className={style['asterisk']}>*</em></Item>
           </List>
           <List renderHeader={() => '发布所需要的工种或机械'} className={style['select-class-list']}>
-            <Item extra={classifyVal} arrow='horizontal' onClick={this.handleSelectClassify} thumb={<NewIcon type='icon-haiwai' className={style['icon-class-haiwai']} />}>工种/机械<em className={style['asterisk']}>*</em></Item>
+            <Item extra={classifyVal} arrow={orderno !== '' ? '' : 'horizontal'} onClick={() => {
+              orderno !== '' ? null : this.handleSelectClassify()
+            }} thumb={<NewIcon type='icon-haiwai' className={style['icon-class-haiwai']} />}>工种/机械<em className={style['asterisk']}>*</em></Item>
           </List>
           <List style={{ display: parentClassId === 'skill' && showtech === true ? 'block' : 'none' }} renderHeader={() => '技能要求只能允许满足相关技能要求的个人接单'} className={style['select-class-list']}>
             <Item extra={teachVal} arrow='horizontal' onClick={this.handleSelectTech} thumb={<NewIcon type='icon-jobHunting' className={style['icon-class-haiwai']} />}>技能要求</Item>
           </List>
           <List renderHeader={() => '选择计价方式'} className={`${style['select-class-list']} ${style['settle-type-list']}`}>
             {data.map(i => (
-              <RadioItem key={i.value} checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
+              <RadioItem key={i.value} disabled={ orderno !== '' && settleId === 2 } checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
                 {i.label}
               </RadioItem>
             ))}

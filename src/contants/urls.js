@@ -32,10 +32,16 @@ export const ATTENDDETAIL = `${WORKLISTMANAGE}/attendRecord/detail` // 考勤详
 
 // 我的
 export const MINE = `${BASE_URL}/Mine`
-export const APPLYSETTLE = `${MINE}/myorder/applySettle` // 申请结算
-export const CONFIRMSETTLE = `${MINE}/myorder/applySettle/confirmlist` // 确认结算
-export const SELECTWORKER = `${MINE}/myorder/selectWorker` // 选择工人
-export const MYPUSH = `${MINE}/myPush` // 我的发布
+export const MYORDER = `${MINE}/myorder` // 我的订单
+export const OACCESSRECORD = `${MYORDER}/accessRecord` // 接单记录
+export const OSETTLERECORD = `${MYORDER}/settleRecord` // 结算记录
+export const OATTENDRECORD = `${MYORDER}/attendRecord` // 考勤记录
+export const OSENDSTARTWORKRECORD = `${MYORDER}/sendStartWorkRecord` // 开工记录 我发的
+export const OORDERSTARTWORKRECORD = `${MYORDER}/orderStartWorkRecord` // 开工记录 我接的
+export const OATTENDDETAIL = `${MYORDER}/attendRecord/detail` // 考勤详情
+export const APPLYSETTLE = `${MYORDER}/applySettle` // 申请结算
+export const CONFIRMSETTLE = `${MYORDER}/applySettle/confirmlist` // 确认结算
+export const SELECTWORKER = `${MYORDER}/selectWorker` // 选择工人
 export const SETUP = `${MINE}/SetUp` // 我的设置
 export const SETPAYPWD = `${SETUP}/setPayPwd` // 设置支付密码
 export const SETUPSECURITY = `${MINE}/security` // 我的设置》账户与安全

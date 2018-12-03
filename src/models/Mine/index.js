@@ -79,7 +79,7 @@ const menuData = [
   // }
 ]
 const menuRouter = {
-  1: urls.MYPUSH,
+  1: urls.MYORDER,
   2: urls.ACCOUNT,
   3: urls.COMPANYAUTHDETAIL,
   4: urls.INVOICEMANGE,

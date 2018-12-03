@@ -1,0 +1,42 @@
+html:not([data-scale]) .record-list :global(.am-list-body::after) {
+  height: 0;
+} 
+.record-list {
+  touch-action: none;
+  height: 622px;
+  & li {
+    background: #fff;
+    padding: 8px 15px;
+    overflow: hidden;
+    margin-top: 4px;
+    color: #313f48;
+    & .record-hd {
+      float: left;
+      & p {
+        width: 210px;
+        height: 26px;
+        line-height: 26px;
+      }
+      & time {
+        display: block;
+        line-height: 20px;
+        font-size: 12px;
+      }
+    }
+    & .record-btn {
+      float: right;
+      & :global(.am-button) {
+        font-size: 12px;
+        height: 28px;
+        line-height: 28px;
+        background: #0467e0;
+        margin-top: 10px;
+      }
+    }
+  }
+  & :global(.am-list-footer) {
+    & > div {
+      text-align: center;
+    }
+  }
+}
