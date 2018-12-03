@@ -74,8 +74,9 @@ html .message-content :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab:
       margin-left: 10px;
       & p {
         width: 100%;
-        font-size: 17px;
+        font-size: 16px;
         color: #333333;
+        margin-top: 1px;
         & em {
           float: right;
           font-style: normal;
@@ -85,7 +86,7 @@ html .message-content :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab:
         }
       }
       & span {
-        font-size: 15px;
+        font-size: 14px;
         color: #999999;
         display: block;
         height: 20px;

@@ -449,7 +449,15 @@ export default {
     },
     feedback: (params) => {
       return FetchSave('/common/feedback', params, 'post', { showloading: false })
-    }
+    },
+    CheckSet: { // 考勤设置
+      getConfig(params) {
+        return Fetch('/worksheet/attend/getConfig', params, 'get')
+      },
+      saveConfig(params) {
+        return FetchSave('/worksheet/attend/set', params, 'post', { showloading: false })
+      }
+    },
   },
   Home: {
     getSystemInforms(params) { // 系统通知
