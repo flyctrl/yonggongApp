@@ -1,129 +1,193 @@
-/*
-* @Author: chengbs
-* @Date:   2018-04-08 16:16:58
-* @Last Modified by:   chengbs
-* @Last Modified time: 2018-06-06 18:41:18
-*/
+
 import React, { Component } from 'react'
-import { Tabs } from 'antd-mobile'
-import { Content } from 'Components'
+import { Content, Header } from 'Components'
 import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import style from './style.css'
-
-const tabs = [
-  { title: '消息' },
-  { title: '待处理' }
-]
+import { msgStatus } from 'Contants/fieldmodel'
+import { getQueryString } from 'Contants/tooler'
+import ReactDOM from 'react-dom'
+import { ListView, PullToRefresh, Tabs } from 'antd-mobile'
+const NUM_ROWS = 20
 class Message extends Component {
   constructor(props) {
     super(props)
+    const dataSource = new ListView.DataSource({
+      rowHasChanged: (row1, row2) => row1 !== row2,
+    })
     this.state = {
-      noticeList: [],
-      tobeList: [],
-      isload: false
+      isLoading: true,
+      dataSource,
+      refreshing: true,
+      height: document.documentElement.clientHeight,
+      pageIndex: 1,
+      pageNos: 1,
+      isload: false,
+      tabIndex: getQueryString('tabIndex') || 0,
     }
   }
-  getNoticeList = async () => {
-    this.setState({
-      isload: false
-    })
-    const data = await api.Message.getNoticeList({}) || false
-    this.setState({
-      noticeList: data['list'],
-      isload: true
-    })
-  }
-  getTobeDoneList = async () => {
-    this.setState({
-      isload: false
-    })
-    const data = await api.Home.getTodayTodo({}) || false
-    this.setState({
-      tobeList: data['list'],
-      isload: true
-    })
+  genData = async (pIndex = 1, tab = this.state.tabIndex) => {
+    if (pIndex > this.state.pageNos) {
+      return []
+    }
+    const data = await api.Message.getNoticeList({
+      page: pIndex,
+      limit: NUM_ROWS,
+      tab
+    }) || false
+    if (data) {
+      this.setState({
+        pageNos: data['pageNos']
+      })
+      return await data['list']
+    }
   }
   componentDidMount() {
-    this.getNoticeList()
+    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 140
+    this.genData().then((rdata) => {
+      this.rData = rdata
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        height: hei,
+        refreshing: false,
+        isLoading: false,
+      })
+    })
+  }
+  onEndReached = (event) => {
+    console.log('onEndReached')
+    if (this.state.isLoading) {
+      return
+    }
+    let { pageIndex } = this.state
+    // console.log('reach end', event)
+    this.setState({ isLoading: true })
+    let newIndex = pageIndex + 1
+    console.log('pageIndex', newIndex)
+    this.genData(newIndex).then((rdata) => {
+      this.rData = [...this.rData, ...rdata]
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        isLoading: false,
+        pageIndex: newIndex
+      })
+    })
+  }
+
+  onRefresh = () => {
+    console.log('onRefresh')
+    this.setState({ refreshing: true, isLoading: true, pageIndex: 1 })
+    // simulate initial Ajax
+    this.genData(1).then((rdata) => {
+      this.rData = rdata
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        refreshing: false,
+        isLoading: false,
+      })
+    })
   }
   handleSysNotice = (e) => {
     let id = e.currentTarget.getAttribute('data-id')
-    this.props.match.history.push(urls.SHOWINFODETAIL + '?id=' + id)
+    let { tabIndex } = this.state
+    this.props.match.history.push(urls.SHOWINFODETAIL + '?id=' + id + '&index=' + tabIndex)
   }
-  handleMesage() {
-    this.props.match.history.push(urls.CHATBOX)
-  }
-  handleTabChange = (value, index) => {
-    if (index === 1) {
-      this.getTobeDoneList()
-    } else if (index === 0) {
-      this.getNoticeList()
+  handlebtnType = (e, type) => { // 根据类型跳转页面
+    let id = e.currentTarget.getAttribute('data-id')
+    let { tabIndex } = this.state
+    switch (type) {
+      case '1': // 接单记录
+        this.props.match.history.push(urls.SHOWINFODETAIL + '?id=' + id + '&tabIndex=' + tabIndex)
+        break
+      case '2': // 开工记录
+        break
+      case '3': // 开工记录
+        break
+      case '4': // 结算记录
+        break
+      case '5': // 账户明细
+        break
+      case '6': // 账户明细
+        break
+      case '7': // 个人账户
+        break
     }
   }
+  handleTabsChange = (tabs, index) => {
+    this.setState({
+      tabIndex: index,
+      refreshing: true,
+      isLoading: true,
+      pageIndex: 1
+    })
+    this.genData(1, index).then((rdata) => {
+      this.rData = rdata
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        refreshing: false,
+        isLoading: false,
+      })
+    })
+  }
   render() {
-    let { noticeList, tobeList, isload } = this.state
+    let { tabIndex } = this.state
+    const row = (rowData, sectionID, rowID) => {
+      return (
+        <div data-id={rowData['id']} key={rowData['id']} onClick={this.handleSysNotice} className={`${style['notice-box']}`}>
+          <dl>
+            <dt>
+              <span>
+                <NewIcon className={style['notice-icon']} type='icon-xiaolaba' />
+              </span>
+            </dt>
+            <dd>
+              <p>公告通知<em>{rowData['created_at']}</em></p>
+              <span className='ellipsis'>{rowData['title']}</span>
+            </dd>
+          </dl>
+          <div className={`${style['notice-border']} my-bottom-border`}></div>
+        </div>
+      )
+    }
     return (
-      <div className={`contentBox ${style['message-content']}`}>
-        <Content isHeader={false}>
-          <Tabs tabs={tabs}
-            initalPage={0}
-            tabBarBackgroundColor='#FAFAFA'
-            onChange={this.handleTabChange}
+      <div className={`contentBox antdgray ${style['message-content']}`}>
+        <Header
+          title='消息'
+        />
+        <Content>
+          <Tabs tabs={msgStatus}
+            page={parseInt(tabIndex, 10)}
+            tabBarTextStyle={{ fontSize: '15px', color: '#999999' }}
+            tabBarActiveTextColor='#1298FC'
+            tabBarUnderlineStyle={{ borderColor: '#1298FC', width: '6%', marginLeft: '9.5%' }}
+            onChange={this.handleTabsChange}
           >
-            <div>
-              {
-                noticeList.length !== 0 && isload ? noticeList.map((item) => {
-                  return (
-                    <div data-id={item['id']} key={item['id']} onClick={this.handleSysNotice} className={`${style['notice-box']} my-bottom-border`}>
-                      <dl>
-                        <dt>
-                          <span>
-                            <NewIcon className={style['notice-icon']} type='icon-xiaolaba' />
-                          </span>
-                        </dt>
-                        <dd>
-                          <p>公告通知<em>{item['created_at']}</em></p>
-                          <span>{item['title']}</span>
-                        </dd>
-                      </dl>
-                    </div>
-                  )
-                }) : <div className={'nodata'}>{ noticeList.length === 0 && isload ? '暂无数据' : ''}</div>
-              }
-              {
-                // <ul className={style['mesg-list']}>
-                //   <li className='my-bottom-border' onClick={this.handleMesage}>
-                //     <div className={`${style['usr-header']} my-full-border`}>小明</div>
-                //     <div className={style['msg-box']}>
-                //       <p>江西华夏建筑有限公司<em>下午 2:23 </em></p>
-                //       <span>您直接在线接单就可以了。</span>
-                //     </div>
-                //   </li>
-                // </ul>
-              }
-            </div>
-            <div>
-              {
-                tobeList.length !== 0 && isload ? tobeList.map((item, index) => {
-                  return (
-                    <div key={index} className={`${style['notice-box']} my-bottom-border`}>
-                      <dl>
-                        <dt>
-                          <span className={style['tobedone']}>
-                            <NewIcon className={style['notice-icon']} type='icon-jinridaiban' />
-                          </span>
-                        </dt>
-                        <dd>
-                          <p>{item['title']}<em>{item['created_at']}</em></p>
-                          <span>{item['content']}</span>
-                        </dd>
-                      </dl>
-                    </div>
-                  )
-                }) : <div className={'nodata'}>{ tobeList.length === 0 && isload ? '暂无数据' : ''}</div>
-              }
+            <div className={style['msg-box']}>
+              <ListView
+                ref={(el) => { this.lv = el }}
+                dataSource={this.state.dataSource}
+                renderFooter={() => (<div className={style['list-loading']}>
+                  {this.state.isLoading ? '' : '加载完成'}
+                </div>)}
+                renderRow={row}
+                style={{
+                  height: this.state.height,
+                  position: 'absolute',
+                  width: '100%'
+                }}
+                className={style['job-list']}
+                pageSize={NUM_ROWS}
+                // onScroll={(e) => { console.log('onscroll') }}
+                pullToRefresh={<PullToRefresh
+                  refreshing={this.state.refreshing}
+                  onRefresh={this.onRefresh}
+                />}
+                onEndReachedThreshold={10}
+                initialListSize={NUM_ROWS}
+                scrollRenderAheadDistance={120}
+                onEndReached={this.onEndReached}
+              />
             </div>
           </Tabs>
         </Content>
