@@ -49,6 +49,9 @@ export const FAILPAGE = `${ACCOUNT}/failPage` // 支付失败页面
 export const ACCOUNTDETAIL = `${ACCOUNT}/detail` // 我的账户》账户详细
 export const BANKCARD = `${ACCOUNT}/bankCard` // 银行卡
 export const CHECKSET = `${MINE}/CheckSet` // 考勤设置
+export const CHECK = `${MINE}/Check` // 考勤管理
+export const CHECKLIST = `${MINE}/Check/checkList` // 考勤列表
+export const CHECKSTATUS = `${CHECK}/status` // 考勤状态
 
 export const COMPANYAUTH = `${MINE}/companyAuth` // 企业认证
 export const REALNAMEAUTH = `${MINE}/realNameAuth` // 个人认证

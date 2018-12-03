@@ -1,4 +1,17 @@
+html .project-mange-box :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab::after) {
+  height: 0;
+}
+.project-mange-box {
+  & :global(.am-list-body::before) {
+    height: 0!important;
+  }
+  & :global(.am-list-body::after) {
+    height: 0!important;
+  }
+}
 .project-mange-list {
+  display: block;
+  background: #ffffff;
   & li {
     padding: 14px 16px;
     overflow: hidden;
@@ -52,4 +65,8 @@
     text-align: center;
     color: #313f48;
   }
+}
+
+html :global(.am-list-footer) {
+  text-align: center;
 }

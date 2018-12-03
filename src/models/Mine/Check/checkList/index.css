@@ -1,0 +1,51 @@
+.checklist {
+  padding: 0 15px;
+  padding-bottom: 20px;
+  & :global(.am-card-header-content) {
+    font-size: 14px;
+    color: #888;
+  }
+  & :global(.am-card-body) {
+    padding: 10px 10px 6px;
+  }
+  & :global(.am-card) {
+    margin-top: 15px;
+  }
+}
+.checklist-hd {
+  overflow: hidden;
+  height: 60px;
+  width: 100%;
+  & svg {
+    float: left;
+    width: 32px;
+    height: 32px;
+    margin-top: 10px;
+    color: #0467e0;
+  }
+  & p {
+    float: left;
+    margin-left: 12px;
+    & time {
+      display: block;
+      height: 22px;
+      line-height: 22px;
+      font-size: 14px;
+      color: #313f48;
+    }
+    & :global(.am-button-small) {
+      height: 24px;
+      line-height: 24px;
+      font-size: 12px;
+      background-color: #0467e0;
+      width: 100px;
+      margin-top: 4px;
+    }
+  }
+}
+
+.checklist-bd {
+  font-size: 14px;
+  color: #313f48;
+  line-height: 20px;
+}

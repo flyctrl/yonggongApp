@@ -34,11 +34,11 @@ class Message extends Component {
     const data = await api.Message.getNoticeList({
       page: pIndex,
       limit: NUM_ROWS,
-      tab
+      msg_type: tab
     }) || false
     if (data) {
       this.setState({
-        pageNos: data['pageNos']
+        pageNos: data['pageNos'] === 0 ? 1 : data['pageNos']
       })
       return await data['list']
     }
@@ -119,7 +119,8 @@ class Message extends Component {
       tabIndex: index,
       refreshing: true,
       isLoading: true,
-      pageIndex: 1
+      pageIndex: 1,
+      pageNos: 1
     })
     this.genData(1, index).then((rdata) => {
       this.rData = rdata

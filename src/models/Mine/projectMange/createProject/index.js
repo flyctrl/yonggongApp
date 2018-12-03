@@ -23,6 +23,7 @@ class CreateProject extends Component {
       constructShow: false,
       workShow: false,
       proShow: false,
+      coordinate: {},
       address: '请选择施工地址',
       constructInfo: '请输入中标信息',
       workInfo: '请输入施工信息',
@@ -77,10 +78,13 @@ class CreateProject extends Component {
     })
   }
   submitAddress = (data) => { // 地图取值
-    console.log(data)
     this.setState({
       address: data['nowAddress'],
-      mapShow: false
+      mapShow: false,
+      coordinate: {
+        lng: data['position']['lng'],
+        lat: data['position']['lat']
+      }
     })
     this.props.form.setFieldsValue({
       construction_place: data['nowAddress']
@@ -123,9 +127,12 @@ class CreateProject extends Component {
       proShow: false
     })
   }
+  onErrorClick = (field) => {
+    Toast.info(this.props.form.getFieldError(field).join('、'))
+  }
   onHandleSubmit = () => { // 提交数据
     let validateAry = ['prj_name', 'construction_place', 'prj_win_bid_unit', 'prj_construct_unit']
-    const { fileList, constrNum, workCode, workNum, proText } = this.state
+    let { fileList, constrNum, workCode, workNum, proText, coordinate } = this.state
     let postFile = []
     fileList.map((item, index, ary) => {
       postFile.push(item['path'])
@@ -134,7 +141,7 @@ class CreateProject extends Component {
     Toast.loading('发布中...', 0)
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
-        let postData = { ...{ attachment: postFile }, ...values, ...{ prj_win_bid_notice_no: constrNum, prj_construct_unit_code: workCode, licence_no: workNum, prj_brief: proText }}
+        let postData = { ...{ attachment: postFile }, ...values, ...{ prj_win_bid_notice_no: constrNum, prj_construct_unit_code: workCode, licence_no: workNum, prj_brief: proText, coordinate }}
         console.log(postData)
         const data = await api.Mine.projectMange.createProject(postData) || false
         if (data) {
@@ -199,8 +206,14 @@ class CreateProject extends Component {
                   )}
                 </div>
                 <div>
-                  {getFieldDecorator('construction_amount')(
+                  {getFieldDecorator('construction_amount', {
+                    rules: [
+                      { pattern: /^[0-9]*$/, message: '格式错误' }
+                    ]
+                  })(
                     <InputItem
+                      error={!!getFieldError('construction_amount')}
+                      onErrorClick={() => this.onErrorClick('construction_amount')}
                       clear
                       placeholder='请输入总投资'
                     >总投资</InputItem>

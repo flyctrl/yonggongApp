@@ -45,6 +45,9 @@ class Construct extends Component {
       })
     }
   }
+  onErrorClick = (field) => {
+    Toast.info(this.props.form.getFieldError(field).join('、'))
+  }
   onHandleSubmit = () => { // 提交数据
     let validateAry = ['prj_brief']
     const { getFieldError } = this.props.form

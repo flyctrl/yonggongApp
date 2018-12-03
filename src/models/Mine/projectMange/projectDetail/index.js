@@ -7,21 +7,31 @@ import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import { projectStatus } from 'Contants/fieldmodel'
 import style from 'Src/models/PushOrder/form.css'
-
+const prjStatus = {
+  1: '待开工',
+  2: '施工中',
+  3: '已作废',
+  4: '已完成'
+}
+const isShowPrj = {
+  0: '不显示',
+  1: '显示'
+}
 class ProjectDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
       fileList: [],
       dataSource: {},
-      isLoading: true
+      isLoading: true,
+      tabIndex: tooler.getQueryString('tabIndex')
     }
   }
   getProjectDetail = async () => {
     this.setState({ isLoading: true })
     let id = tooler.getQueryString('id')
     const data = await api.Mine.projectMange.projectDetail({
-      prj_id: id
+      prj_no: id
     }) || false
     // console.log(data)
     if (data) {
@@ -36,7 +46,7 @@ class ProjectDetail extends Component {
     this.getProjectDetail()
   }
   render() {
-    let { fileList, dataSource, isLoading } = this.state
+    let { fileList, dataSource, isLoading, tabIndex } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -44,7 +54,7 @@ class ProjectDetail extends Component {
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
-            this.props.match.history.push(urls.PROJECTMANGE)
+            this.props.match.history.push(`${urls.PROJECTMANGE}?tabIndex=${tabIndex}`)
           }}
         />
         <Content>
@@ -78,9 +88,22 @@ class ProjectDetail extends Component {
                 <List renderHeader={() => '项目施工地址'}>
                   {dataSource['construction_place']}
                 </List>
+                <List renderHeader={() => '项目施工坐标'}>
+                  {dataSource['coordinate']}
+                </List>
                 <List renderHeader={() => '项目审核状态'}>
                   {
                     projectStatus[dataSource['status'] || 0]['title']
+                  }
+                </List>
+                <List renderHeader={() => '项目状态'}>
+                  {
+                    prjStatus[dataSource['bid_status']]
+                  }
+                </List>
+                <List renderHeader={() => '项目是否显示'}>
+                  {
+                    isShowPrj[dataSource['is_show']]
                   }
                 </List>
                 <List renderHeader={() => '项目中标单位'}>
@@ -91,6 +114,9 @@ class ProjectDetail extends Component {
                 </List>
                 <List className={style['remark-desc']} renderHeader={() => '项目概括'}>
                   {dataSource['prj_brief'] || ' '}
+                </List>
+                <List renderHeader={() => '项目施工图纸'}>
+                  <img src={dataSource['prj_construct_drawings']}/>
                 </List>
                 <List className={`${style['attch-list']} my-bottom-border`} renderHeader={() => '附件'}>
                   <ul className={style['file-list']}>
