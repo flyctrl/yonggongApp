@@ -338,6 +338,22 @@ const CreateWorkerSuccess = Loadable({ // 添加工人成功
   loader: () => import(/* webpackChunkName: "createworkersuccess" */ '../models/Mine/workerMange/createWorker/success'),
   loading: MyLoadingComponent
 })
+const CheckSet = Loadable({ // 考勤设置
+  loader: () => import(/* webpackChunkName: "checkset" */ '../models/Mine/CheckSet'),
+  loading: MyLoadingComponent
+})
+const Check = Loadable({ // 考勤管理
+  loader: () => import(/* webpackChunkName: "check" */ '../models/Mine/Check'),
+  loading: MyLoadingComponent
+})
+const CheckList = Loadable({ // 考勤管理
+  loader: () => import(/* webpackChunkName: "checklist" */ '../models/Mine/Check/checkList'),
+  loading: MyLoadingComponent
+})
+const CheckStatus = Loadable({ // 考勤状态
+  loader: () => import(/* webpackChunkName: "checkstatus" */ '../models/Mine/Check/status'),
+  loading: MyLoadingComponent
+})
 const Login = Loadable({ // 登录
   loader: () => import(/* webpackChunkName: "login" */ '../models/Login/login'),
   loading: MyLoadingComponent
@@ -1017,6 +1033,38 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '添加工人成功'
+  }, {
+    path: urls.CHECKSET,
+    exact: true,
+    component: CheckSet,
+    parent: true,
+    animated: true,
+    showMenu: false,
+    title: '考勤设置'
+  }, {
+    path: urls.CHECK,
+    exact: true,
+    component: Check,
+    parent: true,
+    animated: true,
+    showMenu: false,
+    title: '考勤管理'
+  }, {
+    path: urls.CHECKLIST,
+    exact: true,
+    component: CheckList,
+    parent: true,
+    animated: true,
+    showMenu: false,
+    title: '考勤列表'
+  }, {
+    path: urls.CHECKSTATUS,
+    exact: true,
+    component: CheckStatus,
+    parent: true,
+    animated: true,
+    showMenu: false,
+    title: '考勤状态'
   }, {
     path: urls.LOGIN,
     exact: true,

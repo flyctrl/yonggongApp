@@ -449,7 +449,33 @@ export default {
     },
     feedback: (params) => {
       return FetchSave('/common/feedback', params, 'post', { showloading: false })
-    }
+    },
+    CheckSet: { // 考勤设置
+      getConfig(params) {
+        return Fetch('/worksheet/attend/getConfig', params, 'get')
+      },
+      saveConfig(params) {
+        return FetchSave('/worksheet/attend/set', params, 'post', { showloading: false })
+      }
+    },
+    Check: {// 考勤
+      attendCheck(params) {
+        // return Fetch('/worksheetOrder/attendCheck', params, 'get') // 打卡校验
+        return Fetch('/worksheetOrder/attend/check', params, 'get', { showloading: false }) // 打卡校验
+      },
+      attend(params) {
+        return Fetch('/worksheetOrder/attend', params, 'post', { showloading: false }) // 打卡
+      },
+      project(params) { // 工单订单列表获取项目
+        return Fetch('/worksheetOrder/attend/orderList', params, 'get')
+      },
+      uploadImg(params) { // 上传照片
+        return Fetch('/common/attach/imageData', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false })
+      },
+      attendOrderlist(params) { // 考勤订单列表
+        return Fetch('/worksheetOrder/attend/orderList', params, 'get')
+      }
+    },
   },
   Home: {
     getSystemInforms(params) { // 系统通知
@@ -467,7 +493,10 @@ export default {
   },
   Message: { // 消息
     getNoticeList(params) {
-      return Fetch(prefix + '/message/notice/list', params, 'get')
+      return Fetch(prefix + '/message/mm/list', params, 'get')
+    },
+    unReadMsg(params) {
+      return Fetch(prefix + '/message/mm/unreadStatus', params, 'get')
     },
     getNoticeDetail(params) {
       return Fetch(prefix + '/message/notice/show', params, 'get')

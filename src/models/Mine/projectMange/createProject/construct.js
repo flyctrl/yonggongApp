@@ -17,6 +17,9 @@ class Construct extends Component {
       unit: newProps['unit']
     }
   }
+  onErrorClick = (field) => {
+    Toast.info(this.props.form.getFieldError(field).join('、'))
+  }
   onHandleSubmit = () => { // 提交数据
     let validateAry = ['prj_win_bid_unit', 'prj_win_bid_notice_no']
     const { getFieldError } = this.props.form
@@ -79,7 +82,7 @@ class Construct extends Component {
                   initialValue: number,
                   rules: [
                     { required: true, message: '请输入中标通知书编号' },
-                    { pattern: /^[0-9]*[1-9][0-9]*$/, message: '666' }
+                    // { pattern: /^[0-9]*$/, message: '格式错误' }
                   ]
                 })(
                   <InputItem

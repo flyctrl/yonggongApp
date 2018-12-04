@@ -132,7 +132,12 @@ let invoiceStatus = { // 开票状态详情
   2: '处理成功',
   3: '作废'
 }
-
+const msgStatus = [ // 消息标题栏
+  { title: '全部' },
+  { title: '考勤' },
+  { title: '工单' },
+  { title: '账户' }
+]
 export {
   priceModeData,
   settleRadio,
@@ -153,5 +158,6 @@ export {
   payOrderStatus,
   worksheetStatus,
   workplanStatus,
-  receiveTypeRadio
+  receiveTypeRadio,
+  msgStatus
 }

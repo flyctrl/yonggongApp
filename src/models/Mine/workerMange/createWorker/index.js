@@ -200,7 +200,7 @@ class CreateWorker extends Component {
               )}
             </List>
           </div>
-          <div style={{ display: isSuccessBack ? 'block' : 'none' }}>
+          <div className={style['auth-form-bottom']} style={{ display: isSuccessBack ? 'block' : 'none' }}>
             <List >
               <Item extra={'杭州公安总部'}>签发机关</Item>
             </List>

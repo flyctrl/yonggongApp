@@ -166,7 +166,7 @@ class RealNameAuth extends Component {
               <Item extra={'浙江省杭州市西湖区西溪一号 蒋村花园'}>地址</Item>
             </List>
           </div>
-          <div style={{ display: isSuccessBack ? 'block' : 'none' }}>
+          <div className={style['auth-form-bottom']} style={{ display: isSuccessBack ? 'block' : 'none' }}>
             <List className={`${style['input-form-list']}`}>
               <Item extra={'杭州公安总部'}>签发机关</Item>
             </List>

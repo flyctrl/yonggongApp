@@ -1,18 +1,6 @@
 html:not([data-scale]) :global(.am-list-body::before) {
   height: 0;
 }
-html :global(.am-list-item .am-list-line .am-list-extra) {
-  flex-basis: 80%;
-  padding: 0;
-}
-html :global(.am-button){
-    border-radius:3px;
-    line-height: 40px;
-    height: 40px;
-    font-size:15px;
-    font-family:SourceHanSansCN-Regular;
-    font-weight:400;
-}
 .auth-step {
   width: 90%;
   margin-left: 5%;
@@ -27,12 +15,22 @@ html :global(.am-button){
   }
 }
 .auth-form {
-  margin-top: 20px; 
+  margin-top: 20px;
+  & :global(.am-list-item .am-list-line .am-list-extra) {
+    flex-basis: 80%;
+    padding: 0;
+  }
   & :global(.am-list:nth-child(7)) {
     color: red;
     & :global(.am-input-label) {
       width: 200px;
     }
+  }
+}
+.auth-form-bottom {
+  & :global(.am-list-item .am-list-line .am-list-extra) {
+    flex-basis: 80%;
+    padding: 0;
   }
 }
 .auth-des {
@@ -68,6 +66,14 @@ footer {
     width:328px;
     height:40px;
     margin-left: 23px;
+    :global(.am-button){
+      border-radius:3px;
+      line-height: 40px;
+      height: 40px;
+      font-size:15px;
+      font-family:SourceHanSansCN-Regular;
+      font-weight:400;
+  }
   }
   & .auth-btn-top {
     margin-top: 30px;

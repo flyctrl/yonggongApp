@@ -19,6 +19,9 @@ class Work extends Component {
       code: newProps['code']
     }
   }
+  onErrorClick = (field) => {
+    Toast.info(this.props.form.getFieldError(field).join('、'))
+  }
   onHandleSubmit = () => { // 提交数据
     let validateAry = ['prj_construct_unit', 'prj_construct_unit_code', 'licence_no']
     const { getFieldError } = this.props.form

@@ -13,41 +13,35 @@ dl, dt, dd, p, span {
   margin: 0;
   padding: 0;
 }
-
+html :global(.am-list-footer) {
+  text-align: center;
+}
 html .message-content :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab::after) {
   height: 0;
 }
 .message-content {
-  & :global(.am-tabs-tab-bar-wrap) {
-    height: 50px;
-    & :global(.am-tabs-default-bar-top) {
-      & :global(.am-tabs-default-bar-tab) {
-        padding-bottom: 0;
-        color: #999;
-        font-size: 14px;
-      }
-      & :global(.am-tabs-default-bar-tab-active) {
-        color: #0467e0;
-        font-weight: bolder;
-      }
-      & :global(.am-tabs-default-bar-underline) {
-        bottom: 5px;
-        border-color: #0467E0;
-      }
-    }
+  & :global(.am-list-body::before) {
+    height: 0!important;
   }
-  & :global(.am-tabs-default-bar-top) {
-    & :global(.am-tabs-default-bar-content) {
-      width: 40%;
-      margin: 0 auto;
-      overflow: hidden;
-    }
+  & :global(.am-list-body::after) {
+    height: 0!important;
   }
 }
-
+.msg-box {
+  margin-top: 10px;
+}
 .notice-box {
   padding: 15px;
   height: 80px;
+  background: #fff;
+  font-family:SourceHanSansCN-Regular;
+  position: relative;
+  & .notice-border {
+    position: absolute!important;
+    bottom: 0;
+    width: 82%;
+    right: 0;
+  }
   & dl {
     overflow: hidden;
     & dt {
@@ -80,20 +74,23 @@ html .message-content :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab:
       margin-left: 10px;
       & p {
         width: 100%;
-        font-size: 14px;
-        color: rgba(49, 63, 72, 1);
-        height: 30px;
-        line-height: 30px;
+        font-size: 16px;
+        color: #333333;
+        margin-top: 1px;
         & em {
           float: right;
           font-style: normal;
           font-size: 12px;
-          color: rgba(195, 205, 212, 1);
+          color: #999999;
+          line-height: 20px;
         }
       }
       & span {
-        font-size: 12px;
-        color: rgba(138, 150, 160, 1);
+        font-size: 14px;
+        color: #999999;
+        display: block;
+        height: 20px;
+        margin-top: 10px;
       }
     }
   }
@@ -105,44 +102,6 @@ html:not([data-scale]) .usr-header {
   }
 }
 
-.mesg-list {
-  & li {
-    padding: 15px;
-    height: 80px;
-    overflow: hidden;
-    & .usr-header {
-      float: left;
-      width: 50px;
-      height: 50px;
-      line-height: 50px;
-      text-align: center;
-      border-radius: 50%;
-      color: rgba(138, 150, 160, 1);
-      font-size: 16px;
-      margin-right: 10px;
-    }
-    & .msg-box {
-      float: left;
-      width: 280px;
-      & p {
-        height: 30px;
-        line-height: 30px;
-        color: rgba(49, 63, 72, 1);
-        font-size: 14px;
-        & em {
-          float: right;
-          font-style: normal;
-          color: rgba(195, 205, 212, 1);
-          font-size: 12px;
-        }
-      }
-      & span {
-        font-size: 12px;
-        color: rgba(138, 150, 160, 1);
-      }
-    }
-  }
-}
 
 /* sysNotice */
 .notice-list {
