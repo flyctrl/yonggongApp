@@ -8,7 +8,25 @@ import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 import AppMenu from 'Components/Menus'
 import history from 'Util/history'
+import storage from 'Util/storage'
+import * as urls from 'Contants/urls'
+import * as tooler from 'Contants/tooler'
+import api from 'Util/api'
 
+const urlJson = {
+  'F01001': { // 实名认证详情
+    name: 'REALNAMEAUTHDETAIL',
+    data: []
+  },
+  'F02001': { // 企业认证详情
+    name: 'COMPANYAUTHDETAIL',
+    data: []
+  },
+  'G01001': { // 项目详情
+    name: 'PROJECTDETAIL',
+    data: ['event_no']
+  }
+}
 class MainLayout extends Component {
   constructor(props) {
     super(props)
@@ -20,6 +38,77 @@ class MainLayout extends Component {
     }
     this.goBack = this.goBack.bind(this)
     this.showMenu = this.showMenu.bind(this)
+  }
+  componentDidMount() {
+    let _t = this
+    let isreg = true
+    document.addEventListener('deviceready', function() {
+      // 初始化获取id
+      window.JPush.init()
+      document.addEventListener('jpush.receiveRegistrationId', function (event) {
+        console.log(event.registrationId)
+        isreg = false
+        console.log('监听时的id：' + event.registrationId)
+        setTimeout(() => {
+          _t.bindRegId(event.registrationId)
+        }, 800)
+      }, false)
+      if (isreg) {
+        setTimeout(_t.getRegistrationID, 800)
+      }
+
+      // 收到通知时触发事件
+      document.addEventListener('jpush.receiveNotification', function (event) {
+        console.log('收到通知时：', event)
+      }, false)
+
+      // 点击通知内容时触发事件
+      document.addEventListener('jpush.openNotification', function (event) {
+        console.log('点击通知内容时：', event)
+        let urlcode = event.extras.code
+        let extras = event['extras']['cn.jpush.android.EXTRA']['data']
+        if (typeof urlJson[urlcode] === 'undefined') {
+          return
+        }
+        let dataAry = urlJson[urlcode]['data']
+        if (dataAry.length > 0) {
+          let newjson = {}
+          for (let i = 0; i < dataAry.length; i++) {
+            newjson[dataAry[i]] = extras[dataAry[i]]
+          }
+          history.push(`${urls[urlJson[urlcode]['name']]}?${tooler.parseJsonUrl(newjson)}`)
+        } else {
+          history.push(`${urls[urlJson[urlcode]['name']]}`)
+        }
+      }, false)
+    }, false)
+  }
+  getRegistrationID = () => {
+    window.JPush.getRegistrationID(this.onGetRegistrationID)
+  }
+  onGetRegistrationID = (data) => {
+    try {
+      if (data.length === 0) {
+        setTimeout(this.getRegistrationID, 800)
+      } else {
+        console.log('调用时的id：' + data)
+        this.bindRegId(data)
+      }
+    } catch (exception) {
+      console.log(exception)
+    }
+  }
+  bindRegId = async (rId) => {
+    let data = await api.Common.bindDevice({
+      deviceId: device.uuid,
+      outerId: rId,
+      osType: 2,
+      deviceType: 1
+    }) || false
+    if (data) {
+      storage.set('deviceId', device.uuid)
+      storage.set('outerId', rId)
+    }
   }
   componentWillReceiveProps(nextProps) {
     const propObj = this.getRouteByPath(nextProps.location.pathname)
