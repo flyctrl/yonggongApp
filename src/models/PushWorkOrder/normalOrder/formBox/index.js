@@ -46,7 +46,7 @@ class FormBox extends Component {
     let { settleValue } = this.state.urlJson
     let data = await api.Common.getUnitlist({
       type: settleValue,
-      worksheet_type: 3
+      worksheet_type: 2
     })
     let newData = []
     data.map(item => {
@@ -113,7 +113,7 @@ class FormBox extends Component {
   }
   onSubmit = () => { // 提交
     let { addressObj, fileList } = this.state
-    let { classifyId, constructType, teachId } = this.state.urlJson
+    let { classifyId, constructType, teachId, proId, orderno, paymethodId } = this.state.urlJson
     let attachment = []
     fileList.map(item => {
       attachment.push(item['path'])
@@ -121,26 +121,34 @@ class FormBox extends Component {
     this.props.form.validateFields({ force: true }, async (error) => {
       if (!error) {
         let formJson = this.props.form.getFieldsValue()
+        let repush = {}
+        if (orderno !== '' && typeof orderno !== 'undefined') {
+          repush = {
+            p_order_no: orderno
+          }
+        }
         let postJson = {
-          ...{ worksheet_type: 3 },
+          ...{ worksheet_type: 2 },
           ...formJson,
+          ...{ prj_no: proId },
+          ...repush,
           ...{ start_time: tooler.formatDate(formJson['start_time']), end_time: tooler.formatDate(formJson['end_time']) },
           ...{ valuation_unit: formJson['valuation_unit'][0] },
-          ...{ construct_ids: [classifyId] },
           ...{ coordinate: { lng: addressObj.position.lng, lat: addressObj.position.lat }},
           ...{ city_code: addressObj.position.cityCode },
           ...{ construct_ids: [classifyId] },
           ...{ construct_type: constructType },
           ...{ professional_level: teachId !== 'null' ? teachId : '' },
+          ...{ settle_fix_time: paymethodId },
           attachment
         }
         console.log(postJson)
         Toast.loading('提交中...', 0)
-        let data = await api.Home.workSheet(postJson) || false
+        let data = await api.PushOrder.normal(postJson) || false
         if (data) {
           Toast.hide()
-          Toast.success('发布成功', 2, () => {
-            this.props.match.history.push(`${urls.WORKLISTDETAIL}?url=HOME&worksheetno=${data['worksheet_no']}`)
+          Toast.success('发布成功', 1, () => {
+            this.props.match.history.push(`${urls.NLORDERRESULT}?worksheetno=${data['worksheet_no']}`)
           })
         }
       }
@@ -150,7 +158,7 @@ class FormBox extends Component {
     const { getFieldProps, getFieldError, getFieldValue } = this.props.form
     let { fileList, remarkShow, startDate, endDate, mapShow, address, valuationUnit, chargeSizeData, remark } = this.state
     console.log('fileList:', fileList)
-    let { settleValue } = this.state.urlJson
+    let { settleValue, starttime, orderno } = this.state.urlJson
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
@@ -279,7 +287,7 @@ class FormBox extends Component {
             <div>
               <DatePicker
                 mode='date'
-                minDate={new Date()}
+                minDate={orderno !== '' && typeof starttime !== 'undefined' ? new Date(Date.parse(starttime.replace(/-/g, '/'))) : new Date()}
                 maxDate={endDate}
                 title='开工时间'
                 extra={getFieldError('start_time') ? <div className='colorRed'>未选择</div> : '请选择开工时间'}

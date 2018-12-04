@@ -93,7 +93,7 @@ class FormBox extends Component {
   }
   onSubmit = () => { // 提交
     let { addressObj, fileList } = this.state
-    let { classifyId, constructType, teachId } = this.state.urlJson
+    let { teachId, proId, receiveType, bidwayId, paymethodId, paymodeId } = this.state.urlJson
     let attachment = []
     fileList.map(item => {
       attachment.push(item['path'])
@@ -102,24 +102,22 @@ class FormBox extends Component {
       if (!error) {
         let formJson = this.props.form.getFieldsValue()
         let postJson = {
-          ...{ worksheet_type: 3 },
+          ...{ worksheet_type: 1 },
           ...formJson,
-          ...{ start_time: tooler.formatDate(formJson['start_time']), end_time: tooler.formatDate(formJson['end_time']) },
-          ...{ construct_ids: [classifyId] },
+          ...{ prj_no: proId, taker_type: receiveType, tender_way: bidwayId, settle_fix_time: paymethodId, pay_way: paymodeId },
+          ...{ start_time: tooler.formatDate(formJson['start_time']), end_time: tooler.formatDate(formJson['end_time']), bid_end_time: tooler.formatDate(formJson['bid_end_time']) },
           ...{ coordinate: { lng: addressObj.position.lng, lat: addressObj.position.lat }},
           ...{ city_code: addressObj.position.cityCode },
-          ...{ construct_ids: [classifyId] },
-          ...{ construct_type: constructType },
-          ...{ professional_level: teachId !== 'null' ? teachId : '' },
+          ...{ aptitude_code_list: teachId !== 'null' && teachId !== '0' ? [teachId] : [] },
           attachment
         }
         console.log(postJson)
         Toast.loading('提交中...', 0)
-        let data = await api.Home.workSheet(postJson) || false
+        let data = await api.PushOrder.tender(postJson) || false
         if (data) {
           Toast.hide()
-          Toast.success('发布成功', 2, () => {
-            this.props.match.history.push(`${urls.WORKLISTDETAIL}?url=HOME&worksheetno=${data['worksheet_no']}`)
+          Toast.success('发布成功', 1, () => {
+            this.props.match.history.push(`${urls.BIDORDERRESULT}?worksheetno=${data['worksheet_no']}`)
           })
         }
       }
@@ -152,7 +150,7 @@ class FormBox extends Component {
     return <div>
       <div className='pageBox gray' style={{ display: mapShow ? 'none' : 'block' }}>
         <Header
-          title={remarkShow ? '工单备注' : '发布招标'}
+          title={remarkShow ? '招标备注' : '发布招标'}
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
@@ -185,8 +183,8 @@ class FormBox extends Component {
               placeholder='请输入标题'
             >标 题<em className={style['asterisk']}>*</em></InputItem>
             {
-              bidwayId === 'A' ? <InputItem
-                {...getFieldProps('valuation_quantity', {
+              bidwayId === '1' ? <InputItem
+                {...getFieldProps('tender_amount', {
                   rules: [
                     { required: true, message: '请输入总价' },
                     { pattern: /^[1-9]|([1-9][0-9]+)$/, message: '总价需要大于1' }
@@ -194,8 +192,8 @@ class FormBox extends Component {
                 })}
                 type='digit'
                 clear
-                error={!!getFieldError('valuation_quantity')}
-                onErrorClick={() => this.onErrorClick('valuation_quantity')}
+                error={!!getFieldError('tender_amount')}
+                onErrorClick={() => this.onErrorClick('tender_amount')}
                 placeholder='请输入总价'
               >总价<em className={style['asterisk']}>*</em></InputItem> : null
             }
@@ -203,10 +201,10 @@ class FormBox extends Component {
               mode='date'
               minDate={new Date()}
               title='截标时间'
-              extra={getFieldError('start_time') ? <div className='colorRed'>未选择</div> : '请选择截标时间'}
+              extra={getFieldError('bid_end_time') ? <div className='colorRed'>未选择</div> : '请选择截标时间'}
               value={startDate}
               onOk={(date) => this.handleStartDate(date)}
-              {...getFieldProps('start_time', {
+              {...getFieldProps('bid_end_time', {
                 rules: [
                   { required: true, message: '请选择截标时间' }
                 ],
@@ -258,21 +256,21 @@ class FormBox extends Component {
               </div>
             </div>
             <InputItem
-              {...getFieldProps('contact')}
+              {...getFieldProps('tender_contract')}
               clear
-              error={!!getFieldError('contact')}
-              onErrorClick={() => this.onErrorClick('contact')}
+              error={!!getFieldError('tender_contract')}
+              onErrorClick={() => this.onErrorClick('tender_contract')}
               placeholder='请输入联系人'
             >联系人</InputItem>
             <InputItem
-              {...getFieldProps('mobile', {
+              {...getFieldProps('tender_contract_way', {
                 rules: [
                   { pattern: /^1[345789]\d{9}$/, message: '手机号格式错误' }
                 ],
               })}
               clear
-              error={!!getFieldError('mobile')}
-              onErrorClick={() => this.onErrorClick('mobile')}
+              error={!!getFieldError('tender_contract_way')}
+              onErrorClick={() => this.onErrorClick('tender_contract_way')}
               placeholder='请输入手机号'
             >手机号</InputItem>
             <div className={style['input-ellipsis']} onClick={this.handleRemarkClick}>
@@ -291,7 +289,7 @@ class FormBox extends Component {
                   { pattern: /^.{20,500}$/, message: '描述字数为20~500字' }
                 ],
               })}
-              placeholder='描述你快单的具体要求，能更快找到合适你的工人，如：工作环境、工作要求等（至少20个字）'
+              placeholder='描述你招标的具体要求，能更快找到合作方，如：招标范围、招标组织形式、招标方式等（至少20个字）'
               error={!!getFieldError('remark')}
               onErrorClick={() => this.onErrorClick('remark')}
               rows={4}

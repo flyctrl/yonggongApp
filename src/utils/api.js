@@ -154,9 +154,15 @@ export default {
     }
   },
   PushOrder: {
-    workSheet(params) { // 发布工单/快单/招标
-      return FetchSave(prefix + '/worksheet/add', params, 'post', { showloading: false })
+    quick(params) { // 发布快单
+      return FetchSave(prefix + '/worksheet/add/quick', params, 'post', { showloading: false })
     },
+    normal(params) { // 发布工单
+      return FetchSave(prefix + '/worksheet/add/common', params, 'post', { showloading: false })
+    },
+    tender(params) { // 发布招标
+      return FetchSave(prefix + '/worksheet/add/tendering', params, 'post', { showloading: false })
+    }
   },
   WorkOrder: {
     WorkOrderList(params) { // 工单列表
@@ -317,7 +323,7 @@ export default {
         return FetchSave(prefix + '/project/add', params, 'post', { showloading: false })
       },
       projectList(params) { // 项目列表(发布工单时)
-        return Fetch(prefix + '/project/list/select', params)
+        return Fetch(prefix + '/project/list/select', params, 'get')
       },
       getProjectList(params) { // 项目列表
         return Fetch(prefix + '/project/plist', params, 'get')

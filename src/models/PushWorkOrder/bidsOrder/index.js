@@ -28,65 +28,27 @@ class SelectClass extends Component {
     super(props)
     this.state = {
       showIndex: 0,
-      receiveType: 1,
-      proId: '',
-      proVal: '请选择',
-      paymethodId: '',
-      paymethodVal: '请选择',
-      bidwayId: '',
-      bidwayVal: '请选择',
-      paymodeId: 'A',
-      paymodeVal: '直接付款',
-      teachVal: '不限',
-      teachId: '0',
+      receiveType: tooler.getQueryString('receiveType') || 1,
+      proId: tooler.getQueryString('proId') || '',
+      proVal: tooler.getQueryString('proVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('proVal'))) : '请选择',
+      paymethodId: tooler.getQueryString('paymethodId') || '',
+      paymethodVal: tooler.getQueryString('paymethodVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('paymethodVal'))) : '请选择',
+      bidwayId: tooler.getQueryString('bidwayId') || '',
+      bidwayVal: tooler.getQueryString('bidwayVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('bidwayVal'))) : '请选择',
+      paymodeId: tooler.getQueryString('paymodeId') || '1',
+      paymodeVal: tooler.getQueryString('paymodeVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('paymodeVal'))) : '直接付款',
+      teachVal: tooler.getQueryString('teachVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('teachVal'))) : '不限',
+      teachId: tooler.getQueryString('teachId') || '0',
       showform: false,
       showtech: false,
       url: tooler.getQueryString('url')
     }
   }
   componentDidMount() {
-    let [
-      teachVal,
-      teachId,
-      proId,
-      proVal,
-      paymethodId,
-      paymethodVal,
-      bidwayId,
-      bidwayVal,
-      paymodeId,
-      paymodeVal
-    ] = [
-      decodeURIComponent(decodeURIComponent(tooler.getQueryString('teachVal'))),
-      tooler.getQueryString('teachId'),
-      tooler.getQueryString('proId'),
-      decodeURIComponent(decodeURIComponent(tooler.getQueryString('proVal'))),
-      tooler.getQueryString('paymethodId'),
-      decodeURIComponent(decodeURIComponent(tooler.getQueryString('paymethodVal'))),
-      tooler.getQueryString('bidwayId'),
-      decodeURIComponent(decodeURIComponent(tooler.getQueryString('bidwayVal'))),
-      tooler.getQueryString('paymodeId'),
-      decodeURIComponent(decodeURIComponent(tooler.getQueryString('paymodeVal'))),
-    ]
-    console.log('teachId:', teachId)
-    if (teachId === null) {
-      teachVal = '不限'
-      teachId = '0'
-    }
-    if (proId && proVal && paymethodId && paymethodVal && bidwayId && bidwayVal && paymodeId && paymodeId && paymodeVal) {
-      this.setState({
-        teachVal,
-        teachId,
-        proId,
-        proVal,
-        paymethodId,
-        paymethodVal,
-        bidwayId,
-        bidwayVal,
-        paymodeId,
-        paymodeVal
-      })
-    }
+    let { receiveType } = this.state
+    this.setState({
+      showtech: parseInt(receiveType) === 2
+    })
   }
   handleProject = (value) => { // 选择项目
     this.setState({
@@ -158,7 +120,7 @@ class SelectClass extends Component {
     console.log(value)
   }
   handleNextStep = () => { // 下一步
-    let { teachVal, teachId, showtech, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal } = this.state
+    let { teachVal, teachId, showtech, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal, receiveType } = this.state
     if (proId === '' || paymethodId === '' || bidwayId === '' || paymodeId === '') {
       this.setState({
         proVal: proId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : proVal,
@@ -170,7 +132,7 @@ class SelectClass extends Component {
       if (showtech === false) {
         teachId = 'null'
       }
-      let urlJson = { teachVal, teachId, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal }
+      let urlJson = { teachVal, teachId, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal, receiveType }
       console.log('urlJson:', urlJson)
       let skipurl = tooler.parseJsonUrl(urlJson)
       console.log('skipurl:', skipurl)
@@ -203,7 +165,7 @@ class SelectClass extends Component {
                 return (
                   <Radio
                     key={item.value}
-                    checked={receiveType === item.value}
+                    checked={parseInt(receiveType) === item.value}
                     name='salary_payment_way'
                     className={style['pro-radio']}
                     onChange={() => this.handleChangeType(item.value)}

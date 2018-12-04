@@ -21,8 +21,8 @@ class ClassifyList extends Component {
     this.getClassifyList()
   }
   getClassifyList = async () => {
-    let data = await api.Common.getWorkSkill({
-      code: this.props.code
+    let data = await api.Common.getAptitude({
+      type: 'company'
     }) || []
     let defaultData = [{ label: '不限', value: 0 }]
     if (data) {

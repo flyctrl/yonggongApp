@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { List, Radio } from 'antd-mobile'
 import { Header, Content } from 'Components'
-// import api from 'Util/api'
+import api from 'Util/api'
 
 const RadioItem = Radio.RadioItem
 class ClassifyList extends Component {
@@ -9,7 +9,8 @@ class ClassifyList extends Component {
     super(props)
     this.state = {
       value: 0,
-      datasource: []
+      datasource: [],
+      isloading: true
     }
   }
   onChange = (value) => {
@@ -26,31 +27,17 @@ class ClassifyList extends Component {
     }
     console.log(this.props.data)
   }
-  getClassifyList = () => {
-    // let data = await api.Common.getWorkSkill({
-    //   code: this.props.code
-    // }) || []
-    // let defaultData = [{ label: '不限', value: 0 }]
-    // if (data) {
-    //   data.map(item => {
-    //     defaultData.push(item)
-    //   })
-    //   this.setState({
-    //     datasource: defaultData
-    //   })
-    // }
+  getClassifyList = async () => {
     this.setState({
-      datasource: [{
-        label: '土木工程项目',
-        value: 1
-      }, {
-        label: '水电工程项目',
-        value: 2
-      }, {
-        label: '国家电网项目',
-        value: 3
-      }]
+      isloading: true
     })
+    let data = await api.Mine.projectMange.projectList({}) || []
+    if (data) {
+      this.setState({
+        datasource: data,
+        isloading: false
+      })
+    }
   }
   onSubmit = () => {
     let { value, datasource } = this.state
@@ -60,7 +47,7 @@ class ClassifyList extends Component {
     this.props.onSubmit(checkJson)
   }
   render() {
-    let { value, datasource } = this.state
+    let { value, datasource, isloading } = this.state
     return <div className='pageBox gray'>
       <Header
         title='选择项目'
@@ -73,13 +60,15 @@ class ClassifyList extends Component {
         rightClick = {this.onSubmit}
       />
       <Content>
-        <List renderHeader={() => '请选择工单所属的项目'}>
-          {datasource.map(i => (
-            <RadioItem key={i['value']} checked={value === i['value']} onChange={() => this.onChange(i['value'])}>
-              {i['label']}
-            </RadioItem>
-          ))}
-        </List>
+        {
+          datasource.length !== 0 && !isloading ? <List renderHeader={() => '请选择工单所属的项目'}>
+            {datasource.map(i => (
+              <RadioItem key={i['value']} checked={value === i['value']} onChange={() => this.onChange(i['value'])}>
+                {i['label']}
+              </RadioItem>
+            ))}
+          </List> : <div className='nodata'>{ datasource.length === 0 && !isloading ? '暂无数据' : ''}</div>
+        }
       </Content>
     </div>
   }

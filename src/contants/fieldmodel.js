@@ -25,8 +25,8 @@ const settleRadio = [
 ]
 
 const payModeRadio = [
-  { value: 'A', label: '直接付款' },
-  { value: 'B', label: '委托付款' }
+  { value: 1, label: '直接付款' },
+  { value: 2, label: '委托付款' }
 ]
 
 const rightWrongRadio = [
@@ -110,8 +110,8 @@ const attendanceDetailType = { // 考勤详情打卡类型
 }
 
 const tenderWayRadio = [
-  { value: 'A', label: '要约价招标' },
-  { value: 'B', label: '竞价招标' }
+  { value: 1, label: '要约价招标' },
+  { value: 2, label: '竞价招标' }
 ]
 
 const receiveTypeRadio = [{

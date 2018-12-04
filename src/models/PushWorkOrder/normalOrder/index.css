@@ -10,7 +10,7 @@
 }
 
 .classnext-step-btn {
-  margin-top: 40px;
+  margin-top: 30px;
   & :global(.am-button-primary) {
     background: #1298FC;
   }
