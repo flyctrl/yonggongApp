@@ -28,8 +28,24 @@ class Login extends Component {
     const { getFieldError } = this.props.form
     let validateAry = ['username', 'password']
     this.props.form.validateFields(async (error) => {
+      let devJson = {}
+      if ('cordova' in window) {
+        devJson = {
+          platform: 1,
+          device: {
+            os: 2,
+            osver: device.version,
+            version: '1.0.2',
+            device_id: storage.get('deviceId'),
+            outer_id: storage.get('outerId')
+          }
+        }
+      }
       if (!error) {
-        const data = await api.auth.login(this.props.form.getFieldsValue()) || false
+        const data = await api.auth.login({
+          ...this.props.form.getFieldsValue(),
+          ...devJson
+        }) || false
         if (data) {
           storage.set('Authorization', 'Bearer ' + data['access_token'])
           storage.set('refreshToken', data['refresh_token'])

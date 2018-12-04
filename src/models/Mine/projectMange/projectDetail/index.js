@@ -29,7 +29,9 @@ class ProjectDetail extends Component {
   }
   getProjectDetail = async () => {
     this.setState({ isLoading: true })
-    let id = tooler.getQueryString('id')
+    let listId = tooler.getQueryString('id')
+    let eventno = tooler.getQueryString('event_no')
+    let id = listId !== null ? listId : eventno
     const data = await api.Mine.projectMange.projectDetail({
       prj_no: id
     }) || false
