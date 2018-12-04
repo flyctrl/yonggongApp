@@ -134,9 +134,13 @@ let invoiceStatus = { // 开票状态详情
 }
 const msgStatus = [ // 消息标题栏
   { title: '全部' },
-  { title: '考勤' },
+  { title: '用户' },
   { title: '工单' },
-  { title: '账户' }
+  { title: '账户' },
+  { title: '公告' },
+  { title: '考勤' },
+  { title: '认证' },
+  { title: '项目' },
 ]
 export {
   priceModeData,

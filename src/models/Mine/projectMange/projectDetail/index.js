@@ -70,9 +70,9 @@ class ProjectDetail extends Component {
                 <List renderHeader={() => '施工许可证编号'}>
                   {dataSource['licence_no'] || ' '}
                 </List>
-                <List renderHeader={() => '建设单位'}>
+                {/* <List renderHeader={() => '建设单位'}>
                   {dataSource['prj_build_unit']}
-                </List>
+                </List> */}
                 <List renderHeader={() => '施工单位'}>
                   {dataSource['prj_construct_unit'] || ' '}
                 </List>
@@ -89,7 +89,8 @@ class ProjectDetail extends Component {
                   {dataSource['construction_place']}
                 </List>
                 <List renderHeader={() => '项目施工坐标'}>
-                  {dataSource['coordinate']}
+                  经度:{dataSource['coordinate'] ? JSON.parse(dataSource['coordinate'])['lng'] : '数据未知'},
+                  纬度:{dataSource['coordinate'] ? JSON.parse(dataSource['coordinate'])['lat'] : '数据未知'}
                 </List>
                 <List renderHeader={() => '项目审核状态'}>
                   {
@@ -115,9 +116,12 @@ class ProjectDetail extends Component {
                 <List className={style['remark-desc']} renderHeader={() => '项目概括'}>
                   {dataSource['prj_brief'] || ' '}
                 </List>
-                <List renderHeader={() => '项目施工图纸'}>
-                  <img src={dataSource['prj_construct_drawings']}/>
+                <List renderHeader={() => '创建时间'}>
+                  {dataSource['created_at'] || ' '}
                 </List>
+                {/* <List renderHeader={() => '项目施工图纸'}>
+                  <img src={dataSource['prj_construct_drawings']}/>
+                </List> */}
                 <List className={`${style['attch-list']} my-bottom-border`} renderHeader={() => '附件'}>
                   <ul className={style['file-list']}>
                     {

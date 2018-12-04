@@ -151,6 +151,18 @@ export default {
     },
     vailPaypwd(params) { // 提现验证密码
       return Fetch(prefix + '/withdraw/validate', params)
+    },
+    realNameFront(params) {
+      return FetchSave(prefix + '/certificate/front', params, 'post', { 'Content-Type': 'multipart/form-data', loadtitle: '上传中...' }) // 正面
+    },
+    realNameBack(params) {
+      return Fetch(prefix + '/certificate/back', params, 'post', { 'Content-Type': 'multipart/form-data', loadtitle: '上传中...' }) // 反面
+    },
+    realNameFace(params) {
+      return Fetch(prefix + '/certificate/face', params, 'post', { 'Content-Type': 'multipart/form-data', loadtitle: '上传中...' }) // 脸部
+    },
+    realNameConfirm(params) {
+      return Fetch(prefix + '/certificate/confirm', params, 'post', { 'Content-Type': 'multipart/form-data', loadtitle: '上传中...' }) // 确认
     }
   },
   PushOrder: {
@@ -476,6 +488,23 @@ export default {
         return Fetch('/worksheetOrder/attend/orderList', params, 'get')
       }
     },
+    Auth: {// 认证
+      realNameFront(params) {
+        return Fetch(prefix + '/certificate/front', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 正面
+      },
+      realNameBack(params) {
+        return Fetch(prefix + '/certificate/back', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 反面
+      },
+      realNameFace(params) {
+        return Fetch(prefix + '/certificate/face', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 脸部
+      },
+      realNameToken(params) {
+        return Fetch(prefix + '/certificate/token', params, 'post', { showloading: false }) // token
+      },
+      realNameConfirm(params) {
+        return Fetch(prefix + '/certificate/confirm', params, 'post', { showloading: false }) // 确认
+      }
+    }
   },
   Home: {
     getSystemInforms(params) { // 系统通知

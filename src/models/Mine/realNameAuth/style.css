@@ -41,14 +41,31 @@ html:not([data-scale]) :global(.am-list-body::before) {
   margin-left: 5%;
   margin-top: 20px;
   height: 110px;
+  & .auth-pic-front {
+    width:155px;
+    height:110px;
+    float: left;
+    position: relative;
+  }
+  & .auth-pic-back {
+    width:155px;
+    height:110px;
+    float: left;
+    margin-left: 20px;
+    position: relative;
+  }
   & img {
     width:155px;
     height:110px;
     display: block;
-    float: left;
+    position: absolute;
   }
-  & .pic-right {
-    margin-left:20px;
+  & .input {
+    opacity: 0;
+    width:155px;
+    height:110px;
+    display: block;
+    position: absolute;
   }
 }
 footer {
