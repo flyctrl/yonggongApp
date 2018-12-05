@@ -4,27 +4,24 @@
  * @Title: 个人认证
  */
 import React, { Component } from 'react'
-import { Steps, Toast, Button, List, InputItem } from 'antd-mobile'
+import { Steps, Toast, Button, List, Modal } from 'antd-mobile'
 import { createForm } from 'rc-form'
 import api from 'Util/api'
-// import * as urls from 'Contants/urls'
+import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
 import style from './style.css'
 // import Loadable from 'react-loadable'
 import back from 'Src/assets/back.png'
 import front from 'Src/assets/front.png'
 import backFace from 'Src/assets/backimg.png'
+const prompt = Modal.prompt
+let newPrompt = null
 const Item = List.Item
-// let Upload = Loadable({
-//   loader: () => import('rc-upload'),
-//   loading: () => {
-//     return null
-//   },
-//   render(loaded, props) {
-//     let Upload = loaded.default
-//     return <Upload {...props}/>
-//   }
-// })
+let myreg = /^[1][3,4,5,7,8][0-9]{9}$/
+const sex = {
+  1: '男',
+  2: '女'
+}
 const Step = Steps.Step
 class CreateWorker extends Component {
   constructor(props) {
@@ -41,31 +38,45 @@ class CreateWorker extends Component {
       stepNum: 0, // 步骤数
       isShowFace: false, // 是否显示人脸识别页面
       phone: '',
-      idCard: '',
       token: ''
     }
   }
   handleClickNext = () => { // 是否显示人脸识别页面
-    let { isSuccessBack, isSuccessFront } = this.state
-    let { getFieldError } = this.props.form
-    let validateAry = ['phone']
-    this.props.form.validateFields({ force: true }, async (error, values) => {
-      if (!error) {
-        if (isSuccessBack && isSuccessFront) {
-          this.setState({
-            isShowFace: true,
-            phone: values['phone']
-          })
-        }
+    let { isSuccessBack, isSuccessFront, stepNum, token } = this.state
+    if (isSuccessBack && isSuccessFront) {
+      if (stepNum === 2) {
+        this.setState({
+          isShowFace: true
+        }, () => {
+          newPrompt = prompt(
+            '请输入工人手机号',
+            '',
+            [
+              { text: '取消' },
+              { text: '确定', onPress: (phone) => new Promise(async (resolve, reject) => {
+                if (phone === '') {
+                  Toast.fail('手机号不能为空', 2)
+                  return false
+                } else if (!myreg.test(phone)) {
+                  Toast.fail('请输入正确的手机号', 1.5)
+                  return false
+                } else {
+                  this.handleAuthConfirm(token, phone)
+                }
+                newPrompt.close()
+                reject()
+              }),
+              }
+            ],
+            'default'
+          )
+        })
       } else {
-        for (let value of validateAry) {
-          if (error[value]) {
-            Toast.fail(getFieldError(value), 1)
-            return
-          }
-        }
+        this.setState({
+          isShowFace: true
+        })
       }
-    })
+    }
   }
   handleClick = () => { // 如果先点击反面照,报错
     let { isClickBack, isClickFront } = this.state
@@ -82,7 +93,8 @@ class CreateWorker extends Component {
       stepNum: 0,
       fileList: {},
       backImg: back,
-      frontImg: front
+      frontImg: front,
+      token: ''
     })
   }
   handleTakeFront = (e) => { // 正面照
@@ -92,18 +104,19 @@ class CreateWorker extends Component {
     reader.onload = async function () {
       Toast.loading('上传中...', 0)
       let url = this.result
-      const data = await api.work.realNameFront({
+      const data = await api.Mine.workManage.realNameFront({
         image: url
       }) || false
       if (data) {
         Toast.hide()
+        Toast.success('上传成功', 1.5)
         _this.setState({
           fileList: data,
           frontImg: url,
           isClickFront: true,
           isClickBack: false,
           isSuccessFront: true,
-          frontToken: data['token']
+          token: data['token']
         })
       }
     }
@@ -113,26 +126,27 @@ class CreateWorker extends Component {
     reader.readAsDataURL(file)
   }
   handleTakeBack = (e) => { // 反面照
-    let { frontToken, fileList } = this.state
+    let { token, fileList } = this.state
     let file = e.target.files[0]
     let reader = new FileReader()
     let _this = this
     reader.onload = async function () {
       let url = this.result
       Toast.loading('上传中...', 0)
-      const data = await api.work.realNameBack({
+      const data = await api.Mine.workManage.realNameBack({
         image: url,
-        token: frontToken
+        token
       }) || false
       if (data) {
         Toast.hide()
+        Toast.success('上传成功', 1.5)
         _this.setState({
           fileList: { ...fileList, ...data },
           backImg: url,
           isClickBack: true,
           isSuccessBack: true,
           stepNum: 1,
-          backToken: data['token']
+          token: data['token']
         })
       }
     }
@@ -142,30 +156,51 @@ class CreateWorker extends Component {
     reader.readAsDataURL(file)
   }
   handleTakeFace = (e) => { // 人脸识别
-    let { frontToken } = this.state
+    let { token } = this.state
     let file = e.target.files[0]
     let reader = new FileReader()
     let _this = this
     reader.onload = async function () {
-      // let formData = new FormData()
-      // formData.append('image', file)
-      // formData.append('type', 5)
       Toast.loading('上传中...', 0)
       let url = this.result
-      const data = await api.work.realNameFace({
+      const data = await api.Mine.workManage.realNameFace({
         image: url,
-        token: frontToken
+        token
       }) || false
       if (data) {
         Toast.hide()
+        Toast.success('上传成功', 1.5)
+        setTimeout(() => {
+          newPrompt = prompt(
+            '请输入工人手机号',
+            '',
+            [
+              { text: '取消' },
+              { text: '确定', onPress: (phone) => new Promise(async (resolve, reject) => {
+                if (phone === '') {
+                  Toast.fail('手机号不能为空', 1.5)
+                  return false
+                } else if (!myreg.test(phone)) {
+                  Toast.fail('请输入正确的手机号', 1.5)
+                  return false
+                } else {
+                  _this.handleAuthConfirm(data['token'], phone)
+                }
+                newPrompt.close()
+                reject()
+              }),
+              }
+            ],
+            'default'
+          )
+        }, 1500)
         _this.setState({
-          backFace: url,
+          backFaceImg: url,
           isClickBack: true,
           isSuccessBack: true,
-          stepNum: 3,
-          backToken: data['token']
+          stepNum: 2,
+          token: data['token']
         })
-        this.handleAuthToken()
       }
     }
     reader.onerror = function () {
@@ -173,83 +208,31 @@ class CreateWorker extends Component {
     }
     reader.readAsDataURL(file)
   }
-  handleAuthToken = async () => {
-    let { fileList } = this.state
-    Toast.loading('上传中...', 0)
-    const data = await api.work.realNameToken({
-      name: fileList['name'],
-      id_number: fileList['id_number'],
-      sex: fileList['sex'],
-      people: fileList['people'],
-      issue_workority: fileList['issue_workority'],
-      validity: fileList['validity'],
+  handleAuthConfirm = async(token, phone) => {
+    Toast.loading('实名认证中...', 0)
+    // let { phone } = this.state
+    const data = await api.Mine.workManage.realNameConfirm({
+      token,
+      mobile: phone
     }) || false
     if (data) {
       Toast.hide()
-      this.setState({
-        backToken: data['token']
+      Toast.success('实名成功', 1.5, () => {
+        this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?isBack=1`)
       })
-      this.handleAuthConfirm()
+      this.setState({
+        stepNum: 3
+      })
     }
   }
-  handleAuthConfirm = async() => {
-    Toast.loading('提交中...', 0)
-    let { frontToken } = this.state
-    const data = await api.work.realNameToken({
-      token: frontToken
-    }) || false
-    if (data) {
-      Toast.hide()
+  componentWillUnmount () {
+    if (newPrompt) {
+      newPrompt.close()
     }
   }
   render() {
-    const { getFieldDecorator, getFieldError } = this.props.form
+    // const { getFieldDecorator, getFieldError } = this.props.form
     let { backImg, frontImg, isClickBack, isClickFront, isSuccessFront, isSuccessBack, stepNum, isShowFace, backFaceImg, fileList } = this.state
-    // const uploaderProps = {
-    //   action: api.Common.uploadFile,
-    //   data: { type: 5, token: '12', phone, idCard },
-    //   multiple: false,
-    //   onSuccess: (file) => {
-    //     if (file['code'] === 0) {
-    //       Toast.hide()
-    //       Toast.success('上传成功', 1)
-    //       if (isSuccessBack && isSuccessFront) { // 人脸识别成功
-    //         this.setState(({ fileList }) => ({
-    //           fileList: [...fileList, file['data']],
-    //           backFaceImg: file['data']['url'],
-    //           stepNum: 3
-    //         }))
-    //         this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?isBack=1`)
-    //         return
-    //       }
-    //       if (isClickBack) { // 设置正面照
-    //         this.setState(({ fileList }) => ({
-    //           fileList: [...fileList, file['data']],
-    //           frontImg: file['data']['url'],
-    //           isClickFront: true,
-    //           isClickBack: false,
-    //           isSuccessFront: true,
-    //           idCard: '12155121'
-    //         }))
-    //         return
-    //       } else { // 设置反面照
-    //         this.setState(({ fileList }) => ({
-    //           fileList: [...fileList, file['data']],
-    //           backImg: file['data']['url'],
-    //           isClickBack: true,
-    //           isSuccessBack: true,
-    //           stepNum: 1
-    //         }))
-    //         return
-    //       }
-    //     } else {
-    //       Toast.fail(file['msg'], 1)
-    //     }
-    //   },
-    //   beforeUpload(file) {
-    //     Toast.loading('上传中...', 0)
-    //   }
-    // }
     return <div className='pageBox'>
       <Header
         title={isShowFace ? '人脸识别' : '身份验证'}
@@ -293,7 +276,7 @@ class CreateWorker extends Component {
               <Item extra={fileList['name']}>姓名</Item>
             </List>
             <List>
-              <Item extra={fileList['sex']}>性别</Item>
+              <Item extra={sex[fileList['sex']]}>性别</Item>
             </List>
             <List>
               <Item extra={fileList['people']}>名族</Item>
@@ -307,11 +290,11 @@ class CreateWorker extends Component {
             <List>
               <Item extra={fileList['address']}>地址</Item>
             </List>
-            <List >
+            {/* <List >
               { getFieldDecorator('phone', {
                 rules: [
                   { required: true, message: '请输入手机号' },
-                  { pattern: /^[1][3,4,5,7,8][0-9]{9}$/, message: '格式错误' }
+                  { pattern: /^[1][3,4,5,7,8,9][0-9]{9}$/, message: '格式错误' }
                 ]
               })(
                 <InputItem
@@ -321,14 +304,14 @@ class CreateWorker extends Component {
                   placeholder='请输入手机号'
                 >手机号</InputItem>
               )}
-            </List>
+            </List> */}
           </div>
           <div className={style['work-form-bottom']} style={{ display: isSuccessBack ? 'block' : 'none' }}>
             <List >
-              <Item extra={'杭州公安总部'}>签发机关</Item>
+              <Item extra={fileList['issue_authority']}>签发机关</Item>
             </List>
             <List >
-              <Item extra={'2018.09.09-2038.09.09'}>有效期</Item>
+              <Item extra={fileList['validity']}>有效期</Item>
             </List>
           </div>
           <footer style={{ display: isSuccessBack || isSuccessFront ? 'block' : 'none' }}>
@@ -351,7 +334,7 @@ class CreateWorker extends Component {
           </div>
           <div className={style['work-face-btn']}>
             拍一张照片
-            <input id='btn_camera_back' className={style['input']} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFace} />
+            <input id='btn_camera_face' className={style['input']} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFace} />
           </div>
         </div>
       </Content>

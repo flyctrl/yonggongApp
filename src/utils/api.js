@@ -153,16 +153,16 @@ export default {
       return Fetch(prefix + '/withdraw/validate', params)
     },
     realNameFront(params) {
-      return FetchSave(prefix + '/certificate/front', params, 'post', { 'Content-Type': 'multipart/form-data', loadtitle: '上传中...' }) // 正面
+      return FetchSave(prefix + '/certificate/front', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 正面
     },
     realNameBack(params) {
-      return Fetch(prefix + '/certificate/back', params, 'post', { 'Content-Type': 'multipart/form-data', loadtitle: '上传中...' }) // 反面
+      return Fetch(prefix + '/certificate/back', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 反面
     },
     realNameFace(params) {
-      return Fetch(prefix + '/certificate/face', params, 'post', { 'Content-Type': 'multipart/form-data', loadtitle: '上传中...' }) // 脸部
+      return Fetch(prefix + '/certificate/face', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 脸部
     },
     realNameConfirm(params) {
-      return Fetch(prefix + '/certificate/confirm', params, 'post', { 'Content-Type': 'multipart/form-data', loadtitle: '上传中...' }) // 确认
+      return Fetch(prefix + '/certificate/confirm', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 确认
     }
   },
   PushOrder: {
@@ -495,48 +495,45 @@ export default {
     Check: {// 考勤
       attendCheck(params) {
         // return Fetch('/worksheetOrder/attendCheck', params, 'get') // 打卡校验
-        return Fetch('/worksheetOrder/attend/check', params, 'get', { showloading: false }) // 打卡校验
+        return Fetch(prefix + '/worksheetOrder/attend/check', params, 'get', { showloading: false }) // 打卡校验
       },
       attend(params) {
-        return Fetch('/worksheetOrder/attend', params, 'post', { showloading: false }) // 打卡
+        return Fetch(prefix + '/worksheetOrder/attend', params, 'post', { showloading: false }) // 打卡
       },
       project(params) { // 工单订单列表获取项目
-        return Fetch('/worksheetOrder/attend/orderList', params, 'get')
+        return Fetch(prefix + '/worksheetOrder/attend/orderList', params, 'get')
       },
       uploadImg(params) { // 上传照片
-        return Fetch('/common/attach/imageData', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false })
+        return Fetch(prefix + '/common/attach/imageData', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false })
       },
-      attendOrderlist(params) { // 考勤订单列表
-        return Fetch('/worksheetOrder/attend/orderList', params, 'get')
+      attendOrderlist(params) { // 代考勤订单列表(考勤提醒)
+        return Fetch(prefix + '/worksheetOrder/attend/orderList', params, 'get')
+      },
+      attendUserlist(params) { // 代考勤订单用户列表
+        return Fetch(prefix + '/worksheetOrder/attend/userList', params, 'get')
       }
     },
-    Auth: {// 认证
+    workManage: {// 工人管理
       realNameFront(params) {
-        return Fetch(prefix + '/certificate/front', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 正面
+        return Fetch(prefix + '/worker/front', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 正面
       },
       realNameBack(params) {
-        return Fetch(prefix + '/certificate/back', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 反面
+        return Fetch(prefix + '/worker/back', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 反面
       },
       realNameFace(params) {
-        return Fetch(prefix + '/certificate/face', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 脸部
-      },
-      realNameToken(params) {
-        return Fetch(prefix + '/certificate/token', params, 'post', { showloading: false }) // token
+        return Fetch(prefix + '/worker/face', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 脸部
       },
       realNameConfirm(params) {
-        return Fetch(prefix + '/certificate/confirm', params, 'post', { showloading: false }) // 确认
+        return Fetch(prefix + '/worker/confirm', params, 'post', { showloading: false }) // 确认
+      },
+      getWorkList(params) {
+        return Fetch(prefix + '/worker', params, 'get')
       }
     }
   },
   Home: {
     getSystemInforms(params) { // 系统通知
       return Fetch(prefix + '/message/sys/list', params, 'get')
-    },
-    getSystemMessDetail(params) { // 系统通知详情
-      return Fetch(prefix + '/message/sys/show', params, 'get')
-    },
-    getTodayTodo(params) { // 获取今日代办
-      return Fetch(prefix + '/user_todo/list', params, 'get')
     },
     getBannerList(params) { // 获取banner
       return Fetch('/common/banner/list', params, 'get')
