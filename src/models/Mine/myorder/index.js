@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { SegmentedControl, Button, Badge, ListView, PullToRefresh, ActionSheet, Toast, Modal } from 'antd-mobile'
+import { Button, Badge, ListView, PullToRefresh, ActionSheet, Toast, Modal } from 'antd-mobile'
 import { Header, Content, NewIcon } from 'Components'
-import { worksheetType, worksheetStatus, orderStatus } from 'Contants/fieldmodel'
+import { orderStatus } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
-import * as tooler from 'Contants/tooler'
+// import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import style from './index.css'
 
@@ -17,7 +17,6 @@ class WorkListManage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      parentIndex: parseInt(tooler.getQueryString('listType')) || 0,
       pageIndex: 1,
       pageNos: 0,
       dataSource: [],
@@ -29,19 +28,17 @@ class WorkListManage extends Component {
     }
   }
   componentDidMount() {
-    let { parentIndex } = this.state
-    this.getdataTemp(parentIndex)
+    this.getdataTemp()
   }
-  getdataTemp = (parentIndex = 0) => {
-    const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 50
+  getdataTemp = () => {
+    const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 47
     this.genData().then((rdata) => {
       this.rData = rdata
       this.setState({
         dataSource: this.rData,
         height: hei,
         refreshing: false,
-        isLoading: false,
-        parentIndex
+        isLoading: false
       })
     })
   }
@@ -83,20 +80,10 @@ class WorkListManage extends Component {
     this.setState({
       isLoading: true
     })
-    let { parentIndex } = this.state
-    let data = {}
-    console.log('parentIndex:', parentIndex)
-    if (parentIndex === 0) { // 我接的
-      data = await api.Mine.WorkOrderList.workorderList({
-        page: pIndex,
-        limit: NUM_ROWS
-      }) || false
-    } else if (parentIndex === 1) { // 我发布的
-      data = await api.Mine.WorkOrderList.worksheetList({
-        page: pIndex,
-        limit: NUM_ROWS
-      }) || false
-    }
+    let data = await api.Mine.myorder.workorderList({
+      page: pIndex,
+      limit: NUM_ROWS
+    }) || false
     if (data['currPageNo'] === 1 && data['list'].length === 0) {
       document.body.style.overflow = 'hidden'
       this.setState({
@@ -113,27 +100,8 @@ class WorkListManage extends Component {
     return await data['list']
   }
 
-  handleSegmentedChange = (e) => {
-    let parentIndex = e.nativeEvent.selectedSegmentIndex
-    this.props.match.history.replace(`?listType=${parentIndex}`)
-    this.setState({
-      parentIndex,
-      subIndex: 0,
-      pageNos: 0,
-      refreshing: true,
-      isLoading: true,
-      dataSource: [],
-    }, () => {
-      this.getdataTemp(parentIndex)
-    })
-  }
   handleShowDetail = (number) => {
-    let { parentIndex } = this.state
-    if (parentIndex === 0) {
-      this.props.match.history.push(urls.WORKLISTDETAIL + '?orderno=' + number + '&worktype=' + parentIndex)
-    } else if (parentIndex === 1) {
-      this.props.match.history.push(urls.WORKLISTDETAIL + '?worksheetno=' + number + '&worktype=' + parentIndex)
-    }
+    this.props.match.history.push(urls.ORDERLISTDETAIL + '?worksheetno=' + number)
   }
   /* *************** 按钮start *************** */
   showActionSheet = (key, rowData) => { // app底部sheet
@@ -205,24 +173,6 @@ class WorkListManage extends Component {
     switch (type) {
       case 'handleTake': // 接单
         break
-      case 'cancelWorksheet': // 我发的 - 取消开工
-        this.handleCancelWorksheet(rowData)
-        break
-      case 'pageAttend': // 我发的 - 考勤设置
-        this.handleSetAttend(rowData)
-        break
-      case 'viewAttend': // 我发的 - 考勤记录
-        this.handleViewAttend(rowData)
-        break
-      case 'viewApply': // 我发的 - 接单记录
-        this.handleViewApply(rowData)
-        break
-      case 'viewSettle': // 我发的 - 结算记录
-        this.handleViewSettle(rowData)
-        break
-      case 'viewWorkPlan': // 我发的 - 开工记录
-        this.handleViewWorkPlan(rowData)
-        break
       case 'orderPageCommon': // 我接的 - 发工单
         break
       case 'orderPageQuick': // 我接的 - 发快单
@@ -262,44 +212,6 @@ class WorkListManage extends Component {
         this.handleOrderViewWorkPlan(rowData)
         break
     }
-  }
-  handleCancelWorksheet = async (rowData) => { // 我发的 - 取消开工
-    console.log(rowData)
-    let { dataSource } = this.state
-    let currentIndex
-    dataSource.map((item, index) => {
-      if (item['worksheet_no'] === rowData['worksheet_no']) {
-        currentIndex = index
-      }
-    })
-    Toast.loading('取消中...', 0)
-    let data = await api.Mine.WorkOrderList.cancelWork({
-      worksheet_no: rowData['worksheet_no']
-    }) || false
-    Toast.hide()
-    if (data) {
-      dataSource[currentIndex] = data
-      this.setState({
-        dataSource
-      })
-      Toast.success('成功取消开工', 1.5)
-    }
-  }
-  handleSetAttend = (rowData) => { // 我发的 - 考勤设置 worksheetno
-    // this.props.match.history.push(urls.CHECKSET + '?url=WORKLISTMANAGE&worksheetno=' + rowData['worksheet_no'])
-    console.log('考勤设置')
-  }
-  handleViewAttend = (rowData) => { // 我发的 - 考勤记录
-    this.props.match.history.push(urls.OATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'])
-  }
-  handleViewApply = (rowData) => { // 我发的 - 接单记录
-    this.props.match.history.push(urls.OACCESSRECORD + '?worksheetno=' + rowData['worksheet_no'])
-  }
-  handleViewSettle = (rowData) => { // 我发的 - 结算记录
-    this.props.match.history.push(urls.OSETTLERECORD + '?worksheetno=' + rowData['worksheet_no'] + '&worktype=1')
-  }
-  handleViewWorkPlan = (rowData) => { // 我发的 - 开工记录
-    this.props.match.history.push(urls.OSENDSTARTWORKRECORD + '?worksheetno=' + rowData['worksheet_no'])
   }
   handlePushQuick = (rowData) => { // 我接的 - 发快单
     // this.props.match.history.push(urls.PUSHORDER + '?url=WORKLISTMANAGE')
@@ -412,7 +324,7 @@ class WorkListManage extends Component {
   }
   /* *************** 按钮end *************** */
   render() {
-    const { parentIndex, isLoading, nodata, height, dataSource } = this.state
+    const { isLoading, nodata, height, dataSource } = this.state
     const footerShow = () => {
       if (isLoading) {
         return null
@@ -423,10 +335,40 @@ class WorkListManage extends Component {
       }
     }
     let row = (rowData, sectionID, rowID) => {
-      if (parentIndex === 0) { // 我接的
-        return <dl key={rowData['id']} onClick={() => this.handleShowDetail(rowData['order_no'])}>
+      if (rowData['worksheet_type'] === 1) { // 招标
+        return <dl key={rowData['worksheet_no']} onClick={() => this.handleShowDetail(rowData['worksheet_no'])}>
           <dt className='my-bottom-border'>
-            <Badge className={`${style['typericon']}`} text={worksheetType[rowData['worksheet_type']]} />
+            <Badge className={`${style['typericon']}`} text='招标' />
+            <p className='ellipsis'>{rowData['title']}</p>
+            <Badge className={`${style['statusicon']} ${rowData['order_status'] === 4 ? style['gray'] : style['orage']}`} text={
+              orderStatus.find((item) => {
+                return item.status === rowData['order_status']
+              })['title']
+            } />
+          </dt>
+          <dd>
+            <p className={style['price']}>
+              <span>预计总价：<em>{rowData['total_amount']}</em> {rowData['total_amount_unit']}</span>
+            </p>
+            <p className={style['two-rows']}>
+              <span>开工日期：{rowData['start_date']}</span>
+            </p>
+            <p className={style['two-rows']}>
+              <span>截标日期：{rowData['bid_end_date']}</span>
+              <span>工期：{rowData['time_limit_day']} 天</span>
+            </p>
+            <p className={style['address']}>
+              <span>地址：{rowData['address']}</span>
+            </p>
+            {
+              this.showContorlBtn(rowData)
+            }
+          </dd>
+        </dl>
+      } else if (rowData['worksheet_type'] === 2) { // 工单
+        return <dl key={rowData['worksheet_no']} onClick={() => this.handleShowDetail(rowData['worksheet_no'])}>
+          <dt className='my-bottom-border'>
+            <Badge className={`${style['typericon']}`} text='工单' />
             <p className='ellipsis'>{rowData['title']}</p>
             <Badge className={`${style['statusicon']} ${rowData['order_status'] === 4 ? style['gray'] : style['orage']}`} text={
               orderStatus.find((item) => {
@@ -444,7 +386,7 @@ class WorkListManage extends Component {
             </div>
             <p className={style['price']}>
               <span>单价：<em>{rowData['unit_price']}</em> {rowData['unit']}</span>
-              <span>预计收入：<em>{rowData['total_amount']}</em> {rowData['total_amount_unit']}</span>
+              <span>预计总价：<em>{rowData['total_amount']}</em> {rowData['total_amount_unit']}</span>
             </p>
             <p className={style['two-rows']}>
               <span>开工日期：{rowData['start_date']}</span>
@@ -458,14 +400,14 @@ class WorkListManage extends Component {
             }
           </dd>
         </dl>
-      } else if (parentIndex === 1) { // 我发布的
-        return <dl key={rowData['id']} onClick={() => { this.handleShowDetail(rowData['worksheet_no']) }}>
+      } else if (rowData['worksheet_type'] === 3) { // 快单
+        return <dl key={rowData['worksheet_no']} onClick={() => this.handleShowDetail(rowData['worksheet_no'])}>
           <dt className='my-bottom-border'>
-            <Badge className={`${style['typericon']}`} text={worksheetType[rowData['worksheet_type']]} />
+            <Badge className={`${style['typericon']}`} text='快单' />
             <p className='ellipsis'>{rowData['title']}</p>
-            <Badge className={`${style['statusicon']} ${rowData['worksheet_status'] === 5 ? style['gray'] : style['orage']}`} text={
-              worksheetStatus.find((item) => {
-                return item.status === rowData['worksheet_status']
+            <Badge className={`${style['statusicon']} ${rowData['order_status'] === 4 ? style['gray'] : style['orage']}`} text={
+              orderStatus.find((item) => {
+                return item.status === rowData['order_status']
               })['title']
             } />
           </dt>
@@ -476,11 +418,10 @@ class WorkListManage extends Component {
                   return <em key={index}>{item}</em>
                 })
               }
-              <span>人数：{rowData['people_confirm']}/{rowData['people_total']}</span>
             </div>
             <p className={style['price']}>
               <span>单价：<em>{rowData['unit_price']}</em> {rowData['unit']}</span>
-              <span>预计收入：<em>{rowData['total_amount']}</em> {rowData['total_amount_unit']}</span>
+              <span>预计总价：<em>{rowData['total_amount']}</em> {rowData['total_amount_unit']}</span>
             </p>
             <p className={style['two-rows']}>
               <span>开工日期：{rowData['start_date']}</span>
@@ -506,7 +447,6 @@ class WorkListManage extends Component {
         }}
       />
       <Content style={{ overflow: 'hidden' }}>
-        <SegmentedControl prefixCls='toplist-tabs' selectedIndex={parentIndex} onChange={this.handleSegmentedChange} values={['我接的', '我发布的']} />
         <div className={style['worklist-body']}>
           <ListView
             ref={(el) => {

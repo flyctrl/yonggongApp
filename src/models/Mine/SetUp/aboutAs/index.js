@@ -37,7 +37,7 @@ class AboutUs extends Component {
             <img src={logo} />
           </div>
         </div>
-        <p className={style['about-v']}>亚雀 V1.0.0</p>
+        <p className={style['about-v']}>亚雀 V1.0.2</p>
         <div className={style['about-content']}>
           <List>
             {/* <Item onClick={() => {}} arrow='horizontal'>去评分</Item> */}

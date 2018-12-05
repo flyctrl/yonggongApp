@@ -27,15 +27,12 @@ export const ACCESSRECORD = `${WORKLISTMANAGE}/accessRecord` // 接单记录
 export const SETTLERECORD = `${WORKLISTMANAGE}/settleRecord` // 结算记录
 export const ATTENDRECORD = `${WORKLISTMANAGE}/attendRecord` // 考勤记录
 export const SENDSTARTWORKRECORD = `${WORKLISTMANAGE}/sendStartWorkRecord` // 开工记录 我发的
-export const ORDERSTARTWORKRECORD = `${WORKLISTMANAGE}/orderStartWorkRecord` // 开工记录 我接的
 export const ATTENDDETAIL = `${WORKLISTMANAGE}/attendRecord/detail` // 考勤详情
 // 我的
 export const MINE = `${BASE_URL}/Mine`
 export const MYORDER = `${MINE}/myorder` // 我的订单
-export const OACCESSRECORD = `${MYORDER}/accessRecord` // 接单记录
-export const OSETTLERECORD = `${MYORDER}/settleRecord` // 结算记录
-export const OATTENDRECORD = `${MYORDER}/attendRecord` // 考勤记录
-export const OSENDSTARTWORKRECORD = `${MYORDER}/sendStartWorkRecord` // 开工记录 我发的
+export const ORDERLISTDETAIL = `${MYORDER}/worklistDetail` // 订单详情
+export const OSETTLERECORD = `${MYORDER}/settleRecord` // 结算记录 我接的
 export const OORDERSTARTWORKRECORD = `${MYORDER}/orderStartWorkRecord` // 开工记录 我接的
 export const OATTENDDETAIL = `${MYORDER}/attendRecord/detail` // 考勤详情
 export const APPLYSETTLE = `${MYORDER}/applySettle` // 申请结算

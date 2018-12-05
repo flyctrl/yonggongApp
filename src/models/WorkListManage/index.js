@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { SegmentedControl, Button, Badge, ListView, PullToRefresh, ActionSheet, Toast } from 'antd-mobile'
 import { Header, Content, NewIcon } from 'Components'
-import { worksheetStatus, orderStatus } from 'Contants/fieldmodel'
+import { worksheetStatus } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
@@ -16,7 +16,7 @@ class WorkListManage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      parentIndex: parseInt(tooler.getQueryString('listType')) || 0,
+      parentIndex: parseInt(tooler.getQueryString('listType')) || 1,
       pageIndex: 1,
       pageNos: 0,
       dataSource: [],
@@ -31,7 +31,7 @@ class WorkListManage extends Component {
     let { parentIndex } = this.state
     this.getdataTemp(parentIndex)
   }
-  getdataTemp = (parentIndex = 0) => {
+  getdataTemp = (parentIndex = 1) => {
     const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 90
     this.genData().then((rdata) => {
       this.rData = rdata
@@ -83,19 +83,12 @@ class WorkListManage extends Component {
       isLoading: true
     })
     let { parentIndex } = this.state
-    let data = {}
     console.log('parentIndex:', parentIndex)
-    if (parentIndex === 1) { // 我接的
-      data = await api.Mine.WorkOrderList.workorderList({
-        page: pIndex,
-        limit: NUM_ROWS
-      }) || false
-    } else if (parentIndex === 0) { // 我发布的
-      data = await api.Mine.WorkOrderList.worksheetList({
-        page: pIndex,
-        limit: NUM_ROWS
-      }) || false
-    }
+    let data = await api.WorkListManage.worksheetList({
+      worksheet_type: parentIndex,
+      page: pIndex,
+      limit: NUM_ROWS
+    }) || false
     if (data['currPageNo'] === 1 && data['list'].length === 0) {
       document.body.style.overflow = 'hidden'
       this.setState({
@@ -113,7 +106,8 @@ class WorkListManage extends Component {
   }
 
   handleSegmentedChange = (e) => {
-    let parentIndex = e.nativeEvent.selectedSegmentIndex
+    let parentIndex = e.nativeEvent.selectedSegmentIndex + 1
+    console.log(parentIndex)
     this.props.match.history.replace(`?listType=${parentIndex}`)
     this.setState({
       parentIndex,
@@ -128,11 +122,7 @@ class WorkListManage extends Component {
   }
   handleShowDetail = (number) => {
     let { parentIndex } = this.state
-    if (parentIndex === 0) {
-      this.props.match.history.push(urls.WORKLISTDETAIL + '?orderno=' + number + '&worktype=' + parentIndex)
-    } else if (parentIndex === 1) {
-      this.props.match.history.push(urls.WORKLISTDETAIL + '?worksheetno=' + number + '&worktype=' + parentIndex)
-    }
+    this.props.match.history.push(urls.WORKLISTDETAIL + '?worksheetno=' + number + '&worktype=' + parentIndex)
   }
   /* *************** 按钮start *************** */
   showActionSheet = (key, rowData) => { // app底部sheet
@@ -274,8 +264,8 @@ class WorkListManage extends Component {
       }
     }
     let row = (rowData, sectionID, rowID) => {
-      if (parentIndex === 0) { // 快单
-        return <dl key={rowData['id']} onClick={() => { this.handleShowDetail(rowData['worksheet_no']) }}>
+      if (parentIndex === 3) { // 快单
+        return <dl key={rowData['worksheet_no']} onClick={() => { this.handleShowDetail(rowData['worksheet_no']) }}>
           <dt className='my-bottom-border'>
             <p className='ellipsis'>{rowData['title']}</p>
             <Badge className={`${style['statusicon']} ${rowData['worksheet_status'] === 5 ? style['gray'] : style['orage']}`} text={
@@ -295,7 +285,7 @@ class WorkListManage extends Component {
             </div>
             <p className={style['price']}>
               <span>单价：<em>{rowData['unit_price']}</em> {rowData['unit']}</span>
-              <span>预计收入：<em>{rowData['total_amount']}</em> {rowData['total_amount_unit']}</span>
+              <span>预计总价：<em>{rowData['total_amount']}</em> {rowData['total_amount_unit']}</span>
             </p>
             <p className={style['two-rows']}>
               <span>开工日期：{rowData['start_date']}</span>
@@ -309,13 +299,13 @@ class WorkListManage extends Component {
             }
           </dd>
         </dl>
-      } else if (parentIndex === 1) { // 工单
-        return <dl key={rowData['id']} onClick={() => this.handleShowDetail(rowData['order_no'])}>
+      } else if (parentIndex === 2) { // 工单
+        return <dl key={rowData['worksheet_no']} onClick={() => this.handleShowDetail(rowData['worksheet_no'])}>
           <dt className='my-bottom-border'>
             <p className='ellipsis'>{rowData['title']}</p>
-            <Badge className={`${style['statusicon']} ${rowData['order_status'] === 4 ? style['gray'] : style['orage']}`} text={
-              orderStatus.find((item) => {
-                return item.status === rowData['order_status']
+            <Badge className={`${style['statusicon']} ${rowData['worksheet_status'] === 4 ? style['gray'] : style['orage']}`} text={
+              worksheetStatus.find((item) => {
+                return item.status === rowData['worksheet_status']
               })['title']
             } />
           </dt>
@@ -326,10 +316,11 @@ class WorkListManage extends Component {
                   return <em key={index}>{item}</em>
                 })
               }
+              <span>人数：{rowData['people_total']}</span>
             </div>
             <p className={style['price']}>
               <span>单价：<em>{rowData['unit_price']}</em> {rowData['unit']}</span>
-              <span>预计收入：<em>{rowData['total_amount']}</em> {rowData['total_amount_unit']}</span>
+              <span>预计总价：<em>{rowData['total_amount']}</em> {rowData['total_amount_unit']}</span>
             </p>
             <p className={style['two-rows']}>
               <span>开工日期：{rowData['start_date']}</span>
@@ -343,30 +334,25 @@ class WorkListManage extends Component {
             }
           </dd>
         </dl>
-      } else if (parentIndex === 2) { // 招标
-        return <dl key={rowData['id']} onClick={() => this.handleShowDetail(rowData['order_no'])}>
+      } else if (parentIndex === 1) { // 招标
+        return <dl key={rowData['worksheet_no']} onClick={() => this.handleShowDetail(rowData['worksheet_no'])}>
           <dt className='my-bottom-border'>
             <p className='ellipsis'>{rowData['title']}</p>
-            <Badge className={`${style['statusicon']} ${rowData['order_status'] === 4 ? style['gray'] : style['orage']}`} text={
-              orderStatus.find((item) => {
-                return item.status === rowData['order_status']
+            <Badge className={`${style['statusicon']} ${rowData['worksheet_status'] === 4 ? style['gray'] : style['orage']}`} text={
+              worksheetStatus.find((item) => {
+                return item.status === rowData['worksheet_status']
               })['title']
             } />
           </dt>
           <dd>
-            <div className={style['tags-box']}>
-              {
-                rowData['construct'].map((item, index) => {
-                  return <em key={index}>{item}</em>
-                })
-              }
-            </div>
             <p className={style['price']}>
-              <span>单价：<em>{rowData['unit_price']}</em> {rowData['unit']}</span>
-              <span>预计收入：<em>{rowData['total_amount']}</em> {rowData['total_amount_unit']}</span>
+              <span>预计总价：<em>{rowData['total_amount']}</em> {rowData['total_amount_unit']}</span>
             </p>
             <p className={style['two-rows']}>
               <span>开工日期：{rowData['start_date']}</span>
+            </p>
+            <p className={style['two-rows']}>
+              <span>截标日期：{rowData['bid_end_date']}</span>
               <span>工期：{rowData['time_limit_day']} 天</span>
             </p>
             <p className={style['address']}>
@@ -389,7 +375,7 @@ class WorkListManage extends Component {
         }}
       />
       <Content style={{ overflow: 'hidden' }}>
-        <SegmentedControl prefixCls='toplist-tabs' selectedIndex={parentIndex} onChange={this.handleSegmentedChange} values={['快单', '工单', '招标']} />
+        <SegmentedControl prefixCls='toplist-tabs' selectedIndex={parentIndex - 1} onChange={this.handleSegmentedChange} values={['招标', '工单', '快单']} />
         <div className={style['worklist-body']} style={{ height: '100%' }}>
           <ListView
             ref={(el) => {

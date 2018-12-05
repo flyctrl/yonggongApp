@@ -4,7 +4,6 @@ import { Header, Content, NewIcon } from 'Components'
 import { worksheetType } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
-import { onBackKeyDown } from 'Contants/tooler'
 import api from 'Util/api'
 import style from './index.css'
 
@@ -13,9 +12,7 @@ class WorkListDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      orderno: tooler.getQueryString('orderno'),
       worksheetno: tooler.getQueryString('worksheetno'),
-      worktype: tooler.getQueryString('worktype'),
       url: tooler.getQueryString('url') || '',
       datasource: {
         detail: []
@@ -27,38 +24,15 @@ class WorkListDetail extends Component {
   }
   componentDidMount() {
     this.getOrderDetail()
-    document.removeEventListener('backbutton', onBackKeyDown, false)
-    document.addEventListener('backbutton', this.backButtons, false)
-  }
-  componentWillUnmount () {
-    document.removeEventListener('backbutton', this.backButtons)
-    document.addEventListener('backbutton', onBackKeyDown, false)
-  }
-  backButtons = (e) => {
-    let { url } = this.state
-    if (url !== '') {
-      e.preventDefault()
-      this.props.match.history.push(urls.HOME)
-    } else {
-      this.props.match.history.goBack()
-    }
   }
   getOrderDetail = async () => {
     this.setState({
       isLoading: false
     })
-    let { orderno, worksheetno, worktype } = this.state
-    let data = {}
-    console.log('worktype:', worktype)
-    if (worktype === '0') {
-      data = await api.Mine.WorkOrderList.workOrderDetail({
-        order_no: orderno
-      }) || false
-    } else if (worktype === '1' || worksheetno) {
-      data = await api.Mine.WorkOrderList.workSheetDetail({
-        worksheet_no: worksheetno
-      }) || false
-    }
+    let { worksheetno } = this.state
+    let data = await api.Mine.myorder.workSheetDetail({
+      worksheet_no: worksheetno
+    }) || false
     if (data) {
       this.setState({
         datasource: data,
@@ -68,7 +42,7 @@ class WorkListDetail extends Component {
         resizeEnable: false,
         doubleClickZoom: false,
         center: [data.longitude, data.latitude],
-        zoom: 18,
+        zoom: 15,
         dragEnable: false
       })
       let marker = new AMap.Marker({
@@ -98,44 +72,22 @@ class WorkListDetail extends Component {
   }
   handleViewClick = (key, dataObj) => { // 记录点击
     switch (key) {
-      case 'viewAttend': // 我发的 - 考勤记录
-        this.handleAttendRecord(1)
-        break
-      case 'viewApply': // 我发的 - 接单记录
-        this.handleAccessRecord(dataObj['worksheetno'])
-        break
-      case 'viewSettle': // 我发的 - 结算记录
-        this.handleSettleRecord(dataObj['worksheetno'])
-        break
-      case 'viewWorkPlan': // 我发的 - 开工记录
-        this.handleWorkPlan()
-        break
       case 'orderViewWorkPlan': // 我接的 - 开工记录
         this.handleOrderWorkplan()
         break
       case 'orderViewAttend': // 我接的 - 考勤记录
-        this.handleAttendRecord(0)
+        this.handleAttendRecord()
         break
       case 'orderViewSettle': // 我接的 - 结算记录
         this.handleSettleRecord(dataObj['worksheetno'])
         break
     }
   }
-  handleAccessRecord = (worksheetno) => { // 接单记录
-    this.props.match.history.push(urls.OACCESSRECORD + '?worksheetno=' + worksheetno)
-  }
   handleSettleRecord = (worksheetno) => { // 结算记录
-    this.props.match.history.push(urls.OSETTLERECORD + '?worksheetno=' + worksheetno + '&worktype=' + this.state.worktype)
+    this.props.match.history.push(urls.OSETTLERECORD + '?worksheetno=' + worksheetno)
   }
   handleAttendRecord = (type) => { // 考勤记录
-    if (type === 0) {
-      this.props.match.history.push(urls.OATTENDDETAIL + '?orderno=' + this.state.orderno)
-    } else if (type === 1) {
-      this.props.match.history.push(urls.OATTENDRECORD + '?worksheetno=' + this.state.worksheetno)
-    }
-  }
-  handleWorkPlan = () => { // 开工记录 - 我发的
-    this.props.match.history.push(urls.OSENDSTARTWORKRECORD + '?worksheetno=' + this.state.worksheetno)
+    this.props.match.history.push(urls.OATTENDDETAIL + '?orderno=' + this.state.orderno)
   }
   handleOrderWorkplan = () => { // 开工记录 - 我接的
     this.props.match.history.push(urls.OORDERSTARTWORKRECORD + '?orderno=' + this.state.orderno)
@@ -153,10 +105,10 @@ class WorkListDetail extends Component {
     })
   }
   render() {
-    let { datasource, isLoading, worksheetno, worktype, url, showimg, imgurl } = this.state
+    let { datasource, isLoading, url, showimg, imgurl } = this.state
     return <div className='pageBox gray'>
       <Header
-        title='工单详情'
+        title='订单详情'
         leftIcon='icon-back'
         leftTitle1={url !== '' ? '返回首页' : '返回'}
         leftClick1={() => {
@@ -166,9 +118,9 @@ class WorkListDetail extends Component {
             this.props.match.history.go(-1)
           }
         }}
-        rightTitle={(worktype === '0' && !!datasource['contract_no']) || (worktype === '1') ? '合同' : null}
+        rightTitle={ datasource['contract_no'] ? '合同' : null}
         rightClick={() => {
-          worktype === '0' ? this.props.match.history.push(`${urls.ELETAGREEMENT}?contract_no=${datasource['contract_no']}`) : this.props.match.history.push(`${urls.CONTRACTMANGE}?worksheetno=${worksheetno}`)
+          this.props.match.history.push(`${urls.ELETAGREEMENT}?contract_no=${datasource['contract_no']}`)
         }}
       />
       <Content className={style['worklist-detail-box']}>
@@ -181,16 +133,16 @@ class WorkListDetail extends Component {
               </dt>
               <dd>
                 <p>
-                  <span>{datasource['unit_price']}{datasource['unit']}</span>
-                  <em>日结</em>
+                  <span>{datasource['header_A']['value']}{datasource['header_A']['value_unit']}</span>
+                  <em>{datasource['header_A']['key']}</em>
                 </p>
                 <p>
-                  <span>{datasource['time_limit_day']}天</span>
-                  <em>工期</em>
+                  <span>{datasource['header_B']['value']}{datasource['header_B']['value_unit']}</span>
+                  <em>{datasource['header_B']['key']}</em>
                 </p>
                 <p>
-                  <span>{datasource['total_amount']}{datasource['total_amount_unit']}</span>
-                  <em>预算</em>
+                  <span>{datasource['header_C']['value']}{datasource['header_C']['value_unit']}</span>
+                  <em>{datasource['header_C']['key']}</em>
                 </p>
               </dd>
             </dl>

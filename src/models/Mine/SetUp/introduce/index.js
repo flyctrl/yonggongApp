@@ -33,7 +33,7 @@ class Introduce extends Component {
       <Content>
         <div className={style['introduce']}>
           <List>
-            <Item multipleLine onClick={this.handleClick} arrow='horizontal'>亚雀v1.0.0更新<Brief>03月29日</Brief></Item>
+            <Item multipleLine onClick={this.handleClick} arrow='horizontal'>亚雀v1.0.2更新<Brief>12月20日</Brief></Item>
           </List>
         </div>
       </Content>

@@ -92,31 +92,11 @@ const SendStartWorkRecord = Loadable({ // 工单开工记录 我发的
   loader: () => import(/* webpackChunkName: "sendStartWorkRecord" */ '../models/WorkListManage/sendStartWorkRecord'),
   loading: MyLoadingComponent
 })
-const OrderStartWorkRecord = Loadable({ // 工单开工记录 我接的
-  loader: () => import(/* webpackChunkName: "orderStartWorkRecord" */ '../models/WorkListManage/orderStartWorkRecord'),
-  loading: MyLoadingComponent
-})
 const AttendDetail = Loadable({ // 工单考勤详情
   loader: () => import(/* webpackChunkName: "attenddetail" */ '../models/WorkListManage/attendRecord/detail'),
   loading: MyLoadingComponent
 })
 
-const OAccessRecord = Loadable({ // 订单接单记录
-  loader: () => import(/* webpackChunkName: "oaccessrecord" */ '../models/Mine/myorder/accessRecord'),
-  loading: MyLoadingComponent
-})
-const OSettleRecord = Loadable({ // 订单结算记录
-  loader: () => import(/* webpackChunkName: "osettlerecord" */ '../models/Mine/myorder/settleRecord'),
-  loading: MyLoadingComponent
-})
-const OAttendRecord = Loadable({ // 订单考勤记录
-  loader: () => import(/* webpackChunkName: "oattendrecord" */ '../models/Mine/myorder/attendRecord'),
-  loading: MyLoadingComponent
-})
-const OSendStartWorkRecord = Loadable({ // 订单开工记录 我发的
-  loader: () => import(/* webpackChunkName: "osendStartWorkRecord" */ '../models/Mine/myorder/sendStartWorkRecord'),
-  loading: MyLoadingComponent
-})
 const OOrderStartWorkRecord = Loadable({ // 订单开工记录 我接的
   loader: () => import(/* webpackChunkName: "oorderStartWorkRecord" */ '../models/Mine/myorder/orderStartWorkRecord'),
   loading: MyLoadingComponent
@@ -168,6 +148,14 @@ const SetUpIntrduceInfo = Loadable({ // 我的设置》关于我们》功能介�
 })
 const MyOrder = Loadable({ // 我的订单
   loader: () => import(/* webpackChunkName: "myorder" */ '../models/Mine/myorder'),
+  loading: MyLoadingComponent
+})
+const OrderListDetail = Loadable({ // 订单详情
+  loader: () => import(/* webpackChunkName: "orderlistdetail" */ '../models/Mine/myorder/worklistDetail'),
+  loading: MyLoadingComponent
+})
+const OSettleRecord = Loadable({ // 订单结算记录
+  loader: () => import(/* webpackChunkName: "osettlerecord" */ '../models/Mine/myorder/settleRecord'),
   loading: MyLoadingComponent
 })
 const Account = Loadable({ // 我的账户
@@ -624,14 +612,6 @@ const routes = [
     animated: true,
     title: '工单完工记录'
   }, {
-    path: urls.ORDERSTARTWORKRECORD,
-    exact: true,
-    component: OrderStartWorkRecord,
-    parent: null,
-    showMenu: false,
-    animated: true,
-    title: '工单开工记录'
-  }, {
     path: urls.ATTENDDETAIL,
     exact: true,
     component: AttendDetail,
@@ -639,38 +619,6 @@ const routes = [
     showMenu: false,
     animated: true,
     title: '工单考勤详情'
-  }, {
-    path: urls.OACCESSRECORD,
-    exact: true,
-    component: OAccessRecord,
-    parent: null,
-    showMenu: false,
-    animated: true,
-    title: '订单接单记录'
-  }, {
-    path: urls.OSETTLERECORD,
-    exact: true,
-    component: OSettleRecord,
-    parent: null,
-    showMenu: false,
-    animated: true,
-    title: '订单结算记录'
-  }, {
-    path: urls.OATTENDRECORD,
-    exact: true,
-    component: OAttendRecord,
-    parent: null,
-    showMenu: false,
-    animated: true,
-    title: '订单考勤记录'
-  }, {
-    path: urls.OSENDSTARTWORKRECORD,
-    exact: true,
-    component: OSendStartWorkRecord,
-    parent: null,
-    showMenu: false,
-    animated: true,
-    title: '订单完工记录'
   }, {
     path: urls.OORDERSTARTWORKRECORD,
     exact: true,
@@ -695,6 +643,22 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '我的订单'
+  }, {
+    path: urls.ORDERLISTDETAIL,
+    exact: true,
+    component: OrderListDetail,
+    parent: 'MyOrder',
+    animated: true,
+    showMenu: false,
+    title: '订单详情'
+  }, {
+    path: urls.OSETTLERECORD,
+    exact: true,
+    component: OSettleRecord,
+    parent: 'OrderListDetail',
+    animated: true,
+    showMenu: false,
+    title: '订单结算记录'
   }, {
     path: urls.ACCOUNT,
     exact: true,

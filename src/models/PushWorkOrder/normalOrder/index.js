@@ -170,7 +170,7 @@ class SelectClass extends Component {
       if (parentClassId !== 'skill' || showtech === false) {
         teachId = 'null'
       }
-      let urlJson = { settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, proId, proVal, paymethodId, paymethodVal }
+      let urlJson = { url: 'HOME', settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, proId, proVal, paymethodId, paymethodVal }
       console.log('urlJson:', urlJson)
       let skipurl = tooler.parseJsonUrl(urlJson)
       console.log('skipurl:', skipurl)

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Header, Content } from 'Components'
 import * as urls from 'Contants/urls'
-import history from 'Util/history'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
 import api from 'Util/api'
@@ -22,7 +21,7 @@ class ContractMange extends Component {
   }
 
   handlePact = (contractNo) => {
-    history.push(`${urls.ELETAGREEMENT}?url=CONTRACTMANGE&contract_no=${contractNo}`)
+    this.props.match.history.push(`${urls.ELETAGREEMENT}?url=CONTRACTMANGE&contract_no=${contractNo}`)
   }
 
   getcontractList = async () => {
@@ -49,7 +48,7 @@ class ContractMange extends Component {
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
-            history.push(`${urls.MINE}`)
+            this.props.match.history.go(-1)
           }}
         />
         <Content>

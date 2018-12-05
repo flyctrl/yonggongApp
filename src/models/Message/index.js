@@ -8,7 +8,16 @@ import style from './style.css'
 import { msgStatus } from 'Contants/fieldmodel'
 import { getQueryString } from 'Contants/tooler'
 import ReactDOM from 'react-dom'
-import { ListView, PullToRefresh, Tabs } from 'antd-mobile'
+import { ListView, PullToRefresh, Tabs, Badge } from 'antd-mobile'
+const iconData = {
+  1: 'icon-gongrenguanli',
+  2: 'icon-publishWorkOrder',
+  3: 'icon-myAccount1',
+  4: 'icon-Initials',
+  5: 'icon-kaoqinguanli-copy',
+  6: 'icon-corporateApproval',
+  7: 'icon-projectManagement'
+}
 const NUM_ROWS = 20
 class Message extends Component {
   constructor(props) {
@@ -93,24 +102,31 @@ class Message extends Component {
     let { tabIndex } = this.state
     this.props.match.history.push(urls.SHOWINFODETAIL + '?id=' + id + '&index=' + tabIndex)
   }
-  handlebtnType = (e, type) => { // 根据类型跳转页面
-    let id = e.currentTarget.getAttribute('data-id')
+  handlebtnType = (e) => { // 根据类型跳转页面
+    // let id = e.currentTarget.getAttribute('data-id')[0]
+    let type = e.currentTarget.getAttribute('type')[0]
     let { tabIndex } = this.state
     switch (type) {
-      case '1': // 接单记录
-        this.props.match.history.push(urls.SHOWINFODETAIL + '?id=' + id + '&tabIndex=' + tabIndex)
+      case '1': // 用户
+        // this.props.match.history.push(urls.ACCESSRECORD + '&tabIndex=' + tabIndex)
         break
-      case '2': // 开工记录
+      case '2': // 接单记录
+        this.props.match.history.push(urls.ACCESSRECORD + '&tabIndex=' + tabIndex)
         break
-      case '3': // 开工记录
+      case '3': // 账户明细
+        this.props.match.history.push(urls.ACCOUNTDETAIL + '&tabIndex=' + tabIndex)
         break
-      case '4': // 结算记录
+      case '4': // 公告
+        // this.props.match.history.push(urls.ACCOUNTDETAIL + '&tabIndex=' + tabIndex)
         break
-      case '5': // 账户明细
+      case '5': // 考勤明细
+        this.props.match.history.push(urls.ATTENDRECORD + '&tabIndex=' + tabIndex)
         break
-      case '6': // 账户明细
+      case '6': // 个人账户
+        this.props.match.history.push(urls.ACCOUNT + '&tabIndex=' + tabIndex)
         break
-      case '7': // 个人账户
+      case '7': // 项目
+        // this.props.match.history.push(urls.ATTENDRECORD + '&tabIndex=' + tabIndex)
         break
     }
   }
@@ -135,16 +151,17 @@ class Message extends Component {
     let { tabIndex } = this.state
     const row = (rowData, sectionID, rowID) => {
       return (
-        <div data-id={rowData['id']} key={rowData['id']} onClick={this.handleSysNotice} className={`${style['notice-box']}`}>
+        <div data-id={rowData['id']} key={rowData['id']} type={rowData['msg_type']} onClick={this.handlebtnType} className={`${style['notice-box']}`}>
           <dl>
             <dt>
-              <span>
-                <NewIcon className={style['notice-icon']} type='icon-xiaolaba' />
-              </span>
+              <div className={style['icon-box']}>
+                <NewIcon className={style['notice-icon']} type={iconData[rowData['msg_type']]} />
+                {rowData['status'] === 1 ? <Badge dot></Badge> : ''}
+              </div>
             </dt>
             <dd>
-              <p>公告通知<em>{rowData['created_at']}</em></p>
-              <span className='ellipsis'>{rowData['title']}</span>
+              <p>{rowData['title']}<em>{rowData['show_time']}</em></p>
+              <span className='ellipsis'>{rowData['content']}</span>
             </dd>
           </dl>
           <div className={`${style['notice-border']} my-bottom-border`}></div>
@@ -161,7 +178,7 @@ class Message extends Component {
             page={parseInt(tabIndex, 10)}
             tabBarTextStyle={{ fontSize: '15px', color: '#999999' }}
             tabBarActiveTextColor='#1298FC'
-            tabBarUnderlineStyle={{ borderColor: '#1298FC', width: '6%', marginLeft: '9.5%' }}
+            tabBarUnderlineStyle={{ borderColor: '#1298FC', width: '6%', marginLeft: '7%' }}
             onChange={this.handleTabsChange}
           >
             <div className={style['msg-box']}>

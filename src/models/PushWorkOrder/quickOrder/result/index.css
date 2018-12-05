@@ -3,6 +3,9 @@
   background: #fff;
   margin-top: 10px;
   padding-top: 30px;
+  & svg {
+    color: #0098f5;
+  }
   & :global(.am-icon-md) {
     display: block;
     width: 60px;
@@ -25,20 +28,20 @@
   }
 }
 .result-btn {
-  padding: 20px 15px;
+  padding: 80px 15px;
   & :global(.am-button) {
     font-size: 14px;
     &:nth-child(1) {
-      background-color: #0467e0; 
+      background-color: #0098f5; 
     }
     &:nth-child(2) {
       margin-top: 20px;
     }
     &:global(.am-button-ghost) {
-      color: #0467e0;
+      color: #0098f5;
     }
   }
 }
 html:not([data-scale]) .result-btn :global(.am-button-primary::before) {
-  border-color: #0467e0;
+  border-color: #0098f5;
 }

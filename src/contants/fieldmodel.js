@@ -71,7 +71,7 @@ const orderStatus = [
   { title: '待开工', status: 1 },
   { title: '开工中', status: 2 },
   { title: '完工', status: 3 },
-  { title: '已失效', status: 4 }
+  { title: '取消', status: 4 }
 ]
 
 const workplanStatus = [
@@ -134,9 +134,13 @@ let invoiceStatus = { // 开票状态详情
 }
 const msgStatus = [ // 消息标题栏
   { title: '全部' },
-  { title: '考勤' },
+  { title: '用户' },
   { title: '工单' },
-  { title: '账户' }
+  { title: '账户' },
+  { title: '公告' },
+  { title: '考勤' },
+  { title: '认证' },
+  { title: '项目' },
 ]
 export {
   priceModeData,
