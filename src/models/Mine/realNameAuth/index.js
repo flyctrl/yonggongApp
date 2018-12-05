@@ -158,7 +158,7 @@ class RealNameAuth extends Component {
           backFaceImg: url,
           isClickBack: true,
           isSuccessBack: true,
-          stepNum: 3,
+          stepNum: 2,
           token: data['token']
         })
       }
@@ -177,6 +177,9 @@ class RealNameAuth extends Component {
     if (data) {
       Toast.hide()
       Toast.success('实名成功', 1.5, () => {
+        this.setState({
+          stepNum: 3
+        })
         this.props.match.history.push(urls['REALNAMEAUTHSUCCESS'])
       })
     }

@@ -42,16 +42,20 @@ class Check extends Component {
       checkVal: 1,
       imgSrc: '',
       imgPath: '',
-      workorderno: getQueryString('workorderno'),
+      workorderno: '4642477379780878080',
       lng: getQueryString('lng'),
       lat: getQueryString('lat'),
       radius: getQueryString('radius'),
+      dataList: [], // 代考勤用户列表
+      userVal: 0,
+      workerUid: '2266561903591424'
     }
   }
 
   componentDidMount() {
     // let lv = ReactDOM.findDOMNode(this.lv)
     // lv.addEventListener('click', this.handleTake)
+    this.getUserList()
     this._getPosition(getQueryString('lng'), getQueryString('lat'), getQueryString('radius'))
     setTime = setInterval(() => {
       this.setState({
@@ -82,6 +86,16 @@ class Check extends Component {
   //     newAlert.close()
   //   }
   // }
+  getUserList = async() => { // 代考勤用户列表
+    let data = await api.Mine.Check.attendUserlist({
+      order_no: this.state.workorderno
+    }) || false
+    if (data) {
+      this.setState({
+        dataList: data['list']
+      })
+    }
+  }
   showToast = (msg, duration) => {
     let _this = this
     duration = isNaN(duration) ? 3000 : duration
@@ -306,8 +320,11 @@ class Check extends Component {
       dataCheck
     })
   }
+  handleSelectUser = (val) => { // 选择工人
+    console.log(val)
+  }
   handlePushTime = async (e) => {
-    let { dataCheck, position, checkVal, workorderno, imgPath } = this.state
+    let { dataCheck, position, checkVal, workorderno, imgPath, workerUid } = this.state
     if (!('O' in position)) {
       Toast.fail('无法获取该手机位置信息')
       return false
@@ -326,7 +343,8 @@ class Check extends Component {
         },
         order_no: workorderno,
         type: checkVal,
-        img_url: imgPath
+        img_url: imgPath,
+        worker_uid: workerUid
       }) || false
     } else { // 固定打卡
       data = await api.Mine.Check.attend({
@@ -337,7 +355,8 @@ class Check extends Component {
           // lat: '30.321688',
         },
         img_url: imgPath,
-        order_no: workorderno
+        order_no: workorderno,
+        worker_uid: workerUid
       }) || false
     }
     if (data) {
@@ -354,7 +373,7 @@ class Check extends Component {
     this.setState({
       isLoading: true,
     })
-    let { position, checkVal } = this.state
+    let { position, checkVal, workerUid } = this.state
     console.log(position, '1')
     if (!('O' in position)) {
       Toast.fail('无法获取该手机位置信息')
@@ -367,7 +386,8 @@ class Check extends Component {
         // lng: '120.140419',
         // lat: '30.321688',
       },
-      order_no: v
+      order_no: v,
+      worker_uid: workerUid
     }) || false
     if (dataCheck) {
       if (dataCheck['attend_type'] && dataCheck['attend_type'] === 1) {
@@ -449,7 +469,7 @@ class Check extends Component {
   //   }
   // }
   render() {
-    const { time, dataCheck = {}, checkVal, visible, imgSrc, checkInTime, workorderno, isCheck } = this.state
+    const { time, dataCheck = {}, checkVal, visible, imgSrc, checkInTime, workorderno, isCheck, dataList } = this.state
     dataCheck.attend_time_config = dataCheck.attend_time_config || []
     dataCheck['attend_type'] = dataCheck['attend_type'] || ''
     let his = this.props.match.history
@@ -479,6 +499,11 @@ class Check extends Component {
         <div style={{ display: visible ? 'none' : 'block' }}>
           <div ref={(el) => { this.lc = el }} className={style.check}>
             <div className={style['check-info']}>
+              <List>
+                <Picker data={dataList} cols={1} onOk={this.handleSelectUser} onVisibleChange={this.handleVisibleChange}>
+                  <List.Item arrow='horizontal'>选择打卡用户</List.Item>
+                </Picker>
+              </List>
               <div className={style['map-box']}>
                 <div id='mapContainer'></div>
               </div>

@@ -18,16 +18,6 @@ const prompt = Modal.prompt
 let newPrompt = null
 const Item = List.Item
 let myreg = /^[1][3,4,5,7,8][0-9]{9}$/
-// let Upload = Loadable({
-//   loader: () => import('rc-upload'),
-//   loading: () => {
-//     return null
-//   },
-//   render(loaded, props) {
-//     let Upload = loaded.default
-//     return <Upload {...props}/>
-//   }
-// })
 const sex = {
   1: '男',
   2: '女'
@@ -54,7 +44,7 @@ class CreateWorker extends Component {
   handleClickNext = () => { // 是否显示人脸识别页面
     let { isSuccessBack, isSuccessFront, stepNum, token } = this.state
     if (isSuccessBack && isSuccessFront) {
-      if (stepNum === 3) {
+      if (stepNum === 2) {
         this.setState({
           isShowFace: true
         }, () => {
@@ -87,25 +77,6 @@ class CreateWorker extends Component {
         })
       }
     }
-    // let { getFieldError } = this.props.form
-    // let validateAry = ['phone']
-    // this.props.form.validateFields({ force: true }, async (error, values) => {
-    //   if (!error) {
-    //     if (isSuccessBack && isSuccessFront) {
-    //       this.setState({
-    //         isShowFace: true,
-    //         phone: values['phone']
-    //       })
-    //     }
-    //   } else {
-    //     for (let value of validateAry) {
-    //       if (error[value]) {
-    //         Toast.fail(getFieldError(value), 1)
-    //         return
-    //       }
-    //     }
-    //   }
-    // })
   }
   handleClick = () => { // 如果先点击反面照,报错
     let { isClickBack, isClickFront } = this.state
@@ -227,7 +198,7 @@ class CreateWorker extends Component {
           backFaceImg: url,
           isClickBack: true,
           isSuccessBack: true,
-          stepNum: 3,
+          stepNum: 2,
           token: data['token']
         })
       }
@@ -248,6 +219,9 @@ class CreateWorker extends Component {
       Toast.hide()
       Toast.success('实名成功', 1.5, () => {
         this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?isBack=1`)
+      })
+      this.setState({
+        stepNum: 3
       })
     }
   }
@@ -334,10 +308,10 @@ class CreateWorker extends Component {
           </div>
           <div className={style['work-form-bottom']} style={{ display: isSuccessBack ? 'block' : 'none' }}>
             <List >
-              <Item extra={'杭州公安总部'}>签发机关</Item>
+              <Item extra={fileList['issue_authority']}>签发机关</Item>
             </List>
             <List >
-              <Item extra={'2018.09.09-2038.09.09'}>有效期</Item>
+              <Item extra={fileList['validity']}>有效期</Item>
             </List>
           </div>
           <footer style={{ display: isSuccessBack || isSuccessFront ? 'block' : 'none' }}>

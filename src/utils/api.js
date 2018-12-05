@@ -473,19 +473,22 @@ export default {
     Check: {// 考勤
       attendCheck(params) {
         // return Fetch('/worksheetOrder/attendCheck', params, 'get') // 打卡校验
-        return Fetch('/worksheetOrder/attend/check', params, 'get', { showloading: false }) // 打卡校验
+        return Fetch(prefix + '/worksheetOrder/attend/check', params, 'get', { showloading: false }) // 打卡校验
       },
       attend(params) {
-        return Fetch('/worksheetOrder/attend', params, 'post', { showloading: false }) // 打卡
+        return Fetch(prefix + '/worksheetOrder/attend', params, 'post', { showloading: false }) // 打卡
       },
       project(params) { // 工单订单列表获取项目
-        return Fetch('/worksheetOrder/attend/orderList', params, 'get')
+        return Fetch(prefix + '/worksheetOrder/attend/orderList', params, 'get')
       },
       uploadImg(params) { // 上传照片
-        return Fetch('/common/attach/imageData', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false })
+        return Fetch(prefix + '/common/attach/imageData', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false })
       },
-      attendOrderlist(params) { // 考勤订单列表
-        return Fetch('/worksheetOrder/attend/orderList', params, 'get')
+      attendOrderlist(params) { // 代考勤订单列表(考勤提醒)
+        return Fetch(prefix + '/worksheetOrder/attend/orderList', params, 'get')
+      },
+      attendUserlist(params) { // 代考勤订单用户列表
+        return Fetch(prefix + '/worksheetOrder/attend/userList', params, 'get')
       }
     },
     workManage: {// 工人管理
@@ -500,6 +503,9 @@ export default {
       },
       realNameConfirm(params) {
         return Fetch(prefix + '/worker/confirm', params, 'post', { showloading: false }) // 确认
+      },
+      getWorkList(params) {
+        return Fetch(prefix + '/worker', params, 'get')
       }
     }
   },

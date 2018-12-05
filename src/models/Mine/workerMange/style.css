@@ -6,6 +6,7 @@
     & dl {
       padding: 15px;
       height: 60px;
+      position: relative;
       & dt {
         float: left;
           & img {
@@ -34,5 +35,14 @@
           color: #999999;
         }
       }
+      & div {
+        position: absolute!important;
+        right: 0!important;
+        bottom: 0!important;
+        width: 80%!important;
+      }
   }
+}
+html :global(.am-list-footer) {
+  text-align: center;
 }
