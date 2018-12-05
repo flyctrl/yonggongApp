@@ -17,26 +17,14 @@ class Home extends Component {
     this.state = {
       bannerList: [],
       sysInforms: [],
-      companyDetail: [],
       todoList: [],
       isLoading: true,
       isBannerLoading: true
     }
   }
-  componentWillMount() {
+  componentDidMount() {
     this.getSystemInforms()
-    this.getMineDetail()
-    this.getTodayTodo()
     this.getBannerList()
-  }
-  getMineDetail = async() => {
-    const data = await api.Mine.checkDetails.info({ // 查看企业资料
-    }) || false
-    if (data) {
-      this.setState({
-        companyDetail: data
-      })
-    }
   }
   getSystemInforms = async () => {
     const data = await api.Home.getSystemInforms({ // 获取系统通告
@@ -51,24 +39,13 @@ class Home extends Component {
       })
     }
   }
-  getTodayTodo = async () => {
-    this.setState({ isLoading: true })
-    const data = await api.Home.getTodayTodo({ // 获取今日代办列表
-    }) || false
-    if (data) {
-      this.setState({
-        todoList: data.list || [],
-        isLoading: false
-      })
-    }
-  }
   getBannerList = async () => {
     this.setState({ isBannerLoading: true })
     const data = await api.Home.getBannerList({ // 获取banner
     }) || false
     if (data) {
       let newData = [...data['list']]
-      newData = newData.filter((item, index) => index < 3)
+      newData = newData.filter((item, index) => index < 3) // 获取三张
       this.setState({
         bannerList: newData,
         isBannerLoading: false
@@ -84,12 +61,7 @@ class Home extends Component {
   handlePushBidOrder = () => {
     this.props.match.history.push(urls.PUSHBIDORDER)
   }
-  handleClickSysDetail = (e) => {
-    let id = e.currentTarget.getAttribute('data-id')
-    // id.split('$$')[]
-    this.props.match.history.push(`${urls.SYSTEMESSDETAIL}?id=${id}`)
-  }
-  handleMessage = () => {
+  handleClickMsg = () => {
     this.props.match.history.push(urls.MESSAGE)
   }
   render() {
@@ -147,13 +119,13 @@ class Home extends Component {
                   >
                     {
                       sysInforms.map(item => {
-                        return <div key={item.id} data-id={`${item['id']}`} onClick={this.handleClickSysDetail} className={style['v-item']}><p> <span></span>{item.content}</p><em>{item.created_at}</em></div>
+                        return <div key={item.id} data-id={`${item['id']}`} className={style['v-item']}><p> <span></span>{item.content}</p><em>{item.created_at}</em></div>
                       })
                     }
                   </Carousel>
                 </WingBlank> : <div style={{ width: '100%' }}></div>
               }
-              <div className={style['home-more']}>更多<Icon type='right' size='lg' /></div>
+              <div className={style['home-more']} onClick={this.handleClickMsg}>更多<Icon type='right' size='lg' /></div>
             </div>
             <div className={style['home-list']}>
               <dl>
