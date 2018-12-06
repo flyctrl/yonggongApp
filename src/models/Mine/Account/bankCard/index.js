@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { List, Button, Picker, InputItem, Toast } from 'antd-mobile'
 import { createForm } from 'rc-form'
 import { Header, Content } from 'Components'
-import * as urls from 'Contants/urls'
+// import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import style from './style.css'
 
@@ -87,18 +87,17 @@ class BankCard extends Component {
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
         // Toast.loading('提交中...', 0)
-        // let newData = { bank_id: values['bank_id'][0], bank_type: values['bank_type'][0] }
         let postData = { ...values, bankType: cardVal }
         console.log(postData)
-        // const data = await api.Mine.account.bindBinkcard(postData) || false
-        // if (data) {
-        //   // this.props.form.resetFields()
-        //   Toast.hide()
-        //   Toast.success('绑定成功', 1.5, () => {
-        //     // this.props.match.history.push(urls.ACCOUNT)
-        //     this.props.match.history.go(-1)
-        //   })
-        // }
+        const data = await api.Mine.account.bindBinkcard(postData) || false
+        if (data) {
+          // this.props.form.resetFields()
+          Toast.hide()
+          Toast.success('绑定成功', 1.5, () => {
+            // this.props.match.history.push(urls.ACCOUNT)
+            this.props.match.history.go(-1)
+          })
+        }
       } else {
         for (let value of validateAry) {
           if (error[value]) {
@@ -111,18 +110,16 @@ class BankCard extends Component {
     this.setState({
       btn2Color: '#2b8ace'
     })
-    this.props.match.history.push(urls['BANKCARDLIST'])
   }
   handleNextSubmit = async() => { // 下一步
-    // const data = await api.Mine.account.validatecard({
-    //   cardNo: this.state.cardNo
-    // }) || false
-    const data = []
+    const data = await api.Mine.account.validatecard({
+      cardNo: this.state.cardNo
+    }) || false
     if (data) {
       this.setState({
         btn1Color: '#2b8ace',
         isShowNext: true,
-        type: 1
+        type: data['type']
       })
     }
   }
