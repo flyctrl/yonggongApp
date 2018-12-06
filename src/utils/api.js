@@ -486,10 +486,10 @@ export default {
     },
     CheckSet: { // 考勤设置
       getConfig(params) {
-        return Fetch('/worksheet/attend/getConfig', params, 'get')
+        return Fetch(prefix + '/worksheet/attend/getConfig', params, 'get')
       },
       saveConfig(params) {
-        return FetchSave('/worksheet/attend/set', params, 'post', { showloading: false })
+        return FetchSave(prefix + '/worksheet/attend/set', params, 'post', { showloading: false })
       }
     },
     Check: {// 考勤

@@ -5,7 +5,6 @@ import api from 'Util/api'
 import { Header, Content } from 'Components'
 import style from './style.css'
 import zhongguo from 'Src/assets/card/zhongguo.png'
-import nongye from 'Src/assets/card/nongye.png'
 class BankcardList extends Component {
   constructor(props) {
     super(props)
@@ -19,18 +18,21 @@ class BankcardList extends Component {
       isloading: false
     })
     const data = await api.Mine.account.getbindBinkcard({}) || false
-    this.setState({
-      banklist: data,
-      isloading: true
-    })
+    if (data) {
+      this.setState({
+        banklist: data,
+        isloading: true
+      })
+    }
   }
   addBankCard = () => {
     this.props.match.history.push(urls.BANKCARD)
   }
   componentDidMount() {
-    // this.showBankList()
+    this.showBankList()
   }
   render() {
+    let { banklist, isloading } = this.state
     return <div className='pageBox'>
       <Header
         title='银行卡'
@@ -41,22 +43,19 @@ class BankcardList extends Component {
         rightClick={this.addBankCard}
       />
       <Content>
-        <div className={style['card-list']}>
-          <img src={zhongguo}/>
-          <span>
-            中国银行
-          </span>
-          <b>储蓄卡</b>
-          <p>****   ****    ****    6509</p>
-        </div>
-        <div className={style['card-list']}>
-          <img src={nongye}/>
-          <span>
-            农业银行
-          </span>
-          <b>储蓄卡</b>
-          <p>****   ****    ****    6509</p>
-        </div>
+        { isloading && banklist.length !== 0
+          ? banklist.map(item => {
+            return (<div className={style['card-list']}>
+              <img src={zhongguo}/>
+              <span>
+                中国银行
+              </span>
+              <b>储蓄卡</b>
+              <p>****   ****    ****    6509</p>
+            </div>)
+          })
+          : banklist.length === 0 && isloading ? <div className='nodata'>暂无数据</div> : null
+        }
       </Content>
     </div>
   }
