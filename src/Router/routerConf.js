@@ -23,10 +23,6 @@ const Home = Loadable({ // 首页
   loader: () => import(/* webpackChunkName: "home" */ '../models/Home'),
   loading: MyLoadingComponent
 })
-const SystemMessDetail = Loadable({ // 系统消息详情
-  loader: () => import(/* webpackChunkName: "systemessage" */ '../models/Home/SystemMessDetail'),
-  loading: MyLoadingComponent
-})
 const Message = Loadable({ // 消息
   loader: () => import(/* webpackChunkName: "message" */ '../models/Message'),
   loading: MyLoadingComponent
@@ -390,8 +386,7 @@ const routes = [
     showMenu: true,
     animated: false,
     title: '首页'
-  },
-  {
+  }, {
     path: urls.HOME,
     exact: true,
     component: Home,
@@ -399,15 +394,6 @@ const routes = [
     showMenu: true,
     animated: false,
     title: '首页'
-  },
-  {
-    path: urls.SYSTEMESSDETAIL,
-    exact: true,
-    component: SystemMessDetail,
-    parent: Home,
-    showMenu: true,
-    animated: true,
-    title: '系统'
   }, {
     path: urls.WORKLISTMANAGE,
     exact: true,

@@ -49,12 +49,12 @@ class Message extends Component {
     if (data && data['list'].length === 0) {
       this.setState({
         nodata: true,
-        pageNos: data['pageNos']
+        pageNos: data['pageNos'] === 0 ? 1 : data['pageNos']
       })
     } else {
       this.setState({
         nodata: false,
-        pageNos: data['pageNos']
+        pageNos: data['pageNos'] === 0 ? 1 : data['pageNos']
       })
     }
     return await data['list'] || []
