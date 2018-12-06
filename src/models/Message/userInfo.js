@@ -63,7 +63,7 @@ class UserInfo extends Component {
               ? <div className={style['detail-box']}>
                 <div className={`${style['detail-header']} my-bottom-border`}>
                   <img src={company}/>
-                  <h4>杭州亚雀科技有限公司</h4>
+                  <h4>{companyDetail.name}</h4>
                 </div>
                 <dl>
                   <dt>法人信息</dt>

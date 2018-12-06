@@ -110,6 +110,10 @@ const Mine = Loadable({ // 我的
   loader: () => import(/* webpackChunkName: "mine" */ '../models/Mine'),
   loading: MyLoadingComponent
 })
+const Certification = Loadable({ // 认证管理
+  loader: () => import(/* webpackChunkName: "certification" */ '../models/Mine/certification'),
+  loading: MyLoadingComponent
+})
 const ApplySettle = Loadable({ // 申请结算
   loader: () => import(/* webpackChunkName: "applysettle" */ '../models/Mine/myorder/applySettle'),
   loading: MyLoadingComponent
@@ -401,7 +405,7 @@ const routes = [
     component: SystemMessDetail,
     parent: Home,
     showMenu: true,
-    animated: false,
+    animated: true,
     title: '系统'
   }, {
     path: urls.WORKLISTMANAGE,
@@ -417,7 +421,7 @@ const routes = [
     component: PushNormalOrder,
     parent: null,
     showMenu: false,
-    animated: false,
+    animated: true,
     title: '发布工单'
   }, {
     path: urls.PUSHNORMALORDERFORM,
@@ -441,7 +445,7 @@ const routes = [
     component: PushQuickOrder,
     parent: null,
     showMenu: false,
-    animated: false,
+    animated: true,
     title: '发布快单'
   }, {
     path: urls.PUSHQUICKORDERFORM,
@@ -465,7 +469,7 @@ const routes = [
     component: PushBidOrder,
     parent: null,
     showMenu: false,
-    animated: false,
+    animated: true,
     title: '发布招标'
   }, {
     path: urls.PUSHBIDSORDERFORM,
@@ -499,6 +503,14 @@ const routes = [
     animated: false,
     showMenu: true,
     title: '我的'
+  }, {
+    path: urls.CERTIFICATION,
+    exact: true,
+    component: Certification,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '认证管理'
   }, {
     path: urls.APPLYSETTLE,
     exact: true,
@@ -1091,7 +1103,7 @@ const routes = [
     component: ShowInfoDetail,
     parent: 'Message',
     showMenu: false,
-    animated: false,
+    animated: true,
     title: '详情页'
   }
 ]

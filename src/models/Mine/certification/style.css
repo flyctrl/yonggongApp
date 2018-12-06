@@ -1,0 +1,12 @@
+.cert-list {
+  & :global(.am-list-item .am-list-line .am-list-brief) {
+    margin-top: 0;
+    font-size: 13px;
+  }
+  & :global(.am-list-thumb) {
+    & svg {
+      font-size: 25px;
+      color: #0098F5;
+    }
+  }
+}

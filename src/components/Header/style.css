@@ -5,7 +5,7 @@
 
 .header {
   font-family: PingFang-SC-Medium;
-  background-color: rgba(249, 249, 249, 0.87);
+  background-color: #1298FC;
   position: absolute;
   top: 0;
   left: 0;
@@ -28,22 +28,30 @@
   }
   & :global(.am-search-cancel) {
     font-size: 12px;
-    color: #0467E0;
+    color: #fff;
   }
   & :global(.usr-hdleft-title-first), & :global(.usr-hdleft-title-second), & :global(.usr-hdright-title) {
     font-size: 14px;
-    color: #0467E0;
+    color: #fff;
   }
   & :global(.title) {
     font-size: 16px;
-    color: #313F48;
+    color: #fff;
   }
   & :global(.rightBox), & :global(.usr-hdright-title) {
     padding: 10px 10px 10px 0;
   }
 
   & :global(.leftIcon), & :global(.rightIcon) {
-    width: 16px;
+    width: 18px;
+    height: 18px;
+    color: #fff;
+  }
+  & :global(.usr-hdright-title) {
+    & svg {
+      width: 18px;
+      height: 18px;
+    }
   }
 
   & :global(.leftBox) {

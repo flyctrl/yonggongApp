@@ -25,7 +25,7 @@
     z-index: 1200;
   }
   &:global(.gray) {
-    background: #f5f5f9;
+    background: #F6F5FA;
   }
 }
 
@@ -34,7 +34,7 @@
 }
 
 :global(.contentBox.antdgray) {
-  background: #f5f5f9;
+  background: #F6F5FA;
 }
 input {
   outline:none;
