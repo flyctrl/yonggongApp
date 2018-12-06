@@ -26,7 +26,13 @@ module.exports = {
     "AMap": true,
     "AMapUI": true,
     "OCBridge": true,
-    "device": true
+    "device": true,
+    "cordova": true,
+    "CORDOVA": true,
+    "FileTransfer": true,
+    "LocalFileSystem": true,
+    "Camera": true,
+    "GaoDe": true
   },
 
   // http://eslint.org/docs/rules/xxx, xxx代表rule名称, 0=off, 1=warning, 2=error

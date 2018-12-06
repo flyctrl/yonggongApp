@@ -29,9 +29,9 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "build:dev": "BUILD_ENV=dev node scripts/build.js",
-    "build:test": "BUILD_ENV=test node scripts/build.js",
-    "build:pre": "BUILD_ENV=pre node scripts/build.js",
+    "build:dev": "cross-env BUILD_ENV=dev node scripts/build.js",
+    "build:test": "cross-env BUILD_ENV=test node scripts/build.js",
+    "build:pre": "cross-env BUILD_ENV=pre node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "upload": "scp -r build/* root@47.96.236.216:/home/wwwroot/yaqueApp-yonggong"
   },
@@ -52,6 +52,7 @@
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "china-division": "^2.0.0",
     "compression-webpack-plugin": "^1.1.11",
+    "cross-env": "^5.2.0",
     "css-loader": "0.28.7",
     "eslint": "^4.10.0",
     "eslint-config-react-app": "^2.1.0",

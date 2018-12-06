@@ -8,8 +8,9 @@ import React from 'react'
 import { Icon } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import Loadable from 'react-loadable'
-
+import * as tooler from 'Contants/tooler'
 function MyLoadingComponent({ error, pastDelay }) {
+  tooler.backButton()
   if (error) {
     return <div style={{ width: '100%', height: '400px', lineHeight: '400px', textAlign: 'center' }}>网络异常，请重新加载！</div>
   } else if (pastDelay) {
