@@ -249,7 +249,6 @@ html:not([data-scale]) .show-order-box :global(.am-list-body div:not(:last-child
   width: 330px;
   margin: 0 auto;
   & :global(.am-list) {
-    height: 56px;
     margin-top: 10px;
     &.attch-list {
       height: auto;
@@ -276,7 +275,6 @@ html:not([data-scale]) .show-order-box :global(.am-list-body div:not(:last-child
 
     & :global(.am-list-body) {
       color: #313F48;
-      height: 22px;
       line-height: 22px;
     }
     

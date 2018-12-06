@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Radio } from 'antd-mobile'
+import { List, Radio, Toast } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import api from 'Util/api'
 
@@ -8,7 +8,7 @@ class ClassifyList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      value: 0,
+      value: '',
       datasource: [],
       isloading: true
     }
@@ -22,7 +22,7 @@ class ClassifyList extends Component {
     this.getClassifyList()
     if (this.props.data) {
       this.setState({
-        value: parseInt(this.props.data['proId'])
+        value: parseInt(this.props.data['proId']) || ''
       })
     }
     console.log(this.props.data)
@@ -41,10 +41,14 @@ class ClassifyList extends Component {
   }
   onSubmit = () => {
     let { value, datasource } = this.state
-    let checkJson = datasource.find(item => {
-      return item['value'] === value
-    })
-    this.props.onSubmit(checkJson)
+    if (value === '' || datasource.length === 0) {
+      Toast.offline('未选择项目或暂无项目', 2)
+    } else {
+      let checkJson = datasource.find(item => {
+        return item['value'] === value
+      })
+      this.props.onSubmit(checkJson)
+    }
   }
   render() {
     let { value, datasource, isloading } = this.state
