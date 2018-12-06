@@ -176,7 +176,7 @@ export const onBackKeyDown = function (e) {
   let backUrl = history.location.pathname.split('/')
   if (
     (backUrl[1] === 'Home' && backUrl.length <= 2) ||
-    (backUrl[1] === 'ReceiveOrder' && backUrl.length <= 2) ||
+    (backUrl[1] === 'WorkListManage' && backUrl.length <= 2) ||
     (backUrl[1] === 'Mine' && backUrl.length <= 2) ||
     (backUrl[1] === 'Message' && backUrl.length <= 2) || backUrl[1] === ''
   ) {

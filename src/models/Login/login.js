@@ -15,7 +15,7 @@ import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import storage from 'Util/storage'
 import history from 'Util/history'
-
+import { onBackKeyDown } from 'Contants/tooler'
 class Login extends Component {
   constructor(props) {
     super(props)
@@ -23,6 +23,17 @@ class Login extends Component {
       hasError: false,
       value: '',
     }
+  }
+  componentDidMount () {
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
+  }
+  backButtons = () => {
+    navigator.app.exitApp()
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
   }
   onSubmit = () => { // 表单提交
     const { getFieldError } = this.props.form
