@@ -117,7 +117,7 @@ class Construct extends Component {
                     { pattern: /^.{20,500}$/, message: '描述字数为20~500字' }
                   ],
                 })}
-                placeholder='描述你快单的具体要求，能更快找到合适你的工人，如：工作环境、工作要求等（至少20个字）'
+                placeholder='描述你招标的具体要求，能更快找到合作方，如：招标范围、招标组织形式、招标方式等至少20字'
                 error={!!getFieldError('prj_brief')}
                 onErrorClick={() => this.onErrorClick('prj_brief')}
                 rows={4}

@@ -4,7 +4,10 @@ import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import { Header, Content } from 'Components'
 import style from './style.css'
-import zhongguo from 'Src/assets/card/zhongguo.png'
+let cardType = {
+  1: '储蓄卡',
+  2: '信用卡'
+}
 class BankcardList extends Component {
   constructor(props) {
     super(props)
@@ -33,7 +36,7 @@ class BankcardList extends Component {
   }
   render() {
     let { banklist, isloading } = this.state
-    return <div className='pageBox'>
+    return <div className='pageBox gray'>
       <Header
         title='银行卡'
         leftIcon='icon-back'
@@ -45,13 +48,13 @@ class BankcardList extends Component {
       <Content>
         { isloading && banklist.length !== 0
           ? banklist.map(item => {
-            return (<div className={style['card-list']}>
-              <img src={zhongguo}/>
+            return (<div className={style['card-list']} key={item['card_id']}>
+              <img src={item['bank_background']}/>
               <span>
-                中国银行
+                {item['bank_name']}
               </span>
-              <b>储蓄卡</b>
-              <p>****   ****    ****    6509</p>
+              <b>{cardType[item['card_type']]}</b>
+              <p>****   ****    ****    {item['card_no_back']}</p>
             </div>)
           })
           : banklist.length === 0 && isloading ? <div className='nodata'>暂无数据</div> : null

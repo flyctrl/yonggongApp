@@ -3,6 +3,12 @@
   margin-top: 15px;
   font-family:SourceHanSansCN-Regular;
   font-weight:400;
+  & :global(.am-list-body::before) {
+    height: 0!important;
+  }
+  & :global(.am-list-body::after) {
+    height: 0!important;
+  }
     & dl {
       padding: 15px;
       height: 60px;

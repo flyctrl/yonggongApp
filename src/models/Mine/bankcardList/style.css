@@ -2,7 +2,7 @@
   position: relative;
   font-family:SourceHanSansCN-Regular;
   font-weight:400;
-  color:rgba(255,255,255,1);
+  color:white;
   & img{
     display: block;
     width:352px;

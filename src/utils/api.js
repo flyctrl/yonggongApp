@@ -339,6 +339,9 @@ export default {
       getbindBinkcard(params) { // 获取已绑定银行卡列表
         return Fetch(prefix + '/bank', params, 'get')
       },
+      validatecard(params) { // 校验银行卡
+        return Fetch(prefix + '/bank/validate', params, 'get')
+      },
       bindDefaultCard(params) { // 默认绑定的银行卡
         return Fetch(prefix + '/bank/default', params, 'get')
       },

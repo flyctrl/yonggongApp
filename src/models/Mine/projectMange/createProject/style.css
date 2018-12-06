@@ -24,6 +24,9 @@ html :global(.am-list-item .am-list-line .am-list-content) {
     & :global(.am-list-line) {
       border-bottom: none!important;
     }
+    & :global(.am-list-line::after) {
+      height: 0!important;
+    }
   }
 }
 

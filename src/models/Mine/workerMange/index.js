@@ -6,7 +6,6 @@ import { Header, Content } from 'Components'
 import api from 'Util/api'
 import style from './style.css'
 import ReactDOM from 'react-dom'
-import noticeicon from 'Src/assets/home/noticeicon.png'
 const NUM_ROWS = 20
 class WorkList extends Component {
   constructor(props) {
@@ -21,32 +20,7 @@ class WorkList extends Component {
       height: document.documentElement.clientHeight,
       pageIndex: 1,
       pageNos: 1,
-      infoList: [{
-        name: '张老三',
-        content: 1545121212121212121,
-        icon: noticeicon,
-        title: 15930768896
-      }, {
-        name: '张老三',
-        content: 562323232323232323,
-        icon: noticeicon,
-        title: 15930768896
-      }, {
-        name: '张老三',
-        content: 362365632332323232,
-        icon: noticeicon,
-        title: 15930768896
-      }, {
-        name: '张老三',
-        content: 113121200012121212,
-        icon: noticeicon,
-        title: 15930768896
-      }, {
-        name: '张老三',
-        content: 56598623235623232323,
-        icon: noticeicon,
-        title: 15930768896
-      }]
+      nodata: false
     }
   }
   genData = async (pIndex = 1) => {
@@ -57,12 +31,18 @@ class WorkList extends Component {
       page: pIndex,
       pageSize: NUM_ROWS
     }) || false
-    if (data) {
+    if (data && data['list'].length === 0) {
       this.setState({
+        nodata: true,
         pageNos: data['pageNos']
       })
-      return await data['list']
+    } else {
+      this.setState({
+        nodata: false,
+        pageNos: data['pageNos']
+      })
     }
+    return await data['list'] || []
   }
   componentDidMount() {
     const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 60
@@ -110,6 +90,16 @@ class WorkList extends Component {
     })
   }
   render() {
+    let { isLoading, nodata } = this.state
+    const footerShow = () => {
+      if (isLoading) {
+        return null
+      } else if (nodata) {
+        return <div className={style['render-footer']}>暂无数据</div>
+      } else {
+        return ''
+      }
+    }
     const row = (rowData, sectionID, rowID) => {
       return (
         <dl key={rowID} className={style['notice-box']}>
@@ -141,9 +131,7 @@ class WorkList extends Component {
           <ListView
             ref={(el) => { this.lv = el }}
             dataSource={this.state.dataSource}
-            renderFooter={() => (<div className={style['list-loading']}>
-              {this.state.isLoading ? '' : '加载完成'}
-            </div>)}
+            renderFooter={() => footerShow()}
             renderRow={row}
             style={{
               height: this.state.height,
