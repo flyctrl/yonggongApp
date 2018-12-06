@@ -17,7 +17,6 @@ class Home extends Component {
     this.state = {
       bannerList: [],
       sysInforms: [],
-      todoList: [],
       isLoading: true,
       isBannerLoading: true
     }
@@ -26,8 +25,19 @@ class Home extends Component {
     this.getSystemInforms()
     this.getBannerList()
   }
+  getMenuInforms = async () => {
+    this.setState({
+      isLoading: true
+    })
+    const data = await api.Home.getMenuInforms({}) || false
+    if (data) {
+      this.setState({
+        isLoading: false
+      })
+    }
+  }
   getSystemInforms = async () => {
-    const data = await api.Home.getSystemInforms({ // 获取系统通告
+    const data = await api.Message.getNoticeList({ // 获取系统通告
     }) || false
     if (data) {
       let newData = [...data['list']]
@@ -65,7 +75,7 @@ class Home extends Component {
     this.props.match.history.push(urls.MESSAGE)
   }
   render() {
-    const { sysInforms, bannerList } = this.state
+    const { sysInforms, bannerList, isLoading } = this.state
     return (
       <div className='contentBox antdgray'>
         <div className={style['usr-home-content']}>
@@ -119,7 +129,7 @@ class Home extends Component {
                   >
                     {
                       sysInforms.map(item => {
-                        return <div key={item.id} data-id={`${item['id']}`} className={style['v-item']}><p> <span></span>{item.content}</p><em>{item.created_at}</em></div>
+                        return <div key={item.id} data-id={`${item['id']}`} className={style['v-item']}><p> <span></span>{item.content}</p></div>
                       })
                     }
                   </Carousel>
@@ -127,85 +137,89 @@ class Home extends Component {
               }
               <div className={style['home-more']} onClick={this.handleClickMsg}>更多<Icon type='right' size='lg' /></div>
             </div>
-            <div className={style['home-list']}>
-              <dl>
-                <dt className={`${style['home-head']} my-bottom-border`}><em></em>项目 <div>查看全部<Icon type='right' size='lg' /></div></dt>
-                <dd>
-                  <div >
-                    <span>100</span>
-                    <b>项目 (个)</b>
+            {
+              isLoading
+                ? <div className={style['home-list']}>
+                  <dl>
+                    <dt className={`${style['home-head']} my-bottom-border`}><em></em>项目 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dd>
+                      <div >
+                        <span>100</span>
+                        <b>项目 (个)</b>
+                      </div>
+                      <div >
+                        <span>800</span>
+                        <b>工单 (个)</b>
+                      </div>
+                      <div>
+                        <span className={style['home-mark']}>200.00</span>
+                        <b>支出 (万元)</b>
+                      </div>
+                    </dd>
+                  </dl>
+                  <dl>
+                    <dt className={`${style['home-head']} my-bottom-border`}><em></em>工单 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dd>
+                      <div >
+                        <span>800</span>
+                        <b>待开工 (个)</b>
+                      </div>
+                      <div >
+                        <span>120</span>
+                        <b>施工中 (个)</b>
+                      </div>
+                      <div>
+                        <span className={style['home-mark']}>80</span>
+                        <b>完工 (个)</b>
+                      </div>
+                    </dd>
+                  </dl>
+                  <dl>
+                    <dt className={`${style['home-head']} my-bottom-border`}><em></em>结算 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dd>
+                      <div >
+                        <span>200.00</span>
+                        <b>代付款 (万元)
+                        </b>
+                      </div>
+                      <div>
+                        <span className={style['home-mark']}>200.00</span>
+                        <b>已付款 (万元)</b>
+                      </div>
+                    </dd>
+                  </dl>
+                  <dl>
+                    <dt className={`${style['home-head']} my-bottom-border`}><em></em>考勤 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dd>
+                      <div>
+                        <span>200</span>
+                        <b>正常
+                        </b>
+                      </div>
+                      <div>
+                        <span>120</span>
+                        <b>迟到</b>
+                      </div>
+                      <div>
+                        <span>120</span>
+                        <b>早退</b>
+                      </div>
+                      <div>
+                        <span>120</span>
+                        <b>缺卡</b>
+                      </div>
+                      <div>
+                        <span className={style['home-mark']}>120</span>
+                        <b>异常</b>
+                      </div>
+                    </dd>
+                  </dl>
+                  <div className={style['home-footer']}>
+                    <img src={btmtxt}/>
                   </div>
-                  <div >
-                    <span>800</span>
-                    <b>工单 (个)</b>
-                  </div>
-                  <div>
-                    <span className={style['home-mark']}>200.00</span>
-                    <b>支出 (万元)</b>
-                  </div>
-                </dd>
-              </dl>
-              <dl>
-                <dt className={`${style['home-head']} my-bottom-border`}><em></em>工单 <div>查看全部<Icon type='right' size='lg' /></div></dt>
-                <dd>
-                  <div >
-                    <span>800</span>
-                    <b>待开工 (个)</b>
-                  </div>
-                  <div >
-                    <span>120</span>
-                    <b>施工中 (个)</b>
-                  </div>
-                  <div>
-                    <span className={style['home-mark']}>80</span>
-                    <b>完工 (个)</b>
-                  </div>
-                </dd>
-              </dl>
-              <dl>
-                <dt className={`${style['home-head']} my-bottom-border`}><em></em>结算 <div>查看全部<Icon type='right' size='lg' /></div></dt>
-                <dd>
-                  <div >
-                    <span>200.00</span>
-                    <b>代付款 (万元)
-                    </b>
-                  </div>
-                  <div>
-                    <span className={style['home-mark']}>200.00</span>
-                    <b>已付款 (万元)</b>
-                  </div>
-                </dd>
-              </dl>
-              <dl>
-                <dt className={`${style['home-head']} my-bottom-border`}><em></em>考勤 <div>查看全部<Icon type='right' size='lg' /></div></dt>
-                <dd>
-                  <div>
-                    <span>200</span>
-                    <b>正常
-                    </b>
-                  </div>
-                  <div>
-                    <span>120</span>
-                    <b>迟到</b>
-                  </div>
-                  <div>
-                    <span>120</span>
-                    <b>早退</b>
-                  </div>
-                  <div>
-                    <span>120</span>
-                    <b>缺卡</b>
-                  </div>
-                  <div>
-                    <span className={style['home-mark']}>120</span>
-                    <b>异常</b>
-                  </div>
-                </dd>
-              </dl>
-              <div className={style['home-footer']}>
-                <img src={btmtxt}/>
-              </div>
-            </div>
+                </div>
+                : null
+            }
           </Content>
         </div>
       </div>

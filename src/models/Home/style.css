@@ -69,7 +69,7 @@
   }
   & :global(.am-wingblank) {
     float: left;
-    width: 230px;
+    width: 260px;
     margin-right: 8px;
     margin-left:0px;
     & :global(.slider-frame) {
@@ -97,15 +97,12 @@
       }
     float: left;
     padding-left: 10px;
-    width: 150px;
+    width: 253px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-family:SourceHanSansCN-Regular;
     font-weight:400;
-    }
-    & em {
-      float: right;
     }
   }
 }
