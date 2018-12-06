@@ -540,6 +540,9 @@ export default {
     },
     getBannerList(params) { // 获取banner
       return Fetch('/common/banner/list', params, 'get')
+    },
+    getMenuInforms(params) {
+      return fetch(prefix + '/index/company/stat', params, 'get')
     }
   },
   Message: { // 消息
