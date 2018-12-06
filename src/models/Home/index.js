@@ -18,12 +18,14 @@ class Home extends Component {
       bannerList: [],
       sysInforms: [],
       isLoading: true,
-      isBannerLoading: true
+      isBannerLoading: true,
+      dataList: {}
     }
   }
   componentDidMount() {
     this.getSystemInforms()
     this.getBannerList()
+    this.getMenuInforms()
   }
   getMenuInforms = async () => {
     this.setState({
@@ -32,7 +34,8 @@ class Home extends Component {
     const data = await api.Home.getMenuInforms({}) || false
     if (data) {
       this.setState({
-        isLoading: false
+        isLoading: false,
+        dataList: data['data'] || {}
       })
     }
   }
@@ -75,7 +78,8 @@ class Home extends Component {
     this.props.match.history.push(urls.MESSAGE)
   }
   render() {
-    const { sysInforms, bannerList, isLoading } = this.state
+    const { sysInforms, bannerList, isLoading, dataList } = this.state
+    let { project = {}, worksheet = {}, settle = {}, attend = [] } = dataList
     return (
       <div className='contentBox antdgray'>
         <div className={style['usr-home-content']}>
@@ -133,26 +137,26 @@ class Home extends Component {
                       })
                     }
                   </Carousel>
-                </WingBlank> : <div style={{ width: '100%' }}></div>
+                </WingBlank> : <div className={style['data']}>暂无数据</div>
               }
               <div className={style['home-more']} onClick={this.handleClickMsg}>更多<Icon type='right' size='lg' /></div>
             </div>
             {
-              isLoading
+              !isLoading
                 ? <div className={style['home-list']}>
                   <dl>
                     <dt className={`${style['home-head']} my-bottom-border`}><em></em>项目 <div>查看全部<Icon type='right' size='lg' /></div></dt>
                     <dd>
                       <div >
-                        <span>100</span>
+                        <span>{project['prj_num'] || 0}</span>
                         <b>项目 (个)</b>
                       </div>
                       <div >
-                        <span>800</span>
+                        <span>{project['prj_worksheet_num'] || 0}</span>
                         <b>工单 (个)</b>
                       </div>
                       <div>
-                        <span className={style['home-mark']}>200.00</span>
+                        <span className={style['home-mark']}>{project['expense'] || 0}</span>
                         <b>支出 (万元)</b>
                       </div>
                     </dd>
@@ -161,15 +165,15 @@ class Home extends Component {
                     <dt className={`${style['home-head']} my-bottom-border`}><em></em>工单 <div>查看全部<Icon type='right' size='lg' /></div></dt>
                     <dd>
                       <div >
-                        <span>800</span>
+                        <span>{worksheet['wait_construct_num'] || 0}</span>
                         <b>待开工 (个)</b>
                       </div>
                       <div >
-                        <span>120</span>
+                        <span>{worksheet['constructing_num'] || 0}</span>
                         <b>施工中 (个)</b>
                       </div>
                       <div>
-                        <span className={style['home-mark']}>80</span>
+                        <span className={style['home-mark']}>{worksheet['finish_num'] || 0}</span>
                         <b>完工 (个)</b>
                       </div>
                     </dd>
@@ -178,12 +182,12 @@ class Home extends Component {
                     <dt className={`${style['home-head']} my-bottom-border`}><em></em>结算 <div>查看全部<Icon type='right' size='lg' /></div></dt>
                     <dd>
                       <div >
-                        <span>200.00</span>
+                        <span>{settle['wait_pay'] || 0}</span>
                         <b>代付款 (万元)
                         </b>
                       </div>
                       <div>
-                        <span className={style['home-mark']}>200.00</span>
+                        <span className={style['home-mark']}>{settle['paid'] || 0}</span>
                         <b>已付款 (万元)</b>
                       </div>
                     </dd>
@@ -192,24 +196,24 @@ class Home extends Component {
                     <dt className={`${style['home-head']} my-bottom-border`}><em></em>考勤 <div>查看全部<Icon type='right' size='lg' /></div></dt>
                     <dd>
                       <div>
-                        <span>200</span>
+                        <span>{attend[0] || 0}</span>
                         <b>正常
                         </b>
                       </div>
                       <div>
-                        <span>120</span>
+                        <span>{attend[1] || 0}</span>
                         <b>迟到</b>
                       </div>
                       <div>
-                        <span>120</span>
+                        <span>{attend[2] || 0}</span>
                         <b>早退</b>
                       </div>
                       <div>
-                        <span>120</span>
+                        <span>{attend[3] || 0}</span>
                         <b>缺卡</b>
                       </div>
                       <div>
-                        <span className={style['home-mark']}>120</span>
+                        <span className={style['home-mark']}>{attend[4] || 0}</span>
                         <b>异常</b>
                       </div>
                     </dd>

@@ -34,6 +34,7 @@ class Message extends Component {
       pageNos: 1,
       isload: false,
       tabIndex: getQueryString('tabIndex') || 0,
+      nodata: false
     }
   }
   genData = async (pIndex = 1, tab = this.state.tabIndex) => {
@@ -45,12 +46,18 @@ class Message extends Component {
       limit: NUM_ROWS,
       msg_type: tab
     }) || false
-    if (data) {
+    if (data && data['list'].length === 0) {
       this.setState({
-        pageNos: data['pageNos'] === 0 ? 1 : data['pageNos']
+        nodata: true,
+        pageNos: data['pageNos']
       })
-      return await data['list']
+    } else {
+      this.setState({
+        nodata: false,
+        pageNos: data['pageNos']
+      })
     }
+    return await data['list'] || []
   }
   componentDidMount() {
     const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 140
@@ -148,7 +155,16 @@ class Message extends Component {
     })
   }
   render() {
-    let { tabIndex } = this.state
+    let { isLoading, nodata, tabIndex } = this.state
+    const footerShow = () => {
+      if (isLoading) {
+        return null
+      } else if (nodata) {
+        return <div className={style['render-footer']}>暂无数据</div>
+      } else {
+        return ''
+      }
+    }
     const row = (rowData, sectionID, rowID) => {
       return (
         <div data-id={rowData['id']} key={rowData['id']} type={rowData['msg_type']} onClick={this.handlebtnType} className={`${style['notice-box']}`}>
@@ -185,9 +201,7 @@ class Message extends Component {
               <ListView
                 ref={(el) => { this.lv = el }}
                 dataSource={this.state.dataSource}
-                renderFooter={() => (<div className={style['list-loading']}>
-                  {this.state.isLoading ? '' : '加载完成'}
-                </div>)}
+                renderFooter={() => footerShow()}
                 renderRow={row}
                 style={{
                   height: this.state.height,

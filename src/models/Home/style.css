@@ -184,3 +184,10 @@
     }
   }
 }
+.data {
+  height: 60px;
+  line-height: 60px;
+  padding-left: 160px;
+  font-size: 12px;
+  color: #666;
+}
