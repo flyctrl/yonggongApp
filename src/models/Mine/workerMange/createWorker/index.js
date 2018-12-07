@@ -127,17 +127,22 @@ class CreateWorker extends Component {
       token: ''
     })
   }
+  onFail = (message) => {
+    console.log(message, 'messge')
+    // Toast.fail(message)
+  }
   onSuccessFront = async(imageURI) => {
+    console.log(imageURI, 'IMG')
     Toast.loading('上传中...', 0)
-    const data = await api.auth.realNameFront({
-      image: imageURI
+    const data = await api.Mine.workManage.realNameFront({
+      image: 'data:image/png;base64,' + imageURI
     }) || false
     if (data) {
       Toast.hide()
       Toast.success('上传成功', 1.5)
       this.setState({
         fileList: data,
-        frontImg: imageURI,
+        frontImg: 'data:image/png;base64,' + imageURI,
         isClickFront: true,
         isClickBack: false,
         isSuccessFront: true,
@@ -146,8 +151,9 @@ class CreateWorker extends Component {
     }
   }
   handleTakeFront = (e) => { // 正面照
+    console.log('click')
     if ('cordova' in window) {
-      navigator.camera.getPicture(this.onSuccessFront, {
+      navigator.camera.getPicture(this.onSuccessFront, this.onFail, {
         destinationType: Camera.DestinationType.DATA_URL
       })
     } else {
@@ -182,8 +188,8 @@ class CreateWorker extends Component {
   onSuccessBack = async(imageURI) => {
     let { token, fileList } = this.state
     Toast.loading('上传中...', 0)
-    const data = await api.auth.realNameBack({
-      image: imageURI,
+    const data = await api.Mine.workManage.realNameBack({
+      image: 'data:image/png;base64,' + imageURI,
       token
     }) || false
     if (data) {
@@ -191,7 +197,7 @@ class CreateWorker extends Component {
       Toast.success('上传成功', 1.5)
       this.setState({
         fileList: { ...fileList, ...data },
-        backImg: imageURI,
+        backImg: 'data:image/png;base64,' + imageURI,
         isClickBack: true,
         isSuccessBack: true,
         stepNum: 1,
@@ -201,7 +207,7 @@ class CreateWorker extends Component {
   }
   handleTakeBack = (e) => { // 反面照
     if ('cordova' in window) {
-      navigator.camera.getPicture(this.onSuccessBack, {
+      navigator.camera.getPicture(this.onSuccessBack, this.onFail, {
         destinationType: Camera.DestinationType.DATA_URL
       })
     } else {
@@ -238,8 +244,8 @@ class CreateWorker extends Component {
   onSuccessFace = async(imageURI) => {
     Toast.loading('上传中...', 0)
     let { token } = this.state
-    const data = await api.auth.realNameFace({
-      image: imageURI,
+    const data = await api.Mine.workManage.realNameFace({
+      image: 'data:image/png;base64,' + imageURI,
       token
     }) || false
     if (data) {
@@ -270,7 +276,7 @@ class CreateWorker extends Component {
         )
       }, 1500)
       this.setState({
-        backFaceImg: imageURI,
+        backFaceImg: 'data:image/png;base64,' + imageURI,
         isClickBack: true,
         isSuccessBack: true,
         stepNum: 2,
@@ -280,7 +286,7 @@ class CreateWorker extends Component {
   }
   handleTakeFace = (e) => { // 人脸识别
     if ('cordova' in window) {
-      navigator.camera.getPicture(this.onSuccessFace, {
+      navigator.camera.getPicture(this.onSuccessFace, this.onFail, {
         destinationType: Camera.DestinationType.DATA_URL
       })
     } else {

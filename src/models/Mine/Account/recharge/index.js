@@ -64,7 +64,7 @@ class Rechange extends Component {
       cardId: bankval['card_id']
     }) || false
     if (data) {
-      if (CORDOVA) {
+      if ('cordova' in window) {
         document.addEventListener('deviceready', () => {
           let ref = cordova.InAppBrowser.open(data.url, '_blank', 'location=yes,hardwareback=no,closebuttoncaption=关闭,closebuttoncolor=#000000,hidenavigationbuttons=yes,hideurlbar=yes')
           ref.addEventListener('exit', () => {

@@ -55,6 +55,7 @@ class Home extends Component {
   getBannerList = async () => {
     this.setState({ isBannerLoading: true })
     const data = await api.Home.getBannerList({ // 获取banner
+      app: 2
     }) || false
     if (data) {
       let newData = []

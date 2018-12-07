@@ -30,7 +30,7 @@ class EnginReality extends Component {
 
     }
   }
-  componentWillMount () {
+  componentDidMount () {
     this.getProjectList()
     let toolers = tooler.parseURLParam()
     if (JSON.stringify(toolers) !== '{}') {

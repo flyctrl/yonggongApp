@@ -61,7 +61,7 @@ class FormBox extends Component {
         mapShow: false
       })
     } else {
-      this.props.match.history.goBack()
+      this.props.match.history.push(urls.PUSHQUICKORDER + '?' + tooler.parseJsonUrl(this.state.urlJson))
     }
   }
   getValuationUnit = async () => {

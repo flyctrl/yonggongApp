@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Header, Content } from 'Components'
 import { List, Checkbox, Modal, Button, WingBlank, InputItem } from 'antd-mobile'
-// import * as urls from 'Contants/urls'
+import * as urls from 'Contants/urls'
 // import api from 'Util/api'
 // import * as tooler from 'Contants/tooler'
 import style from './style.css'
@@ -30,7 +30,7 @@ class ApplySettle extends Component {
         showConfirm: false
       })
     } else {
-      this.props.match.history.goBack()
+      this.props.match.history.push(urls['MYORDER'])
     }
   }
   componentWillUnmount () {
@@ -178,7 +178,7 @@ class ApplySettle extends Component {
           if (showConfirm) {
             this.closeConfirm()
           } else {
-            this.props.match.history.go(-1)
+            this.props.match.history.push(urls['MYORDER'])
           }
         }}
         rightTitle={ showConfirm ? null : '添加工人'}

@@ -51,14 +51,7 @@ class SelectClass extends Component {
   }
   backButtons = (e) => {
     let { showIndex, url } = this.state
-    if (showIndex === 0) {
-      e.preventDefault()
-      if (url) {
-        this.props.match.history.push(urls[url])
-      } else {
-        this.props.match.history.goBack()
-      }
-    } else if (showIndex !== 0) {
+    if (showIndex !== 0) {
       e.preventDefault()
       if (showIndex === 2) {
         this.setState({
@@ -69,9 +62,12 @@ class SelectClass extends Component {
           showIndex: 0
         })
       }
-      return false
     } else {
-      this.props.match.history.goBack()
+      if (url) {
+        this.props.match.history.push(urls[url])
+      } else {
+        this.props.match.history.push(urls['HOME'])
+      }
     }
   }
   onChange = (value) => {
