@@ -40,28 +40,12 @@ class Content extends Component {
     let normalClass = ''
     let animateClass = ''
     if (this.props.isHeader) { // 有头部
-      // if (isIphoneX) {
-      //   normalClass = style['marginTop83']
-      // } else {
-      //   normalClass = style['marginTop45']
-      // }
       normalClass = style['marginTop45']
     } else { // 无头部
-      // if (isIphoneX) {
-      //   normalClass = style['marginTop38']
-      // } else {
-      //   normalClass = style['marginTop0']
-      // }
       normalClass = style['marginTop0']
     }
 
-    if (this.state.isMenuPage && this.state.animated) { // 不是单页 有菜单
-      if (this.state.path === '/PushOrder') {
-        animateClass = style['bounceInUp']
-      } else {
-        animateClass = style['bounceInRight']
-      }
-    } else if (!this.state.isMenuPage && this.state.animated) { // 单页
+    if (this.state.isMenuPage && this.state.animated || !this.state.isMenuPage && this.state.animated) { // 不是单页 有菜单 || // 单页
       animateClass = style['bounceInRight']
     }
     return (

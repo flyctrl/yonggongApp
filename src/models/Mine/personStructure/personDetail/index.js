@@ -63,7 +63,7 @@ class PesrsonDetail extends Component {
     return (
       <div className='pageBox'>
         <Header
-          title=''
+          title='个人详情'
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {

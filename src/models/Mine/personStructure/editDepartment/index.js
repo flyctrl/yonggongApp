@@ -6,7 +6,7 @@ import { Header, Content } from 'Components'
 import { createForm } from 'rc-form'
 import SelectDepart from '../selectDepart'
 import * as tooler from 'Contants/tooler'
-import style from 'Src/models/PushOrder/form.css'
+import style from 'Src/models/form.css'
 
 class AddPerson extends Component {
   constructor(props) {

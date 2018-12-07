@@ -9,7 +9,7 @@ import SelectDepart from '../selectDepart'
 import { rightWrongRadio } from 'Contants/fieldmodel'
 import { createForm } from 'rc-form'
 import 'antd-mobile/lib/calendar/style/css'
-import style from 'Src/models/PushOrder/form.css'
+import style from 'Src/models/form.css'
 
 const now = new Date()
 let Calendar = Loadable({

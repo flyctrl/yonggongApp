@@ -12,7 +12,7 @@ import { createForm } from 'rc-form'
 import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
-import style from 'Src/models/PushOrder/form.css'
+import style from 'Src/models/form.css'
 
 let Upload = Loadable({
   loader: () => import('rc-upload'),

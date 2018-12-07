@@ -29,7 +29,7 @@ import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import { invoiceStatus } from 'Contants/fieldmodel'
-import style from 'Src/models/PushOrder/form.css'
+import style from 'Src/models/form.css'
 import styles from './style.css'
 class InvoiceDetail extends Component {
   constructor(props) {

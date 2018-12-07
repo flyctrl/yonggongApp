@@ -3,7 +3,7 @@ import { List, Icon, Button } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
-import style from 'Src/models/PushOrder/form.css'
+import style from 'Src/models/form.css'
 import ownStyle from './style.css'
 
 class CompanyAuthDetail extends Component {
