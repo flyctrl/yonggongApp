@@ -1,6 +1,3 @@
-html .project-mange-box :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab::after) {
-  height: 0;
-}
 .project-mange-box {
   & :global(.am-list-body::before) {
     height: 0!important;

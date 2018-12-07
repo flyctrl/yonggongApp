@@ -44,7 +44,7 @@ class Partner extends Component {
           leftClick1={() => {
             history.push(urls.MINE)
           }}
-          rightTitle={<NewIcon type='icon-hzfadd' />}
+          rightTitle={<NewIcon type='icon-add-default' />}
           rightClick={() => {
             history.push(urls.ADDPARTNER)
           }}

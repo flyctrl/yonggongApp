@@ -5,7 +5,7 @@ import { List, InputItem, Icon, Toast } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import { createForm } from 'rc-form'
 import SelectDepart from '../selectDepart'
-import style from 'Src/models/PushOrder/form.css'
+import style from 'Src/models/form.css'
 
 class AddPerson extends Component {
   constructor(props) {

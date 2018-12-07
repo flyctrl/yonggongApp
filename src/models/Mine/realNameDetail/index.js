@@ -3,7 +3,7 @@ import { List, Icon, Button } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
-import style from 'Src/models/PushOrder/form.css'
+import style from 'Src/models/form.css'
 import ownStyle from './style.css'
 
 class CompanyAuthDetail extends Component {
@@ -57,10 +57,9 @@ class CompanyAuthDetail extends Component {
       <div className='pageBox'>
         <Header
           title='实名认证详情'
-          leftIcon={dataSource['status'] === 1 ? 'icon-back' : ''}
-          leftTitle1={dataSource['status'] === 1 ? '返回' : ''}
+          leftIcon={'icon-back'}
           leftClick1={() => {
-            this.props.match.history.push(urls.MINE)
+            this.props.match.history.go(-1)
           }}
         />
         <Content className={ownStyle['comp-content']}>

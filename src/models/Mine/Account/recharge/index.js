@@ -124,8 +124,9 @@ class Rechange extends Component {
             <div className={`${style['withdraw-cash']} contentBox`}>
               <Item
                 arrow='horizontal'
-                thumb={bankval['bank_logo']}
+                thumb={bankval['logo']}
                 onClick={this.handleChangeBank}
+                className='my-bottom-border'
               >
                 <span className={style['title']}>{bankval['bank_name']}</span><Brief className={style['subtitle']}>尾号{bankval['card_no_back']}</Brief>
               </Item>

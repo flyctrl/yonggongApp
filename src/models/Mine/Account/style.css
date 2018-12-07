@@ -37,17 +37,15 @@
       height: 38px;
       line-height: 38px;
       border-radius: 8px;
-      background-color: rgba(4, 103, 224, 1);
+      background-color: #0098F5;
       margin-right: 13px;
       font-size: 14px;
     }
     & .withdraw-cash-btn {
       width: 100px;
-      height: 38px;
-      line-height: 38px;
-      border-radius: 8px;
-      background-color: rgba(138, 150, 160, 1);
-      color: #FFF;
+      height: 36px;
+      line-height: 36px;
+      color: #0098F5;
       font-size: 14px;
     }
   }

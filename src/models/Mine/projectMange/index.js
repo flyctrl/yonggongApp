@@ -138,7 +138,7 @@ class ProjectMange extends Component {
           leftClick1={() => {
             history.push(urls.MINE)
           }}
-          rightTitle={<NewIcon type='icon-hzfadd' />}
+          rightTitle={<NewIcon type='icon-add-default' />}
           rightClick={() => {
             this.handleCreateProject()
           }}

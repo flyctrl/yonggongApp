@@ -28,7 +28,7 @@ const menuData = [
     type: 13
   },
   {
-    title: '企业认证',
+    title: '认证管理',
     icon: 'icon-corporateApproval',
     type: 3
   },
@@ -76,7 +76,7 @@ const menuData = [
 const menuRouter = {
   1: urls.MYORDER,
   2: urls.ACCOUNT,
-  3: urls.COMPANYAUTHDETAIL,
+  3: urls.CERTIFICATION,
   4: urls.INVOICEMANGE,
   5: urls.CONTRACTMANGE,
   6: urls.PROJECTMANGE,

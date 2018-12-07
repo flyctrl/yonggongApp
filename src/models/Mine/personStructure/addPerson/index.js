@@ -9,7 +9,7 @@ import SelectDepart from '../selectDepart'
 import { rightWrongRadio } from 'Contants/fieldmodel'
 import { createForm } from 'rc-form'
 import 'antd-mobile/lib/date-picker/style/css'
-import style from 'Src/models/PushOrder/form.css'
+import style from 'Src/models/form.css'
 
 let DatePicker = Loadable({
   loader: () => import('antd-mobile'),

@@ -56,6 +56,7 @@ export const CHECK = `${MINE}/Check` // 考勤管理
 export const CHECKLIST = `${MINE}/Check/checkList` // 考勤列表
 export const CHECKSTATUS = `${CHECK}/status` // 考勤状态
 
+export const CERTIFICATION = `${MINE}/certification` // 认证管理
 export const COMPANYAUTH = `${MINE}/companyAuth` // 企业认证
 export const REALNAMEAUTH = `${MINE}/realNameAuth` // 个人认证
 export const REALNAMEAUTHSUCCESS = `${REALNAMEAUTH}/success` // 个人认证成功

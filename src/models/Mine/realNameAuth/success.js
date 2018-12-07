@@ -10,10 +10,10 @@ class RealNameAuth extends Component {
       <Header
         title={'认证成功'}
         leftIcon='icon-back'
-        leftTitle1='返回'
+        leftTitle1='返回首页'
         leftClick1={() => {
           // this.props.match.history.push(urls['REALNAMEAUTH'])
-          this.props.match.history.push(urls['HOME'])
+          this.props.match.history.push(urls.HOME)
         }}
       />
       <Content>

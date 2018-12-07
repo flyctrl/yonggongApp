@@ -90,7 +90,7 @@ class Account extends Component {
               <div className={style.title}>账户余额（元）</div>
               <div className={style.money}>{addCommas(moneyA)}</div>
               <div className={style.tip}>冻结金额 ¥{addCommas(moneyB)}元</div>
-              <div className={style.btns}><Button className={style['reChange-btn']} type='primary' inline onClick={this.handleRecharge}>立即充值</Button><Button className={style['withdraw-cash-btn']} inline onClick={this.handleDrawcash}>提现</Button></div>
+              <div className={style.btns}><Button className={style['reChange-btn']} type='primary' inline onClick={this.handleRecharge}>立即充值</Button><Button className={style['withdraw-cash-btn']} inline type='ghost' onClick={this.handleDrawcash}>提现</Button></div>
             </div>
             <Button className={style['bindbtn-box']} onClick={this.handleBindCard} type='ghost'>+ 绑定银行卡</Button>
           </div> : null

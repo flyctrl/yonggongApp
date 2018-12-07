@@ -197,7 +197,7 @@ class RealNameAuth extends Component {
               isShowFace: false
             })
           } else {
-            this.props.match.history.push(urls.MINE)
+            this.props.match.history.go(-1)
           }
         }}
       />

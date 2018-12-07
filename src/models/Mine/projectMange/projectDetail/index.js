@@ -6,7 +6,7 @@ import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import { projectStatus } from 'Contants/fieldmodel'
-import style from 'Src/models/PushOrder/form.css'
+import style from 'Src/models/form.css'
 const prjStatus = {
   1: '待开工',
   2: '施工中',

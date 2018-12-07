@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { Button, Badge, ListView, PullToRefresh, ActionSheet, Toast, Modal } from 'antd-mobile'
-import { Header, Content, NewIcon } from 'Components'
+import { Header, Content, NewIcon, DefaultPage } from 'Components'
 import { orderStatus } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 // import * as tooler from 'Contants/tooler'
@@ -329,7 +329,7 @@ class WorkListManage extends Component {
       if (isLoading) {
         return null
       } else if (nodata) {
-        return <div className={style['render-footer']}>暂无数据</div>
+        return <DefaultPage type='noorder' />
       } else {
         return ''
       }

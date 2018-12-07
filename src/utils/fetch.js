@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2018-11-23 16:04:19
+* @Last Modified time: 2018-12-06 19:41:43
 */
 import * as Loading from './load.js'
 import storage from '../utils/storage'
@@ -72,6 +72,9 @@ fetcher.interceptors.response.use(function (response) {
   }
   return response.data
 }, function (error) {
+  if (error.response.config.showloading) {
+    Loading.hideLoading()
+  }
   if (error && error.response) { // 这里是返回状态码不为200时候的错误处理
     switch (error.response.status) {
       case 400:

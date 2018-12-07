@@ -16,7 +16,7 @@ html:not([data-scale]) .worklist-body :global(.am-list-body::before){
     justify-content: space-around;
     flex: 1 1;
     text-align: center;
-    color: #666;
+    color: #999;
     font-size: 14px;
     &:global(.toplist-tabs-item-selected) {
       color: #1298FC!important;
