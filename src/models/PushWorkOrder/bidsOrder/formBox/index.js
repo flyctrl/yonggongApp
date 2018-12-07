@@ -58,7 +58,7 @@ class FormBox extends Component {
         mapShow: false
       })
     } else {
-      this.props.match.history.goBack()
+      this.props.match.history.push(urls.PUSHBIDORDER + '?' + tooler.parseJsonUrl(this.state.urlJson))
     }
   }
   handleRemarkClick = () => {

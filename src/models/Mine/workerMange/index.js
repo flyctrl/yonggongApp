@@ -6,6 +6,7 @@ import { Header, Content } from 'Components'
 import api from 'Util/api'
 import style from './style.css'
 import ReactDOM from 'react-dom'
+import { onBackKeyDown } from 'Contants/tooler'
 const NUM_ROWS = 20
 class WorkList extends Component {
   constructor(props) {
@@ -45,6 +46,8 @@ class WorkList extends Component {
     return await data['list'] || []
   }
   componentDidMount() {
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
     const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 60
     this.genData().then((rdata) => {
       this.rData = rdata
@@ -55,6 +58,13 @@ class WorkList extends Component {
         isLoading: false,
       })
     })
+  }
+  backButtons = (e) => {
+    this.props.match.history.push(urls['MINE'])
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
   }
   onEndReached = (event) => {
     console.log('onEndReached')

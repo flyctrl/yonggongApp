@@ -7,7 +7,7 @@ import * as urls from 'Contants/urls'
 // import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import style from './index.css'
-
+import { onBackKeyDown } from 'Contants/tooler'
 const prompt = Modal.prompt
 const NUM_ROWS = 20
 const defaultSource = new ListView.DataSource({
@@ -29,6 +29,15 @@ class WorkListManage extends Component {
   }
   componentDidMount() {
     this.getdataTemp()
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
+  }
+  backButtons = (e) => {
+    this.props.match.history.push(urls['MINE'])
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
   }
   getdataTemp = () => {
     const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 47

@@ -93,14 +93,14 @@ class RealNameAuth extends Component {
   onSuccessFront = async(imageURI) => {
     Toast.loading('上传中...', 0)
     const data = await api.auth.realNameFront({
-      image: imageURI
+      image: 'data:image/png;base64,' + imageURI
     }) || false
     if (data) {
       Toast.hide()
       Toast.success('上传成功', 1.5)
       this.setState({
         fileList: data,
-        frontImg: imageURI,
+        frontImg: 'data:image/png;base64,' + imageURI,
         isClickFront: true,
         isClickBack: false,
         isSuccessFront: true,
@@ -109,9 +109,13 @@ class RealNameAuth extends Component {
       })
     }
   }
+  onFail = (message) => {
+    // Toast.fail(message)
+    console.log(message)
+  }
   handleTakeFront = (e) => { // 正面照
     if ('cordova' in window) {
-      navigator.camera.getPicture(this.onSuccessFront, {
+      navigator.camera.getPicture(this.onSuccessFront, this.onFail, {
         destinationType: Camera.DestinationType.DATA_URL
       })
     } else {
@@ -148,7 +152,7 @@ class RealNameAuth extends Component {
     let { token, fileList } = this.state
     Toast.loading('上传中...', 0)
     const data = await api.auth.realNameBack({
-      image: imageURI,
+      image: 'data:image/png;base64,' + imageURI,
       token
     }) || false
     if (data) {
@@ -156,7 +160,7 @@ class RealNameAuth extends Component {
       Toast.success('上传成功', 1.5)
       this.setState({
         fileList: { ...fileList, ...data },
-        backImg: imageURI,
+        backImg: 'data:image/png;base64,' + imageURI,
         isClickBack: true,
         isSuccessBack: true,
         stepNum: 1,
@@ -166,7 +170,7 @@ class RealNameAuth extends Component {
   }
   handleTakeBack = (e) => { // 反面照
     if ('cordova' in window) {
-      navigator.camera.getPicture(this.onSuccessBack, {
+      navigator.camera.getPicture(this.onSuccessBack, this.onFail, {
         destinationType: Camera.DestinationType.DATA_URL
       })
     } else {
@@ -204,7 +208,7 @@ class RealNameAuth extends Component {
     Toast.loading('上传中...', 0)
     let { token } = this.state
     const data = await api.auth.realNameFace({
-      image: imageURI,
+      image: 'data:image/png;base64,' + imageURI,
       token
     }) || false
     if (data) {
@@ -214,7 +218,7 @@ class RealNameAuth extends Component {
         this.handleAuthConfirm(data['token'])
       }, 1500)
       this.setState({
-        backFaceImg: imageURI,
+        backFaceImg: 'data:image/png;base64,' + imageURI,
         isClickBack: true,
         isSuccessBack: true,
         stepNum: 2,
@@ -224,7 +228,7 @@ class RealNameAuth extends Component {
   }
   handleTakeFace = (e) => { // 人脸识别
     if ('cordova' in window) {
-      navigator.camera.getPicture(this.onSuccessFace, {
+      navigator.camera.getPicture(this.onSuccessFace, this.onFail, {
         destinationType: Camera.DestinationType.DATA_URL
       })
     } else {

@@ -15,7 +15,7 @@ import normalorder from 'Src/assets/home/normalorder.png'
 import quickorder from 'Src/assets/home/quickorder.png'
 import initeorder from 'Src/assets/home/initeorder.png'
 import TouchFeedback from 'Util/touchFeedback.js'
-
+import { onBackKeyDown } from 'Contants/tooler'
 const data = [
   {
     path: urls.HOME,
@@ -69,12 +69,28 @@ class AppMenu extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
     this.setState({
       selectedTab: nextProps.path !== '' ? (nextProps.path).split('/')[1] : 'Home'
     })
   }
   componentDidMount() {
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
     new TouchFeedback('.am-tabs-tab-bar-wrap')
+  }
+  backButtons = (e) => {
+    let { visible } = this.state
+    if (visible) {
+      e.preventDefault()
+      this.setState({
+        visible: false
+      })
+    } else {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
   }
   handleCloseMask = () => {
     this.setState({
