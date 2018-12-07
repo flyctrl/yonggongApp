@@ -146,7 +146,9 @@ class RealNameAuth extends Component {
       reader.onerror = function () {
         Toast(reader.error)
       }
-      reader.readAsDataURL(file)
+      if (file) {
+        reader.readAsDataURL(file)
+      }
     }
   }
   onSuccessBack = async(imageURI) => {
@@ -203,7 +205,9 @@ class RealNameAuth extends Component {
       reader.onerror = function () {
         Toast(reader.error)
       }
-      reader.readAsDataURL(file)
+      if (file) {
+        reader.readAsDataURL(file)
+      }
     }
   }
   onSuccessFace = async(imageURI) => {
@@ -264,7 +268,9 @@ class RealNameAuth extends Component {
       reader.onerror = function () {
         Toast(reader.error)
       }
-      reader.readAsDataURL(file)
+      if (file) {
+        reader.readAsDataURL(file)
+      }
     }
   }
   handleAuthConfirm = async(token) => {
