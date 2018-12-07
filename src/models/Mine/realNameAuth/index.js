@@ -6,7 +6,7 @@
 import React, { Component } from 'react'
 import { Steps, Toast, Button, List } from 'antd-mobile'
 import { createForm } from 'rc-form'
-import ReactDOM from 'react-dom'
+// import ReactDOM from 'react-dom'
 import api from 'Util/api'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
@@ -41,12 +41,12 @@ class RealNameAuth extends Component {
   componentDidMount () {
     document.removeEventListener('backbutton', onBackKeyDown, false)
     document.addEventListener('backbutton', this.backButtons, false)
-    let front = ReactDOM.findDOMNode(this.front)
-    front.addEventListener('click', this.handleTakeFront)
-    let back = ReactDOM.findDOMNode(this.back)
-    back.addEventListener('click', this.handleTakeBack)
-    let face = ReactDOM.findDOMNode(this.face)
-    face.addEventListener('click', this.handleTakeFace)
+    // let front = ReactDOM.findDOMNode(this.front)
+    // front.addEventListener('click', this.handleTakeFront)
+    // let back = ReactDOM.findDOMNode(this.back)
+    // back.addEventListener('click', this.handleTakeBack)
+    // let face = ReactDOM.findDOMNode(this.face)
+    // face.addEventListener('click', this.handleTakeFace)
   }
   backButtons = (e) => {
     let { isShowFace } = this.state
@@ -116,7 +116,8 @@ class RealNameAuth extends Component {
   handleTakeFront = (e) => { // 正面照
     if ('cordova' in window) {
       navigator.camera.getPicture(this.onSuccessFront, this.onFail, {
-        destinationType: Camera.DestinationType.DATA_URL
+        destinationType: Camera.DestinationType.DATA_URL,
+        quality: 80
       })
     } else {
       let file = e.target.files[0]
@@ -171,7 +172,8 @@ class RealNameAuth extends Component {
   handleTakeBack = (e) => { // 反面照
     if ('cordova' in window) {
       navigator.camera.getPicture(this.onSuccessBack, this.onFail, {
-        destinationType: Camera.DestinationType.DATA_URL
+        destinationType: Camera.DestinationType.DATA_URL,
+        quality: 80
       })
     } else {
       let { token, fileList } = this.state
@@ -229,7 +231,8 @@ class RealNameAuth extends Component {
   handleTakeFace = (e) => { // 人脸识别
     if ('cordova' in window) {
       navigator.camera.getPicture(this.onSuccessFace, this.onFail, {
-        destinationType: Camera.DestinationType.DATA_URL
+        destinationType: Camera.DestinationType.DATA_URL,
+        quality: 80
       })
     } else {
       let { token } = this.state
@@ -309,17 +312,15 @@ class RealNameAuth extends Component {
           <div className={style['auth-des']}>请上传身份证正反面照片</div>
           <div className={style['auth-picture']}>
             <div className={style['auth-pic-front']}>
-              {/* <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFront} /> */}
-              <div ref={(el) => { this.front = el }} id='btn_camera_front'className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront}></div>
+              <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type={ 'cordova' in window ? 'button' : 'file'} accept='image/jpg' capture='camera' onClick={this.handleTakeFront} onChange={this.handleTakeFront}/>
+              {/* <div ref={(el) => { this.front = el }} id='btn_camera_front'className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront}></div> */}
               <img src={frontImg} style={{ zIndex: isClickFront ? 1 : 0 }}/>
             </div>
             <div className={style['auth-pic-back']}>
-              {/* <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/*' capture='camera' onChange={this.handleTakeBack} /> */}
-              <div ref={(el) => { this.back = el }} id='btn_camera_back'className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack}></div>
+              <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type={ 'cordova' in window ? 'button' : 'file'} accept='image/jpg' capture='camera' onClick={this.handleTakeBack} onChange={this.handleTakeBack} />
+              {/* <div ref={(el) => { this.back = el }} id='btn_camera_back'className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack}></div> */}
               <img src={backImg} onClick={this.handleClick} style={{ zIndex: isClickBack ? 1 : 0 }}/>
             </div>
-            {/* <Upload {...uploaderPropsFront} disabled={isClickFront}><img src={frontImg}/></Upload> */}
-            {/* <Upload {...uploaderPropsBack} disabled={isClickBack}><img onClick={this.handleClick} className={style['pic-right']} src={backImg}/></Upload> */}
           </div>
           <div className={style['auth-des']} style={{ display: isSuccessBack || isSuccessFront ? 'block' : 'none' }}>请核对信息，若有误请点击重新上传</div>
           <div className={style['auth-form']} style={{ display: isSuccessFront ? 'block' : 'none' }}>
@@ -370,8 +371,8 @@ class RealNameAuth extends Component {
           </div>
           <div className={style['auth-face-btn']}>
             拍一张照片
-            <div ref={(el) => { this.face = el }} id='btn_camera_face'className={style['input']}></div>
-            {/* <input id='btn_camera_face' className={style['input']} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFace} /> */}
+            {/* <div ref={(el) => { this.face = el }} id='btn_camera_face'className={style['input']}></div> */}
+            <input id='btn_camera_face' className={style['input']} type={ 'cordova' in window ? 'button' : 'file'} accept='image/jpg' capture='camera' onClick={this.handleTakeFace} onChange={this.handleTakeFace} />
           </div>
         </div>
       </Content>
