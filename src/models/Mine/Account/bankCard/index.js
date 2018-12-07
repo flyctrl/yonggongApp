@@ -5,7 +5,7 @@ import { Header, Content } from 'Components'
 // import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import style from './style.css'
-
+import { onBackKeyDown } from 'Contants/tooler'
 let cardType = {
   1: '储蓄卡',
   2: '信用卡'
@@ -21,7 +21,6 @@ class BankCard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      typeSelect: false,
       isShowNext: false,
       btn1Color: '#0098F5',
       btn2Color: '#0098F5',
@@ -35,6 +34,23 @@ class BankCard extends Component {
   }
   componentDidMount () {
     this.getUserName()
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
+  }
+  backButtons = (e) => {
+    let { isShowNext } = this.state
+    if (isShowNext) {
+      e.preventDefault()
+      this.setState({
+        isShowNext: false
+      })
+    } else {
+      this.props.match.history.goBack()
+    }
   }
   getUserName = async() => {
     this.setState({

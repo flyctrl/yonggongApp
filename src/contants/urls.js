@@ -7,7 +7,6 @@
 const BASE_URL = ``
 
 export const HOME = `${BASE_URL}/Home`
-// export const SYSTEMESSDETAIL = `${HOME}/systemMessDetail` // 首页系统通知详情
 export const MESSAGE = `${BASE_URL}/Message`
 export const WORKLISTMANAGE = `${BASE_URL}/WorkListManage` // 工单列表
 

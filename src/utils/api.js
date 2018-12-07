@@ -71,9 +71,6 @@ const prefix = '/employ'
 
 export default {
   Common: {
-    bindDevice(params) { // 设备绑定
-      return Fetch(prefix + '/device/bind', params, 'post', { showloading: false })
-    },
     getProList(params) { // 获取项目列表
       return Fetch(prefix + '/project/list/select', params, 'get')
     },
@@ -342,6 +339,9 @@ export default {
       getbindBinkcard(params) { // 获取已绑定银行卡列表
         return Fetch(prefix + '/bank', params, 'get')
       },
+      validatecard(params) { // 校验银行卡
+        return Fetch(prefix + '/bank/validate', params, 'get')
+      },
       bindDefaultCard(params) { // 默认绑定的银行卡
         return Fetch(prefix + '/bank/default', params, 'get')
       },
@@ -542,7 +542,7 @@ export default {
       return Fetch('/common/banner/list', params, 'get')
     },
     getMenuInforms(params) {
-      return Fetch(prefix + '/index/company/stat', params, 'get')
+      return fetch(prefix + '/index/company/stat', params, 'get')
     }
   },
   Message: { // 消息

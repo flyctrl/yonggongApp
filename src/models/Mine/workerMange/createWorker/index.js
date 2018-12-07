@@ -14,6 +14,7 @@ import style from './style.css'
 import back from 'Src/assets/back.png'
 import front from 'Src/assets/front.png'
 import backFace from 'Src/assets/backimg.png'
+import { onBackKeyDown } from 'Contants/tooler'
 const prompt = Modal.prompt
 let newPrompt = null
 const Item = List.Item
@@ -39,6 +40,28 @@ class CreateWorker extends Component {
       isShowFace: false, // 是否显示人脸识别页面
       phone: '',
       token: ''
+    }
+  }
+  componentDidMount () {
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
+  }
+  backButtons = (e) => {
+    let { isShowFace } = this.state
+    if (isShowFace) {
+      e.preventDefault()
+      this.setState({
+        isShowFace: false
+      })
+    } else {
+      this.props.match.history.goBack()
+    }
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
+    if (newPrompt) {
+      newPrompt.close()
     }
   }
   handleClickNext = () => { // 是否显示人脸识别页面
@@ -223,11 +246,6 @@ class CreateWorker extends Component {
       this.setState({
         stepNum: 3
       })
-    }
-  }
-  componentWillUnmount () {
-    if (newPrompt) {
-      newPrompt.close()
     }
   }
   render() {
