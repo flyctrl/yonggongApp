@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { List, Radio, Toast } from 'antd-mobile'
-import { Header, Content } from 'Components'
+import { Header, Content, DefaultPage } from 'Components'
 import api from 'Util/api'
 
 const RadioItem = Radio.RadioItem
@@ -71,7 +71,7 @@ class ClassifyList extends Component {
                 {i['label']}
               </RadioItem>
             ))}
-          </List> : <div className='nodata'>{ datasource.length === 0 && !isloading ? '暂无数据' : ''}</div>
+          </List> : datasource.length === 0 && !isloading ? <DefaultPage click={() => { console.log('clicker') }} type='noitems' /> : ''
         }
       </Content>
     </div>

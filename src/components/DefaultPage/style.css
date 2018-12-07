@@ -1,0 +1,28 @@
+.defaultbox {
+  width: 166px;
+  height: 260px;
+  margin: 0 auto;
+  margin-top: 100px;
+  & img {
+    display: block;
+    width: 166px;
+    height: 171px;
+  }
+  & p {
+    height: 30px;
+    line-height: 30px;
+    font-size: 15px;
+    color: #999;
+    text-align: center;
+    margin-top: 15px;
+  }
+  & :global(.am-button) {
+    width: 94px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    margin: 0 auto;
+    margin-top: 10px;
+    border-radius: 3px;
+  }
+}
