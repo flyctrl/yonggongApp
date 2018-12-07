@@ -213,11 +213,11 @@ class RealNameAuth extends Component {
           <div className={style['auth-des']}>请上传身份证正反面照片</div>
           <div className={style['auth-picture']}>
             <div className={style['auth-pic-front']}>
-              <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFront} />
+              <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type={ 'cordova' in window ? 'button' : 'file'} accept='image/jpg' capture='camera' onClick={this.handleTakeFront} onChange={this.handleTakeFront}/>
               <img src={frontImg} style={{ zIndex: isClickFront ? 1 : 0 }}/>
             </div>
             <div className={style['auth-pic-back']}>
-              <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/*' capture='camera' onChange={this.handleTakeBack} />
+              <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type={ 'cordova' in window ? 'button' : 'file'} accept='image/jpg' onClick={this.handleTakeBack} onChange={this.handleTakeBack} />
               <img src={backImg} onClick={this.handleClick} style={{ zIndex: isClickBack ? 1 : 0 }}/>
             </div>
             {/* <Upload {...uploaderPropsFront} disabled={isClickFront}><img src={frontImg}/></Upload> */}
@@ -272,7 +272,7 @@ class RealNameAuth extends Component {
           </div>
           <div className={style['auth-face-btn']}>
             拍一张照片
-            <input id='btn_camera_face' className={style['input']} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFace} />
+            <input id='btn_camera_face' className={style['input']} type={ 'cordova' in window ? 'button' : 'file'} accept='image/jpg' capture='camera' onClick={this.handleTakeFace} onChange={this.handleTakeFace} />
           </div>
         </div>
       </Content>
