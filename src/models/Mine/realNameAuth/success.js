@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react'
 import { Icon } from 'antd-mobile'
-// import * as urls from 'Contants/urls'
+import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
 import style from './style.css'
 class RealNameAuth extends Component {
@@ -13,7 +13,7 @@ class RealNameAuth extends Component {
         leftTitle1='返回'
         leftClick1={() => {
           // this.props.match.history.push(urls['REALNAMEAUTH'])
-          this.props.match.history.go(-1)
+          this.props.match.history.push(urls['HOME'])
         }}
       />
       <Content>
