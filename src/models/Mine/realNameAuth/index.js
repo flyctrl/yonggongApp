@@ -6,6 +6,7 @@
 import React, { Component } from 'react'
 import { Steps, Toast, Button, List } from 'antd-mobile'
 import { createForm } from 'rc-form'
+import ReactDOM from 'react-dom'
 import api from 'Util/api'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
@@ -40,6 +41,12 @@ class RealNameAuth extends Component {
   componentDidMount () {
     document.removeEventListener('backbutton', onBackKeyDown, false)
     document.addEventListener('backbutton', this.backButtons, false)
+    let front = ReactDOM.findDOMNode(this.front)
+    front.addEventListener('click', this.handleTakeFront)
+    let back = ReactDOM.findDOMNode(this.back)
+    back.addEventListener('click', this.handleTakeBack)
+    let face = ReactDOM.findDOMNode(this.face)
+    face.addEventListener('click', this.handleTakeFace)
   }
   backButtons = (e) => {
     let { isShowFace } = this.state
@@ -83,96 +90,175 @@ class RealNameAuth extends Component {
       token: ''
     })
   }
+  onSuccessFront = async(imageURI) => {
+    Toast.loading('上传中...', 0)
+    const data = await api.auth.realNameFront({
+      image: imageURI
+    }) || false
+    if (data) {
+      Toast.hide()
+      Toast.success('上传成功', 1.5)
+      this.setState({
+        fileList: data,
+        frontImg: imageURI,
+        isClickFront: true,
+        isClickBack: false,
+        isSuccessFront: true,
+        token: data['token'],
+        img: data['head_image']
+      })
+    }
+  }
   handleTakeFront = (e) => { // 正面照
-    let file = e.target.files[0]
-    let reader = new FileReader()
-    let _this = this
-    reader.onload = async function () {
-      Toast.loading('上传中...', 0)
-      let url = this.result
-      const data = await api.auth.realNameFront({
-        image: url
-      }) || false
-      if (data) {
-        Toast.hide()
-        Toast.success('上传成功', 1.5)
-        _this.setState({
-          fileList: data,
-          frontImg: url,
-          isClickFront: true,
-          isClickBack: false,
-          isSuccessFront: true,
-          token: data['token'],
-          img: data['head_image']
-        })
+    if ('cordova' in window) {
+      navigator.camera.getPicture(this.onSuccessFront, {
+        destinationType: Camera.DestinationType.DATA_URL
+      })
+    } else {
+      let file = e.target.files[0]
+      let reader = new FileReader()
+      let _this = this
+      reader.onload = async function () {
+        Toast.loading('上传中...', 0)
+        let url = this.result
+        const data = await api.auth.realNameFront({
+          image: url
+        }) || false
+        if (data) {
+          Toast.hide()
+          Toast.success('上传成功', 1.5)
+          _this.setState({
+            fileList: data,
+            frontImg: url,
+            isClickFront: true,
+            isClickBack: false,
+            isSuccessFront: true,
+            token: data['token'],
+            img: data['head_image']
+          })
+        }
       }
+      reader.onerror = function () {
+        Toast(reader.error)
+      }
+      reader.readAsDataURL(file)
     }
-    reader.onerror = function () {
-      Toast(reader.error)
+  }
+  onSuccessBack = async(imageURI) => {
+    let { token, fileList } = this.state
+    Toast.loading('上传中...', 0)
+    const data = await api.auth.realNameBack({
+      image: imageURI,
+      token
+    }) || false
+    if (data) {
+      Toast.hide()
+      Toast.success('上传成功', 1.5)
+      this.setState({
+        fileList: { ...fileList, ...data },
+        backImg: imageURI,
+        isClickBack: true,
+        isSuccessBack: true,
+        stepNum: 1,
+        token: data['token']
+      })
     }
-    reader.readAsDataURL(file)
   }
   handleTakeBack = (e) => { // 反面照
-    let { token, fileList } = this.state
-    let file = e.target.files[0]
-    let reader = new FileReader()
-    let _this = this
-    reader.onload = async function () {
-      let url = this.result
-      Toast.loading('上传中...', 0)
-      const data = await api.auth.realNameBack({
-        image: url,
-        token
-      }) || false
-      if (data) {
-        Toast.hide()
-        Toast.success('上传成功', 1.5)
-        _this.setState({
-          fileList: { ...fileList, ...data },
-          backImg: url,
-          isClickBack: true,
-          isSuccessBack: true,
-          stepNum: 1,
-          token: data['token']
-        })
+    if ('cordova' in window) {
+      navigator.camera.getPicture(this.onSuccessBack, {
+        destinationType: Camera.DestinationType.DATA_URL
+      })
+    } else {
+      let { token, fileList } = this.state
+      let file = e.target.files[0]
+      let reader = new FileReader()
+      let _this = this
+      reader.onload = async function () {
+        let url = this.result
+        Toast.loading('上传中...', 0)
+        const data = await api.auth.realNameBack({
+          image: url,
+          token
+        }) || false
+        if (data) {
+          Toast.hide()
+          Toast.success('上传成功', 1.5)
+          _this.setState({
+            fileList: { ...fileList, ...data },
+            backImg: url,
+            isClickBack: true,
+            isSuccessBack: true,
+            stepNum: 1,
+            token: data['token']
+          })
+        }
       }
+      reader.onerror = function () {
+        Toast(reader.error)
+      }
+      reader.readAsDataURL(file)
     }
-    reader.onerror = function () {
-      Toast(reader.error)
+  }
+  onSuccessFace = async(imageURI) => {
+    Toast.loading('上传中...', 0)
+    let { token } = this.state
+    const data = await api.auth.realNameFace({
+      image: imageURI,
+      token
+    }) || false
+    if (data) {
+      Toast.hide()
+      Toast.success('上传成功', 1.5)
+      setTimeout(() => {
+        this.handleAuthConfirm(data['token'])
+      }, 1500)
+      this.setState({
+        backFaceImg: imageURI,
+        isClickBack: true,
+        isSuccessBack: true,
+        stepNum: 2,
+        token: data['token']
+      })
     }
-    reader.readAsDataURL(file)
   }
   handleTakeFace = (e) => { // 人脸识别
-    let { token } = this.state
-    let file = e.target.files[0]
-    let reader = new FileReader()
-    let _this = this
-    reader.onload = async function () {
-      Toast.loading('上传中...', 0)
-      let url = this.result
-      const data = await api.auth.realNameFace({
-        image: url,
-        token
-      }) || false
-      if (data) {
-        Toast.hide()
-        Toast.success('上传成功', 1.5)
-        setTimeout(() => {
-          _this.handleAuthConfirm(data['token'])
-        }, 1500)
-        _this.setState({
-          backFaceImg: url,
-          isClickBack: true,
-          isSuccessBack: true,
-          stepNum: 2,
-          token: data['token']
-        })
+    if ('cordova' in window) {
+      navigator.camera.getPicture(this.onSuccessFace, {
+        destinationType: Camera.DestinationType.DATA_URL
+      })
+    } else {
+      let { token } = this.state
+      let file = e.target.files[0]
+      let reader = new FileReader()
+      let _this = this
+      reader.onload = async function () {
+        Toast.loading('上传中...', 0)
+        let url = this.result
+        const data = await api.auth.realNameFace({
+          image: url,
+          token
+        }) || false
+        if (data) {
+          Toast.hide()
+          Toast.success('上传成功', 1.5)
+          setTimeout(() => {
+            _this.handleAuthConfirm(data['token'])
+          }, 1500)
+          _this.setState({
+            backFaceImg: url,
+            isClickBack: true,
+            isSuccessBack: true,
+            stepNum: 2,
+            token: data['token']
+          })
+        }
       }
+      reader.onerror = function () {
+        Toast(reader.error)
+      }
+      reader.readAsDataURL(file)
     }
-    reader.onerror = function () {
-      Toast(reader.error)
-    }
-    reader.readAsDataURL(file)
   }
   handleAuthConfirm = async(token) => {
     Toast.loading('实名认证中...', 0)
@@ -219,11 +305,13 @@ class RealNameAuth extends Component {
           <div className={style['auth-des']}>请上传身份证正反面照片</div>
           <div className={style['auth-picture']}>
             <div className={style['auth-pic-front']}>
-              <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFront} />
+              {/* <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFront} /> */}
+              <div ref={(el) => { this.front = el }} id='btn_camera_front'className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront}></div>
               <img src={frontImg} style={{ zIndex: isClickFront ? 1 : 0 }}/>
             </div>
             <div className={style['auth-pic-back']}>
-              <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/*' capture='camera' onChange={this.handleTakeBack} />
+              {/* <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/*' capture='camera' onChange={this.handleTakeBack} /> */}
+              <div ref={(el) => { this.back = el }} id='btn_camera_back'className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack}></div>
               <img src={backImg} onClick={this.handleClick} style={{ zIndex: isClickBack ? 1 : 0 }}/>
             </div>
             {/* <Upload {...uploaderPropsFront} disabled={isClickFront}><img src={frontImg}/></Upload> */}
@@ -278,7 +366,8 @@ class RealNameAuth extends Component {
           </div>
           <div className={style['auth-face-btn']}>
             拍一张照片
-            <input id='btn_camera_face' className={style['input']} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFace} />
+            <div ref={(el) => { this.face = el }} id='btn_camera_face'className={style['input']}></div>
+            {/* <input id='btn_camera_face' className={style['input']} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFace} /> */}
           </div>
         </div>
       </Content>

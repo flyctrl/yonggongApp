@@ -64,7 +64,22 @@ class Rechange extends Component {
       cardId: bankval['card_id']
     }) || false
     if (data) {
-      window.location.href = data.url
+      if (CORDOVA) {
+        document.addEventListener('deviceready', () => {
+          let ref = cordova.InAppBrowser.open(data.url, '_blank', 'location=yes,hardwareback=no,closebuttoncaption=关闭,closebuttoncolor=#000000,hidenavigationbuttons=yes,hideurlbar=yes')
+          ref.addEventListener('exit', () => {
+            this.props.match.history.push(urls.ACCOUNTRECHARGE)
+          })
+          ref.addEventListener('loadstop', (e) => {
+            ref.insertCSS({
+              code: '.iconfont.pme-go-back{display:none;}#mod-footer{display:none;}.order-details{display:block;}.receiveSide{margin-top:40px;}.J-payBtn{background:#0467e0;}#SuccessMessageBackBtn{display:none;}'
+            })
+          })
+        }, false)
+      } else {
+        window.location.href = data.url
+      }
+      // window.location.href = data.url
     }
   }
   handleChangeBank = async () => { // 选择银行按钮

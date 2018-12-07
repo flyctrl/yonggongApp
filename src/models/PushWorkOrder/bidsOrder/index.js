@@ -8,7 +8,7 @@ import * as tooler from 'Contants/tooler'
 import style from './index.css'
 import TeachList from './teachList'
 import ProjectList from './projectList'
-
+import { onBackKeyDown } from 'Contants/tooler'
 const Item = List.Item
 const paymethod = [{
   label: '日',
@@ -45,10 +45,35 @@ class SelectClass extends Component {
     }
   }
   componentDidMount() {
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
     let { receiveType } = this.state
     this.setState({
       showtech: parseInt(receiveType) === 2
     })
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
+  }
+  backButtons = (e) => {
+    let { showIndex, url } = this.state
+    if (showIndex === 0) {
+      e.preventDefault()
+      if (url) {
+        this.props.match.history.push(urls[url])
+      } else {
+        this.props.match.history.goBack()
+      }
+    } else if (showIndex !== 0) {
+      e.preventDefault()
+      this.setState({
+        showIndex: 0
+      })
+      return false
+    } else {
+      this.props.match.history.goBack()
+    }
   }
   handleProject = (value) => { // 选择项目
     this.setState({

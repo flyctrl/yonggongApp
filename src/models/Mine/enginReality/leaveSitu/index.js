@@ -12,8 +12,9 @@ class LeaveSitu extends Component {
     super(props)
     this.state = {
       dataList: [],
-      urls: '',
-      isLoading: true
+      url: '',
+      isLoading: true,
+      count: 0
     }
   }
   handleUsrInfo = () => {
@@ -28,10 +29,10 @@ class LeaveSitu extends Component {
       start_date: paramsData.startTime,
       worksheet_id: paramsData.worksheetId,
       attend_status: paramsData.attend_status
-    }) || {}
+    }) || false
     if (data) {
       this.setState({
-        dataList: data.list || {},
+        dataList: data.list,
         isLoading: false
       })
     }
@@ -41,6 +42,9 @@ class LeaveSitu extends Component {
     //   this.state.urls = window.location.search.substring(1)
     // }
     this.getMineDetail()
+    // document.addEventListener('deviceready', () => {
+    document.addEventListener('backbutton', this.backButton)
+    // })
   }
   handleLeftClick = () => {
     let { url } = this.state
@@ -50,6 +54,15 @@ class LeaveSitu extends Component {
     } else {
       history.push(urls.ENGINREALITY)
     }
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButton)
+    // document.addEventListener('backbutton', () => {
+    // history.goBack()
+    // })
+  }
+  backButton = () => {
+    history.push(`${urls.ENGINREALITY}${history.location.search}`)
   }
   render() {
     const { dataList, isLoading } = this.state

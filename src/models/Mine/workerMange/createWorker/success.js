@@ -8,7 +8,7 @@ import { Icon, Button } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
 import style from './style.css'
-import { getQueryString } from 'Contants/tooler'
+import { getQueryString, onBackKeyDown } from 'Contants/tooler'
 class RealNameAuth extends Component {
   constructor(props) {
     super(props)
@@ -19,6 +19,24 @@ class RealNameAuth extends Component {
 
   handleClick = () => {
     this.props.match.history.push(urls['CREATEWORKER'])
+  }
+  componentDidMount() {
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
+  }
+  backButtons = (e) => {
+    let { isBack } = this.state
+    if (isBack) {
+      e.preventDefault()
+      this.props.match.history.push(urls['WORKERMANGE'])
+    } else {
+      e.preventDefault()
+      this.props.match.history.push(urls['SELECTWORKER'])
+    }
   }
   render() {
     let { isBack } = this.state

@@ -4,6 +4,7 @@ import history from 'Util/history'
 import api from 'Util/api'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
+import { onBackKeyDown } from 'Contants/tooler'
 import style from './style.css'
 
 class PesrsonDetail extends Component {
@@ -11,7 +12,9 @@ class PesrsonDetail extends Component {
     super(props)
     this.state = {
       dataSource: {},
-      isLoading: true
+      isLoading: true,
+      url: tooler.getQueryString('url'),
+      idary: tooler.getQueryString('idary')
     }
   }
   getPersonDetail = async () => {
@@ -29,6 +32,26 @@ class PesrsonDetail extends Component {
   }
   componentDidMount() {
     this.getPersonDetail()
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
+  }
+  backButtons = (e) => {
+    let { url } = this.state
+    if (url) {
+      e.preventDefault()
+      // if (idary !== null && idary !== '') {
+      //   history.push(urls[url] + '?idary=' + idary)
+      // } else {
+      //   history.push(urls[url])
+      // }
+    } else {
+      e.preventDefault()
+      history.push(urls.HOME)
+    }
   }
   showInfo = (dataSource) => {
     let workno = dataSource['work_no']
@@ -59,7 +82,7 @@ class PesrsonDetail extends Component {
     }
   }
   render() {
-    const { dataSource, isLoading } = this.state
+    const { dataSource, isLoading, url, idary } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -67,8 +90,6 @@ class PesrsonDetail extends Component {
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
-            let url = tooler.getQueryString('url')
-            let idary = tooler.getQueryString('idary')
             if (url) {
               if (idary !== null && idary !== '') {
                 history.push(urls[url] + '?idary=' + idary)
