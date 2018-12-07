@@ -71,9 +71,6 @@ const prefix = '/employ'
 
 export default {
   Common: {
-    bindDevice(params) { // 设备绑定
-      return Fetch(prefix + '/device/bind', params, 'post', { showloading: false })
-    },
     getProList(params) { // 获取项目列表
       return Fetch(prefix + '/project/list/select', params, 'get')
     },
@@ -545,7 +542,7 @@ export default {
       return Fetch('/common/banner/list', params, 'get')
     },
     getMenuInforms(params) {
-      return Fetch(prefix + '/index/company/stat', params, 'get')
+      return fetch(prefix + '/index/company/stat', params, 'get')
     }
   },
   Message: { // 消息

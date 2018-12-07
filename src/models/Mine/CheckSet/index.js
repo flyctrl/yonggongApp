@@ -13,6 +13,7 @@ import style from './style.css'
 import SetType from './type'
 import SetRange from './range'
 import SetAddress from 'Components/Address'
+import { onBackKeyDown } from 'Contants/tooler'
 let title = {
   0: '未设置',
   1: '已设置'
@@ -164,6 +165,33 @@ class SetUp extends Component {
   }
   componentDidMount() {
     this.getCheckConfig()
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
+  }
+  backButtons = (e) => {
+    let { isShowType, isShowAddress, isShowRange } = this.state
+    if (isShowType) {
+      e.preventDefault()
+      this.setState({
+        isShowType: false
+      })
+    } else if (isShowAddress) {
+      e.preventDefault()
+      this.setState({
+        isShowAddress: false
+      })
+    } else if (isShowRange) {
+      e.preventDefault()
+      this.setState({
+        isShowRange: false
+      })
+    } else {
+      this.props.match.history.goBack()
+    }
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
   }
   handleChange = (val, val2) => {
     let { data, defaultTime } = this.state

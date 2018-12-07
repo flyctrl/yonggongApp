@@ -10,22 +10,11 @@ import api from 'Util/api'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
 import style from './style.css'
-// import Loadable from 'react-loadable'
 import back from 'Src/assets/back.png'
 import front from 'Src/assets/front.png'
 import backFace from 'Src/assets/backimg.png'
-// import storage from 'Src/utils/storage'
+import { onBackKeyDown } from 'Contants/tooler'
 const Item = List.Item
-// let Upload = Loadable({
-//   loader: () => import('rc-upload'),
-//   loading: () => {
-//     return null
-//   },
-//   render(loaded, props) {
-//     let Upload = loaded.default
-//     return <Upload {...props}/>
-//   }
-// })
 const sex = {
   1: '男',
   2: '女'
@@ -48,7 +37,24 @@ class RealNameAuth extends Component {
       token: ''
     }
   }
-  handleSubmit = () => {
+  componentDidMount () {
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
+  }
+  backButtons = (e) => {
+    let { isShowFace } = this.state
+    if (isShowFace) {
+      e.preventDefault()
+      this.setState({
+        isShowFace: false
+      })
+    } else {
+      this.props.match.history.goBack()
+    }
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
   }
   handleClickNext = () => { // 是否显示人脸识别页面
     let { isSuccessBack, isSuccessFront } = this.state

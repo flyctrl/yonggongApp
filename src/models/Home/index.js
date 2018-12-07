@@ -35,7 +35,7 @@ class Home extends Component {
     if (data) {
       this.setState({
         isLoading: false,
-        dataList: data['data'] || {}
+        dataList: data
       })
     }
   }
@@ -57,8 +57,8 @@ class Home extends Component {
     const data = await api.Home.getBannerList({ // 获取banner
     }) || false
     if (data) {
-      let newData = [...data['list']]
-      newData = newData.filter((item, index) => index < 3) // 获取三张
+      let newData = []
+      newData = data['list'].filter((item, index) => index < 3) // 获取三张
       this.setState({
         bannerList: newData,
         isBannerLoading: false
@@ -132,8 +132,8 @@ class Home extends Component {
                     infinite
                   >
                     {
-                      sysInforms.map(item => {
-                        return <div key={item.id} data-id={`${item['id']}`} className={style['v-item']}><p> <span></span>{item.content}</p></div>
+                      sysInforms.map((item, index) => {
+                        return <div key={`${index}${item['msg_code']}`} className={style['v-item']}><p> <span></span>{item.content}</p></div>
                       })
                     }
                   </Carousel>
@@ -142,86 +142,86 @@ class Home extends Component {
               <div className={style['home-more']} onClick={this.handleClickMsg}>更多<Icon type='right' size='lg' /></div>
             </div>
             {
-              !isLoading ? <div className={style['home-list']}>
-                <dl>
-                  <dt className={`${style['home-head']} my-bottom-border`}><em></em>项目 <div>查看全部<Icon type='right' size='lg' /></div></dt>
-                  <dd>
-                    <div>
-                      <span className={style['home-mark']}>{project['expense'] || 0}</span>
-                      <span>{project['prj_num'] || 0}</span>
-                      <b>项目 (个)</b>
-                    </div>
-                    <div>
-                      <span>{project['prj_worksheet_num'] || 0}</span>
-                      <b>工单 (个)</b>
-                    </div>
-                    <div>
-                      <span className={style['home-mark']}>{project['expense'] || 0}</span>
-                      <b>支出 (万元)</b>
-                    </div>
-                  </dd>
-                </dl>
-                <dl>
-                  <dt className={`${style['home-head']} my-bottom-border`}><em></em>工单 <div>查看全部<Icon type='right' size='lg' /></div></dt>
-                  <dd>
-                    <div>
-                      <span className={style['home-mark']}>{worksheet['finish_num'] || 0}</span>
-                      <span>{worksheet['wait_construct_num'] || 0}</span>
-                      <b>待开工 (个)</b>
-                    </div>
-                    <div >
-                      <span>{worksheet['constructing_num'] || 0}</span>
-                      <b>施工中 (个)</b>
-                    </div>
-                    <div>
-                      <span className={style['home-mark']}>{worksheet['finish_num'] || 0}</span>
-                      <b>完工 (个)</b>
-                    </div>
-                  </dd>
-                </dl>
-                <dl>
-                  <dt className={`${style['home-head']} my-bottom-border`}><em></em>结算 <div>查看全部<Icon type='right' size='lg' /></div></dt>
-                  <dd>
-                    <div>
-                      <span>{settle['wait_pay'] || 0}</span>
-                      <b>代付款 (万元)</b>
-                    </div>
-                    <div>
-                      <span className={style['home-mark']}>{settle['paid'] || 0}</span>
-                      <b>已付款 (万元)</b>
-                    </div>
-                  </dd>
-                </dl>
-                <dl>
-                  <dt className={`${style['home-head']} my-bottom-border`}><em></em>考勤 <div>查看全部<Icon type='right' size='lg' /></div></dt>
-                  <dd>
-                    <div>
-                      <span>{attend[0] || 0}</span>
-                      <b>正常</b>
-                    </div>
-                    <div>
-                      <span className={style['home-mark']}>{attend[4] || 0}</span>
-                      <span>{attend[1] || 0}</span>
-                      <b>迟到</b>
-                    </div>
-                    <div>
-                      <span>{attend[2] || 0}</span>
-                      <b>早退</b>
-                    </div>
-                    <div>
-                      <span>{attend[3] || 0}</span>
-                      <b>缺卡</b>
-                    </div>
-                    <div>
-                      <span className={style['home-mark']}>{attend[4] || 0}</span>
-                      <b>异常</b>
-                    </div>
-                  </dd>
-                </dl>
-                <div className={style['home-footer']}>
-                  <img src={btmtxt}/>
+              !isLoading
+                ? <div className={style['home-list']}>
+                  <dl>
+                    <dt className={`${style['home-head']}`}><em></em>项目 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dd>
+                      <div >
+                        <span>{project['prj_num'] || 0}</span>
+                        <b>项目 (个)</b>
+                      </div>
+                      <div >
+                        <span>{project['prj_worksheet_num'] || 0}</span>
+                        <b>工单 (个)</b>
+                      </div>
+                      <div>
+                        <span className={style['home-mark']}>{project['expense'] || 0}</span>
+                        <b>支出 (万元)</b>
+                      </div>
+                    </dd>
+                  </dl>
+                  <dl>
+                    <dt className={`${style['home-head']}`}><em></em>工单 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dd>
+                      <div >
+                        <span>{worksheet['wait_construct_num'] || 0}</span>
+                        <b>待开工 (个)</b>
+                      </div>
+                      <div >
+                        <span>{worksheet['constructing_num'] || 0}</span>
+                        <b>施工中 (个)</b>
+                      </div>
+                      <div>
+                        <span className={style['home-mark']}>{worksheet['finish_num'] || 0}</span>
+                        <b>完工 (个)</b>
+                      </div>
+                    </dd>
+                  </dl>
+                  <dl>
+                    <dt className={`${style['home-head']}`}><em></em>结算 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dd>
+                      <div >
+                        <span>{settle['wait_pay'] || 0}</span>
+                        <b>代付款 (万元)
+                        </b>
+                      </div>
+                      <div>
+                        <span className={style['home-mark']}>{settle['paid'] || 0}</span>
+                        <b>已付款 (万元)</b>
+                      </div>
+                    </dd>
+                  </dl>
+                  <dl>
+                    <dt className={`${style['home-head']}`}><em></em>考勤 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dd>
+                      <div>
+                        <span>{attend[0] || 0}</span>
+                        <b>正常
+                        </b>
+                      </div>
+                      <div>
+                        <span>{attend[1] || 0}</span>
+                        <b>迟到</b>
+                      </div>
+                      <div>
+                        <span>{attend[2] || 0}</span>
+                        <b>早退</b>
+                      </div>
+                      <div>
+                        <span>{attend[3] || 0}</span>
+                        <b>缺卡</b>
+                      </div>
+                      <div>
+                        <span className={style['home-mark']}>{attend[4] || 0}</span>
+                        <b>异常</b>
+                      </div>
+                    </dd>
+                  </dl>
+                  <div className={style['home-footer']}>
+                    <img src={btmtxt}/>
+                  </div>
                 </div>
-              </div>
                 : null
             }
           </Content>

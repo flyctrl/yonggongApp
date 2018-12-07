@@ -9,7 +9,7 @@ import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import { Header, Content } from 'Components'
 import style from './style.css'
-
+import { onBackKeyDown } from 'Contants/tooler'
 const Item = List.Item
 const Brief = Item.Brief
 const RadioItem = Radio.RadioItem
@@ -21,6 +21,26 @@ class Rechange extends Component {
     showlist: false,
     bankval: {},
     banklist: []
+  }
+  componentDidMount () {
+    this.getDefaultCard()
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
+  }
+  backButtons = (e) => {
+    let { showlist } = this.state
+    if (showlist) {
+      e.preventDefault()
+      this.setState({
+        showlist: false
+      })
+    } else {
+      this.props.match.history.goBack()
+    }
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
   }
   onChange = (value) => {
     if (Number(value) <= 0) {
@@ -63,10 +83,6 @@ class Rechange extends Component {
       bankval: data,
       amount: data['amount']
     })
-  }
-  componentDidMount() {
-    // this.getBindCardlist()
-    this.getDefaultCard()
   }
   onChangeBankval = (value) => { // 选择银行列表
     console.log(value)
