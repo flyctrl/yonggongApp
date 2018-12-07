@@ -10,22 +10,10 @@ import api from 'Util/api'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
 import style from './style.css'
-// import Loadable from 'react-loadable'
 import back from 'Src/assets/back.png'
 import front from 'Src/assets/front.png'
 import backFace from 'Src/assets/backimg.png'
-// import storage from 'Src/utils/storage'
 const Item = List.Item
-// let Upload = Loadable({
-//   loader: () => import('rc-upload'),
-//   loading: () => {
-//     return null
-//   },
-//   render(loaded, props) {
-//     let Upload = loaded.default
-//     return <Upload {...props}/>
-//   }
-// })
 const sex = {
   1: '男',
   2: '女'
@@ -104,7 +92,9 @@ class RealNameAuth extends Component {
     reader.onerror = function () {
       Toast(reader.error)
     }
-    reader.readAsDataURL(file)
+    if (file) {
+      reader.readAsDataURL(file)
+    }
   }
   handleTakeBack = (e) => { // 反面照
     let { token, fileList } = this.state
@@ -134,7 +124,9 @@ class RealNameAuth extends Component {
     reader.onerror = function () {
       Toast(reader.error)
     }
-    reader.readAsDataURL(file)
+    if (file) {
+      reader.readAsDataURL(file)
+    }
   }
   handleTakeFace = (e) => { // 人脸识别
     let { token } = this.state
@@ -166,7 +158,9 @@ class RealNameAuth extends Component {
     reader.onerror = function () {
       Toast(reader.error)
     }
-    reader.readAsDataURL(file)
+    if (file) {
+      reader.readAsDataURL(file)
+    }
   }
   handleAuthConfirm = async(token) => {
     Toast.loading('实名认证中...', 0)

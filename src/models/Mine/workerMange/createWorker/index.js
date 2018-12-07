@@ -10,7 +10,6 @@ import api from 'Util/api'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
 import style from './style.css'
-// import Loadable from 'react-loadable'
 import back from 'Src/assets/back.png'
 import front from 'Src/assets/front.png'
 import backFace from 'Src/assets/backimg.png'
@@ -123,7 +122,9 @@ class CreateWorker extends Component {
     reader.onerror = function () {
       Toast(reader.error)
     }
-    reader.readAsDataURL(file)
+    if (file) {
+      reader.readAsDataURL(file)
+    }
   }
   handleTakeBack = (e) => { // 反面照
     let { token, fileList } = this.state
@@ -153,7 +154,9 @@ class CreateWorker extends Component {
     reader.onerror = function () {
       Toast(reader.error)
     }
-    reader.readAsDataURL(file)
+    if (file) {
+      reader.readAsDataURL(file)
+    }
   }
   handleTakeFace = (e) => { // 人脸识别
     let { token } = this.state
@@ -206,7 +209,9 @@ class CreateWorker extends Component {
     reader.onerror = function () {
       Toast(reader.error)
     }
-    reader.readAsDataURL(file)
+    if (file) {
+      reader.readAsDataURL(file)
+    }
   }
   handleAuthConfirm = async(token, phone) => {
     Toast.loading('实名认证中...', 0)
