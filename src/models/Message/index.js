@@ -111,31 +111,31 @@ class Message extends Component {
   }
   handlebtnType = (e) => { // 根据类型跳转页面
     // let id = e.currentTarget.getAttribute('data-id')[0]
-    let type = e.currentTarget.getAttribute('type')[0]
-    let { tabIndex } = this.state
-    switch (type) {
-      case '1': // 用户
-        // this.props.match.history.push(urls.ACCESSRECORD + '&tabIndex=' + tabIndex)
-        break
-      case '2': // 接单记录
-        this.props.match.history.push(urls.ACCESSRECORD + '&tabIndex=' + tabIndex)
-        break
-      case '3': // 账户明细
-        this.props.match.history.push(urls.ACCOUNTDETAIL + '&tabIndex=' + tabIndex)
-        break
-      case '4': // 公告
-        // this.props.match.history.push(urls.ACCOUNTDETAIL + '&tabIndex=' + tabIndex)
-        break
-      case '5': // 考勤明细
-        this.props.match.history.push(urls.ATTENDRECORD + '&tabIndex=' + tabIndex)
-        break
-      case '6': // 个人账户
-        this.props.match.history.push(urls.ACCOUNT + '&tabIndex=' + tabIndex)
-        break
-      case '7': // 项目
-        // this.props.match.history.push(urls.ATTENDRECORD + '&tabIndex=' + tabIndex)
-        break
-    }
+    // let type = e.currentTarget.getAttribute('type')[0]
+    // let { tabIndex } = this.state
+    // switch (type) {
+    //   case '1': // 用户
+    //     // this.props.match.history.push(urls.ACCESSRECORD + '&tabIndex=' + tabIndex)
+    //     break
+    //   case '2': // 接单记录
+    //     this.props.match.history.push(urls.ACCESSRECORD + '&tabIndex=' + tabIndex)
+    //     break
+    //   case '3': // 账户明细
+    //     this.props.match.history.push(urls.ACCOUNTDETAIL + '&tabIndex=' + tabIndex)
+    //     break
+    //   case '4': // 公告
+    //     // this.props.match.history.push(urls.ACCOUNTDETAIL + '&tabIndex=' + tabIndex)
+    //     break
+    //   case '5': // 考勤明细
+    //     this.props.match.history.push(urls.ATTENDRECORD + '&tabIndex=' + tabIndex)
+    //     break
+    //   case '6': // 个人账户
+    //     this.props.match.history.push(urls.ACCOUNT + '&tabIndex=' + tabIndex)
+    //     break
+    //   case '7': // 项目
+    //     // this.props.match.history.push(urls.ATTENDRECORD + '&tabIndex=' + tabIndex)
+    //     break
+    // }
   }
   handleTabsChange = (tabs, index) => {
     this.setState({
