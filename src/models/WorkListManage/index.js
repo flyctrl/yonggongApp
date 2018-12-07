@@ -368,11 +368,6 @@ class WorkListManage extends Component {
     return <div className='pageBox gray'>
       <Header
         title='工单管理'
-        leftIcon='icon-back'
-        leftTitle1='返回'
-        leftClick1={() => {
-          this.props.match.history.push(urls.MINE)
-        }}
       />
       <Content style={{ overflow: 'hidden' }}>
         <SegmentedControl prefixCls='toplist-tabs' selectedIndex={parentIndex - 1} onChange={this.handleSegmentedChange} values={['招标', '工单', '快单']} />

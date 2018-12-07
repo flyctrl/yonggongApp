@@ -57,10 +57,9 @@ class CompanyAuthDetail extends Component {
       <div className='pageBox'>
         <Header
           title='实名认证详情'
-          leftIcon={dataSource['status'] === 1 ? 'icon-back' : ''}
-          leftTitle1={dataSource['status'] === 1 ? '返回' : ''}
+          leftIcon={'icon-back'}
           leftClick1={() => {
-            this.props.match.history.push(urls.MINE)
+            this.props.match.history.go(-1)
           }}
         />
         <Content className={ownStyle['comp-content']}>

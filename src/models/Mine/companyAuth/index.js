@@ -90,7 +90,7 @@ class Company extends Component {
         leftIcon='icon-back'
         leftTitle1='返回'
         leftClick1={() => {
-          this.props.match.history.push(urls.MINE)
+          this.props.match.history.go(-1)
         }}
       />
       <Content>
