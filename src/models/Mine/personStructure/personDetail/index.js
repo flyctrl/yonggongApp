@@ -40,16 +40,14 @@ class PesrsonDetail extends Component {
     document.addEventListener('backbutton', onBackKeyDown, false)
   }
   backButtons = (e) => {
-    let { url } = this.state
+    let { url, idary } = this.state
     if (url) {
-      e.preventDefault()
-      // if (idary !== null && idary !== '') {
-      //   history.push(urls[url] + '?idary=' + idary)
-      // } else {
-      //   history.push(urls[url])
-      // }
+      if (idary !== null && idary !== '') {
+        history.push(urls[url] + '?idary=' + idary)
+      } else {
+        history.push(urls[url])
+      }
     } else {
-      e.preventDefault()
       history.push(urls.HOME)
     }
   }

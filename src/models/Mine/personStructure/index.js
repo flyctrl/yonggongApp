@@ -4,7 +4,7 @@ import api from 'Util/api'
 import * as urls from 'Contants/urls'
 import NewIcon from 'Components/NewIcon'
 import style from './style.css'
-
+import { onBackKeyDown } from 'Contants/tooler'
 class PesrsonStructure extends Component {
   constructor(props) {
     super(props)
@@ -51,6 +51,15 @@ class PesrsonStructure extends Component {
   }
   componentDidMount() {
     this.getAllPerson()
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
+  }
+  backButtons = (e) => {
+    this.props.match.history.push(urls.MINE)
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
   }
   render() {
     let { dataSource, isLoading } = this.state

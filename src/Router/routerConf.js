@@ -364,10 +364,10 @@ const ResetPwd = Loadable({ // 重置密码
 //   loader: () => import(/* webpackChunkName: "chatbox" */ '../models/Message/chatBox'),
 //   loading: MyLoadingComponent
 // })
-// const UserInfo = Loadable({ // 用户信息
-//   loader: () => import(/* webpackChunkName: "userinfo" */ '../models/Message/userInfo'),
-//   loading: MyLoadingComponent
-// })
+const UserInfo = Loadable({ // 用户信息
+  loader: () => import(/* webpackChunkName: "userinfo" */ '../models/Message/userInfo'),
+  loading: MyLoadingComponent
+})
 // const ShowInfoDetail = Loadable({
 //   loader: () => import(/* webpackChunkName: "showinfodetail" */ '../models/Message/showDetail'),
 //   loading: MyLoadingComponent
@@ -1049,7 +1049,7 @@ const routes = [
     animated: false,
     showMenu: false,
     title: '重置密码'
-  }
+  },
   // {
   //   path: urls.SYSNOTICE,
   //   exact: true,
@@ -1066,15 +1066,17 @@ const routes = [
   //   showMenu: false,
   //   animated: false,
   //   title: '聊天框'
-  // }, {
-  //   path: urls.USERINFO,
-  //   exact: true,
-  //   component: UserInfo,
-  //   parent: 'ChatBox',
-  //   showMenu: false,
-  //   animated: false,
-  //   title: '用户信息'
-  // }, {
+  // },
+  {
+    path: urls.USERINFO,
+    exact: true,
+    component: UserInfo,
+    parent: 'ChatBox',
+    showMenu: false,
+    animated: false,
+    title: '用户信息'
+  }
+  // {
   //   path: urls.SHOWINFODETAIL,
   //   exact: true,
   //   component: ShowInfoDetail,
