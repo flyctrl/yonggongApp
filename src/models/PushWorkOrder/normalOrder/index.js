@@ -9,7 +9,7 @@ import Classify from './classify'
 import ClassifyList from './classifyList'
 import TeachList from './teachList'
 import ProjectList from './projectList'
-
+import { onBackKeyDown } from 'Contants/tooler'
 const Item = List.Item
 const RadioItem = Radio.RadioItem
 const data = [{
@@ -56,6 +56,8 @@ class SelectClass extends Component {
     }
   }
   componentDidMount() {
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
     let { paymethodId } = this.state
     let newary = []
     let newVal = ''
@@ -76,6 +78,35 @@ class SelectClass extends Component {
       this.setState({
         paymethodAry: paymethod
       })
+    }
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
+  }
+  backButtons = (e) => {
+    let { showIndex, url } = this.state
+    if (showIndex === 0) {
+      e.preventDefault()
+      if (url) {
+        this.props.match.history.push(urls[url])
+      } else {
+        this.props.match.history.goBack()
+      }
+    } else if (showIndex !== 0) {
+      e.preventDefault()
+      if (showIndex === 2) {
+        this.setState({
+          showIndex: 1
+        })
+      } else {
+        this.setState({
+          showIndex: 0
+        })
+      }
+      return false
+    } else {
+      this.props.match.history.goBack()
     }
   }
   onChange = (value) => {

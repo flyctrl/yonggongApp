@@ -9,20 +9,6 @@ import { attendanceList } from 'Contants/fieldmodel'
 import history from 'Util/history'
 import style from './style.css'
 import api from 'Util/api'
-// const now = new Date()
-
-// let RadioOrder = Loadable({
-//   loader: () => import('Components'),
-//   modules: ['./RadioOrder'],
-//   loading: () => {
-//     return null
-//   },
-//   render(loaded, props) {
-//     console.log(loaded)
-//     let RadioOrder = loaded.RadioOrder
-//     return <RadioOrder {...props}/>
-//   }
-// })
 class EnginReality extends Component {
   constructor(props) {
     super(props)
@@ -90,13 +76,6 @@ class EnginReality extends Component {
   }
 
   onProChange = async (val, id) => { // 选择项目
-    // let { proData } = this.state
-    // let proLabel
-    // for (const i of proData) {
-    //   if (i['proId'] === val[0]) {
-    //     proLabel = encodeURI(i['label'])
-    //   }
-    // }
     this.setState({ isLoadWork: true })
     const worksheetData = await api.Mine.engineeringLive.getworkSheetList({ // 获取工单列表
       prj_id: val[0]
@@ -113,11 +92,6 @@ class EnginReality extends Component {
       })
     }
   }
-  // handleChangeOrder = () => { // 选择工单
-  //   this.setState({
-  //     showOrder: true
-  //   })
-  // }
   onWorkSheetChange = (val) => {
     const { startTime, endTime } = this.state
     this.setState({
@@ -128,24 +102,6 @@ class EnginReality extends Component {
       }
     })
   }
-  // onClickBack = () => {
-  //   this.setState({
-  //     showOrder: false
-  //   })
-  // }
-  // onHandleSure = (worksheetId, worksheetNo) => {
-  //   const { startTime, endTime } = this.state
-  //   this.setState({
-  //     showOrder: false,
-  //     worksheetId,
-  //     worksheetNo
-  //   }, () => {
-  //     if (worksheetId && startTime && endTime) {
-  //       this.getEngList()
-  //     }
-  //   })
-  // }
-
   hanleShowCalendar = () => {
     this.setState({
       dateShow: true
@@ -176,7 +132,7 @@ class EnginReality extends Component {
     let id = data[0]
     // let num = data[1]
     // if (num > 0) {
-    history.push(`${urls.LEAVESITU}?worksheetId=${worksheetId}&attend_status=${id}&startTime=${tooler.formatDate(new Date(startTime))}&endTime=${tooler.formatDate(new Date(endTime))}&proId=${proId}`)
+    history.push(`${urls.LEAVESITU}?worksheetId=${worksheetId}&attend_status=${id}&startTime=${tooler.formatDate(new Date(startTime))}&endTime=${tooler.formatDate(new Date(endTime))}&proId=${proId}&isBack=${true}`)
     // }
   }
   render() {

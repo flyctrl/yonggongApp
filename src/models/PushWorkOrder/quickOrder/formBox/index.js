@@ -9,7 +9,7 @@ import NewIcon from 'Components/NewIcon'
 import api from 'Util/api'
 import style from './index.css'
 import Address from 'Components/Address'
-
+import { onBackKeyDown } from 'Contants/tooler'
 const Item = List.Item
 let Upload = Loadable({
   loader: () => import('rc-upload'),
@@ -40,7 +40,29 @@ class FormBox extends Component {
     }
   }
   componentDidMount() {
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
     this.getValuationUnit()
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
+  }
+  backButtons = (e) => {
+    let { remarkShow, mapShow } = this.state
+    if (remarkShow) {
+      e.preventDefault()
+      this.setState({
+        remarkShow: false
+      })
+    } else if (mapShow) {
+      e.preventDefault()
+      this.setState({
+        mapShow: false
+      })
+    } else {
+      this.props.match.history.goBack()
+    }
   }
   getValuationUnit = async () => {
     let { settleValue } = this.state.urlJson

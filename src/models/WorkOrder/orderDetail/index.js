@@ -13,13 +13,31 @@ import api from 'Util/api'
 import NewIcon from 'Components/NewIcon'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
-
+import { onBackKeyDown } from 'Contants/tooler'
 class OrderDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
       dataSource: {},
-      isLoading: false
+      isLoading: false,
+      url: tooler.getQueryString('url')
+    }
+  }
+  componentDidMount() {
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
+    this.getOrderDetail()
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
+  }
+  backButtons = (e) => {
+    let { url } = this.state
+    if (url) {
+      this.props.match.history.push(urls[url])
+    } else {
+      this.props.match.history.push(urls.HOME)
     }
   }
   getOrderDetail = async () => {
@@ -52,16 +70,12 @@ class OrderDetail extends Component {
   //     console.log(error)
   //   })
   // }
-  componentDidMount() {
-    this.getOrderDetail()
-  }
   render() {
-    let { dataSource, isLoading } = this.state
+    let { dataSource, isLoading, url } = this.state
     return (
       <div className='pageBox'>
         <Header
           leftClick1={() => {
-            let url = tooler.getQueryString('url')
             if (url) {
               this.props.match.history.push(urls[url])
             } else {
