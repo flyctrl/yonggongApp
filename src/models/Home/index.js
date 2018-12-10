@@ -55,10 +55,11 @@ class Home extends Component {
   getBannerList = async () => {
     this.setState({ isBannerLoading: true })
     const data = await api.Home.getBannerList({ // 获取banner
+      app: 2
     }) || false
     if (data) {
-      let newData = [...data['list']]
-      newData = newData.filter((item, index) => index < 3) // 获取三张
+      let newData = []
+      newData = data['list'].filter((item, index) => index < 3) // 获取三张
       this.setState({
         bannerList: newData,
         isBannerLoading: false
@@ -132,8 +133,8 @@ class Home extends Component {
                     infinite
                   >
                     {
-                      sysInforms.map(item => {
-                        return <div key={item.id} data-id={`${item['id']}`} className={style['v-item']}><p> <span></span>{item.content}</p></div>
+                      sysInforms.map((item, index) => {
+                        return <div key={`${index}${item['msg_code']}`} className={style['v-item']}><p> <span></span>{item.content}</p></div>
                       })
                     }
                   </Carousel>
@@ -145,7 +146,7 @@ class Home extends Component {
               !isLoading
                 ? <div className={style['home-list']}>
                   <dl>
-                    <dt className={`${style['home-head']} my-bottom-border`}><em></em>项目 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dt className={`${style['home-head']}`}><em></em>项目 <div>查看全部<Icon type='right' size='lg' /></div></dt>
                     <dd>
                       <div >
                         <span>{project['prj_num'] || 0}</span>
@@ -162,7 +163,7 @@ class Home extends Component {
                     </dd>
                   </dl>
                   <dl>
-                    <dt className={`${style['home-head']} my-bottom-border`}><em></em>工单 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dt className={`${style['home-head']}`}><em></em>工单 <div>查看全部<Icon type='right' size='lg' /></div></dt>
                     <dd>
                       <div >
                         <span>{worksheet['wait_construct_num'] || 0}</span>
@@ -179,7 +180,7 @@ class Home extends Component {
                     </dd>
                   </dl>
                   <dl>
-                    <dt className={`${style['home-head']} my-bottom-border`}><em></em>结算 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dt className={`${style['home-head']}`}><em></em>结算 <div>查看全部<Icon type='right' size='lg' /></div></dt>
                     <dd>
                       <div >
                         <span>{settle['wait_pay'] || 0}</span>
@@ -193,7 +194,7 @@ class Home extends Component {
                     </dd>
                   </dl>
                   <dl>
-                    <dt className={`${style['home-head']} my-bottom-border`}><em></em>考勤 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dt className={`${style['home-head']}`}><em></em>考勤 <div>查看全部<Icon type='right' size='lg' /></div></dt>
                     <dd>
                       <div>
                         <span>{attend[0] || 0}</span>
