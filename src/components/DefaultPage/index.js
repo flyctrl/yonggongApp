@@ -36,10 +36,10 @@ class DefaultPage extends Component {
     let ishas = false
     return <div>
       {
-        this.imgsrc.map((item) => {
+        this.imgsrc.map((item, index) => {
           if (item['name'] === this.props.type) {
             ishas = true
-            return <div className={`${style['defaultbox']}`}>
+            return <div key={index} className={`${style['defaultbox']}`}>
               <img src={item['url']} />
               <p>{item['desc']}~</p>
               {item['btn'] !== null ? item['btn'] : ''}

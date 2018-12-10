@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { List, Radio, Toast } from 'antd-mobile'
 import { Header, Content, DefaultPage } from 'Components'
+import * as urls from 'Contants/urls'
 import api from 'Util/api'
 
 const RadioItem = Radio.RadioItem
@@ -71,7 +72,7 @@ class ClassifyList extends Component {
                 {i['label']}
               </RadioItem>
             ))}
-          </List> : datasource.length === 0 && !isloading ? <DefaultPage click={() => { console.log('clicker') }} type='noitems' /> : ''
+          </List> : datasource.length === 0 && !isloading ? <DefaultPage click={() => { this.props.match.history.push(urls.CREATEPROJECT) }} type='noitems' /> : ''
         }
       </Content>
     </div>
