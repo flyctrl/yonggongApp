@@ -35,7 +35,7 @@ class Home extends Component {
     if (data) {
       this.setState({
         isLoading: false,
-        dataList: data['data'] || {}
+        dataList: data
       })
     }
   }

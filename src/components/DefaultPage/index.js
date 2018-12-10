@@ -17,6 +17,18 @@ class DefaultPage extends Component {
         desc: '暂时没有订单',
         url: require('Src/assets/defaultpic/noorder.png'),
         btn: null
+      },
+      {
+        name: 'nomsg',
+        desc: '暂时没有消息',
+        url: require('Src/assets/defaultpic/nomsg.png'),
+        btn: null
+      },
+      {
+        name: 'noworklist',
+        desc: '暂时没有添加任何人~',
+        url: require('Src/assets/defaultpic/noworklist.png'),
+        btn: null
       }
     ]
   }

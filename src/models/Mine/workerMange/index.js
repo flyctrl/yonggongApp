@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { ListView, PullToRefresh } from 'antd-mobile'
 import * as urls from 'Contants/urls'
-import { Header, Content } from 'Components'
+import { Header, Content, DefaultPage } from 'Components'
 import api from 'Util/api'
 import style from './style.css'
 import ReactDOM from 'react-dom'
@@ -24,19 +24,21 @@ class WorkList extends Component {
     }
   }
   genData = async (pIndex = 1) => {
-    if (pIndex > this.state.pageNos) {
-      return []
-    }
+    // if (pIndex > this.state.pageNos) {
+    //   return []
+    // }
     const data = await api.Mine.workManage.getWorkList({
       page: pIndex,
       pageSize: NUM_ROWS
     }) || false
-    if (data && data['list'].length === 0) {
+    if (data['currPageNo'] === 1 && data['list'].length === 0) {
+      document.body.style.overflow = 'hidden'
       this.setState({
         nodata: true,
         pageNos: data['pageNos']
       })
     } else {
+      document.body.style.overflow = 'auto'
       this.setState({
         nodata: false,
         pageNos: data['pageNos']
@@ -61,10 +63,13 @@ class WorkList extends Component {
     if (this.state.isLoading) {
       return
     }
-    let { pageIndex } = this.state
+    let { pageIndex, pageNos } = this.state
     // console.log('reach end', event)
     this.setState({ isLoading: true })
     let newIndex = pageIndex + 1
+    if (newIndex > pageNos) {
+      return false
+    }
     console.log('pageIndex', newIndex)
     this.genData(newIndex).then((rdata) => {
       this.rData = [...this.rData, ...rdata]
@@ -95,7 +100,7 @@ class WorkList extends Component {
       if (isLoading) {
         return null
       } else if (nodata) {
-        return <div className={style['render-footer']}>暂无数据</div>
+        return <DefaultPage type='noworklist' />
       } else {
         return ''
       }
