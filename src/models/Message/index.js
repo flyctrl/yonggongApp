@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react'
-import { Content, Header } from 'Components'
+import { Content, Header, DefaultPage } from 'Components'
 import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
@@ -38,20 +38,22 @@ class Message extends Component {
     }
   }
   genData = async (pIndex = 1, tab = this.state.tabIndex) => {
-    if (pIndex > this.state.pageNos) {
-      return []
-    }
+    // if (pIndex > this.state.pageNos) {
+    //   return []
+    // }
     const data = await api.Message.getNoticeList({
       page: pIndex,
       limit: NUM_ROWS,
       msg_type: tab
     }) || false
-    if (data && data['list'].length === 0) {
+    if (data['currPageNo'] === 1 && data['list'].length === 0) {
+      document.body.style.overflow = 'hidden'
       this.setState({
         nodata: true,
         pageNos: data['pageNos'] === 0 ? 1 : data['pageNos']
       })
     } else {
+      document.body.style.overflow = 'auto'
       this.setState({
         nodata: false,
         pageNos: data['pageNos'] === 0 ? 1 : data['pageNos']
@@ -76,10 +78,13 @@ class Message extends Component {
     if (this.state.isLoading) {
       return
     }
-    let { pageIndex } = this.state
+    let { pageIndex, pageNos } = this.state
     // console.log('reach end', event)
     this.setState({ isLoading: true })
     let newIndex = pageIndex + 1
+    if (newIndex > pageNos) {
+      return false
+    }
     console.log('pageIndex', newIndex)
     this.genData(newIndex).then((rdata) => {
       this.rData = [...this.rData, ...rdata]
@@ -160,7 +165,7 @@ class Message extends Component {
       if (isLoading) {
         return null
       } else if (nodata) {
-        return <div className={style['render-footer']}>暂无数据</div>
+        return <DefaultPage type='nomsg' />
       } else {
         return ''
       }

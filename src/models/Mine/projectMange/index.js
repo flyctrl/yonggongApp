@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Header, Content } from 'Components'
+import { Header, Content, DefaultPage } from 'Components'
 import NewIcon from 'Components/NewIcon'
 import api from 'Util/api'
 import * as urls from 'Contants/urls'
@@ -24,23 +24,32 @@ class ProjectMange extends Component {
       pageIndex: 1,
       pageNos: 1,
       tabIndex: getQueryString('tabIndex') || 0,
+      nodata: false
     }
   }
   genData = async (pIndex = 1, tab = this.state.tabIndex) => {
-    if (pIndex > this.state.pageNos) {
-      return []
-    }
+    // if (pIndex > this.state.pageNos) {
+    //   return []
+    // }
     const data = await api.Mine.projectMange.getProjectList({
       page: pIndex,
       size: NUM_ROWS,
       status: tab
     }) || false
-    if (data) {
+    if (data['currPageNo'] === 1 && data['list'].length === 0) {
+      document.body.style.overflow = 'hidden'
       this.setState({
-        pageNos: data['pageNos'] === 0 ? 1 : data['pageNos']
+        nodata: true,
+        pageNos: data['pageNos']
       })
-      return await data['list']
+    } else {
+      document.body.style.overflow = 'auto'
+      this.setState({
+        nodata: false,
+        pageNos: data['pageNos']
+      })
     }
+    return await data['list']
   }
   componentDidMount() {
     const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 90
@@ -59,11 +68,14 @@ class ProjectMange extends Component {
     if (this.state.isLoading) {
       return
     }
-    let { pageIndex } = this.state
+    let { pageIndex, pageNos } = this.state
     // console.log('reach end', event)
     this.setState({ isLoading: true })
     let newIndex = pageIndex + 1
     console.log('pageIndex', newIndex)
+    if (newIndex > pageNos) {
+      return false
+    }
     this.genData(newIndex).then((rdata) => {
       this.rData = [...this.rData, ...rdata]
       this.setState({
@@ -113,7 +125,16 @@ class ProjectMange extends Component {
     history.push(urls.PROJECTDETAIL + '?id=' + id + '&tabIndex=' + tabIndex)
   }
   render() {
-    let { tabIndex } = this.state
+    let { tabIndex, isLoading, nodata } = this.state
+    const footerShow = () => {
+      if (isLoading) {
+        return null
+      } else if (nodata) {
+        return <DefaultPage click={() => { this.props.match.history.push(urls['CREATEWORKER']) }} type='noitems' />
+      } else {
+        return ''
+      }
+    }
     const row = (rowData, sectionID, rowID) => {
       return (
         <li key={rowData['prj_no']} data-id={rowData['prj_no']} onClick={this.handleDetail} className='my-bottom-border'>
@@ -157,9 +178,7 @@ class ProjectMange extends Component {
                 <ListView
                   ref={(el) => { this.lv = el }}
                   dataSource={this.state.dataSource}
-                  renderFooter={() => (<div className={style['list-loading']}>
-                    {this.state.isLoading ? '' : '加载完成'}
-                  </div>)}
+                  renderFooter={() => footerShow()}
                   renderRow={row}
                   style={{
                     height: this.state.height,
