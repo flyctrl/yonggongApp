@@ -545,11 +545,7 @@ export default {
       return Fetch('/common/banner/list', params, 'get')
     },
     getMenuInforms(params) {
-<<<<<<< HEAD
-      return fetch(prefix + '/index/company/stat', params, 'get')
-=======
       return Fetch(prefix + '/index/company/stat', params, 'get')
->>>>>>> origin/cordova-android
     }
   },
   Message: { // 消息
