@@ -24,7 +24,12 @@ class RealNameAuth extends Component {
         leftIcon='icon-back'
         leftTitle1='返回首页'
         leftClick1={() => {
+<<<<<<< HEAD
           this.props.match.history.push(urls.HOME)
+=======
+          // this.props.match.history.push(urls['REALNAMEAUTH'])
+          this.props.match.history.push(urls['HOME'])
+>>>>>>> origin/cordova-android
         }}
       />
       <Content>
