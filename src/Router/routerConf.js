@@ -360,10 +360,6 @@ const ResetPwd = Loadable({ // 重置密码
   loading: MyLoadingComponent
 })
 
-const SysNotice = Loadable({ // 系统通知
-  loader: () => import(/* webpackChunkName: "sysnotice" */ '../models/Message/sysNotice'),
-  loading: MyLoadingComponent
-})
 const ChatBox = Loadable({ // 聊天框
   loader: () => import(/* webpackChunkName: "chatbox" */ '../models/Message/chatBox'),
   loading: MyLoadingComponent
@@ -1060,14 +1056,6 @@ const routes = [
     animated: false,
     showMenu: false,
     title: '重置密码'
-  }, {
-    path: urls.SYSNOTICE,
-    exact: true,
-    component: SysNotice,
-    parent: 'Message',
-    showMenu: false,
-    animated: true,
-    title: '系统通知'
   }, {
     path: urls.CHATBOX,
     exact: true,
