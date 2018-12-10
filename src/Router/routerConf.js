@@ -363,22 +363,22 @@ const ResetPwd = Loadable({ // 重置密码
   loading: MyLoadingComponent
 })
 
-const SysNotice = Loadable({ // 系统通知
-  loader: () => import(/* webpackChunkName: "sysnotice" */ '../models/Message/sysNotice'),
-  loading: MyLoadingComponent
-})
-const ChatBox = Loadable({ // 聊天框
-  loader: () => import(/* webpackChunkName: "chatbox" */ '../models/Message/chatBox'),
-  loading: MyLoadingComponent
-})
+// const SysNotice = Loadable({ // 系统通知
+//   loader: () => import(/* webpackChunkName: "sysnotice" */ '../models/Message/sysNotice'),
+//   loading: MyLoadingComponent
+// })
+// const ChatBox = Loadable({ // 聊天框
+//   loader: () => import(/* webpackChunkName: "chatbox" */ '../models/Message/chatBox'),
+//   loading: MyLoadingComponent
+// })
 const UserInfo = Loadable({ // 用户信息
   loader: () => import(/* webpackChunkName: "userinfo" */ '../models/Message/userInfo'),
   loading: MyLoadingComponent
 })
-const ShowInfoDetail = Loadable({
-  loader: () => import(/* webpackChunkName: "showinfodetail" */ '../models/Message/showDetail'),
-  loading: MyLoadingComponent
-})
+// const ShowInfoDetail = Loadable({
+//   loader: () => import(/* webpackChunkName: "showinfodetail" */ '../models/Message/showDetail'),
+//   loading: MyLoadingComponent
+// })
 
 const routes = [
   {
@@ -1073,23 +1073,26 @@ const routes = [
     animated: false,
     showMenu: false,
     title: '重置密码'
-  }, {
-    path: urls.SYSNOTICE,
-    exact: true,
-    component: SysNotice,
-    parent: 'Message',
-    showMenu: false,
-    animated: true,
-    title: '系统通知'
-  }, {
-    path: urls.CHATBOX,
-    exact: true,
-    component: ChatBox,
-    parent: 'Message',
-    showMenu: false,
-    animated: false,
-    title: '聊天框'
-  }, {
+  },
+  // {
+  //   path: urls.SYSNOTICE,
+  //   exact: true,
+  //   component: SysNotice,
+  //   parent: 'Message',
+  //   showMenu: false,
+  //   animated: true,
+  //   title: '系统通知'
+  // },
+  // {
+  //   path: urls.CHATBOX,
+  //   exact: true,
+  //   component: ChatBox,
+  //   parent: 'Message',
+  //   showMenu: false,
+  //   animated: false,
+  //   title: '聊天框'
+  // },
+  {
     path: urls.USERINFO,
     exact: true,
     component: UserInfo,
@@ -1097,15 +1100,16 @@ const routes = [
     showMenu: false,
     animated: false,
     title: '用户信息'
-  }, {
-    path: urls.SHOWINFODETAIL,
-    exact: true,
-    component: ShowInfoDetail,
-    parent: 'Message',
-    showMenu: false,
-    animated: true,
-    title: '详情页'
   }
+  // , {
+  //   path: urls.SHOWINFODETAIL,
+  //   exact: true,
+  //   component: ShowInfoDetail,
+  //   parent: 'Message',
+  //   showMenu: false,
+  //   animated: true,
+  //   title: '详情页'
+  // }
 ]
 
 export default routes
