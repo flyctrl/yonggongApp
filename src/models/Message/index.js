@@ -143,12 +143,16 @@ class Message extends Component {
     // }
   }
   handleTabsChange = (tabs, index) => {
+    const dataSource = new ListView.DataSource({
+      rowHasChanged: (row1, row2) => row1 !== row2,
+    })
     this.setState({
       tabIndex: index,
       refreshing: true,
       isLoading: true,
       pageIndex: 1,
-      pageNos: 1
+      pageNos: 1,
+      dataSource
     })
     this.genData(1, index).then((rdata) => {
       this.rData = rdata

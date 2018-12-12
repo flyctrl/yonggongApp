@@ -156,8 +156,8 @@ class SetUp extends Component {
     if (config) {
       Toast.hide()
       Toast.success('设置成功', 1.5, () => {
-        // this.props.match.history.go(-1)
-        this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=1`)
+        this.props.match.history.go(-1)
+        // this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=1`)
       })
     }
     console.log(...newData)
@@ -215,8 +215,8 @@ class SetUp extends Component {
                   leftIcon='icon-back'
                   leftTitle1='返回'
                   leftClick1={() => {
-                    // this.props.match.history.go(-1)
-                    this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=1`)
+                    this.props.match.history.go(-1)
+                    // this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=1`)
                   }}
                 />
                 <Content>
