@@ -182,12 +182,15 @@ export default {
     },
     workSheetDetail(params) { // 工单详情
       return Fetch(prefix + '/worksheet/detail', params, 'get')
-    }
-  },
-  WorkOrder: {
-    WorkOrderList(params) { // 工单列表
-      return Fetch(prefix + '/worksheet/list', params, 'get')
     },
+    worksheetApplyList(params) { // 接单记录
+      return Fetch(prefix + '/worksheet/apply/list', params, 'get')
+    },
+    confirmQtReefusal(params) { // 接单记录-同意和拒绝
+      return FetchSave(prefix + '/worksheet/confirm/apply', params)
+    },
+  },
+  WorkOrder: { // （会删除会删除会删除会删除）
     showReview(params) { // 审批工单详情
       return Fetch(prefix + '/worksheet/showReview', params, 'get')
     },
@@ -232,31 +235,10 @@ export default {
     },
     confirmSettle(params) { // 结算确认
       return FetchSave(prefix + '/worksheetOrder/settle', params, 'post', { showloading: false })
-    },
-    worksheetDetail(params) { // 工单详情
-      return Fetch(prefix + '/worksheet/show', params, 'get')
     }
   },
   Mine: { // 我的
-    WorkOrderList: { // 我的工单
-      workorderList(params) { // 我的接单
-        return Fetch('/worksheetOrder/mine/list', params, 'get')
-      },
-      worksheetList(params) { // 我发布的
-        return Fetch('/worksheet/mine/list', params, 'get')
-      },
-      workOrderDetail(params) { // 工单详情 order_no
-        return Fetch('/worksheetOrder/worksheetDetail', params, 'get')
-      },
-      workSheetDetail(params) { // 工单详情 worksheet_no
-        return Fetch('/worksheet/detail', params, 'get')
-      },
-      worksheetApplyList(params) { // 接单记录
-        return Fetch('/worksheet/apply/list', params, 'get')
-      },
-      confirmQtReefusal(params) { // 接单记录-同意和拒绝
-        return FetchSave('/worksheet/confirm/apply', params)
-      },
+    WorkOrderList: { // 我的工单（会删除会删除会删除会删除）
       settleRecordAccept(params) { // 我接的 - 结算记录
         return Fetch('/worksheet/settle/accept', params, 'get')
       },

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Badge, List, WhiteSpace } from 'antd-mobile'
+import { Badge, List, WhiteSpace, Button } from 'antd-mobile'
 import { Header, Content, NewIcon } from 'Components'
 import { worksheetType } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
@@ -8,6 +8,11 @@ import api from 'Util/api'
 import style from './index.css'
 
 const Item = List.Item
+const typeicon = {
+  1: 'bidicon',
+  2: 'sheeticon',
+  3: 'quickicon'
+}
 class WorkListDetail extends Component {
   constructor(props) {
     super(props)
@@ -128,7 +133,10 @@ class WorkListDetail extends Component {
           isLoading ? <div>
             <dl className={style['detail-head']}>
               <dt className='my-bottom-border'>
-                <h2><Badge className={`${style['typericon']} bule-full-border`} text={worksheetType[datasource['worksheet_type']]} /><em className='ellipsis'>{datasource['title']}</em></h2>
+                <h2>
+                  <Badge className={`typericon ${typeicon[datasource['worksheet_type']]}`} text={worksheetType[datasource['worksheet_type']]} />
+                  <em className='ellipsis'>{datasource['title']}</em>
+                </h2>
                 <p>发布于 {datasource['created_at']}</p>
               </dt>
               <dd>
@@ -152,15 +160,70 @@ class WorkListDetail extends Component {
                 worksheetno: datasource['worksheet_no']
               })
             }
+            <div className={style['operate-list']}>
+              <h4 className={`${style['modal-title']} my-bottom-border`}>订单操作</h4>
+              <ul>
+                <li>
+                  <NewIcon type='icon-gongrenjiluxuanzhong'/>
+                  <p>工人记录</p>
+                </li>
+                <li className={style['disabled']}>
+                  <NewIcon type='icon-kaigong'/>
+                  <p>开工记录</p>
+                </li>
+                <li>
+                  <NewIcon type='icon-kaoqinjiluxuanzhong'/>
+                  <p>考勤记录</p>
+                </li>
+                <li>
+                  <NewIcon type='icon-jiesuanjiluxuanzhong'/>
+                  <p>结算记录</p>
+                </li>
+                <li>
+                  <NewIcon type='icon-zhuanfa-'/>
+                  <p>转发工单</p>
+                </li>
+                <li>
+                  <NewIcon type='icon-zhuanfakuaidan'/>
+                  <p>转发快单</p>
+                </li>
+                <li>
+                  <NewIcon type='icon-shenfenxuanze'/>
+                  <p>选择工人</p>
+                </li>
+                <li>
+                  <NewIcon type='icon-kaoqin-'/>
+                  <p>考勤</p>
+                </li>
+                <li>
+                  <NewIcon type='icon-daikaoqin'/>
+                  <p>代考勤</p>
+                </li>
+                <li>
+                  <NewIcon type='icon-daikaigongkaobei'/>
+                  <p>代开工</p>
+                </li>
+                <li>
+                  <NewIcon type='icon-daiwangong-'/>
+                  <p>代完工</p>
+                </li>
+                <li>
+                  <NewIcon type='icon-daijiesuan'/>
+                  <p>提交结算</p>
+                </li>
+              </ul>
+            </div>
+            <WhiteSpace />
             <div className={style['body-list']}>
+              <h4 className={`${style['modal-title']} my-bottom-border`}>订单详情</h4>
               {
                 datasource['detail'].map((item, index) => {
-                  return <p key={index}>{item['label']}：{item['value']}</p>
+                  return <p key={index}><em>{item['label']}</em><span>{item['value']}</span></p>
                 })
               }
             </div>
             <WhiteSpace />
-            <div className={style['address-title']}>施工地址: {datasource['address']}</div>
+            <div className={style['address-title']}>地理位置</div>
             <div className={style['addressBox']}>
               <div id='AddressContainer' className={style['address-mapbox']}></div>
               <div className={style['address-mask']}></div>
@@ -168,7 +231,7 @@ class WorkListDetail extends Component {
             <WhiteSpace />
             {
               datasource['attachment'].length > 0 ? <ul className={style['file-list']}>
-                <p>附件：</p>
+                <h4 className={`${style['modal-title']} my-bottom-border`}>附件</h4>
                 {
                   datasource['attachment'].map((item, index, ary) => {
                     return (
@@ -178,21 +241,28 @@ class WorkListDetail extends Component {
                 }
               </ul> : null
             }
+            <h4 className={`${style['modal-title']} my-bottom-border`}>附件</h4>
+            <ul className={style['file-list']}>
+              <li onClick={() => this.showImg('https://goss1.vcg.com/creative/vcg/800/new/VCG211180672430.jpg')} style={{ backgroundImage: 'url(https://goss1.vcg.com/creative/vcg/800/new/VCG211180672430.jpg)', backgroundSize: 'cover' }}>
+              </li>
+              <li onClick={() => this.showImg('https://goss2.vcg.com/creative/vcg/800/new/VCG211179537526.jpg')} style={{ backgroundImage: 'url(https://goss2.vcg.com/creative/vcg/800/new/VCG211179537526.jpg)', backgroundSize: 'cover' }}>
+              </li>
+              <li onClick={() => this.showImg('https://goss2.vcg.com/creative/vcg/800/new/VCG211179485422.jpg')} style={{ backgroundImage: 'url(https://goss2.vcg.com/creative/vcg/800/new/VCG211179485422.jpg)', backgroundSize: 'cover' }}>
+              </li>
+              <li onClick={() => this.showImg('https://goss.vcg.com/creative/vcg/800/new/VCG211179292892.jpg')} style={{ backgroundImage: 'url(https://goss.vcg.com/creative/vcg/800/new/VCG211179292892.jpg)', backgroundSize: 'cover' }}>
+              </li>
+            </ul>
             <WhiteSpace />
           </div> : null
         }
       </Content>
       {
-        // isLoading ? <div className={`${style['btn-box']} ${style['threebtn']}`}>
-        //   <Button type='primary' inline>考勤</Button>
-        //   <Button type='primary' inline>接单</Button>
-        //   <Button type='primary' inline>取消</Button>
-        // </div> : null
+        isLoading ? <div className={`${style['btn-box']} ${style['onebtn']}`}>
+          <Button type='primary' inline>接单</Button>
+        </div> : null
       }
       <div style={{ display: showimg ? 'block' : 'none' }} onClick={this.handleImgMask} className={`showimg-box animated ${showimg ? 'fadeIn' : 'fadeOut'}`}>
-        <img onClick={(e) => {
-          e.stopPropagation()
-        }} src={imgurl} />
+        <img src={imgurl} />
       </div>
     </div>
   }

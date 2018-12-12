@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Badge, List, WhiteSpace } from 'antd-mobile'
+import { Badge, List, WhiteSpace, Button } from 'antd-mobile'
 import { Header, Content, NewIcon } from 'Components'
 import { worksheetType } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
@@ -8,6 +8,11 @@ import api from 'Util/api'
 import style from './index.css'
 
 const Item = List.Item
+const typeicon = {
+  1: 'bidicon',
+  2: 'sheeticon',
+  3: 'quickicon'
+}
 class WorkListDetail extends Component {
   constructor(props) {
     super(props)
@@ -135,7 +140,10 @@ class WorkListDetail extends Component {
           isLoading ? <div>
             <dl className={style['detail-head']}>
               <dt className='my-bottom-border'>
-                <h2><Badge className={`${style['typericon']} bule-full-border`} text={worksheetType[datasource['worksheet_type']]} /><em className='ellipsis'>{datasource['title']}</em></h2>
+                <h2>
+                  <Badge className={`typericon ${typeicon[datasource['worksheet_type']]}`} text={worksheetType[datasource['worksheet_type']]} />
+                  <em className='ellipsis'>{datasource['title']}</em>
+                </h2>
                 <p>发布于 {datasource['created_at']}</p>
               </dt>
               <dd>
@@ -159,42 +167,69 @@ class WorkListDetail extends Component {
                 worksheetno: datasource['worksheet_no']
               })
             }
+            <div className={style['operate-list']}>
+              <h4 className={`${style['modal-title']} my-bottom-border`}>工单操作</h4>
+              <ul>
+                <li>
+                  <NewIcon type='icon-jiedanjilu'/>
+                  <p>接单记录</p>
+                </li>
+                <li className={style['disabled']}>
+                  <NewIcon type='icon-kaigong'/>
+                  <p>开工记录</p>
+                </li>
+                <li>
+                  <NewIcon type='icon-kaoqinjiluxuanzhong'/>
+                  <p>考勤记录</p>
+                </li>
+                <li>
+                  <NewIcon type='icon-jiesuanjiluxuanzhong'/>
+                  <p>结算记录</p>
+                </li>
+                <li>
+                  <NewIcon type='icon-kaoqinshezhi'/>
+                  <p>考勤设置</p>
+                </li>
+              </ul>
+            </div>
+            <WhiteSpace />
             <div className={style['body-list']}>
+              <h4 className={`${style['modal-title']} my-bottom-border`}>工单详情</h4>
               {
                 datasource['detail'].map((item, index) => {
-                  return <p key={index}>{item['label']}：{item['value']}</p>
+                  return <p key={index}><em>{item['label']}</em><span>{item['value']}</span></p>
                 })
               }
             </div>
             <WhiteSpace />
-            <div className={style['address-title']}>施工地址: {datasource['address']}</div>
+            <div className={style['address-title']}>地理位置</div>
             <div className={style['addressBox']}>
               <div id='AddressContainer' className={style['address-mapbox']}></div>
               <div className={style['address-mask']}></div>
             </div>
             <WhiteSpace />
             {
-              datasource['attachment'].length > 0 ? <ul className={style['file-list']}>
-                <p>附件：</p>
-                {
-                  datasource['attachment'].map((item, index, ary) => {
-                    return (
-                      <li key={index} ><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a onClick={() => this.showImg(item.url)}>{item.name}</a></li>
-                    )
-                  })
-                }
-              </ul> : null
+              datasource['attachment'].length > 0 ? <div>
+                <h4 className={`${style['modal-title']} my-bottom-border`}>附件</h4>
+                <ul className={style['file-list']}>
+                  {
+                    datasource['attachment'].map((item, index, ary) => {
+                      return (
+                        <li key={index} onClick={() => this.showImg(item['url'])} style={{ backgroundImage: `'url(${item['preview_url']})'`, backgroundSize: 'cover' }}></li>
+                      )
+                    })
+                  }
+                </ul>
+                <WhiteSpace />
+              </div> : null
             }
-            <WhiteSpace />
           </div> : null
         }
       </Content>
       {
-        // isLoading ? <div className={`${style['btn-box']} ${style['threebtn']}`}>
-        //   <Button type='primary' inline>考勤</Button>
-        //   <Button type='primary' inline>接单</Button>
-        //   <Button type='primary' inline>取消</Button>
-        // </div> : null
+        isLoading ? <div className={`${style['btn-box']} ${style['onebtn']}`}>
+          <Button type='primary' inline>接单</Button>
+        </div> : null
       }
       <div style={{ display: showimg ? 'block' : 'none' }} onClick={this.handleImgMask} className={`showimg-box animated ${showimg ? 'fadeIn' : 'fadeOut'}`}>
         <img src={imgurl} />

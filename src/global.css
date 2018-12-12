@@ -433,3 +433,26 @@ html:not([data-scale]) :global(.pageBox .am-button-primary::before) {
 :global(.pageBox .am-pull-to-refresh-content-wrapper) {
   overflow: unset;
 }
+
+:global(.pageBox) {
+  & :global(.am-badge) {
+    &:global(.typericon) {
+      margin-right: 6px;
+      border-radius: 2px;
+      &:global(.quickicon) {
+        background: #F8B500;
+      }
+      &:global(.sheeticon) {
+        background: #00BECC;
+      }
+      &:global(.bidicon) {
+        background: #39A5F1;
+      }
+      & sup {
+        color: #fff;
+        background: none;
+        line-height: 20px;
+      }
+    }
+  }
+}

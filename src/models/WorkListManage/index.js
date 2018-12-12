@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { SegmentedControl, Button, Badge, ListView, PullToRefresh, ActionSheet, Toast } from 'antd-mobile'
-import { Header, Content, NewIcon } from 'Components'
+import { Header, Content, NewIcon, DefaultPage } from 'Components'
 import { worksheetStatus } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
@@ -193,7 +193,7 @@ class WorkListManage extends Component {
     switch (type) {
       case 'handleTake': // 接单
         break
-      case 'cancelWorksheet': // 我发的 - 取消开工
+      case 'handleCancelWorksheet': // 我发的 - 取消工单
         this.handleCancelWorksheet(rowData)
         break
       case 'pageAttend': // 我发的 - 考勤设置
@@ -202,7 +202,7 @@ class WorkListManage extends Component {
       case 'viewAttend': // 我发的 - 考勤记录
         this.handleViewAttend(rowData)
         break
-      case 'viewApply': // 我发的 - 接单记录
+      case 'viewTake': // 我发的 - 接单记录
         this.handleViewApply(rowData)
         break
       case 'viewSettle': // 我发的 - 结算记录
@@ -213,7 +213,7 @@ class WorkListManage extends Component {
         break
     }
   }
-  handleCancelWorksheet = async (rowData) => { // 我发的 - 取消开工
+  handleCancelWorksheet = async (rowData) => { // 我发的 - 取消工单
     console.log(rowData)
     let { dataSource } = this.state
     let currentIndex
@@ -236,8 +236,7 @@ class WorkListManage extends Component {
     }
   }
   handleSetAttend = (rowData) => { // 我发的 - 考勤设置 worksheetno
-    // this.props.match.history.push(urls.CHECKSET + '?url=WORKLISTMANAGE&worksheetno=' + rowData['worksheet_no'])
-    console.log('考勤设置')
+    this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'])
   }
   handleViewAttend = (rowData) => { // 我发的 - 考勤记录
     this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'])
@@ -258,7 +257,7 @@ class WorkListManage extends Component {
       if (isLoading) {
         return null
       } else if (nodata) {
-        return <div className={style['render-footer']}>暂无数据</div>
+        return <DefaultPage type='noworkmanage' />
       } else {
         return ''
       }

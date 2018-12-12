@@ -50,17 +50,9 @@ html:not([data-scale]) .worklist-body :global(.am-list-body::before){
     & dt {
       height: 38px;
       overflow: hidden;
-      & .typericon {
+      & :global(.typericon) {
         float: left;
-        background: #f8b500;
         margin-top: 8px;
-        margin-right: 6px;
-        border-radius: 2px;
-        & sup {
-          color: #fff;
-          background: none;
-          line-height: 20px;
-        }
       }
       & p {
         float: left;
