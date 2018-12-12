@@ -81,7 +81,7 @@ class AccessRecord extends Component {
     this.setState({
       isLoading: true
     })
-    let data = await api.Mine.WorkOrderList.orderWorkplanList({
+    let data = await api.Mine.myorder.orderWorkplanList({
       page: pIndex,
       limit: NUM_ROWS,
       order_no: orderno
@@ -102,23 +102,43 @@ class AccessRecord extends Component {
     return await data['list']
   }
   showlistStatus = (item) => { // 状态按钮
-    if (item['workplan_status'] === 2) {
-      return <div>
-        <Button type='primary' onClick={() => { this.getSolicit(item['plan_no']) }} size='small'>完工</Button>
-      </div>
+    if (item['status'] === 3) { // 已完工
+      return <div className={style['confirm-status']}>{
+        workplanStatus.find(i => {
+          return i['status'] === item['status']
+        })['title']
+      }</div>
+    } else if (item['status'] === 2) { // 开工中
+      return <div className={style['reject-status']}>{
+        workplanStatus.find(i => {
+          return i['status'] === item['status']
+        })['title']
+      }</div>
+    } else if (item['status'] === 1) { // 完工待确认
+      if (item['handle_type'] === 1) {
+        return <div>
+          <Button type='primary' onClick={() => { this.getSolicit(item['task_no'], 1, item) }} size='small'>确认完工</Button>
+          <Button type='primary' onClick={() => { this.getSolicit(item['task_no'], 2, item) }} size='small'>驳回</Button>
+        </div>
+      } else if (item['handle_type'] === 2) {
+        return <div>
+          <Button type='primary' className={style['one-btn']} onClick={() => { this.getSolicit(item['order_no'], 3, item) }} size='small'>完工</Button>
+        </div>
+      }
     }
   }
-  solicitfun = async (planno) => {
+  solicitfun = async (planno, type) => {
     let { dataSource } = this.state
     let currentIndex
     dataSource.map((item, index) => {
-      if (item['plan_no'] === planno) {
+      if (item['task_no'] === planno) {
         currentIndex = index
       }
     })
     Toast.loading('提交中...', 0)
-    let data = await api.Mine.WorkOrderList.orderConfirmWork({
-      plan_no: planno
+    let data = await api.Mine.myorder.orderConfirmWork({
+      task_no: planno,
+      confirm_status: type
     }) || false
     Toast.hide()
     if (data) {
@@ -129,13 +149,58 @@ class AccessRecord extends Component {
       Toast.success('操作成功', 1.5)
     }
   }
-  getSolicit = (planno) => {
-    alert('确认已经完成，等待用工确认结算？', '', [
-      { text: '取消' },
-      { text: '确认', onPress: async () => {
-        this.solicitfun(planno)
-      } },
-    ])
+  finshWork = async (orderno, type, rowData) => {
+    let { dataSource } = this.state
+    let currentIndex
+    dataSource.map((item, index) => {
+      if (item['order_no'] === orderno) {
+        currentIndex = index
+      }
+    })
+    Toast.loading('提交中...', 0)
+    let workloadJson = {}
+    if (rowData['valuation_way'] === 1) {
+      workloadJson = {
+        workload: rowData['workload']
+      }
+    }
+    let data = await api.Mine.myorder.orderWorkplanFinish({
+      task_no: rowData['task_no'],
+      order_no: rowData['order_no'],
+      ...workloadJson
+    }) || false
+    Toast.hide()
+    if (data) {
+      dataSource[currentIndex] = data
+      this.setState({
+        dataSource
+      })
+      Toast.success('操作成功', 1.5)
+    }
+  }
+  getSolicit = (planno, type, rowData) => {
+    if (type === 1) {
+      alert('确定' + rowData['workload'] + rowData['workload_unit'] + '的工作量吗？', '', [
+        { text: '取消' },
+        { text: '确认', onPress: async () => {
+          this.solicitfun(planno, type)
+        } },
+      ])
+    } else if (type === 2) {
+      alert('确定驳回整改吗？', '', [
+        { text: '取消' },
+        { text: '确认', onPress: () => {
+          this.solicitfun(planno, type)
+        } },
+      ])
+    } else if (type === 3) {
+      alert('确认已经完成，等待用工确认结算？', '', [
+        { text: '取消' },
+        { text: '确认', onPress: async () => {
+          this.finshWork(planno, type, rowData)
+        } },
+      ])
+    }
   }
   render() {
     const { isLoading, nodata, height, dataSource } = this.state
@@ -158,14 +223,17 @@ class AccessRecord extends Component {
       />
     )
     const row = (rowData, sectionID, rowID) => {
-      return <li key={rowData['plan_no']}>
+      return <li key={rowData['task_no']}>
+        <div className={`${style['record-img']} ${rowData['is_self'] === 1 ? style['record-self'] : ''}`}>
+          <img src={rowData['tasker_avatar']}/>
+          {
+            rowData['is_self'] === 1 ? <p>(自己)</p> : ''
+          }
+        </div>
         <div className={style['record-hd']}>
-          <p className='ellipsis'>{rowData['work_period']}</p>
-          <time className={ rowData['workplan_status'] === 4 ? 'colorGreen' : 'colorRed' }>{
-            workplanStatus.find(item => {
-              return item['status'] === rowData['workplan_status']
-            })['title']
-          }</time>
+          <p className='ellipsis'>{rowData['tasker_name']}<span>（{rowData['workload']}{rowData['workload_unit']}）</span></p>
+          <time>开工时间：{rowData['started_at']}</time>
+          <time>完工时间：{rowData['ended_at'] ? rowData['ended_at'] : '暂无'}</time>
         </div>
         <div className={style['record-btn']}>
           {

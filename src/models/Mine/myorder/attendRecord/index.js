@@ -108,7 +108,7 @@ class AttendRecord extends Component {
       isLoading: true
     })
     let { worksheetno, dateVal, statusVal } = this.state
-    let data = await api.Mine.WorkOrderList.attendStat({
+    let data = await api.WorkListManage.attendStat({
       worksheet_no: worksheetno,
       date: dateVal !== null ? dateVal.Format('yyyy-MM-dd') : null,
       status: statusVal !== 0 ? statusVal[0] : 0,

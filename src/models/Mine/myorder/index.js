@@ -224,10 +224,11 @@ class WorkListManage extends Component {
     console.log('选择工人')
   }
   handleAttend = (rowData) => { // 我接的 - 考勤 workorderno
-    // this.props.match.history.push(urls.CHECK + '?url=WORKLISTMANAGE&workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
+    this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
     console.log('考勤')
   }
   handleGenAttend = (rowData) => { // 我接的 - 代考勤
+    // this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
     console.log('代考勤')
   }
   handleStart = async (rowData) => { // 我接的 - 开工
@@ -241,7 +242,7 @@ class WorkListManage extends Component {
       }
     })
     Toast.loading('提交中...', 0)
-    let data = await api.Mine.WorkOrderList.startWork({
+    let data = await api.Mine.myorder.startWork({
       order_no: rowData['order_no']
     }) || false
     Toast.hide()
@@ -254,7 +255,7 @@ class WorkListManage extends Component {
     }
   }
   handleAgentStart = (rowData) => { // 我接的 - 代开工
-    console.log('代开工')
+    this.props.match.history.push(urls.AGENTSTARTLIST + '?orderno=' + rowData['order_no'])
   }
   handleFished = async (rowData) => { // 我接的 - 完工
     console.log('完工')
@@ -276,9 +277,9 @@ class WorkListManage extends Component {
             if (regzs.test(value)) {
               resolve()
               Toast.loading('提交中...', 0)
-              data = await api.Mine.WorkOrderList.finshedWork({
+              data = await api.Mine.myorder.finshedWork({
                 order_no: rowData['order_no'],
-                work_amount: value
+                workload: value
               }) || false
               Toast.hide()
               if (data) {
@@ -297,7 +298,7 @@ class WorkListManage extends Component {
       ], 'default', null, ['请输入工作量'])
     } else {
       Toast.loading('提交中...', 0)
-      data = await api.Mine.WorkOrderList.finshedWork({
+      data = await api.Mine.myorder.finshedWork({
         order_no: rowData['order_no']
       }) || false
       Toast.hide()
@@ -317,16 +318,16 @@ class WorkListManage extends Component {
     console.log('提交结算')
   }
   handleOrderViewAttend = (rowData) => { // 我接的 - 考勤记录
-    this.props.match.history.push(urls.OATTENDDETAIL + '?orderno=' + rowData['order_no'])
+    this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'])
   }
   handleOrderViewSettle = (rowData) => { // 我接的 - 结算记录
-    this.props.match.history.push(urls.OSETTLERECORD + '?worksheetno=' + rowData['worksheet_no'] + '&worktype=0')
+    this.props.match.history.push(urls.OSETTLERECORD + '?orderno=' + rowData['order_no'])
   }
   handleOrderViewWorkPlan = (rowData) => { // 我接的 - 开工记录
     this.props.match.history.push(urls.OORDERSTARTWORKRECORD + '?orderno=' + rowData['order_no'])
   }
-  handleOrderViewTasker = (rowData) => { // 我接的 - 工人记录
-    console.log('工人记录')
+  handleOrderViewTasker = (rowData) => { // 我接的 - 工人列表
+    this.props.match.history.push(urls.ORDERWORKERLIST + '?orderno=' + rowData['order_no'])
   }
   /* *************** 按钮end *************** */
   render() {

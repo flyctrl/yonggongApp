@@ -189,6 +189,21 @@ export default {
     confirmQtReefusal(params) { // 接单记录-同意和拒绝
       return FetchSave(prefix + '/worksheet/confirm/apply', params)
     },
+    attendStat(params) { // 考勤记录（我发的）
+      return Fetch(prefix + '/worksheet/attend/stat', params, 'get')
+    },
+    attendDetail(params) { // 考勤打卡明细（我接的）
+      return Fetch(prefix + '/worksheetOrder/attend/detail', params, 'get')
+    },
+    sendWorkplanList(params) { // 开工记录 - 我发的
+      return Fetch(prefix + '/workPlan/list/publisherTask', params, 'get')
+    },
+    sendConfirmWork(params) { // 确认完工 - 开工记录 - 我发的
+      return FetchSave(prefix + '/workPlan/confirmWork', params, 'post', { showloading: false })
+    },
+    settleRecordSend(params) { // 我发的 - 结算记录
+      return Fetch(prefix + '/worksheet/settle', params, 'get')
+    },
   },
   WorkOrder: { // （会删除会删除会删除会删除）
     showReview(params) { // 审批工单详情
@@ -239,44 +254,14 @@ export default {
   },
   Mine: { // 我的
     WorkOrderList: { // 我的工单（会删除会删除会删除会删除）
-      settleRecordAccept(params) { // 我接的 - 结算记录
-        return Fetch('/worksheet/settle/accept', params, 'get')
-      },
-      settleRecordSend(params) { // 我发的 - 结算记录
-        return Fetch('/worksheet/settle/send', params, 'get')
-      },
       workorderSubmit(params) { // 我的接单 确认完工
         return FetchSave('/worksheetOrder/submit', params)
       },
       workorderApply(params) { // 我的接单 确认结算
         return FetchSave('/worksheetOrder/settleApply', params)
       },
-      startWork(params) { // 我的接单 开工
-        return FetchSave('/worksheetOrder/startWork', params, 'post', { showloading: false })
-      },
       cancelWork(params) { // 我发的 取消开工
         return FetchSave('/worksheet/cancel', params, 'post', { showloading: false })
-      },
-      finshedWork(params) { // 我的接单 完工
-        return FetchSave('/worksheetOrder/finishWork', params, 'post', { showloading: false })
-      },
-      sendWorkplanList(params) { // 开工记录 - 我发的
-        return Fetch('/workplan/list/to_confirm', params, 'get')
-      },
-      orderWorkplanList(params) { // 开工记录 - 我接的
-        return Fetch('/workplan/list/worker', params, 'get')
-      },
-      sendConfirmWork(params) { // 确认完工 - 开工记录 - 我发的
-        return FetchSave('/workplan/confirm', params, 'post', { showloading: false })
-      },
-      orderConfirmWork(params) { // 确认完工 - 开工记录 - 我接的
-        return FetchSave('/workplan/finish', params, 'post', { showloading: false })
-      },
-      attendStat(params) { // 考勤记录（我发的）
-        return Fetch('/worksheet/attend/stat', params, 'get')
-      },
-      attendDetail(params) { // 考勤打卡明细（我接的）
-        return Fetch('/worksheetOrder/attend/detail', params, 'get')
       },
       confirmConstruct(params) { // 确认开工 快单、普通工单、招标
         return FetchSave('/worksheet/confirmConstruct', params)
@@ -300,6 +285,30 @@ export default {
       },
       workSheetDetail(params) { // 订单详情
         return Fetch(prefix + '/worksheetOrder/worksheetDetail', params, 'get')
+      },
+      startWork(params) { // 我的接单 开工
+        return FetchSave(prefix + '/worksheetOrder/startWork', params, 'post', { showloading: false })
+      },
+      finshedWork(params) { // 我的接单 完工
+        return FetchSave(prefix + '/worksheetOrder/finishWork', params, 'post', { showloading: false })
+      },
+      orderWorkplanList(params) { // 开工记录 - 我接的
+        return Fetch(prefix + '/workPlan/list/workerTask', params, 'get')
+      },
+      orderConfirmWork(params) { // 确认驳回 - 开工记录 - 我接的
+        return FetchSave(prefix + '/workPlan/confirmWork', params, 'post', { showloading: false })
+      },
+      orderWorkplanFinish(params) { // 完工 - 开工记录 - 我接的
+        return FetchSave(prefix + '/workPlan/finishWork', params, 'post', { showloading: false })
+      },
+      orderWorkerlist(params) { // 订单 工人列表
+        return Fetch(prefix + '/worksheetOrder/list/tasker', params, 'get')
+      },
+      settleRecordAccept(params) { // 我接的 - 结算记录
+        return Fetch(prefix + '/settle/accept', params, 'get')
+      },
+      agentStartList(params) { // 代开工列表
+        return Fetch(prefix + '/workPlan/list/agentStart', params, 'get')
       }
     },
     account: {

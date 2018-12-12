@@ -215,7 +215,7 @@ class WorkListDetail extends Component {
                   {
                     datasource['attachment'].map((item, index, ary) => {
                       return (
-                        <li key={index} onClick={() => this.showImg(item['url'])} style={{ backgroundImage: `'url(${item['preview_url']})'`, backgroundSize: 'cover' }}></li>
+                        <li key={index} onClick={() => this.showImg(item['url'])} style={{ backgroundImage: `url(${item['preview_url']})`, backgroundSize: 'cover' }}></li>
                       )
                     })
                   }

@@ -26,8 +26,7 @@ class SettleRecord extends Component {
       nodata: false,
       amount: 0,
       waitAmount: 0,
-      worksheetno: tooler.getQueryString('worksheetno'),
-      worktype: tooler.getQueryString('worktype')
+      orderno: tooler.getQueryString('orderno')
     }
   }
   componentDidMount() {
@@ -80,24 +79,15 @@ class SettleRecord extends Component {
   }
 
   genData = async (pIndex = 1) => { // 获取数据
-    let { worktype, worksheetno } = this.state
+    let { orderno } = this.state
     this.setState({
       isLoading: true
     })
-    let data = {}
-    if (worktype === '0') { // 我接的
-      data = await api.Mine.WorkOrderList.settleRecordAccept({
-        worksheet_no: worksheetno,
-        page: pIndex,
-        pagesize: NUM_ROWS
-      }) || false
-    } else if (worktype === '1') { // 我发布的
-      data = await api.Mine.WorkOrderList.settleRecordSend({
-        worksheet_no: worksheetno,
-        page: pIndex,
-        pagesize: NUM_ROWS
-      }) || false
-    }
+    let data = await api.Mine.myorder.settleRecordAccept({
+      workSheetOrderNo: orderno,
+      page: pIndex,
+      pagesize: NUM_ROWS
+    }) || false
     if (data['currPageNo'] === 1 && data['list'].length === 0) {
       document.body.style.overflow = 'hidden'
       this.setState({
@@ -118,7 +108,7 @@ class SettleRecord extends Component {
     return await data['list']
   }
   render() {
-    const { isLoading, nodata, height, dataSource, amount, waitAmount, worktype } = this.state
+    const { isLoading, nodata, height, dataSource, amount, waitAmount } = this.state
     const footerShow = () => {
       if (isLoading) {
         return null
@@ -129,11 +119,7 @@ class SettleRecord extends Component {
       }
     }
     const row = (rowData, sectionID, rowID) => {
-      if (worktype === '0') {
-        return <Item key={rowID} multipleLine extra={rowData['amount']} thumb={rowData['avatar']}><Brief>{rowData['time']}</Brief></Item>
-      } else if (worktype === '1') {
-        return <Item key={rowID} multipleLine extra={rowData['amount']} thumb={rowData['avatar']}>{rowData['username']} <Brief>{rowData['time']}</Brief></Item>
-      }
+      return <Item key={rowID} multipleLine extra={rowData['amount']} thumb={rowData['avatar']}><Brief>{rowData['time']}</Brief></Item>
     }
     return <div className='pageBox gray'>
       <Header

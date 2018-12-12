@@ -75,10 +75,9 @@ const orderStatus = [
 ]
 
 const workplanStatus = [
-  { title: '待开工', status: 1 },
-  { title: '开工中', status: 2 },
-  { title: '完工待确认', status: 3 },
-  { title: '已完工', status: 4 }
+  { title: '开工中', status: 1 },
+  { title: '完工待确认', status: 2 },
+  { title: '已完工', status: 3 }
 ]
 
 const payOrderStatus = {
