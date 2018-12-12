@@ -29,7 +29,7 @@ const List = (props) => {
         <ul className='my-top-border my-bottom-border'>
           <li><span>时间</span><em>{time}</em></li>
           <li><span>位置</span><em>{dataCheck['address']}</em></li>
-          <li><span>备注</span><img src={`data:image/jpg;base64,${imgSrc}`}/></li>
+          <li><span>备注</span><img src={`${imgSrc}`}/></li>
         </ul>
       </div>
     </div>
