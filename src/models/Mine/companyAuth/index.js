@@ -4,13 +4,15 @@
  * @Title: 企业资格认证
  */
 import React, { Component } from 'react'
-import { InputItem, Button, Toast, ImagePicker, ActionSheet } from 'antd-mobile'
+import { InputItem, Button, Toast, ActionSheet } from 'antd-mobile'
 import { createForm } from 'rc-form'
 import api from 'Util/api'
 import * as urls from 'Contants/urls'
 import { Header, Content, NewIcon } from 'Components'
 import style from './style.css'
-
+import frontImg from 'Src/assets/fc.png'
+import backImg from 'Src/assets/bc.png'
+import charterImg from 'Src/assets/cc.png'
 class Company extends Component {
   constructor(props) {
     super(props)
@@ -18,7 +20,12 @@ class Company extends Component {
       licenseImg: [],
       cardfrontImg: [],
       cardbackImg: [],
-      src: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg'
+      frontImg,
+      backImg,
+      charterImg,
+      isClickCharter: false,
+      isClickFront: false,
+      isClickBack: false
     }
   }
 
@@ -58,11 +65,7 @@ class Company extends Component {
   }
 
   handleChange = (img, name) => {
-    if ('cordova' in window) {
-      return false
-    } else {
-      this.uploadImg(img, name)
-    }
+    this.uploadImg(img, name)
   }
   handleSubmit = () => {
     const validateAry = ['name', 'legal', 'card_no', 'address', 'credit_code', 'mobile', 'license', 'card_front', 'card_back']
@@ -85,6 +88,39 @@ class Company extends Component {
       }
     })
   }
+  onSuccessCharter = async(imageURI) => {
+    Toast.loading('上传中...', 0)
+    const data = await api.auth.realNameCharter({
+      image: 'data:image/png;base64,' + imageURI
+    }) || false
+    if (data) {
+      Toast.hide()
+      Toast.success('上传成功', 1.5)
+      this.setState({
+        fileList: data,
+        frontImg: 'data:image/png;base64,' + imageURI,
+        isClickCharter: true,
+      })
+    }
+  }
+  onFail = (message) => {
+    // Toast.fail(message)
+    console.log(message)
+  }
+  handleTakeType = (index) => { // 0 相机 1 相册
+    if (index === 0) {
+      navigator.camera.getPicture(this.onSuccessCharter, this.onFail, {
+        destinationType: Camera.DestinationType.DATA_URL,
+        quality: 80
+      })
+    } else if (index === 1) {
+      navigator.camera.getPicture(this.onSuccessCharter, this.onFail, {
+        destinationType: Camera.DestinationType.DATA_URL,
+        quality: 80,
+        sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+      })
+    }
+  }
   showActionSheet = (key, rowData) => { // app底部sheet
     const btnlist = ['选择相机', '选择相册']
     ActionSheet.showActionSheetWithOptions({
@@ -96,10 +132,59 @@ class Company extends Component {
       if (buttonIndex < 0) {
         return false
       }
+      this.handleTakeType(buttonIndex)
     })
   }
+  handleTakeCharter = (e) => { // 营业执照
+    if ('cordova' in window) {
+      this.showActionSheet()
+    } else {
+      let file = e.target.files[0]
+      let reader = new FileReader()
+      let _this = this
+      reader.onload = async function () {
+        Toast.loading('上传中...', 0)
+        let formData = new FormData()
+        formData.append('image', file)
+        formData.append('type', 4)
+        const data = await api.Common.uploadImg(formData) || {}
+        if (data) {
+          Toast.hide()
+          Toast.success('上传成功', 1.5)
+          _this.setState({
+            fileList: data,
+            charterImg: data['url'],
+            isClickCharter: true,
+          })
+        }
+      }
+      reader.onerror = function () {
+        Toast(reader.error)
+      }
+      if (file) {
+        reader.readAsDataURL(file)
+      }
+    }
+  }
+  handleDelete = (e) => {
+    let type = e.currentTarget.getAttribute('data-type')
+    if (type === '1') {
+      this.setState({
+        charterImg,
+        isClickCharter: false
+      })
+    } else if (type === '2') {
+      this.setState({
+        frontImg,
+      })
+    } else if (type === '3') {
+      this.setState({
+        backImg
+      })
+    }
+  }
   render() {
-    const { cardfrontImg, cardbackImg } = this.state
+    const { frontImg, isClickCharter, isClickBack, isClickFront, backImg, charterImg } = this.state
     const { getFieldDecorator } = this.props.form
     return <div className='pageBox'>
       <Header
@@ -112,7 +197,6 @@ class Company extends Component {
       />
       <Content>
         <div className={style.company}>
-          <div onClick={this.showActionSheet}>点击</div>
           <div className={`${style.input} my-bottom-border`}>
             <div className={style['title']}>企业名称</div>
             {getFieldDecorator('name', {
@@ -178,7 +262,7 @@ class Company extends Component {
               <div className={style.title}>营业执照</div>
               <div className={style['up-img']}>
                 <div>
-                  <NewIcon className={style.icon} type='icon-camera'/>
+                  <span className={style['img-span']} style={{ zIndex: isClickCharter ? 2 : -1 }}><NewIcon className={style.icon} data-type='1' onClick={this.handleDelete} type='icon-x'/></span>
                   <span className={style.title}>营业执照扫描件</span>
                   {
                     getFieldDecorator('license', {
@@ -186,7 +270,7 @@ class Company extends Component {
                         required: true, message: '请上传营业执照',
                       }]
                     })(
-                      <img className={style['img-picker']} src={this.state.src}/>
+                      <img className={style['img-picker']} style={{ zIndex: isClickCharter ? 1 : 0 }} src={charterImg}/>
                       // <ImagePicker
                       //   className={style['img-picker']}
                       //   files={licenseImg}
@@ -195,6 +279,11 @@ class Company extends Component {
                       // />
                     )
                   }
+                  {
+                    'cordova' in window
+                      ? <input className={style['input-pic']} style={{ zIndex: isClickCharter ? 0 : 1 }} disabled={isClickCharter} type='button' capture='camera' onClick={this.handleTakeCharter}/>
+                      : <input className={style['input-pic']} style={{ zIndex: isClickCharter ? 0 : 1 }} disabled={isClickCharter} type='file' capture='camera' onChange={this.handleTakeCharter}/>
+                  }
                 </div>
               </div>
             </div>
@@ -202,7 +291,7 @@ class Company extends Component {
               <div className={style.title}>身份证正面</div>
               <div className={style['up-img']}>
                 <div>
-                  <NewIcon className={style.icon} type='icon-camera'/>
+                  <span className={style['img-span']} style={{ zIndex: isClickFront ? 2 : -1 }}><NewIcon className={style.icon} data-type='2' onClick={this.handleDelete} type='icon-x'/></span>
                   <span className={style.title}>身份证正面扫描件</span>
                   {
                     getFieldDecorator('card_front', {
@@ -210,13 +299,18 @@ class Company extends Component {
                         required: true, message: '请上传身份证正面',
                       }]
                     })(
-                      <ImagePicker
-                        className={style['img-picker']}
-                        files={cardfrontImg}
-                        onChange={(img) => { this.handleChange(img, 'cardfrontImg') }}
-                        selectable={cardfrontImg.length < 1}
-                      />
+                      <img className={style['img-picker']} style={{ zIndex: isClickFront ? 1 : 0 }} src={frontImg}/>
+                      // <ImagePicker
+                      //   className={style['img-picker']}
+                      //   files={cardfrontImg}
+                      //   onChange={(img) => { this.handleChange(img, 'cardfrontImg') }}
+                      //   selectable={cardfrontImg.length < 1}
+                      // />
                     )
+                  }{
+                    'cordova' in window
+                      ? <input className={style['input-pic']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickCharter} type='button' capture='camera' onClick={this.handleTakeFront}/>
+                      : <input className={style['input-pic']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickCharter} type='file' capture='camera' onChange={this.handleTakeFront}/>
                   }
                 </div>
               </div>
@@ -225,7 +319,7 @@ class Company extends Component {
               <div className={style.title}>身份证反面</div>
               <div className={style['up-img']}>
                 <div>
-                  <NewIcon className={style.icon} type='icon-camera'/>
+                  <span className={style['img-span']} style={{ zIndex: isClickBack ? 2 : -1 }}><NewIcon className={style.icon} data-type='3' onClick={this.handleDelete} type='icon-x'/></span>
                   <span className={style.title}>身份证反面扫描件</span>
                   {
                     getFieldDecorator('card_back', {
@@ -233,13 +327,18 @@ class Company extends Component {
                         required: true, message: '请上传身份证反面',
                       }]
                     })(
-                      <ImagePicker
-                        className={style['img-picker']}
-                        files={cardbackImg}
-                        onChange={(img) => { this.handleChange(img, 'cardbackImg') }}
-                        selectable={cardbackImg.length < 1}
-                      />
+                      <img className={style['img-picker']} style={{ zIndex: isClickBack ? 1 : 0 }} src={backImg}/>
+                      // <ImagePicker
+                      //   className={style['img-picker']}
+                      //   files={cardbackImg}
+                      //   onChange={(img) => { this.handleChange(img, 'cardbackImg') }}
+                      //   selectable={cardbackImg.length < 1}
+                      // />
                     )
+                  }{
+                    'cordova' in window
+                      ? <input className={style['input-pic']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='button' capture='camera' onClick={this.handleTakeBack}/>
+                      : <input className={style['input-pic']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' capture='camera' onChange={this.handleTakeBack}/>
                   }
                 </div>
               </div>

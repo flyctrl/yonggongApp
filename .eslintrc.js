@@ -25,7 +25,8 @@ module.exports = {
     "PRE": true,
     "AMap": true,
     "AMapUI": true,
-    "OCBridge": true
+    "OCBridge": true,
+    "Camera": true
   },
 
   // http://eslint.org/docs/rules/xxx, xxx代表rule名称, 0=off, 1=warning, 2=error
