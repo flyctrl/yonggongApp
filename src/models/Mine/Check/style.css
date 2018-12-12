@@ -1,6 +1,9 @@
 
 .check {
   /* height: 100%; */
+  & :global(.amap-toolbar ){
+    visibility: hidden!important
+  }
   box-sizing: border-box;
   & .check-info {
     display: block;

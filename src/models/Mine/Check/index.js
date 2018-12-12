@@ -10,7 +10,6 @@ import api from 'Util/api'
 import ChildStatus from './status'
 import { Button, Icon, Modal, List, Picker } from 'antd-mobile'
 import tips from 'Src/assets/ad.png'
-// import { onBackKeyDown } from 'Contants/tooler'
 const alert = Modal.alert
 let positionPicker = null
 let distanceStatus = {
@@ -42,19 +41,16 @@ class Check extends Component {
       checkVal: 1,
       imgSrc: '',
       imgPath: '',
-      workorderno: '4642477379780878080',
+      workorderno: getQueryString('workorderno'),
       lng: getQueryString('lng'),
       lat: getQueryString('lat'),
       radius: getQueryString('radius'),
-      dataList: [], // 代考勤用户列表
       userVal: 0,
-      workerUid: '2266561903591424'
+      workerUid: getQueryString('workerUid') || ''
     }
   }
 
   componentDidMount() {
-    // let lv = ReactDOM.findDOMNode(this.lv)
-    // lv.addEventListener('click', this.handleTake)
     this.getUserList()
     this._getPosition(getQueryString('lng'), getQueryString('lat'), getQueryString('radius'))
     setTime = setInterval(() => {
@@ -62,30 +58,7 @@ class Check extends Component {
         time: new Date().Format('hh:mm'),
       })
     }, 1000)
-    // document.removeEventListener('backbutton', onBackKeyDown, false)
-    // document.addEventListener('backbutton', this.backButtons, false)
   }
-  // backButtons = (e) => {
-  //   if (newAlert) {
-  //     newAlert.close()
-  //   }
-  //   let { visible } = this.state
-  //   if (visible) {
-  //     e.preventDefault()
-  //     this.setState({
-  //       visible: false
-  //     })
-  //   } else {
-  //     this.props.match.history.goBack()
-  //   }
-  // }
-  // componentWillUnmount () {
-  //   document.removeEventListener('backbutton', this.backButtons)
-  //   document.addEventListener('backbutton', onBackKeyDown, false)
-  //   if (newAlert) {
-  //     newAlert.close()
-  //   }
-  // }
   getUserList = async() => { // 代考勤用户列表
     let data = await api.Mine.Check.attendUserlist({
       order_no: this.state.workorderno
@@ -114,128 +87,24 @@ class Check extends Component {
       }, d * 1000)
     }, duration)
   }
-  // cameraTakePicture = () => {
-  //   if (newAlert) {
-  //     newAlert.close()
-  //   }
-  //   let _this = this
-  //   document.addEventListener('deviceready', () => {
-  //     navigator.splashscreen.hide()
-  //   })
-  //   navigator.camera.getPicture(onSuccess, onFail, {
-  //     destinationType: Camera.DestinationType.DATA_URL
-  //   })
-
-  //   async function onSuccess(imageURI) {
-  //     Toast.loading('提交中...', 0)
-  //     let data = await api.Mine.Check.uploadImg({
-  //       image: imageURI,
-  //       type: 8
-  //     }) || false
-  //     if (data) {
-  //       _this.setState({
-  //         imgSrc: imageURI,
-  //         imgPath: data.path
-  //       })
-  //       _this.handlePushTime()
-  //     } else {
-  //       console.log('data', data)
-  //     }
-  //   }
-
-  //   function onFail(message) {
-  //     console.log('Failed because: ' + message)
-  //   }
-  // }
   _getPosition (lng, lat, radius) {
-    // let _t = this
-    // GaoDe.getCurrentPosition((natviepos) => {
-    //   console.log('natviepos:', natviepos)
-    //   // console.log('state：', lng + 'lat:' + lat + 'radius' + radius)
-    //   map = new AMap.Map('mapContainer', {
-    //     resizeEnable: true,
-    //     zoomEnable: false,
-    //     zoom: 13,
-    //     doubleClickZoom: false,
-    //     touchZoom: false,
-    //     dragEnable: false,
-    //   })
-    //   map.on('complete', function() {
-    //     // 定位
-    //     AMap.plugin('AMap.Geolocation', function() {
-    //       let geolocation = new AMap.Geolocation({
-    //         enableHighAccuracy: true, // 是否使用高精度定位，默认:true
-    //         timeout: 300,
-    //         buttonPosition: 'RB', // 定位按钮的停靠位置
-    //         buttonOffset: new AMap.Pixel(10, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-    //         zoomToAccuracy: true, // 定位成功后是否自动调整地图视野到定位点
-    //         showMarker: false,
-    //         showButton: false,
-    //         showCircle: false
-    //       })
-    //       map.addControl(geolocation)
-    //       geolocation.getCurrentPosition(function(status, result) {
-    //         if (status === 'complete') {
-    //           onComplete(result)
-    //         } else if (status === 'error') {
-    //           onError(result)
-    //         } else {
-    //           _t.showToast('未知错误')
-    //         }
-    //       })
-    //     })
-    //     function onComplete(result) {
-    //       console.log('result:', result)
-    //       let nativeResult = { position: { P: natviepos.longitude, O: natviepos.latitude }}
-    //       console.log('nativeResult', nativeResult)
-    //       _t.moveMap(nativeResult)
-    //       let marker = new AMap.Marker({
-    //         position: new AMap.LngLat(lng, lat)
-    //       // icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
-    //       // offset: new AMap.Pixel(-10, -40)
-    //       })
-    //       marker.setMap(map)
-    //       marker.setLabel({
-    //         offset: new AMap.Pixel(-39, -42),
-    //         content: `<img className=${style['img-box']} src=${tips} />`
-    //       })
-    //       let circle = new AMap.Circle({
-    //         map: map,
-    //         center: new AMap.LngLat(lng, lat), // 设置线覆盖物路径
-    //         radius: radius || 500,
-    //         strokeColor: '#3366FF', // 边框线颜色
-    //         strokeOpacity: 0.3, // 边框线透明度
-    //         strokeWeight: 3, // 边框线宽
-    //         fillColor: '#1791fc', // 填充色
-    //         fillOpacity: 0.35// 填充透明度
-    //       })
-    //       circle.setMap(map)
-    //     }
-    //     function onError(result) {
-    //       console.log('result:', result)
-    //       _t.showToast('定位失败')
-    //     }
-    //   })
-    // }, (error) => {
-    //   _t.showToast(error.message)
-    // })
     let _this = this
     map = new AMap.Map('mapContainer', {
       resizeEnable: true,
       zoomEnable: false,
+      zoom: 15,
       doubleClickZoom: false,
       touchZoom: false,
+      dragEnable: false,
     })
     let opt = {
       enableHighAccuracy: true, // 是否使用高精度定位，默认:true
-      'timeout': 3000,
-      'showButton': false, // 是否显示定位按钮
-      'buttonPosition': 'RB', // 定位按钮的位置
-      /* LT LB RT RB */
-      'buttonOffset': new AMap.Pixel(10, 20), // 定位按钮距离对应角落的距离
-      'showMarker': false, // 是否显示定位点
-      zoomToAccuracy: true,
-      GeoLocationFirst: true,
+      timeout: 300,
+      buttonOffset: new AMap.Pixel(10, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+      zoomToAccuracy: true, // 定位成功后是否自动调整地图视野到定位点
+      showMarker: false,
+      showButton: false,
+      showCircle: false
     }
     // 定位
     map.on('complete', function() {
@@ -292,6 +161,7 @@ class Check extends Component {
         map: map
       })
       positionPicker.on('success', function(positionResult) {
+        console.log(1)
         _t.setState({
           position: positionResult.position,
         })
@@ -303,8 +173,8 @@ class Check extends Component {
         // _t.props.match.history.go(0)
       })
       // positionPicker.start(map.getBounds().getSouthWest())
-      positionPicker.start(result.position)
-      // positionPicker.start()
+      // positionPicker.start(result.position)
+      positionPicker.start()
       // map.panBy(0, 1)
       // map.addControl(new AMap.ToolBar({
       //   liteStyle: true
@@ -320,9 +190,6 @@ class Check extends Component {
       dataCheck
     })
   }
-  handleSelectUser = (val) => { // 选择工人
-    console.log(val)
-  }
   handlePushTime = async (e) => {
     let { dataCheck, position, checkVal, workorderno, imgPath, workerUid } = this.state
     if (!('O' in position)) {
@@ -333,32 +200,65 @@ class Check extends Component {
       Toast.loading('提交中...', 0)
     }
     let data
+    let postData
     if (dataCheck['attend_type'] && dataCheck['attend_type'] === 1) { // 自由打卡
-      data = await api.Mine.Check.attend({
-        place_info: {
-          lng: position.P,
-          lat: position.O
-          // lng: '120.140419',
-          // lat: '30.321688',
-        },
-        order_no: workorderno,
-        type: checkVal,
-        img_url: imgPath,
-        worker_uid: workerUid
-      }) || false
+      if (workerUid !== '' && workerUid !== null) { // 代考勤
+        postData = {
+          place_info: {
+            lng: position.P,
+            lat: position.O
+            // lng: '120.140419',
+            // lat: '30.321688',
+          },
+          order_no: workorderno,
+          type: checkVal,
+          img_url: imgPath,
+          worker_uid: workerUid,
+          is_agent: 1
+        }
+      } else { // 本人
+        postData = {
+          place_info: {
+            lng: position.P,
+            lat: position.O
+            // lng: '120.140419',
+            // lat: '30.321688',
+          },
+          order_no: workorderno,
+          type: checkVal,
+          img_url: imgPath,
+          is_agent: 0
+        }
+      }
     } else { // 固定打卡
-      data = await api.Mine.Check.attend({
-        place_info: {
-          lng: position.P,
-          lat: position.O
-          // lng: '120.140419',
-          // lat: '30.321688',
-        },
-        img_url: imgPath,
-        order_no: workorderno,
-        worker_uid: workerUid
-      }) || false
+      if (workerUid !== '' && workerUid !== null) {
+        postData = {
+          place_info: {
+            lng: position.P,
+            lat: position.O
+            // lng: '120.140419',
+            // lat: '30.321688',
+          },
+          img_url: imgPath,
+          order_no: workorderno,
+          worker_uid: workerUid,
+          is_agent: 1
+        }
+      } else {
+        postData = {
+          place_info: {
+            lng: position.P,
+            lat: position.O
+            // lng: '120.140419',
+            // lat: '30.321688',
+          },
+          img_url: imgPath,
+          order_no: workorderno,
+          is_agent: 0
+        }
+      }
     }
+    data = await api.Mine.Check.attend(postData) || false
     if (data) {
       this.setState({
         data,
@@ -379,16 +279,32 @@ class Check extends Component {
       Toast.fail('无法获取该手机位置信息')
       return false
     }
-    let dataCheck = await api.Mine.Check.attendCheck({
-      place_info: {
-        lng: position.P,
-        lat: position.O
-        // lng: '120.140419',
-        // lat: '30.321688',
-      },
-      order_no: v,
-      worker_uid: workerUid
-    }) || false
+    let postData = {}
+    if (workerUid !== '' && workerUid !== null) {
+      postData = {
+        place_info: {
+          lng: position.P,
+          lat: position.O
+          // lng: '120.140419',
+          // lat: '30.321688',
+        },
+        order_no: v,
+        is_agent: 1,
+        worker_uid: workerUid
+      }
+    } else {
+      postData = {
+        place_info: {
+          lng: position.P,
+          lat: position.O
+          // lng: '120.140419',
+          // lat: '30.321688',
+        },
+        order_no: v,
+        is_agent: 0,
+      }
+    }
+    let dataCheck = await api.Mine.Check.attendCheck(postData) || false
     if (dataCheck) {
       if (dataCheck['attend_type'] && dataCheck['attend_type'] === 1) {
         dataCheck['type'] = checkVal
@@ -426,15 +342,13 @@ class Check extends Component {
       formData.append('image', file)
       formData.append('type', 8)
       Toast.loading('提交中...', 0)
-      const data = await api.Mine.Check.uploadImg(formData) || {}
+      const data = await api.Mine.Check.uploadImg(formData) || false
       if (data) {
         _this.setState({
           imgSrc: data.url,
           imgPath: data.path
         })
         _this.handlePushTime()
-      } else {
-        Toast.info('获取照片失败')
       }
     }
     reader.onerror = function () {
@@ -454,22 +368,8 @@ class Check extends Component {
       this.handleTakePic(file)
     }
   }
-  // handleTake = (e) => {
-  //   let { isCheck, dataCheck } = this.state
-  //   if (!isCheck) {
-  //     return
-  //   }
-  //   if (dataCheck.distance_status && dataCheck.distance_status === 1) {
-  //     newAlert = alert(<div style={{ color: '#c40808' }}>{distanceStatus[dataCheck.distance_status]}</div>, '你确定要打卡吗??', [
-  //       { text: '取消', onPress: () => console.log('cancel') },
-  //       { text: '确定', onPress: () => { this.cameraTakePicture() } },
-  //     ])
-  //   } else {
-  //     this.cameraTakePicture()
-  //   }
-  // }
   render() {
-    const { time, dataCheck = {}, checkVal, visible, imgSrc, checkInTime, workorderno, isCheck, dataList } = this.state
+    const { time, dataCheck = {}, checkVal, visible, imgSrc, checkInTime, workorderno, isCheck } = this.state
     dataCheck.attend_time_config = dataCheck.attend_time_config || []
     dataCheck['attend_type'] = dataCheck['attend_type'] || ''
     let his = this.props.match.history
@@ -499,11 +399,6 @@ class Check extends Component {
         <div style={{ display: visible ? 'none' : 'block' }}>
           <div ref={(el) => { this.lc = el }} className={style.check}>
             <div className={style['check-info']}>
-              <List>
-                <Picker data={dataList} cols={1} onOk={this.handleSelectUser} onVisibleChange={this.handleVisibleChange}>
-                  <List.Item arrow='horizontal'>选择打卡用户</List.Item>
-                </Picker>
-              </List>
               <div className={style['map-box']}>
                 <div id='mapContainer'></div>
               </div>
