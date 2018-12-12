@@ -4,7 +4,7 @@
  * @Title: 企业资格认证
  */
 import React, { Component } from 'react'
-import { InputItem, Button, Toast, ImagePicker } from 'antd-mobile'
+import { InputItem, Button, Toast, ImagePicker, ActionSheet } from 'antd-mobile'
 import { createForm } from 'rc-form'
 import api from 'Util/api'
 import * as urls from 'Contants/urls'
@@ -17,7 +17,8 @@ class Company extends Component {
     this.state = {
       licenseImg: [],
       cardfrontImg: [],
-      cardbackImg: []
+      cardbackImg: [],
+      src: 'https://zos.alipayobjects.com/rmsportal/PZUUCKTRIHWiZSY.jpeg'
     }
   }
 
@@ -57,7 +58,11 @@ class Company extends Component {
   }
 
   handleChange = (img, name) => {
-    this.uploadImg(img, name)
+    if ('cordova' in window) {
+      return false
+    } else {
+      this.uploadImg(img, name)
+    }
   }
   handleSubmit = () => {
     const validateAry = ['name', 'legal', 'card_no', 'address', 'credit_code', 'mobile', 'license', 'card_front', 'card_back']
@@ -80,9 +85,21 @@ class Company extends Component {
       }
     })
   }
-
+  showActionSheet = (key, rowData) => { // app底部sheet
+    const btnlist = ['选择相机', '选择相册']
+    ActionSheet.showActionSheetWithOptions({
+      options: btnlist,
+      maskClosable: true,
+      onTouchStart: e => e.preventDefault()
+    }, (buttonIndex) => {
+      console.log('buttonIndex:', buttonIndex)
+      if (buttonIndex < 0) {
+        return false
+      }
+    })
+  }
   render() {
-    const { licenseImg, cardfrontImg, cardbackImg } = this.state
+    const { cardfrontImg, cardbackImg } = this.state
     const { getFieldDecorator } = this.props.form
     return <div className='pageBox'>
       <Header
@@ -95,6 +112,7 @@ class Company extends Component {
       />
       <Content>
         <div className={style.company}>
+          <div onClick={this.showActionSheet}>点击</div>
           <div className={`${style.input} my-bottom-border`}>
             <div className={style['title']}>企业名称</div>
             {getFieldDecorator('name', {
@@ -168,12 +186,13 @@ class Company extends Component {
                         required: true, message: '请上传营业执照',
                       }]
                     })(
-                      <ImagePicker
-                        className={style['img-picker']}
-                        files={licenseImg}
-                        onChange={(img) => { this.handleChange(img, 'licenseImg') }}
-                        selectable={licenseImg.length < 1}
-                      />
+                      <img className={style['img-picker']} src={this.state.src}/>
+                      // <ImagePicker
+                      //   className={style['img-picker']}
+                      //   files={licenseImg}
+                      //   onChange={(img) => { this.handleChange(img, 'licenseImg') }}
+                      //   selectable={licenseImg.length < 1}
+                      // />
                     )
                   }
                 </div>

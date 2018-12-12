@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 // import { List } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
-import { Header, Content } from 'Components'
+import { Header, Content, DefaultPage } from 'Components'
 import style from './style.css'
 let cardType = {
   1: '储蓄卡',
@@ -57,7 +57,7 @@ class BankcardList extends Component {
               <p>****   ****    ****    {item['card_no_back']}</p>
             </div>)
           })
-          : banklist.length === 0 && isloading ? <div className='nodata'>暂无数据</div> : null
+          : banklist.length === 0 && isloading ? <DefaultPage type='nobankcard' /> : null
         }
       </Content>
     </div>
