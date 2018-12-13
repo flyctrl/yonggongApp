@@ -34,7 +34,7 @@ class Check extends Component {
     this.state = {
       isLoading: true,
       isCheck: false,
-      visible: true,
+      visible: false,
       checkInTime: null, // 打卡时间
       time: '', // 考勤倒计时
       succTime: 5, // 返回列表倒计时
@@ -262,7 +262,7 @@ class Check extends Component {
         if (this.state.succTime <= 1) {
           clearInterval(successTime)
           if (workerUid) {
-            this.props.match.history.push(urls[''])
+            this.props.match.history.push(`${urls['AGENTCHECKLIST']}?orderno=${workorderno}`)
           } else {
             this.setState({
               visible: false
@@ -390,14 +390,11 @@ class Check extends Component {
         rightTitle='考勤明细'
         leftClick1={() => {
           if (!visible) {
-            if (workerUid) {
-              his.push(urls[''])
-            } else {
-              his.go(-1)
-            }
+            his.go(-1)
           } else {
             if (workerUid) {
-              his.push(urls[''])
+              // his.push(`${urls['AGENTCHECKLIST']}?orderno=${workorderno}`)
+              his.go(-1)
             } else {
               this.setState({
                 visible: !this.state.visible
