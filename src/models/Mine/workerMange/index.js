@@ -132,7 +132,7 @@ class WorkList extends Component {
         rightClick={() => { this.props.match.history.push(urls['CREATEWORKER']) }}
       />
       <Content>
-        <div className={style['box']}>
+        <div className={style['box']} style={{ height: '100%' }}>
           <ListView
             ref={(el) => { this.lv = el }}
             dataSource={this.state.dataSource}
@@ -140,8 +140,6 @@ class WorkList extends Component {
             renderRow={row}
             style={{
               height: this.state.height,
-              position: 'absolute',
-              width: '100%'
             }}
             className={style['job-list']}
             pageSize={NUM_ROWS}

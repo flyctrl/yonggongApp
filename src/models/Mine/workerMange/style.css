@@ -1,4 +1,6 @@
 .box {
+  width: 100%;
+  overflow-y: auto;
   background: #fff;
   margin-top: 15px;
   font-family:SourceHanSansCN-Regular;

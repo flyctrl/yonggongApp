@@ -80,7 +80,7 @@ class RealNameAuth extends Component {
         Toast.success('上传成功', 1.5)
         _this.setState({
           fileList: data,
-          frontImg: url,
+          frontImg: data['front_image'],
           isClickFront: true,
           isClickBack: false,
           isSuccessFront: true,
@@ -113,7 +113,7 @@ class RealNameAuth extends Component {
         Toast.success('上传成功', 1.5)
         _this.setState({
           fileList: { ...fileList, ...data },
-          backImg: url,
+          backImg: data['back_image'],
           isClickBack: true,
           isSuccessBack: true,
           stepNum: 1,

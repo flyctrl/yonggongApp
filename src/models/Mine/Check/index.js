@@ -46,7 +46,7 @@ class Check extends Component {
       lat: getQueryString('lat'),
       radius: getQueryString('radius'),
       userVal: 0,
-      workerUid: getQueryString('workerUid') || ''
+      workerUid: getQueryString('workerUid')
     }
   }
 

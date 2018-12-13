@@ -13,25 +13,30 @@ class RealNameAuth extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isBack: getQueryString('isBack')
+      isBack: getQueryString('orderno')
     }
   }
 
   handleClick = () => {
-    this.props.match.history.push(urls['CREATEWORKER'])
+    let { isBack } = this.state
+    if (isBack) {
+      this.props.match.history.push(`${urls['CREATEWORKER']}?orderno=${isBack}`)
+    } else {
+      this.props.match.history.push(`${urls['CREATEWORKER']}`)
+    }
   }
   render() {
     let { isBack } = this.state
     return <div className='pageBox'>
       <Header
-        title={'验证成功'}
+        title='验证成功'
         leftIcon='icon-back'
-        leftTitle1='返回'
+        leftTitle1={ isBack ? '返回选择列表' : '返回' }
         leftClick1={() => {
           if (isBack) {
-            this.props.match.history.push(urls['WORKERMANGE'])
+            this.props.match.history.push(`${urls['SELECTWORKER']}?orderno=${isBack}`)
           } else {
-            this.props.match.history.push(urls['SELECTWORKER'])
+            this.props.match.history.push(urls['WORKERMANGE'])
           }
         }}
       />

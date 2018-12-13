@@ -206,7 +206,7 @@ class Message extends Component {
             tabBarUnderlineStyle={{ borderColor: '#1298FC', width: '6%', marginLeft: '7%' }}
             onChange={this.handleTabsChange}
           >
-            <div className={style['msg-box']}>
+            <div className={style['msg-box']} style={{ height: '100%' }} >
               <ListView
                 ref={(el) => { this.lv = el }}
                 dataSource={this.state.dataSource}
@@ -214,8 +214,6 @@ class Message extends Component {
                 renderRow={row}
                 style={{
                   height: this.state.height,
-                  position: 'absolute',
-                  width: '100%'
                 }}
                 className={style['job-list']}
                 pageSize={NUM_ROWS}
