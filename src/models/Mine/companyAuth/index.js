@@ -17,9 +17,7 @@ class Company extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      licenseImg: [],
-      cardfrontImg: [],
-      cardbackImg: [],
+      typeName: '',
       frontImg,
       backImg,
       charterImg,
@@ -88,7 +86,7 @@ class Company extends Component {
       }
     })
   }
-  onSuccessCharter = async(imageURI) => {
+  onSuccess = async(imageURI) => {
     Toast.loading('上传中...', 0)
     const data = await api.auth.realNameCharter({
       image: 'data:image/png;base64,' + imageURI
@@ -96,32 +94,28 @@ class Company extends Component {
     if (data) {
       Toast.hide()
       Toast.success('上传成功', 1.5)
-      this.setState({
-        fileList: data,
-        frontImg: 'data:image/png;base64,' + imageURI,
-        isClickCharter: true,
-      })
+      this.handleSetImg(data)
     }
   }
   onFail = (message) => {
     // Toast.fail(message)
     console.log(message)
   }
-  handleTakeType = (index) => { // 0 相机 1 相册
+  handleTakeType = (index, name) => { // 0 相机 1 相册
     if (index === 0) {
-      navigator.camera.getPicture(this.onSuccessCharter, this.onFail, {
+      navigator.camera.getPicture(this.onSuccess, this.onFail, {
         destinationType: Camera.DestinationType.DATA_URL,
         quality: 80
       })
     } else if (index === 1) {
-      navigator.camera.getPicture(this.onSuccessCharter, this.onFail, {
+      navigator.camera.getPicture(this.onSuccess, this.onFail, {
         destinationType: Camera.DestinationType.DATA_URL,
         quality: 80,
         sourceType: Camera.PictureSourceType.PHOTOLIBRARY
       })
     }
   }
-  showActionSheet = (key, rowData) => { // app底部sheet
+  showActionSheet = (name) => { // app底部sheet
     const btnlist = ['选择相机', '选择相册']
     ActionSheet.showActionSheetWithOptions({
       options: btnlist,
@@ -132,11 +126,42 @@ class Company extends Component {
       if (buttonIndex < 0) {
         return false
       }
-      this.handleTakeType(buttonIndex)
+      this.handleTakeType(buttonIndex, name)
     })
+  }
+  handleSetImg = (data) => { // 设置图片
+    let { typeName } = this.state
+    if (typeName === 'license') {
+      this.setState({
+        charterImg: data['url'],
+        isClickCharter: true,
+      })
+      this.props.form.setFieldsValue({
+        license: data['path']
+      })
+    } else if (typeName === 'front') {
+      this.setState({
+        frontImg: data['url'],
+        isClickFront: true,
+      })
+      this.props.form.setFieldsValue({
+        card_front: data['path']
+      })
+    } else if (typeName === 'back') {
+      this.setState({
+        backImg: data['url'],
+        isClickBack: true,
+      })
+      this.props.form.setFieldsValue({
+        card_back: data['path']
+      })
+    }
   }
   handleTake = (e) => { //
     let name = e.currentTarget.getAttribute('data-name')
+    this.setState({
+      typeName: name
+    })
     if ('cordova' in window) {
       this.showActionSheet(name)
     } else {
@@ -144,43 +169,20 @@ class Company extends Component {
       let reader = new FileReader()
       let _this = this
       reader.onload = async function () {
+        let url = this.result
         Toast.loading('上传中...', 0)
-        let formData = new FormData()
-        formData.append('image', file)
+        let formData = {}
+        formData.image = url
         if (name === 'license') {
-          formData.append('type', 4)
+          formData.type = 4
         } else {
-          formData.append('type', 5)
+          formData.type = 5
         }
         const data = await api.Common.uploadImg(formData) || false
         if (data) {
           Toast.hide()
           Toast.success('上传成功', 1.5)
-          if (name === 'license') {
-            _this.setState({
-              charterImg: data['url'],
-              isClickCharter: true,
-            })
-            _this.props.form.setFieldsValue({
-              license: data['path']
-            })
-          } else if (name === 'front') {
-            _this.setState({
-              frontImg: data['url'],
-              isClickFront: true,
-            })
-            _this.props.form.setFieldsValue({
-              card_front: data['path']
-            })
-          } else if (name === 'back') {
-            _this.setState({
-              backImg: data['url'],
-              isClickBack: true,
-            })
-            _this.props.form.setFieldsValue({
-              card_back: data['path']
-            })
-          }
+          _this.handleSetImg(data)
         }
       }
       reader.onerror = function () {
@@ -191,7 +193,7 @@ class Company extends Component {
       }
     }
   }
-  handleDelete = (e) => {
+  handleDelete = (e) => { // 删除图片
     let type = e.currentTarget.getAttribute('data-type')
     if (type === '1') {
       this.setState({

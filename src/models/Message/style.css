@@ -29,6 +29,8 @@ html .message-content :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab:
 }
 .msg-box {
   margin-top: 10px;
+  width: 100%;
+  overflow-y: auto;
 }
 .notice-box {
   padding: 15px;

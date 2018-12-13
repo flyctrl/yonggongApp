@@ -13,6 +13,7 @@ import style from './style.css'
 import back from 'Src/assets/back.png'
 import front from 'Src/assets/front.png'
 import backFace from 'Src/assets/backimg.png'
+import { getQueryString } from 'Contants/tooler'
 const prompt = Modal.prompt
 let newPrompt = null
 const Item = List.Item
@@ -37,7 +38,8 @@ class CreateWorker extends Component {
       stepNum: 0, // 步骤数
       isShowFace: false, // 是否显示人脸识别页面
       phone: '',
-      token: ''
+      token: '',
+      isBack: getQueryString('orderno')
     }
   }
   handleClickNext = () => { // 是否显示人脸识别页面
@@ -215,7 +217,7 @@ class CreateWorker extends Component {
   }
   handleAuthConfirm = async(token, phone) => {
     Toast.loading('实名认证中...', 0)
-    // let { phone } = this.state
+    let { isBack } = this.state
     const data = await api.Mine.workManage.realNameConfirm({
       token,
       mobile: phone
@@ -223,7 +225,11 @@ class CreateWorker extends Component {
     if (data) {
       Toast.hide()
       Toast.success('实名成功', 1.5, () => {
-        this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?isBack=1`)
+        if (isBack) {
+          this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?orderno=${isBack}`)
+        } else {
+          this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}`)
+        }
       })
       this.setState({
         stepNum: 3
@@ -237,7 +243,7 @@ class CreateWorker extends Component {
   }
   render() {
     // const { getFieldDecorator, getFieldError } = this.props.form
-    let { backImg, frontImg, isClickBack, isClickFront, isSuccessFront, isSuccessBack, stepNum, isShowFace, backFaceImg, fileList } = this.state
+    let { backImg, frontImg, isClickBack, isClickFront, isSuccessFront, isSuccessBack, stepNum, isShowFace, backFaceImg, fileList, isBack } = this.state
     return <div className='pageBox'>
       <Header
         title={isShowFace ? '人脸识别' : '身份验证'}
@@ -249,7 +255,11 @@ class CreateWorker extends Component {
               isShowFace: false
             })
           } else {
-            this.props.match.history.go(-1)
+            if (isBack) {
+              this.props.match.history.push(`${urls['SELECTWORKER']}?orderno=${isBack}`)
+            } else {
+              this.props.match.history.go(-1)
+            }
           }
         }}
       />

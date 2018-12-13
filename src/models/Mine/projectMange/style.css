@@ -7,6 +7,8 @@
   }
 }
 .project-mange-list {
+  width: 100%;
+  overflow-y: auto;
   display: block;
   background: #ffffff;
   & li {

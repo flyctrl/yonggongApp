@@ -178,16 +178,14 @@ class ProjectMange extends Component {
               onChange={this.handleTabsChange}
             >
 
-              <ul style={{ height: this.state.height }} className={style['project-mange-list']}>
+              <ul style={{ height: '100%' }} className={style['project-mange-list']}>
                 <ListView
                   ref={(el) => { this.lv = el }}
                   dataSource={this.state.dataSource}
                   renderFooter={() => footerShow()}
                   renderRow={row}
                   style={{
-                    height: this.state.height,
-                    position: 'absolute',
-                    width: '100%'
+                    height: this.state.height
                   }}
                   className={style['job-list']}
                   pageSize={NUM_ROWS}
