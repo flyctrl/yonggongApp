@@ -109,6 +109,10 @@ const AgentFinishList = Loadable({ // 代完工列表 我的订单
   loader: () => import(/* webpackChunkName: "agentfinishlist" */ '../models/Mine/myorder/agentFinish'),
   loading: MyLoadingComponent
 })
+const AgentCheckList = Loadable({ // 代考勤列表 我的订单
+  loader: () => import(/* webpackChunkName: "agentchecklist" */ '../models/Mine/myorder/agentCheck'),
+  loading: MyLoadingComponent
+})
 const OOrderStartWorkRecord = Loadable({ // 订单开工记录 我接的
   loader: () => import(/* webpackChunkName: "oorderStartWorkRecord" */ '../models/Mine/myorder/orderStartWorkRecord'),
   loading: MyLoadingComponent
@@ -667,6 +671,14 @@ const routes = [
     showMenu: false,
     animated: true,
     title: '订单代完工列表'
+  }, {
+    path: urls.AGENTCHECKLIST,
+    exact: true,
+    component: AgentCheckList,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '订单代考勤列表'
   }, {
     path: urls.OORDERSTARTWORKRECORD,
     exact: true,

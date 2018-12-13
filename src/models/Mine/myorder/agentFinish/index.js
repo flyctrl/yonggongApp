@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { Header, Content } from 'Components'
-import { List, Checkbox, Modal } from 'antd-mobile'
-import * as urls from 'Contants/urls'
-// import api from 'Util/api'
+import { List, Checkbox, Modal, InputItem } from 'antd-mobile'
+import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
 const CheckboxItem = Checkbox.CheckboxItem
@@ -12,62 +11,49 @@ class ApplySettle extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      orderno: tooler.getQueryString('orderno'),
+      valuationWay: tooler.getQueryString('valuationWay'),
       checkall: false,
-      dataSource: []
+      dataSource: [],
+      isloading: false
     }
   }
   componentDidMount() {
     this.getDatalist()
   }
-  getDatalist = () => {
-    let data = [
-      { value: 0, label: '大脸猫1', price: 200000 },
-      { value: 1, label: '大脸猫2', price: 32000 },
-      { value: 2, label: '大脸猫3', price: 2000000 },
-      { value: 3, label: '大脸猫4', price: 300010 },
-      { value: 4, label: '大脸猫5', price: 400000 },
-      { value: 5, label: '大脸猫6', price: 9500000 },
-      { value: 6, label: '大脸猫7', price: 9500000 },
-      { value: 7, label: '大脸猫8', price: 9500000 },
-      { value: 8, label: '大脸猫9', price: 9500000 },
-      { value: 9, label: '大脸猫10', price: 9500000 },
-      { value: 10, label: '大脸猫11', price: 9500000 },
-      { value: 11, label: '大脸猫12', price: 9500000 },
-      { value: 12, label: '大脸猫13', price: 9500000 },
-    ]
-    let idstr = tooler.getQueryString('ids')
-    let ids = []
-    if (idstr) {
-      ids = idstr.split(',')
-    }
-    console.log('ids:', ids)
-    let dataSource = []
-    for (let j = 0; j < data.length; j++) {
-      if (ids.includes(data[j]['value'].toString())) {
+  getDatalist = async () => {
+    this.setState({
+      isloading: false
+    })
+    let { orderno } = this.state
+    let data = await api.Mine.myorder.agentFinishList({
+      page: 1,
+      limit: 500,
+      order_no: orderno
+    }) || false
+    if (data) {
+      let dataSource = []
+      for (let j = 0; j < data['list'].length; j++) {
         dataSource.push({
-          ...data[j],
-          ...{ ischeck: true }
-        })
-      } else {
-        dataSource.push({
-          ...data[j],
+          ...data['list'][j],
           ...{ ischeck: false }
         })
       }
-    }
-    let checkall = false
-    for (let i = 0; i < dataSource.length; i++) {
-      if (dataSource[i].ischeck) {
-        checkall = true
-      } else {
-        checkall = false
-        break
+      let checkall = false
+      for (let i = 0; i < dataSource.length; i++) {
+        if (dataSource[i].ischeck) {
+          checkall = true
+        } else {
+          checkall = false
+          break
+        }
       }
+      this.setState({
+        dataSource,
+        checkall,
+        isloading: true
+      })
     }
-    this.setState({
-      dataSource,
-      checkall
-    })
   }
   onChange = (val) => {
     let { dataSource } = this.state
@@ -106,15 +92,15 @@ class ApplySettle extends Component {
       checkall: !checkall
     })
   }
-  countTotal = (data) => { // 计算总价
+  countTotal = (data) => { // 计算总数
     let total = 0
     data.map((item) => {
-      item.ischeck ? total += item.price : null
+      item.ischeck ? total += 1 : null
     })
     console.log(total)
-    return total !== 0 ? tooler.addCommas(total / 100) : 0
+    return total !== 0 ? total : 0
   }
-  handleApply = () => { // 申请结算
+  handleApply = () => { // 代完工事件
     let { dataSource } = this.state
     let ishas = false
     for (let i = 0; i < dataSource.length; i++) {
@@ -126,23 +112,33 @@ class ApplySettle extends Component {
       }
     }
     if (!ishas) {
-      alert('请选择结算记录')
+      alert('请选择代完工的人员')
     } else {
-      let ids = []
+      let uids = []
       dataSource.map((item) => {
         if (item.ischeck) {
-          ids.push(item['value'])
+          uids.push(item['uid'])
         }
       })
-      this.props.match.history.replace(`?ids=${ids.join(',')}`)
-      this.props.match.history.push(`${urls.CONFIRMSETTLE}?ids=${ids.join(',')}`)
+      console.log(uids)
+      this.agentFinishWork(uids)
+    }
+  }
+  agentFinishWork = async (uids) => { // 代开工操作
+    let { orderno } = this.state
+    let data = await api.Mine.myorder.agentFinishWork({
+      order_no: orderno,
+      task_list: uids
+    }) || false
+    if (data) {
+      this.props.match.history.go(-1)
     }
   }
   render() {
-    let { dataSource, checkall } = this.state
+    let { dataSource, checkall, isloading, valuationWay } = this.state
     return <div className='pageBox gray'>
       <Header
-        title='申请结算'
+        title='代完工列表'
         leftIcon='icon-back'
         leftTitle1='返回'
         leftClick1={() => {
@@ -150,24 +146,38 @@ class ApplySettle extends Component {
         }}
       />
       <Content>
-        <List className={style['settle-list']}>
-          {dataSource.map(i => (
-            <CheckboxItem key={i.value} checked={i.ischeck} activeStyle={{ backgroundColor: '#fff' }} onChange={() => this.onChange(i)}>
-              <img className={style['header']} src='http://tupian.qqjay.com/u/2017/1201/2_161641_2.jpg' />
-              <div className={style['settle-info']}>
-                <h2>{i.label}</h2>
-                <p>80元/天</p>
-                <time>2018/09/09-2018/09/12</time>
-              </div>
-              <span className={style['price']}>¥240.00</span>
-            </CheckboxItem>
-          ))}
-        </List>
-        <div className={style['btn-box']}>
-          <AgreeItem checked={checkall} onChange={this.handleCheckAll}>全选</AgreeItem>
-          <a onClick={this.handleApply}>申请结算</a>
-          <span>合计：<em>{this.countTotal(dataSource)}元</em></span>
-        </div>
+        {
+          isloading && dataSource.length !== 0 ? <div>
+            <List className={style['settle-list']}>
+              {dataSource.map(i => (
+                <CheckboxItem key={i.uid} checked={i.ischeck} activeStyle={{ backgroundColor: '#fff' }} onChange={() => this.onChange(i)}>
+                  <img className={style['header']} src={i['tasker_avatar']} />
+                  <div className={style['settle-info']}>
+                    <h2>{i.tasker_name}</h2>
+                    <p>手机号：{i['tasker_mobile']}</p>
+                    <time>开工时间：{i['started_at']}</time>
+                  </div>
+                  {
+                    valuationWay === '1' ? <span className={style['price']}>
+                      <InputItem
+                        placeholder=''
+                        extra={`${i.workload_unit}`}
+                        defaultValue={0}
+                        onChange={(value) => this.handlePrice(i.uid, value)}
+                        onBlur={(value) => this.handleBlurprice(i.uid, value)}
+                      />
+                    </span> : null
+                  }
+                </CheckboxItem>
+              ))}
+            </List>
+            <div className={style['btn-box']}>
+              <AgreeItem checked={checkall} onChange={this.handleCheckAll}>全选</AgreeItem>
+              <a onClick={this.handleApply}>代完工</a>
+              <span>共选择：<em>{this.countTotal(dataSource)}人</em></span>
+            </div>
+          </div> : dataSource.length === 0 && isloading ? <div className='nodata'>暂无数据</div> : null
+        }
       </Content>
     </div>
   }

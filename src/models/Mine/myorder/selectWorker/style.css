@@ -31,6 +31,10 @@ html:not([data-scale]) :global(.am-list-body div:not(:last-child)) .price :globa
   &:global(.am-list .am-list-item.am-checkbox-item .am-list-thumb) {
    display: none; 
   }
+  & .price {
+    height: 56px;
+    line-height: 56px;
+  }
 }
 .settle-list {
   & :global(.am-list-content) {

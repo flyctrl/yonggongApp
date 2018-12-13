@@ -19,7 +19,6 @@ const data = [{
   label: '按量计价',
   value: 1
 }]
-const settleId = parseInt(tooler.getQueryString('settleValue'))
 class SelectClass extends Component {
   constructor(props) {
     super(props)
@@ -27,6 +26,7 @@ class SelectClass extends Component {
       showIndex: 0,
       proId: tooler.getQueryString('proId') || '',
       proVal: tooler.getQueryString('proVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('proVal'))) : '请选择',
+      settleId: parseInt(tooler.getQueryString('settleValue')),
       settleValue: parseInt(tooler.getQueryString('settleValue')) || 2,
       classifyVal: tooler.getQueryString('classifyVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('classifyVal'))) : '请选择',
       classifyId: tooler.getQueryString('classifyId') || '',
@@ -136,7 +136,7 @@ class SelectClass extends Component {
   }
   render() {
     console.log(this.state)
-    let { orderno, settleValue, classifyVal, showIndex, parentClassId, teachId, teachVal, showtech, classifyId, proId, proVal, url } = this.state
+    let { orderno, settleValue, classifyVal, showIndex, parentClassId, teachId, teachVal, showtech, classifyId, proId, proVal, settleId, url } = this.state
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
         <Header

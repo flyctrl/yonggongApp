@@ -25,6 +25,7 @@
   & .settle-info {
     float: left;
     width: 150px;
+    margin-top: 12px;
     & h2 {
       line-height: 20px;
       color: #333;

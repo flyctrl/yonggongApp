@@ -30,9 +30,9 @@ class ApplySettle extends Component {
     }) || false
     if (data) {
       let dataSource = []
-      for (let j = 0; j < data.length; j++) {
+      for (let j = 0; j < data['list'].length; j++) {
         dataSource.push({
-          ...data[j],
+          ...data['list'][j],
           ...{ ischeck: false }
         })
       }
@@ -97,7 +97,7 @@ class ApplySettle extends Component {
     console.log(total)
     return total !== 0 ? total : 0
   }
-  handleApply = () => { // 代开工
+  handleApply = () => { // 代开工事件
     let { dataSource } = this.state
     let ishas = false
     for (let i = 0; i < dataSource.length; i++) {
@@ -117,6 +117,17 @@ class ApplySettle extends Component {
           uids.push(item['uid'])
         }
       })
+      console.log(uids)
+      this.agentStartWork(uids)
+    }
+  }
+  agentStartWork = async (uids) => { // 代开工操作
+    let data = await api.Mine.myorder.agentStartWork({
+      order_no: tooler.getQueryString('orderno'),
+      task_uid_list: uids
+    }) || false
+    if (data) {
+      this.props.match.history.go(-1)
     }
   }
   render() {

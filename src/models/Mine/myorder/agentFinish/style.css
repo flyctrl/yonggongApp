@@ -3,11 +3,20 @@
   margin-top: 10px;
   overflow-y: auto;
   -webkit-overflow-scrolling:touch;
+  & :global(.am-list-item) {
+    padding-left: 10px;
+  }
   &:global(.am-list .am-list-item.am-checkbox-item .am-list-thumb .am-checkbox-inner) {
     top: 28px;
   }
   &:global(.am-list .am-list-item.am-checkbox-item .am-list-thumb .am-checkbox) {
     height: 74px;
+  }
+  &:global(.am-list .am-list-item.am-checkbox-item .am-list-thumb) {
+    margin-right: 10px;
+  }
+  & :global(.am-list .am-list-item.am-checkbox-item .am-list-thumb .am-checkbox-inner) {
+    left: 10px;
   }
 }
 .confirm-list {
@@ -18,9 +27,10 @@
 .settle-list {
   & .header {
     float: left;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     margin-right: 10px;
+    margin-top: 5px;
   }
   & .settle-info {
     float: left;
@@ -41,10 +51,24 @@
     }
   }
   & .price {
-    float: right;
+    position: absolute;
+    z-index: 10;
+    top: 18px;
+    right: 10px;
     color:rgba(250,107,109,1);
     font-size: 16px;
-    line-height: 60px;
+    height: 44px;
+    & :global(.am-list-item.am-input-item) {
+      padding-left: 5px;
+      width: 90px;
+      & :global(.am-list-line) {
+        padding-right: 0;
+        margin-top: 10px;
+      }
+      & :global(.am-input-control input) {
+        text-align: center;
+      }
+    }
   }
 }
 
