@@ -2,7 +2,6 @@
   width: 100%;
   overflow-y: auto;
   background: #fff;
-  margin-top: 15px;
   font-family:SourceHanSansCN-Regular;
   font-weight:400;
   & :global(.am-list-body::before) {

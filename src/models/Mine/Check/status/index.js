@@ -17,7 +17,7 @@ let typeStatus = {
   2: '下班'
 }
 const List = (props) => {
-  let { dataCheck = {}, time, imgSrc } = props
+  let { dataCheck = {}, time, imgSrc, succTime, workerUid } = props
   return <div className='pageBox gray'>
     <div className={style['check-info']}>
       <div className={style['check-info-m']}>
@@ -31,6 +31,7 @@ const List = (props) => {
           <li><span>位置</span><em>{dataCheck['address']}</em></li>
           <li><span>备注</span><img src={`${imgSrc}`}/></li>
         </ul>
+        <div className={style['success-footer']}><em>{succTime}</em> 秒后系统将自动跳转到{workerUid ? '代考勤列表页' : '考勤页'}</div>
       </div>
     </div>
   </div>

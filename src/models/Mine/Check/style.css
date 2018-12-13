@@ -28,6 +28,10 @@
         & :global(.amap-marker-label) {
           border:none;
           background:none;
+          & img {
+            width: 91px;
+            height: 42px;
+          }
         }
         & :global(.amap-marker .amap-marker-content) {
             & img {
