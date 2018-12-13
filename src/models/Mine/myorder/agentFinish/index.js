@@ -7,6 +7,7 @@ import style from './style.css'
 const CheckboxItem = Checkbox.CheckboxItem
 const AgreeItem = Checkbox.AgreeItem
 const alert = Modal.alert
+const numReg = /^(([1-9][0-9]*\.[0-9][0-9]*)|([0]\.[0-9][0-9]*)|([1-9][0-9]*)|([0]{1}))$/
 class ApplySettle extends Component {
   constructor(props) {
     super(props)
@@ -36,7 +37,8 @@ class ApplySettle extends Component {
       for (let j = 0; j < data['list'].length; j++) {
         dataSource.push({
           ...data['list'][j],
-          ...{ ischeck: false }
+          ...{ ischeck: false },
+          ...{ currentprice: 0 }
         })
       }
       let checkall = false
@@ -106,33 +108,68 @@ class ApplySettle extends Component {
     for (let i = 0; i < dataSource.length; i++) {
       if (dataSource[i].ischeck) {
         ishas = true
-        break
-      } else {
-        ishas = false
+        if (dataSource[i]['currentprice'] <= 0) {
+          alert('工作量必须大于0')
+          return
+        }
       }
     }
     if (!ishas) {
       alert('请选择代完工的人员')
     } else {
-      let uids = []
+      let tasklist = []
       dataSource.map((item) => {
         if (item.ischeck) {
-          uids.push(item['uid'])
+          tasklist.push({
+            task_no: item['task_no'],
+            workload: item['currentprice']
+          })
         }
       })
-      console.log(uids)
-      this.agentFinishWork(uids)
+      console.log(tasklist)
+      this.agentFinishWork(tasklist)
     }
   }
-  agentFinishWork = async (uids) => { // 代开工操作
+  agentFinishWork = async (tasklist) => { // 代开工操作
     let { orderno } = this.state
     let data = await api.Mine.myorder.agentFinishWork({
       order_no: orderno,
-      task_list: uids
+      task_list: tasklist
     }) || false
     if (data) {
       this.props.match.history.go(-1)
     }
+  }
+  handleBlurprice = (id, value) => { // 失去焦点检测
+    let { dataSource } = this.state
+    if (!numReg.test(value)) {
+      alert('输入的工作量格式错误', null, [
+        {
+          text: '确认',
+          onPress: () => {
+            dataSource.map(item => {
+              if (item['task_no'] === id) {
+                item['currentprice'] = 0
+              }
+            })
+            this.setState({
+              dataSource
+            })
+          }
+        }
+      ])
+    }
+  }
+  handlePrice = (id, value) => { // 焦点在
+    let { dataSource } = this.state
+    dataSource.map(item => {
+      if (item['task_no'] === id) {
+        item['currentprice'] = value
+      }
+    })
+    this.setState({
+      dataSource
+    })
   }
   render() {
     let { dataSource, checkall, isloading, valuationWay } = this.state
@@ -150,7 +187,7 @@ class ApplySettle extends Component {
           isloading && dataSource.length !== 0 ? <div>
             <List className={style['settle-list']}>
               {dataSource.map(i => (
-                <CheckboxItem key={i.uid} checked={i.ischeck} activeStyle={{ backgroundColor: '#fff' }} onChange={() => this.onChange(i)}>
+                <CheckboxItem key={i.task_no} checked={i.ischeck} activeStyle={{ backgroundColor: '#fff' }} onChange={() => this.onChange(i)}>
                   <img className={style['header']} src={i['tasker_avatar']} />
                   <div className={style['settle-info']}>
                     <h2>{i.tasker_name}</h2>
@@ -163,8 +200,9 @@ class ApplySettle extends Component {
                         placeholder=''
                         extra={`${i.workload_unit}`}
                         defaultValue={0}
-                        onChange={(value) => this.handlePrice(i.uid, value)}
-                        onBlur={(value) => this.handleBlurprice(i.uid, value)}
+                        value={i.currentprice}
+                        onChange={(value) => this.handlePrice(i.task_no, value)}
+                        onBlur={(value) => this.handleBlurprice(i.task_no, value)}
                       />
                     </span> : null
                   }

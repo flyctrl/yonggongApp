@@ -80,6 +80,9 @@ export default {
     getWorkmachine(params) { // 获取机械
       return Fetch('/common/machine', params, 'get')
     },
+    getWorkSkill(params) { // 获取工种技能
+      return Fetch('/common/work/skill', params, 'get')
+    },
     getAptitude(params) { // 获取工种列表和企业资质列表
       return Fetch('/common/aptitude', params, 'get')
     },
@@ -183,6 +186,9 @@ export default {
     workSheetDetail(params) { // 工单详情
       return Fetch(prefix + '/worksheet/detail', params, 'get')
     },
+    cancelWork(params) { // 我发的 取消工单
+      return FetchSave(prefix + '/worksheet/cancel', params, 'post', { showloading: false })
+    },
     worksheetApplyList(params) { // 接单记录
       return Fetch(prefix + '/worksheet/apply/list', params, 'get')
     },
@@ -205,80 +211,7 @@ export default {
       return Fetch(prefix + '/worksheet/settle', params, 'get')
     },
   },
-  WorkOrder: { // （会删除会删除会删除会删除）
-    showReview(params) { // 审批工单详情
-      return Fetch(prefix + '/worksheet/showReview', params, 'get')
-    },
-    getListByPro(params) { // 根据项目获取工单列表
-      return Fetch(prefix + '/worksheet/prj/list', params, 'get')
-    },
-    getStatusList(params) { // 获取工单状态
-      return Fetch(prefix + '/worksheet/stat/status', params, 'get')
-    },
-    confirmConstruct(params) { // 确认开工 快单、普通工单、招标
-      return FetchSave(prefix + '/worksheet/confirmConstruct', params, 'post', { showloading: false })
-    },
-    cancelConstruct(params) { // 取消开工 快单、普通工单、招标
-      return FetchSave(prefix + '/worksheet/cancel', params, 'post', { showloading: false })
-    },
-    handleConfirmComp(params) { // 快单 确认完工列表
-      return Fetch(prefix + '/worksheetOrder/confirmList', params, 'get')
-    },
-    confirmQtReefusal(params) { // 确认和驳回 快单
-      return FetchSave(prefix + '/worksheetOrder/confirm', params, 'post', { showloading: false })
-    },
-    applyQtList(params) { // 快单接单记录
-      return Fetch(prefix + '/worksheetOrder/applyList', params, 'get')
-    },
-    reviewOrder(params) { // 审批工单
-      return FetchSave(prefix + '/worksheet/review', params, 'post', { showloading: false })
-    },
-    confirmApplyRecord(params) { // 确认拒绝接单记录
-      return FetchSave(prefix + '/worksheet/confirmApplyRecord', params, 'post', { showloading: false })
-    },
-    confirmOrder(params) { // 确认工单 普通工单、招标
-      return FetchSave(prefix + '/worksheet/confirm', params, 'post', { showloading: false })
-    },
-    confirmWorkList(params) { // 开工列表
-      return Fetch(prefix + '/worksheetOrder/confirmList', params, 'get')
-    },
-    confirmWorkOrderlist(params) { // 开工列表的确认
-      return FetchSave(prefix + '/worksheetOrder/confirm', params, 'post', { showloading: false })
-    },
-    settleList(params) { // 结算列表
-      return Fetch(prefix + '/worksheetOrder/settleList', params, 'get')
-    },
-    confirmSettle(params) { // 结算确认
-      return FetchSave(prefix + '/worksheetOrder/settle', params, 'post', { showloading: false })
-    }
-  },
   Mine: { // 我的
-    WorkOrderList: { // 我的工单（会删除会删除会删除会删除）
-      workorderSubmit(params) { // 我的接单 确认完工
-        return FetchSave('/worksheetOrder/submit', params)
-      },
-      workorderApply(params) { // 我的接单 确认结算
-        return FetchSave('/worksheetOrder/settleApply', params)
-      },
-      cancelWork(params) { // 我发的 取消开工
-        return FetchSave('/worksheet/cancel', params, 'post', { showloading: false })
-      },
-      confirmConstruct(params) { // 确认开工 快单、普通工单、招标
-        return FetchSave('/worksheet/confirmConstruct', params)
-      },
-      cancelConstruct(params) { // 取消开工 快单、普通工单、招标
-        return FetchSave('/worksheet/cancel', params)
-      },
-      handleConfirmComp(params) { // 快单 确认完工列表
-        return Fetch('/worksheetOrder/confirmList', params, 'get')
-      },
-      getContractList(params) { // 合同列表
-        return Fetch('/contract/list/publish', params, 'get')
-      },
-      getContractDetail(params) { // 合同列表详情
-        return Fetch('/contract/show', params, 'get')
-      }
-    },
     myorder: {
       workorderList(params) { // 订单列表
         return Fetch(prefix + '/worksheetOrder/list', params, 'get')

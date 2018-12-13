@@ -223,7 +223,7 @@ class WorkListManage extends Component {
       }
     })
     Toast.loading('取消中...', 0)
-    let data = await api.Mine.WorkOrderList.cancelWork({
+    let data = await api.WorkListManage.cancelWork({
       worksheet_no: rowData['worksheet_no']
     }) || false
     Toast.hide()
