@@ -6,31 +6,82 @@ html:not([data-scale]) .record-list :global(.am-list-body::after) {
   height: 622px;
   & li {
     background: #fff;
-    padding: 8px 15px;
+    padding: 8px 10px;
+    height: 74px;
     overflow: hidden;
     margin-top: 4px;
     color: #313f48;
+    & .record-img {
+      float: left;
+      margin-right: 10px;
+      margin-top: 10px;
+      & img {
+        display: block;
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+        margin-top: 7px;
+      }
+      & p {
+        display: none;
+        font-size: 13px;
+        color: #b1aeae;
+        text-align: center;
+        line-height: 24px;
+      }
+      &.record-self {
+        margin-top: 0;
+        & p {
+          display: block;
+        }
+      }
+    }
     & .record-hd {
       float: left;
       & p {
         width: 210px;
-        height: 26px;
-        line-height: 26px;
+        height: 32px;
+        line-height: 32px;
+        & span {
+          color: #1298FC;
+        }
       }
       & time {
         display: block;
         line-height: 20px;
-        font-size: 12px;
+        color: #ccc;
       }
     }
     & .record-btn {
       float: right;
+      margin-top: 6px;
+      & .confirm-status {
+        height: 52px;
+        line-height: 52px;
+        font-size: 12px;
+        text-align: center;
+        color: #03bd03;
+      }
+      & .reject-status {
+        height: 50px;
+        line-height: 50px;
+        font-size: 12px;
+        text-align: center;
+        color: #e40505;
+      }
       & :global(.am-button) {
         font-size: 12px;
-        height: 28px;
-        line-height: 28px;
-        background: #0467e0;
-        margin-top: 10px;
+        height: 24px;
+        line-height: 24px;
+        background: #1298FC;
+        &:nth-child(2) {
+          margin-top: 14px;
+          background: #fff;
+          color: #1298FC;
+        }
+        &.one-btn {
+          margin-top: 22px;
+        }
       }
     }
   }

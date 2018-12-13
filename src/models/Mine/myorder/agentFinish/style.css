@@ -1,0 +1,90 @@
+.settle-list {
+  height: 560px;
+  margin-top: 10px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling:touch;
+  &:global(.am-list .am-list-item.am-checkbox-item .am-list-thumb .am-checkbox-inner) {
+    top: 28px;
+  }
+  &:global(.am-list .am-list-item.am-checkbox-item .am-list-thumb .am-checkbox) {
+    height: 74px;
+  }
+}
+.confirm-list {
+  &:global(.am-list .am-list-item.am-checkbox-item .am-list-thumb) {
+   display: none; 
+  }
+}
+.settle-list {
+  & .header {
+    float: left;
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+  }
+  & .settle-info {
+    float: left;
+    width: 150px;
+    & h2 {
+      line-height: 20px;
+      color: #333;
+      font-size: 16px;
+      font-weight: normal;
+    }
+    & p {
+      font-size: 14px;
+      color: #666;
+    }
+    & time {
+      color:rgba(153,153,153,1);
+      font-size: 12px;
+    }
+  }
+  & .price {
+    float: right;
+    color:rgba(250,107,109,1);
+    font-size: 16px;
+    line-height: 60px;
+  }
+}
+
+.btn-box {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 50px;
+  background: #fff;
+  overflow: hidden;
+  & :global(.am-checkbox-agree) {
+    float: left;
+    padding-top: 14px;
+    & :global(.am-checkbox-agree-label) {
+      font-size: 15px;
+      color:rgba(153,153,153,1);
+      margin-left: 25px;
+    }
+    & :global(.am-checkbox-inner) {
+      top: 15px;
+    }
+  }
+  & span {
+    float: right;
+    line-height: 50px;
+    font-size:15px;
+    color:rgba(51,51,51,1);
+    margin-right: 10px;
+    & em {
+      color: #FA6B6D;
+    }
+  }
+  & a {
+    float: right;
+    width: 105px;
+    line-height: 50px;
+    background:rgba(0,152,245,1);
+    text-align: center;
+    font-size: 15px;
+    color: #fff;
+  }
+}

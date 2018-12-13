@@ -178,8 +178,8 @@ class WorkListManage extends Component {
       case 'orderPageQuick': // 我接的 - 发快单
         this.handlePushQuick(rowData)
         break
-      case 'orderPageAddWorker': // 我接的 - 添加工人
-        this.handleAddpeo(rowData)
+      case 'orderPageSelectWorker': // 我接的 - 选择工人
+        this.handleSelectWorker(rowData)
         break
       case 'orderPageAttend': // 我接的 - 考勤
         this.handleAttend(rowData)
@@ -199,7 +199,7 @@ class WorkListManage extends Component {
       case 'orderPageAgentFinishWork': // 我接的 - 代完工
         this.handleAgentFished(rowData)
         break
-      case 'orderPageSettle': // 我接的 - 提交结算
+      case 'orderPageSubmitSettle': // 我接的 - 提交结算
         this.handleRefSettle(rowData)
         break
       case 'orderViewAttend': // 我接的 - 考勤记录
@@ -211,20 +211,24 @@ class WorkListManage extends Component {
       case 'orderViewWorkPlan': // 我接的 - 开工记录
         this.handleOrderViewWorkPlan(rowData)
         break
+      case 'orderViewTasker': // 我接的 - 工人记录
+        this.handleOrderViewTasker(rowData)
+        break
     }
   }
   handlePushQuick = (rowData) => { // 我接的 - 发快单
     // this.props.match.history.push(urls.PUSHORDER + '?url=WORKLISTMANAGE')
     console.log('发快单')
   }
-  handleAddpeo = (rowData) => { // 我接的 - 添加工人
-    console.log('添加工人')
+  handleSelectWorker = (rowData) => { // 我接的 - 选择工人
+    console.log('选择工人')
   }
   handleAttend = (rowData) => { // 我接的 - 考勤 workorderno
-    // this.props.match.history.push(urls.CHECK + '?url=WORKLISTMANAGE&workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
+    this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
     console.log('考勤')
   }
   handleGenAttend = (rowData) => { // 我接的 - 代考勤
+    // this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
     console.log('代考勤')
   }
   handleStart = async (rowData) => { // 我接的 - 开工
@@ -238,7 +242,7 @@ class WorkListManage extends Component {
       }
     })
     Toast.loading('提交中...', 0)
-    let data = await api.Mine.WorkOrderList.startWork({
+    let data = await api.Mine.myorder.startWork({
       order_no: rowData['order_no']
     }) || false
     Toast.hide()
@@ -251,7 +255,7 @@ class WorkListManage extends Component {
     }
   }
   handleAgentStart = (rowData) => { // 我接的 - 代开工
-    console.log('代开工')
+    this.props.match.history.push(urls.AGENTSTARTLIST + '?orderno=' + rowData['order_no'])
   }
   handleFished = async (rowData) => { // 我接的 - 完工
     console.log('完工')
@@ -273,9 +277,9 @@ class WorkListManage extends Component {
             if (regzs.test(value)) {
               resolve()
               Toast.loading('提交中...', 0)
-              data = await api.Mine.WorkOrderList.finshedWork({
+              data = await api.Mine.myorder.finshedWork({
                 order_no: rowData['order_no'],
-                work_amount: value
+                workload: value
               }) || false
               Toast.hide()
               if (data) {
@@ -294,7 +298,7 @@ class WorkListManage extends Component {
       ], 'default', null, ['请输入工作量'])
     } else {
       Toast.loading('提交中...', 0)
-      data = await api.Mine.WorkOrderList.finshedWork({
+      data = await api.Mine.myorder.finshedWork({
         order_no: rowData['order_no']
       }) || false
       Toast.hide()
@@ -314,13 +318,16 @@ class WorkListManage extends Component {
     console.log('提交结算')
   }
   handleOrderViewAttend = (rowData) => { // 我接的 - 考勤记录
-    this.props.match.history.push(urls.OATTENDDETAIL + '?orderno=' + rowData['order_no'])
+    this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'])
   }
   handleOrderViewSettle = (rowData) => { // 我接的 - 结算记录
-    this.props.match.history.push(urls.OSETTLERECORD + '?worksheetno=' + rowData['worksheet_no'] + '&worktype=0')
+    this.props.match.history.push(urls.OSETTLERECORD + '?orderno=' + rowData['order_no'])
   }
   handleOrderViewWorkPlan = (rowData) => { // 我接的 - 开工记录
     this.props.match.history.push(urls.OORDERSTARTWORKRECORD + '?orderno=' + rowData['order_no'])
+  }
+  handleOrderViewTasker = (rowData) => { // 我接的 - 工人列表
+    this.props.match.history.push(urls.ORDERWORKERLIST + '?orderno=' + rowData['order_no'])
   }
   /* *************** 按钮end *************** */
   render() {
@@ -338,7 +345,7 @@ class WorkListManage extends Component {
       if (rowData['worksheet_type'] === 1) { // 招标
         return <dl key={rowData['worksheet_no']} onClick={() => this.handleShowDetail(rowData['worksheet_no'])}>
           <dt className='my-bottom-border'>
-            <Badge className={`${style['typericon']}`} text='招标' />
+            <Badge className='typericon bidicon' text='招标' />
             <p className='ellipsis'>{rowData['title']}</p>
             <Badge className={`${style['statusicon']} ${rowData['order_status'] === 4 ? style['gray'] : style['orage']}`} text={
               orderStatus.find((item) => {
@@ -368,7 +375,7 @@ class WorkListManage extends Component {
       } else if (rowData['worksheet_type'] === 2) { // 工单
         return <dl key={rowData['worksheet_no']} onClick={() => this.handleShowDetail(rowData['worksheet_no'])}>
           <dt className='my-bottom-border'>
-            <Badge className={`${style['typericon']}`} text='工单' />
+            <Badge className='typericon sheeticon' text='工单' />
             <p className='ellipsis'>{rowData['title']}</p>
             <Badge className={`${style['statusicon']} ${rowData['order_status'] === 4 ? style['gray'] : style['orage']}`} text={
               orderStatus.find((item) => {
@@ -403,7 +410,7 @@ class WorkListManage extends Component {
       } else if (rowData['worksheet_type'] === 3) { // 快单
         return <dl key={rowData['worksheet_no']} onClick={() => this.handleShowDetail(rowData['worksheet_no'])}>
           <dt className='my-bottom-border'>
-            <Badge className={`${style['typericon']}`} text='快单' />
+            <Badge className='typericon quickicon' text='快单' />
             <p className='ellipsis'>{rowData['title']}</p>
             <Badge className={`${style['statusicon']} ${rowData['order_status'] === 4 ? style['gray'] : style['orage']}`} text={
               orderStatus.find((item) => {

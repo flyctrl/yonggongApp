@@ -97,6 +97,18 @@ const AttendDetail = Loadable({ // 工单考勤详情
   loading: MyLoadingComponent
 })
 
+const OrderWorkerList = Loadable({ // 工人列表 我的订单
+  loader: () => import(/* webpackChunkName: "orderworkerlist" */ '../models/Mine/myorder/workerList'),
+  loading: MyLoadingComponent
+})
+const AgentStartList = Loadable({ // 代开工列表 我的订单
+  loader: () => import(/* webpackChunkName: "agentstartlist" */ '../models/Mine/myorder/agentStart'),
+  loading: MyLoadingComponent
+})
+const AgentFinishList = Loadable({ // 代完工列表 我的订单
+  loader: () => import(/* webpackChunkName: "agentfinishlist" */ '../models/Mine/myorder/agentFinish'),
+  loading: MyLoadingComponent
+})
 const OOrderStartWorkRecord = Loadable({ // 订单开工记录 我接的
   loader: () => import(/* webpackChunkName: "oorderStartWorkRecord" */ '../models/Mine/myorder/orderStartWorkRecord'),
   loading: MyLoadingComponent
@@ -631,6 +643,30 @@ const routes = [
     showMenu: false,
     animated: true,
     title: '工单考勤详情'
+  }, {
+    path: urls.ORDERWORKERLIST,
+    exact: true,
+    component: OrderWorkerList,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '订单工人列表'
+  }, {
+    path: urls.AGENTSTARTLIST,
+    exact: true,
+    component: AgentStartList,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '订单代开工列表'
+  }, {
+    path: urls.AGENTFINISHLIST,
+    exact: true,
+    component: AgentFinishList,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '订单代完工列表'
   }, {
     path: urls.OORDERSTARTWORKRECORD,
     exact: true,

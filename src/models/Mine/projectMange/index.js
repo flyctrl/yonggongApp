@@ -134,7 +134,7 @@ class ProjectMange extends Component {
       if (isLoading) {
         return null
       } else if (nodata) {
-        return <DefaultPage click={() => { this.props.match.history.push(urls['CREATEWORKER']) }} type='noitems' />
+        return <DefaultPage click={() => { this.props.match.history.push(urls['CREATEPROJECT']) }} type='noitems' />
       } else {
         return ''
       }

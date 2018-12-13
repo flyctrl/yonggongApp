@@ -81,7 +81,7 @@ class AccessRecord extends Component {
     this.setState({
       isLoading: true
     })
-    let data = await api.Mine.WorkOrderList.sendWorkplanList({
+    let data = await api.WorkListManage.sendWorkplanList({
       page: pIndex,
       limit: NUM_ROWS,
       worksheet_no: worksheetno
@@ -102,22 +102,22 @@ class AccessRecord extends Component {
     return await data['list']
   }
   showlistStatus = (item) => { // 状态按钮
-    if (item['workplan_status'] === 4) { // 已完工
+    if (item['status'] === 3) { // 已完工
       return <div className={style['confirm-status']}>{
         workplanStatus.find(i => {
-          return i['status'] === item['workplan_status']
+          return i['status'] === item['status']
         })['title']
       }</div>
-    } else if (item['workplan_status'] === 1 || item['workplan_status'] === 2) { // 待开工、开工中
+    } else if (item['status'] === 1) { // 开工中
       return <div className={style['reject-status']}>{
         workplanStatus.find(i => {
-          return i['status'] === item['workplan_status']
+          return i['status'] === item['status']
         })['title']
       }</div>
-    } else {
+    } else if (item['status'] === 2) { // 完工待确认
       return <div>
-        <Button type='primary' onClick={() => { this.getSolicit(item['plan_no'], 1, item) }} size='small'>确认完工</Button>
-        <Button type='primary' onClick={() => { this.getSolicit(item['plan_no'], 2, item) }} size='small'>驳回</Button>
+        <Button type='primary' onClick={() => { this.getSolicit(item['task_no'], 1, item) }} size='small'>确认完工</Button>
+        <Button type='primary' onClick={() => { this.getSolicit(item['task_no'], 2, item) }} size='small'>驳回</Button>
       </div>
     }
   }
@@ -125,14 +125,14 @@ class AccessRecord extends Component {
     let { dataSource } = this.state
     let currentIndex
     dataSource.map((item, index) => {
-      if (item['plan_no'] === planno) {
+      if (item['task_no'] === planno) {
         currentIndex = index
       }
     })
     Toast.loading('提交中...', 0)
-    let data = await api.Mine.WorkOrderList.sendConfirmWork({
-      plan_no: planno,
-      status: type
+    let data = await api.WorkListManage.sendConfirmWork({
+      task_no: planno,
+      confirm_status: type
     }) || false
     Toast.hide()
     if (data) {
@@ -145,7 +145,7 @@ class AccessRecord extends Component {
   }
   getSolicit = (planno, type, rowData) => {
     if (type === 1) {
-      alert('确定支付' + rowData['worker_realname'] + rowData['pay_amount'] + '工资吗？', '', [
+      alert('确定' + rowData['workload'] + rowData['workload_unit'] + '的工作量吗？', '', [
         { text: '取消' },
         { text: '确认', onPress: async () => {
           this.solicitfun(planno, type)
@@ -181,13 +181,14 @@ class AccessRecord extends Component {
       />
     )
     const row = (rowData, sectionID, rowID) => {
-      return <li key={rowData['plan_no']}>
+      return <li key={rowData['task_no']}>
         <div className={style['record-img']}>
-          <img src={rowData['worker_avatar']}/>
+          <img src={rowData['tasker_avatar']}/>
         </div>
         <div className={style['record-hd']}>
-          <p className='ellipsis'>{rowData['worker_realname']}</p>
-          <time>{rowData['ended_at']}</time>
+          <p className='ellipsis'>{rowData['tasker_name']}<span>（{rowData['workload']}{rowData['workload_unit']}）</span></p>
+          <time>开工时间：{rowData['started_at']}</time>
+          <time>完工时间：{rowData['ended_at'] ? rowData['ended_at'] : '暂无'}</time>
         </div>
         <div className={style['record-btn']}>
           {

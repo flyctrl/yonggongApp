@@ -13,10 +13,10 @@ import ProjectList from './projectList'
 const Item = List.Item
 const RadioItem = Radio.RadioItem
 const data = [{
-  label: '按时间结算',
+  label: '按时间计价',
   value: 2
 }, {
-  label: '按量结算',
+  label: '按量计价',
   value: 1
 }]
 const settleId = parseInt(tooler.getQueryString('settleValue'))
@@ -185,7 +185,7 @@ class SelectClass extends Component {
         showIndex === 3 ? <TeachList code={classifyId} onClose={() => this.closeDialog(0)} onSubmit={(postJson) => this.teachListSubmit(postJson)} /> : null
       }
       {
-        showIndex === 4 ? <ProjectList data={{ proId }} onClose={() => this.closeDialog(0)} onSubmit={(postJson) => this.projectListSubmit(postJson)} /> : null
+        showIndex === 4 ? <ProjectList match={this.props.match} data={{ proId }} onClose={() => this.closeDialog(0)} onSubmit={(postJson) => this.projectListSubmit(postJson)} /> : null
       }
     </div>
   }

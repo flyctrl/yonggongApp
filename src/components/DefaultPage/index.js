@@ -29,7 +29,13 @@ class DefaultPage extends Component {
         desc: '暂时没有添加任何人~',
         url: require('Src/assets/defaultpic/noworklist.png'),
         btn: null
-      }
+      },
+      {
+        name: 'noworkmanage',
+        desc: '暂时没有工单',
+        url: require('Src/assets/defaultpic/noorder.png'),
+        btn: null
+      },
     ]
   }
   render() {

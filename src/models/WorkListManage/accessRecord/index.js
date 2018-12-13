@@ -79,7 +79,7 @@ class AccessRecord extends Component {
     this.setState({
       isLoading: true
     })
-    let data = await api.Mine.WorkOrderList.worksheetApplyList({
+    let data = await api.WorkListManage.worksheetApplyList({
       page: pIndex,
       limit: NUM_ROWS,
       worksheet_no: worksheetno
@@ -120,7 +120,7 @@ class AccessRecord extends Component {
       }
     })
     Toast.loading('提交中...', 0)
-    let data = await api.Mine.WorkOrderList.confirmQtReefusal({
+    let data = await api.WorkListManage.confirmQtReefusal({
       apply_no: applyno,
       type: type
     }) || false
