@@ -27,15 +27,17 @@ let checkType = [{
 let map = null
 let newAlert = null
 let setTime
+let successTime
 class Check extends Component {
   constructor(props) {
     super(props)
     this.state = {
       isLoading: true,
       isCheck: false,
-      visible: false,
+      visible: true,
       checkInTime: null, // 打卡时间
-      time: '', // 倒计时
+      time: '', // 考勤倒计时
+      succTime: 5, // 返回列表倒计时
       dataCheck: {}, // 校验
       position: {},
       checkVal: 1,
@@ -51,23 +53,12 @@ class Check extends Component {
   }
 
   componentDidMount() {
-    this.getUserList()
     this._getPosition(getQueryString('lng'), getQueryString('lat'), getQueryString('radius'))
     setTime = setInterval(() => {
       this.setState({
         time: new Date().Format('hh:mm'),
       })
     }, 1000)
-  }
-  getUserList = async() => { // 代考勤用户列表
-    let data = await api.Mine.Check.attendUserlist({
-      order_no: this.state.workorderno
-    }) || false
-    if (data) {
-      this.setState({
-        dataList: data['list']
-      })
-    }
   }
   showToast = (msg, duration) => {
     let _this = this
@@ -202,7 +193,7 @@ class Check extends Component {
     let data
     let postData
     if (dataCheck['attend_type'] && dataCheck['attend_type'] === 1) { // 自由打卡
-      if (workerUid !== '' && workerUid !== null) { // 代考勤
+      if (workerUid) { // 代考勤
         postData = {
           place_info: {
             lng: position.P,
@@ -231,7 +222,7 @@ class Check extends Component {
         }
       }
     } else { // 固定打卡
-      if (workerUid !== '' && workerUid !== null) {
+      if (workerUid) {
         postData = {
           place_info: {
             lng: position.P,
@@ -267,6 +258,20 @@ class Check extends Component {
       })
       Toast.hide()
       Toast.success('打卡成功', 1)
+      successTime = setInterval(() => {
+        if (this.state.succTime <= 1) {
+          clearInterval(successTime)
+          if (workerUid) {
+            this.props.match.history.push(urls[''])
+          } else {
+            this.setState({
+              visible: false
+            })
+          }
+        } else {
+          this.setState({ succTime: this.state.succTime - 1 })
+        }
+      }, 1000)
     }
   }
   handleCheckTime = async (v) => {
@@ -280,7 +285,7 @@ class Check extends Component {
       return false
     }
     let postData = {}
-    if (workerUid !== '' && workerUid !== null) {
+    if (workerUid) {
       postData = {
         place_info: {
           lng: position.P,
@@ -368,8 +373,12 @@ class Check extends Component {
       this.handleTakePic(file)
     }
   }
+  componentWillUnmount() {
+    clearInterval(setTime)
+    clearInterval(successTime)
+  }
   render() {
-    const { time, dataCheck = {}, checkVal, visible, imgSrc, checkInTime, workorderno, isCheck } = this.state
+    const { time, dataCheck = {}, checkVal, visible, imgSrc, checkInTime, workorderno, isCheck, workerUid, succTime } = this.state
     dataCheck.attend_time_config = dataCheck.attend_time_config || []
     dataCheck['attend_type'] = dataCheck['attend_type'] || ''
     let his = this.props.match.history
@@ -381,11 +390,19 @@ class Check extends Component {
         rightTitle='考勤明细'
         leftClick1={() => {
           if (!visible) {
-            his.go(-1)
+            if (workerUid) {
+              his.push(urls[''])
+            } else {
+              his.go(-1)
+            }
           } else {
-            this.setState({
-              visible: !this.state.visible
-            })
+            if (workerUid) {
+              his.push(urls[''])
+            } else {
+              this.setState({
+                visible: !this.state.visible
+              })
+            }
             if (newAlert) {
               newAlert.close()
             }
@@ -431,7 +448,7 @@ class Check extends Component {
           </div>
         </div>
         <div style={{ display: !visible ? 'none' : 'block' }}>
-          <ChildStatus dataCheck={dataCheck} time={checkInTime} imgSrc={ imgSrc }/>
+          <ChildStatus dataCheck={dataCheck} time={checkInTime} succTime={succTime} imgSrc={ imgSrc } workerUid={workerUid}/>
         </div>
       </Content>
     </div>
