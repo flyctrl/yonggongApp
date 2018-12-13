@@ -1,0 +1,19 @@
+.agentcheck-list {
+  & :global(.am-list-item) {
+    & img {
+      width: 46px;
+      height: 46px;
+    }
+    & :global(.am-list-line-multiple) {
+      padding: 10px 15px 10px 0;
+    }
+    & :global(.am-list-line) {
+      & :global(.am-list-brief) {
+        margin-top: 0;
+      }
+      & :global(.am-list-content) {
+        line-height: 1.2;
+      }
+    }
+  }
+}

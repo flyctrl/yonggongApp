@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Header, Content } from 'Components'
+import { Header, Content, DefaultPage } from 'Components'
 import { List, Checkbox, Modal, Button, WingBlank, InputItem } from 'antd-mobile'
-// import * as urls from 'Contants/urls'
-// import api from 'Util/api'
-// import * as tooler from 'Contants/tooler'
+import * as urls from 'Contants/urls'
+import api from 'Util/api'
+import * as tooler from 'Contants/tooler'
 import style from './style.css'
 const CheckboxItem = Checkbox.CheckboxItem
 const alert = Modal.alert
@@ -12,40 +12,39 @@ class ApplySettle extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      orderno: tooler.getQueryString('orderno'),
       dataSource: [],
-      showConfirm: false
+      showConfirm: false,
+      isloading: false
     }
   }
   componentDidMount() {
     this.getDatalist()
   }
-  getDatalist = () => {
-    let data = [
-      { value: 0, label: '大脸猫1', singleprice: 200 },
-      { value: 1, label: '大脸猫2', singleprice: 30 },
-      { value: 2, label: '大脸猫3', singleprice: 20 },
-      { value: 3, label: '大脸猫4', singleprice: 310 },
-      { value: 4, label: '大脸猫5', singleprice: 40 },
-      { value: 5, label: '大脸猫6', singleprice: 90 },
-      { value: 6, label: '大脸猫7', singleprice: 95 },
-      { value: 7, label: '大脸猫8', singleprice: 95 },
-      { value: 8, label: '大脸猫9', singleprice: 90 },
-      { value: 9, label: '大脸猫10', singleprice: 900 },
-      { value: 10, label: '大脸猫11', singleprice: 900 },
-      { value: 11, label: '大脸猫12', singleprice: 90 },
-      { value: 12, label: '大脸猫13', singleprice: 95 },
-    ]
-    let dataSource = []
-    for (let j = 0; j < data.length; j++) {
-      dataSource.push({
-        ...data[j],
-        ...{ ischeck: false },
-        ...{ currentprice: data[j]['singleprice'] }
+  getDatalist = async () => {
+    this.setState({
+      isloading: false
+    })
+    let { orderno } = this.state
+    let data = await api.Mine.myorder.workerselectList({
+      orderNo: orderno,
+      page: 1,
+      pageSize: 500
+    }) || false
+    if (data) {
+      let dataSource = []
+      for (let j = 0; j < data['list'].length; j++) {
+        dataSource.push({
+          ...data['list'][j],
+          ...{ ischeck: false },
+          ...{ currentprice: data['list'][j]['price'] }
+        })
+      }
+      this.setState({
+        dataSource,
+        isloading: true
       })
     }
-    this.setState({
-      dataSource
-    })
   }
   onChange = (val) => {
     let { dataSource } = this.state
@@ -55,7 +54,7 @@ class ApplySettle extends Component {
       dataSource
     })
   }
-  handleApply = () => { // 申请结算
+  handleApply = () => { // 下一步
     let { dataSource } = this.state
     let ishas = false
     for (let i = 0; i < dataSource.length; i++) {
@@ -72,7 +71,7 @@ class ApplySettle extends Component {
       let ids = []
       dataSource.map((item) => {
         if (item.ischeck) {
-          ids.push(item['value'])
+          ids.push(item['uid'])
         }
       })
     }
@@ -85,8 +84,8 @@ class ApplySettle extends Component {
           text: '确认',
           onPress: () => {
             dataSource.map(item => {
-              if (item['value'] === id) {
-                item['currentprice'] = item['singleprice']
+              if (item['uid'] === id) {
+                item['currentprice'] = item['price']
               }
             })
             this.setState({
@@ -97,12 +96,12 @@ class ApplySettle extends Component {
       ])
     } else {
       dataSource.map(item => {
-        if (item['value'] === id) {
-          if (item['currentprice'] > item['singleprice']) {
+        if (item['uid'] === id) {
+          if (item['currentprice'] > item['price']) {
             alert('金额超过最大范围', null, [{
               text: '确认',
               onPress: () => {
-                item['currentprice'] = item['singleprice']
+                item['currentprice'] = item['price']
                 this.setState({
                   dataSource
                 })
@@ -116,7 +115,7 @@ class ApplySettle extends Component {
   handlePrice = (id, value) => { // 焦点在
     let { dataSource } = this.state
     dataSource.map(item => {
-      if (item['value'] === id) {
+      if (item['uid'] === id) {
         item['currentprice'] = value
       }
     })
@@ -149,8 +148,27 @@ class ApplySettle extends Component {
       showConfirm: false
     })
   }
+  submitSelect = async () => { // 确认选择工人
+    let { orderno, dataSource } = this.state
+    let newary = []
+    for (let i = 0; i < dataSource.length; i++) {
+      if (dataSource[i].ischeck) {
+        newary.push({
+          uid: dataSource[i]['uid'],
+          price: dataSource[i]['currentprice']
+        })
+      }
+    }
+    let data = await api.Mine.myorder.workerselectAdd({
+      orderNo: orderno,
+      worker: newary
+    }) || false
+    if (data) {
+      this.props.match.history.go(-1)
+    }
+  }
   render() {
-    let { dataSource, showConfirm } = this.state
+    let { dataSource, showConfirm, isloading, orderno } = this.state
     return <div className='pageBox gray'>
       <Header
         title='选择工人'
@@ -164,42 +182,43 @@ class ApplySettle extends Component {
           }
         }}
         rightTitle={ showConfirm ? null : '添加工人'}
-        rightClick={() => console.log('去添加工人')}
+        rightClick={() => this.props.match.history.push(`${urls.CREATEWORKER}?orderno=${orderno}`)}
       />
       {
         showConfirm ? <Content>
           <List className={`${style['settle-list']} ${style['confirm-list']}`}>
             {dataSource.map(i => (
-              i.ischeck ? <CheckboxItem key={i.value} disabled={true}>
-                <img className={style['header']} src='http://tupian.qqjay.com/u/2017/1201/2_161641_2.jpg' />
+              i.ischeck ? <CheckboxItem key={i.uid} disabled={true}>
+                <img className={style['header']} src={i.avatar} />
                 <div className={style['settle-info']}>
-                  <h2>{i.label}</h2>
-                  <p>15858246633</p>
+                  <h2>{i.realname}</h2>
+                  <p>{i.mobile}</p>
                 </div>
-                <span className={style['price']}>¥240.00</span>
+                <span className={style['price']}>{i.currentprice}元/{i.unit}</span>
               </CheckboxItem> : null
             ))}
           </List>
           <div className={style['btn-box']}>
-            <WingBlank><Button type='primary'>确认选择</Button></WingBlank>
+            <WingBlank><Button onClick={this.submitSelect} type='primary'>确认选择</Button></WingBlank>
           </div>
-        </Content> : <Content style={{ display: showConfirm ? 'none' : 'block' }}>
+        </Content> : (isloading && dataSource.length !== 0 ? <Content style={{ display: showConfirm ? 'none' : 'block' }}>
           <List className={style['settle-list']}>
             {dataSource.map(i => (
-              <CheckboxItem key={i.value} activeStyle={{ backgroundColor: '#fff' }} checked={i.ischeck} onChange={() => this.onChange(i)}>
-                <img className={style['header']} src='http://tupian.qqjay.com/u/2017/1201/2_161641_2.jpg' />
+              <CheckboxItem key={i.uid} activeStyle={{ backgroundColor: '#fff' }} disabled={i.status === 1} checked={i.ischeck || i.status === 1} onChange={() => this.onChange(i)}>
+                <img className={style['header']} src={i.avatar} />
                 <div className={style['settle-info']}>
-                  <h2>{i.label}</h2>
-                  <p>15858246633</p>
+                  <h2>{i.realname}</h2>
+                  <p>{i.mobile}</p>
                 </div>
                 <span className={style['price']}>
                   <InputItem
                     placeholder=''
-                    extra='元/日'
-                    defaultValue={i.singleprice}
+                    disabled={i.status === 1}
+                    extra={`元/${i.unit}`}
+                    defaultValue={i.price}
                     value={i.currentprice}
-                    onChange={(value) => this.handlePrice(i.value, value)}
-                    onBlur={(value) => this.handleBlurprice(i.value, value)}
+                    onChange={(value) => this.handlePrice(i.uid, value)}
+                    onBlur={(value) => this.handleBlurprice(i.uid, value)}
                   />
                 </span>
               </CheckboxItem>
@@ -208,7 +227,7 @@ class ApplySettle extends Component {
           <div className={style['btn-box']}>
             <WingBlank><Button type='primary' onClick={this.handleNextStep}>下一步</Button></WingBlank>
           </div>
-        </Content>
+        </Content> : dataSource.length === 0 && isloading ? <DefaultPage type='noworklist' /> : null)
       }
     </div>
   }

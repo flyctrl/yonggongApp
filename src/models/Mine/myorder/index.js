@@ -221,14 +221,14 @@ class WorkListManage extends Component {
     console.log('发快单')
   }
   handleSelectWorker = (rowData) => { // 我接的 - 选择工人
-    console.log('选择工人')
+    this.props.match.history.push(urls.SELECTWORKER + '?orderno=' + rowData['order_no'])
   }
   handleAttend = (rowData) => { // 我接的 - 考勤 workorderno
     this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
     console.log('考勤')
   }
   handleGenAttend = (rowData) => { // 我接的 - 代考勤
-    // this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
+    this.props.match.history.push(urls.AGENTCHECKLIST + '?orderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
     console.log('代考勤')
   }
   handleStart = async (rowData) => { // 我接的 - 开工
@@ -312,7 +312,7 @@ class WorkListManage extends Component {
     }
   }
   handleAgentFished = (rowData) => { // 我接的 - 代完工
-    console.log('代完工')
+    this.props.match.history.push(`${urls.AGENTFINISHLIST}?orderno=${rowData['order_no']}&valuationWay=${rowData['valuation_way']}`)
   }
   handleRefSettle = (rowData) => { // 我接的 - 提交结算
     console.log('提交结算')

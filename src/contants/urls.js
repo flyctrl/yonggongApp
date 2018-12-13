@@ -37,6 +37,7 @@ export const OORDERSTARTWORKRECORD = `${MYORDER}/orderStartWorkRecord` // 开工
 export const ORDERWORKERLIST = `${MYORDER}/workerList` // 工人列表
 export const AGENTSTARTLIST = `${MYORDER}/agentStart` // 代开工列表
 export const AGENTFINISHLIST = `${MYORDER}/agentFinish` // 代完工列表
+export const AGENTCHECKLIST = `${MYORDER}/agentCheck` // 代考勤列表
 export const OATTENDDETAIL = `${MYORDER}/attendRecord/detail` // 考勤详情
 export const APPLYSETTLE = `${MYORDER}/applySettle` // 申请结算
 export const CONFIRMSETTLE = `${MYORDER}/applySettle/confirmlist` // 确认结算

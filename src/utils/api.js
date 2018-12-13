@@ -309,6 +309,24 @@ export default {
       },
       agentStartList(params) { // 代开工列表
         return Fetch(prefix + '/workPlan/list/agentStart', params, 'get')
+      },
+      agentStartWork(params) { // 代开工
+        return FetchSave(prefix + '/workPlan/agentStartWork', params)
+      },
+      agentFinishList(params) { // 代完工列表
+        return Fetch(prefix + '/workPlan/list/agentFinish', params, 'get')
+      },
+      agentFinishWork(params) { // 代完工
+        return FetchSave(prefix + '/workPlan/agentFinishWork', params)
+      },
+      workerselectList(params) { // 待选工人列表
+        return Fetch(prefix + '/order/worker/select', params, 'get')
+      },
+      workerselectAdd(params) { // 选择工人
+        return FetchSave(prefix + '/order/worker/add', params)
+      },
+      attendUserlist(params) { // 代考勤订单用户列表
+        return Fetch(prefix + '/worksheetOrder/attend/userList', params, 'get')
       }
     },
     account: {
@@ -502,9 +520,6 @@ export default {
       },
       attendOrderlist(params) { // 代考勤订单列表(考勤提醒)
         return Fetch(prefix + '/worksheetOrder/attend/orderList', params, 'get')
-      },
-      attendUserlist(params) { // 代考勤订单用户列表
-        return Fetch(prefix + '/worksheetOrder/attend/userList', params, 'get')
       }
     },
     workManage: {// 工人管理

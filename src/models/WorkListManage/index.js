@@ -302,7 +302,7 @@ class WorkListManage extends Component {
         return <dl key={rowData['worksheet_no']} onClick={() => this.handleShowDetail(rowData['worksheet_no'])}>
           <dt className='my-bottom-border'>
             <p className='ellipsis'>{rowData['title']}</p>
-            <Badge className={`${style['statusicon']} ${rowData['worksheet_status'] === 4 ? style['gray'] : style['orage']}`} text={
+            <Badge className={`${style['statusicon']} ${rowData['worksheet_status'] === 5 ? style['gray'] : style['orage']}`} text={
               worksheetStatus.find((item) => {
                 return item.status === rowData['worksheet_status']
               })['title']
@@ -337,7 +337,7 @@ class WorkListManage extends Component {
         return <dl key={rowData['worksheet_no']} onClick={() => this.handleShowDetail(rowData['worksheet_no'])}>
           <dt className='my-bottom-border'>
             <p className='ellipsis'>{rowData['title']}</p>
-            <Badge className={`${style['statusicon']} ${rowData['worksheet_status'] === 4 ? style['gray'] : style['orage']}`} text={
+            <Badge className={`${style['statusicon']} ${rowData['worksheet_status'] === 5 ? style['gray'] : style['orage']}`} text={
               worksheetStatus.find((item) => {
                 return item.status === rowData['worksheet_status']
               })['title']
