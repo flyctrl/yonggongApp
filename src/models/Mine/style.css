@@ -35,12 +35,12 @@ html .mine-header :global(.am-button-ghost::before) {
     }
   }
   & .company-title {
-    padding: 15px;
+    padding: 10px;
     padding-top: 0;
     overflow: hidden;
     & dt {
       float: left;
-      margin-right: 12px;
+      margin-right: 10px;
       & img {
         display: block;
         width: 66px;
@@ -61,14 +61,8 @@ html .mine-header :global(.am-button-ghost::before) {
       & p {
         font-size: 13px;
         color:rgba(255,255,255,1);
-        background:rgba(0,0,0,0.08);
-        border-radius:10px;
         height: 22px;
         line-height: 22px;
-        width: 110px;
-        & svg {
-          margin: 0 5px;
-        }
       }
     }
   }
@@ -109,6 +103,61 @@ html .mine-header :global(.am-button-ghost::before) {
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
+    }
+  }
+  & .attest-btn {
+    display: block;
+    width:100px;
+    height:30px;
+    background:rgba(255,255,255,1);
+    border-radius:15px;
+    position: absolute;
+    top: 72px;
+    right: 10px;
+    overflow: hidden;
+    & span {
+      float: left;
+      font-size: 12px;
+      line-height: 30px;
+      width: 54px;
+      text-align: center;
+    }
+    & .licon {
+      float: left;
+      width: 22px;
+      height: 22px;
+      margin-top: 4px;
+      margin-left: 5px;
+    }
+    & .ricon {
+      float: right;
+      width: 12px;
+      height: 30px;
+      margin-right: 5px;
+    }
+    &.people {
+      & span {
+        color: #00BECC;
+      }
+      & .ricon {
+        color: #00BECC;
+      }
+    }
+    &.company {
+      & span {
+        color: #1198FC;
+      }
+      & .ricon {
+        color: #1198FC;
+      }
+    }
+    &.failer {
+      & span {
+        color: #FA6B6D;
+      }
+      & .ricon {
+        color: #FA6B6D;
+      }
     }
   }
 }

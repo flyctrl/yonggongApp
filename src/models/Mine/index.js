@@ -6,8 +6,7 @@
 */
 import React, { Component } from 'react'
 // import { Button } from 'antd-mobile'
-import { Content } from 'Components'
-import NewIcon from 'Components/NewIcon'
+import { Content, NewIcon } from 'Components'
 import * as urls from 'Contants/urls'
 import style from './style.css'
 import api from 'Util/api'
@@ -92,6 +91,7 @@ class Mine extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      dataSource: {}
     }
   }
   componentWillMount() {
@@ -101,7 +101,7 @@ class Mine extends Component {
     const data = await api.Mine.checkDetails.info({
     }) || false
     this.setState({
-      companyDetail: data
+      dataSource: data
     })
   }
   handleMenuClick(type) {
@@ -111,8 +111,18 @@ class Mine extends Component {
   handleSeeClick = () => {
     this.props.match.history.push(urls.USERINFO + '?url=MINE')
   }
+  showAttest = (dataSource) => {
+    if (dataSource['user']['is_realname'] === 0) {
+      return <a onClick={() => this.props.match.history.push(urls.REALNAMEAUTH)} className={`${style['attest-btn']} ${style['people']}`}><NewIcon className={style['licon']} type='icon-shiming' /><span>实名认证</span><NewIcon className={style['ricon']} type='icon-youjiantou' /></a>
+    } else if (dataSource['company']['company_status'] === 0) { // 未认证
+      return <a onClick={() => this.props.match.history.push(urls.COMPANYAUTH)} className={`${style['attest-btn']} ${style['company']}`}><NewIcon className={style['licon']} type='icon-renzheng' /><span>公司认证</span><NewIcon className={style['ricon']} type='icon-youjiantou' /></a>
+    } else if (dataSource['company']['company_status'] === 3) { // 审核失败
+      return <a onClick={() => this.props.match.history.push(urls.COMPANYAUTH)} className={`${style['attest-btn']} ${style['failer']}`}><NewIcon className={style['licon']} type='icon-shibai' /><span>重新认证</span><NewIcon className={style['ricon']} type='icon-youjiantou' /></a>
+    }
+  }
   render() {
-    let { companyDetail } = this.state
+    let { dataSource } = this.state
+    console.log(typeof dataSource['user'] === 'undefined')
     return (
       <div className='pageBox'>
         <Content isHeader={false}>
@@ -121,19 +131,24 @@ class Mine extends Component {
               <a onClick={() => this.props.match.history.push(urls.SETUP)}><NewIcon type='icon-shezhi1' />设置</a>
             </div>
             <dl className={style['company-title']}>
-              <dt><img src='http://pic170.nipic.com/file/20180628/3803997_104151366083_2.jpg' /></dt>
+              <dt>{
+                typeof dataSource['user'] !== 'undefined' ? <img src={dataSource['user']['avatar']} /> : ''
+              }</dt>
               <dd>
-                <h1>{ companyDetail ? companyDetail.name : ''}</h1>
-                { companyDetail ? <p><NewIcon type='icon-dianhua' />手机号码</p> : null}
+                <h1>{typeof dataSource['company'] !== 'undefined' ? dataSource['company']['name'] : ''}</h1>
+                <p>{typeof dataSource['user'] !== 'undefined' ? '账号：' + dataSource['user']['username'] : ''}</p>
               </dd>
             </dl>
             <div className={style['company-detail']}>
               <p>
-                <span>{ companyDetail ? companyDetail.name : ''}</span>
+                <span>{typeof dataSource['company'] !== 'undefined' ? dataSource['company']['name'] : ''}</span>
                 <a onClick={this.handleSeeClick}>公司详情>></a>
               </p>
-              <content>{ companyDetail ? companyDetail.description : ''}</content>
+              <content>{typeof dataSource['company'] !== 'undefined' ? dataSource['company']['description'] : ''}</content>
             </div>
+            {
+              typeof dataSource['user'] !== 'undefined' ? this.showAttest(dataSource) : null
+            }
           </div>
           <ul className={style['mine-btn-list']}>
             {
@@ -148,6 +163,7 @@ class Mine extends Component {
             }
           </ul>
         </Content>
+        }
       </div>
     )
   }

@@ -141,6 +141,19 @@ const msgStatus = [ // 消息标题栏
   { title: '认证' },
   { title: '项目' },
 ]
+const paymethod = [{ // 结算方式
+  label: '日',
+  value: 1
+}, {
+  label: '周',
+  value: 2
+}, {
+  label: '月',
+  value: 3
+}, {
+  label: '年',
+  value: 4
+}]
 export {
   priceModeData,
   settleRadio,
@@ -162,5 +175,6 @@ export {
   worksheetStatus,
   workplanStatus,
   receiveTypeRadio,
-  msgStatus
+  msgStatus,
+  paymethod
 }

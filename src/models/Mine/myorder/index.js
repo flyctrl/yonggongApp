@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { Button, Badge, ListView, PullToRefresh, ActionSheet, Toast, Modal } from 'antd-mobile'
 import { Header, Content, NewIcon, DefaultPage } from 'Components'
-import { orderStatus } from 'Contants/fieldmodel'
+import { orderStatus, paymethod } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
-// import * as tooler from 'Contants/tooler'
+import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import style from './index.css'
 
@@ -174,6 +174,7 @@ class WorkListManage extends Component {
       case 'handleTake': // 接单
         break
       case 'orderPageCommon': // 我接的 - 发工单
+        this.handlePushNormal(rowData)
         break
       case 'orderPageQuick': // 我接的 - 发快单
         this.handlePushQuick(rowData)
@@ -216,9 +217,72 @@ class WorkListManage extends Component {
         break
     }
   }
-  handlePushQuick = (rowData) => { // 我接的 - 发快单
-    // this.props.match.history.push(urls.PUSHORDER + '?url=WORKLISTMANAGE')
-    console.log('发快单')
+  handlePushNormal = async (rowData) => { // 我接的 - 发工单
+    let data = await api.Mine.myorder.worksheetOrderData({
+      order_no: rowData['order_no']
+    }) || false
+    if (data) {
+      let levelJson = {}
+      let constructJson = {}
+      let settleJson = {}
+      if (data['professional_level'].length !== 0) {
+        levelJson = {
+          teachId: data['professional_level']['id'],
+          teachVal: data['professional_level']['name']
+        }
+      }
+      if (data['construct'].length !== 0) {
+        constructJson = {
+          classifyId: data['construct'][0]['code'],
+          classifyVal: data['construct'][0]['name'],
+          constructType: data['construct'][0]['construct_type']
+        }
+      }
+      if (data['valuation_way'] !== '') {
+        settleJson = {
+          settleValue: data['valuation_way']
+        }
+      }
+      let paymethodVal = paymethod.filter(item => {
+        return item['value'] === data['settle_fix_time']
+      })[0]['label']
+      let urlJson = {
+        proId: data['prj_no'],
+        proVal: data['prj_name'],
+        ...levelJson,
+        ...constructJson,
+        ...settleJson,
+        paymethodId: data['settle_fix_time'],
+        paymethodVal,
+        starttime: data['start_time']
+      }
+      this.props.match.history.push(`${urls.PUSHNORMALORDER}?${tooler.parseJsonUrl(urlJson)}`)
+    }
+  }
+  handlePushQuick = async (rowData) => { // 我接的 - 发快单
+    let data = await api.Mine.myorder.worksheetOrderData({
+      order_no: rowData['order_no']
+    }) || false
+    if (data) {
+      let levelJson = {}
+      if (data['professional_level'].length !== 0) {
+        levelJson = {
+          teachId: data['professional_level']['id'],
+          teachVal: data['professional_level']['name']
+        }
+      }
+      let urlJson = {
+        proId: data['prj_no'],
+        proVal: data['prj_name'],
+        classifyId: data['construct'][0]['code'],
+        classifyVal: data['construct'][0]['name'],
+        constructType: data['construct'][0]['construct_type'],
+        ...levelJson,
+        settleValue: data['valuation_way'],
+        starttime: data['start_time']
+      }
+      this.props.match.history.push(`${urls.PUSHQUICKORDER}?${tooler.parseJsonUrl(urlJson)}`)
+    }
   }
   handleSelectWorker = (rowData) => { // 我接的 - 选择工人
     this.props.match.history.push(urls.SELECTWORKER + '?orderno=' + rowData['order_no'])
@@ -315,7 +379,7 @@ class WorkListManage extends Component {
     this.props.match.history.push(`${urls.AGENTFINISHLIST}?orderno=${rowData['order_no']}&valuationWay=${rowData['valuation_way']}`)
   }
   handleRefSettle = (rowData) => { // 我接的 - 提交结算
-    console.log('提交结算')
+    this.props.match.history.push(`${urls.PENDINGSETTLERECORD}?orderno=${rowData['order_no']}`)
   }
   handleOrderViewAttend = (rowData) => { // 我接的 - 考勤记录
     this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'])

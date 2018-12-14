@@ -40,7 +40,7 @@ class AttendDetail extends Component {
   }
   getAttendDetail = async (postdate = null) => {
     let { orderno, defaultDate } = this.state
-    let data = await api.Mine.WorkOrderList.attendDetail({
+    let data = await api.WorkListManage.attendDetail({
       order_no: orderno,
       date: postdate !== null ? postdate : defaultDate
     }) || []
