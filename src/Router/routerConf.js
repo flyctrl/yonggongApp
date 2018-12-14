@@ -342,6 +342,10 @@ const CreateWorker = Loadable({ // 添加工人
   loader: () => import(/* webpackChunkName: "createworker" */ '../models/Mine/workerMange/createWorker'),
   loading: MyLoadingComponent
 })
+const CreateWorkerCode = Loadable({ // 添加工人手机验证码
+  loader: () => import(/* webpackChunkName: "createworkercode" */ '../models/Mine/workerMange/createWorker/code'),
+  loading: MyLoadingComponent
+})
 const CreateWorkerSuccess = Loadable({ // 添加工人成功
   loader: () => import(/* webpackChunkName: "createworkersuccess" */ '../models/Mine/workerMange/createWorker/success'),
   loading: MyLoadingComponent
@@ -1057,6 +1061,14 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '添加工人成功'
+  }, {
+    path: urls.CREATEWORKERCODE,
+    exact: true,
+    component: CreateWorkerCode,
+    parent: 'WorkerMange',
+    animated: true,
+    showMenu: false,
+    title: '添加工人手机号'
   }, {
     path: urls.CHECKSET,
     exact: true,

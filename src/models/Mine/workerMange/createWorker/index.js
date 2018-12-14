@@ -4,7 +4,7 @@
  * @Title: 个人认证
  */
 import React, { Component } from 'react'
-import { Steps, Toast, Button, List, Modal } from 'antd-mobile'
+import { Steps, Toast, Button, List, InputItem } from 'antd-mobile'
 import { createForm } from 'rc-form'
 import api from 'Util/api'
 import * as urls from 'Contants/urls'
@@ -14,8 +14,6 @@ import back from 'Src/assets/back.png'
 import front from 'Src/assets/front.png'
 import backFace from 'Src/assets/backimg.png'
 import { getQueryString } from 'Contants/tooler'
-const prompt = Modal.prompt
-let newPrompt = null
 const Item = List.Item
 let myreg = /^[1][3,4,5,7,8][0-9]{9}$/
 const sex = {
@@ -39,38 +37,19 @@ class CreateWorker extends Component {
       isShowFace: false, // 是否显示人脸识别页面
       phone: '',
       token: '',
-      isBack: getQueryString('orderno')
+      isBack: getQueryString('orderno'),
+      codeDisabled: false,
+      codeText: '获取验证码',
+      total: 10,
     }
   }
   handleClickNext = () => { // 是否显示人脸识别页面
-    let { isSuccessBack, isSuccessFront, stepNum, token } = this.state
+    let { isSuccessBack, isSuccessFront, stepNum } = this.state
     if (isSuccessBack && isSuccessFront) {
       if (stepNum === 2) {
         this.setState({
-          isShowFace: true
-        }, () => {
-          newPrompt = prompt(
-            '请输入工人手机号',
-            '',
-            [
-              { text: '取消' },
-              { text: '确定', onPress: (phone) => new Promise(async (resolve, reject) => {
-                if (phone === '') {
-                  Toast.fail('手机号不能为空', 2)
-                  return false
-                } else if (!myreg.test(phone)) {
-                  Toast.fail('请输入正确的手机号', 1.5)
-                  return false
-                } else {
-                  this.handleAuthConfirm(token, phone)
-                }
-                newPrompt.close()
-                reject()
-              }),
-              }
-            ],
-            'default'
-          )
+          isShowFace: false,
+          isPhone: true
         })
       } else {
         this.setState({
@@ -95,7 +74,8 @@ class CreateWorker extends Component {
       fileList: {},
       backImg: back,
       frontImg: front,
-      token: ''
+      token: '',
+      isPhone: false
     })
   }
   handleTakeFront = (e) => { // 正面照
@@ -175,36 +155,14 @@ class CreateWorker extends Component {
       if (data) {
         Toast.hide()
         Toast.success('上传成功', 1.5)
-        setTimeout(() => {
-          newPrompt = prompt(
-            '请输入工人手机号',
-            '',
-            [
-              { text: '取消' },
-              { text: '确定', onPress: (phone) => new Promise(async (resolve, reject) => {
-                if (phone === '') {
-                  Toast.fail('手机号不能为空', 1.5)
-                  return false
-                } else if (!myreg.test(phone)) {
-                  Toast.fail('请输入正确的手机号', 1.5)
-                  return false
-                } else {
-                  _this.handleAuthConfirm(data['token'], phone)
-                }
-                newPrompt.close()
-                reject()
-              }),
-              }
-            ],
-            'default'
-          )
-        }, 1500)
         _this.setState({
           backFaceImg: url,
           isClickBack: true,
           isSuccessBack: true,
           stepNum: 2,
-          token: data['token']
+          token: data['token'],
+          isPhone: true,
+          isShowFace: false
         })
       }
     }
@@ -236,14 +194,82 @@ class CreateWorker extends Component {
       })
     }
   }
-  componentWillUnmount () {
-    if (newPrompt) {
-      newPrompt.close()
+  handleTime = () => {
+    this.interval = setInterval(() => {
+      if (this.state.total < 1) {
+        this.handleOver()
+        clearInterval(this.interval)
+      } else {
+        this.setState({ total: this.state.total - 1 })
+      }
+    }, 1000)
+  }
+  onSubmit = () => { // 表单提交
+    let { isBack, token } = this.state
+    Toast.loading('提交中...', 0)
+    let validateAry = ['mobile', 'verify_code']
+    const { getFieldError } = this.props.form
+    this.props.form.validateFields(async (error, values) => {
+      if (!error) {
+        const data = await api.Mine.workManage.realNameConfirm({
+          token,
+          mobile: values['mobile']
+        }) || false
+        if (data) {
+          Toast.hide()
+          Toast.success('实名成功', 1.5, () => {
+            if (isBack) {
+              this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?orderno=${isBack}`)
+            } else {
+              this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}`)
+            }
+          })
+        }
+      } else {
+        for (let value of validateAry) {
+          if (error[value]) {
+            console.log(error, 'error')
+            Toast.fail(getFieldError(value), 1)
+            return
+          }
+        }
+      }
+    })
+  }
+  handleOver = () => {
+    this.setState({
+      codeDisabled: false,
+      codeText: '重新发送'
+    })
+  }
+  getCode = async() => {
+    const phoneErr = this.props.form.getFieldError('mobile')
+    const phone = this.props.form.getFieldValue('mobile')
+    if (phone === undefined || phone === '') {
+      Toast.fail('请输入手机号码', 1)
+    } else if (phoneErr !== undefined) {
+      Toast.fail('请输入正确格式手机号码', 1)
+    }
+    if (phoneErr === undefined && phone !== undefined) {
+      const data = await api.auth.getcode({
+        mobile: phone,
+        type: 2,
+      }) || false
+      if (data) {
+        this.handleTime()
+        this.setState({
+          codeDisabled: true
+        })
+      }
+      console.log(phone)
     }
   }
+  componentWillUnmount () {
+    clearInterval(this.interval)
+  }
   render() {
-    // const { getFieldDecorator, getFieldError } = this.props.form
-    let { backImg, frontImg, isClickBack, isClickFront, isSuccessFront, isSuccessBack, stepNum, isShowFace, backFaceImg, fileList, isBack } = this.state
+    const { getFieldError, getFieldDecorator } = this.props.form
+    let { backImg, frontImg, isClickBack, isClickFront, isSuccessFront, isSuccessBack, stepNum, isShowFace, backFaceImg, fileList, isBack, isPhone } = this.state
     return <div className='pageBox'>
       <Header
         title={isShowFace ? '人脸识别' : '身份验证'}
@@ -253,6 +279,11 @@ class CreateWorker extends Component {
           if (isShowFace) {
             this.setState({
               isShowFace: false
+            })
+          } else if (isPhone) {
+            this.setState({
+              isPhone: false,
+              isShowFace: true
             })
           } else {
             if (isBack) {
@@ -269,74 +300,106 @@ class CreateWorker extends Component {
             <Steps direction='horizontal' current={stepNum}>
               <Step title='身份验证' />
               <Step title='人脸识别' />
-              <Step title='受理完成' />
+              <Step title='手机验证' />
             </Steps>
           </div>
-          <div className={style['work-des']}>请上传身份证正反面照片</div>
-          <div className={style['work-picture']}>
-            <div className={style['work-pic-front']}>
-              <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFront} />
-              <img src={frontImg} style={{ zIndex: isClickFront ? 1 : 0 }}/>
+          <div style={{ display: isPhone ? 'none' : 'block' }}>
+            <div className={style['work-des']}>请上传身份证正反面照片</div>
+            <div className={style['work-picture']}>
+              <div className={style['work-pic-front']}>
+                <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFront} />
+                <img src={frontImg} style={{ zIndex: isClickFront ? 1 : 0 }}/>
+              </div>
+              <div className={style['work-pic-back']}>
+                <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/*' capture='camera' onChange={this.handleTakeBack} />
+                <img src={backImg} onClick={this.handleClick} style={{ zIndex: isClickBack ? 1 : 0 }}/>
+              </div>
+              {/* <Upload {...uploaderProps} disabled={isClickFront}><img src={frontImg}/></Upload>
+              <Upload {...uploaderProps} disabled={isClickBack}><img onClick={this.handleClick} className={style['pic-right']} src={backImg}/></Upload> */}
             </div>
-            <div className={style['work-pic-back']}>
-              <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/*' capture='camera' onChange={this.handleTakeBack} />
-              <img src={backImg} onClick={this.handleClick} style={{ zIndex: isClickBack ? 1 : 0 }}/>
+            <div className={style['work-des']} style={{ display: isSuccessBack || isSuccessFront ? 'block' : 'none' }}>请核对信息，若有误请点击重新上传</div>
+            <div className={style['work-form']} style={{ display: isSuccessFront ? 'block' : 'none' }}>
+              <List>
+                <Item extra={fileList['name']}>姓名</Item>
+              </List>
+              <List>
+                <Item extra={sex[fileList['sex']]}>性别</Item>
+              </List>
+              <List>
+                <Item extra={fileList['people']}>名族</Item>
+              </List>
+              <List>
+                <Item extra={fileList['birthday']}>出生日期</Item>
+              </List>
+              <List>
+                <Item extra={fileList['id_number']}>身份证号</Item>
+              </List>
+              <List>
+                <Item extra={fileList['address']}>地址</Item>
+              </List>
             </div>
-            {/* <Upload {...uploaderProps} disabled={isClickFront}><img src={frontImg}/></Upload>
-            <Upload {...uploaderProps} disabled={isClickBack}><img onClick={this.handleClick} className={style['pic-right']} src={backImg}/></Upload> */}
+            <div className={style['work-form-bottom']} style={{ display: isSuccessBack ? 'block' : 'none' }}>
+              <List >
+                <Item extra={fileList['issue_authority']}>签发机关</Item>
+              </List>
+              <List >
+                <Item extra={fileList['validity']}>有效期</Item>
+              </List>
+            </div>
+            <footer style={{ display: isSuccessBack || isSuccessFront ? 'block' : 'none' }}>
+              <div className={ `${style['work-btn-top']} ${style['work-btn']}`}>
+                <Button disabled={!isSuccessBack} onClick={this.handleClickNext}>下一步</Button>
+              </div>
+              <div className={`${style['work-btn-bottom']} ${style['work-btn']}`}>
+                <Button onClick={this.handleReset}>重新上传</Button>
+              </div>
+            </footer>
           </div>
-          <div className={style['work-des']} style={{ display: isSuccessBack || isSuccessFront ? 'block' : 'none' }}>请核对信息，若有误请点击重新上传</div>
-          <div className={style['work-form']} style={{ display: isSuccessFront ? 'block' : 'none' }}>
+          <div className={style['auth-phone']} style={{ display: isPhone ? 'block' : 'none' }}>
             <List>
-              <Item extra={fileList['name']}>姓名</Item>
-            </List>
-            <List>
-              <Item extra={sex[fileList['sex']]}>性别</Item>
-            </List>
-            <List>
-              <Item extra={fileList['people']}>名族</Item>
-            </List>
-            <List>
-              <Item extra={fileList['birthday']}>出生日期</Item>
-            </List>
-            <List>
-              <Item extra={fileList['id_number']}>身份证号</Item>
-            </List>
-            <List>
-              <Item extra={fileList['address']}>地址</Item>
-            </List>
-            {/* <List >
-              { getFieldDecorator('phone', {
+              {getFieldDecorator('mobile', {
                 rules: [
-                  { required: true, message: '请输入手机号' },
-                  { pattern: /^[1][3,4,5,7,8,9][0-9]{9}$/, message: '格式错误' }
-                ]
+                  { required: true, message: '请输入您的手机号' },
+                  { pattern: myreg, message: '请输入正确格式的手机号码' }
+                ],
               })(
                 <InputItem
                   clear
-                  error={!!getFieldError('phone')}
-                  onErrorClick={() => this.onErrorClick('phone')}
                   placeholder='请输入手机号'
-                >手机号</InputItem>
+                  error={!!getFieldError('mobile')}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError('mobile'), 1)
+                  }}
+                ></InputItem>
               )}
-            </List> */}
-          </div>
-          <div className={style['work-form-bottom']} style={{ display: isSuccessBack ? 'block' : 'none' }}>
-            <List >
-              <Item extra={fileList['issue_authority']}>签发机关</Item>
+              <div>
+                {getFieldDecorator('verify_code', {
+                  rules: [
+                    { required: true, message: '请输入验证码' },
+                  ],
+                })(
+                  <InputItem
+                    extra={<Button className={ style['codebtn'] } disabled={this.state.codeDisabled} type='primary' size='small' onClick={this.getCode}>
+                      {
+                        this.state.codeDisabled ? <div className={style['timer']} >{
+                          this.state.total < 1 ? '0秒' : this.state.total + '秒'
+                        }</div> : this.state.codeText
+                      }
+                    </Button>}
+                    clear
+                    placeholder='请输入验证码'
+                    error={!!getFieldError('verify_code')}
+                    onErrorClick={() => {
+                      Toast.fail(getFieldError('verify_code'), 1)
+                    }}
+                  ></InputItem>
+                )}
+              </div>
             </List>
-            <List >
-              <Item extra={fileList['validity']}>有效期</Item>
-            </List>
+            <div className={style['phone-btn']}>
+              <Button onClick={this.onSubmit}>提交</Button>
+            </div>
           </div>
-          <footer style={{ display: isSuccessBack || isSuccessFront ? 'block' : 'none' }}>
-            <div className={ `${style['work-btn-top']} ${style['work-btn']}`}>
-              <Button disabled={!isSuccessBack} onClick={this.handleClickNext}>下一步</Button>
-            </div>
-            <div className={`${style['work-btn-bottom']} ${style['work-btn']}`}>
-              <Button onClick={this.handleReset}>重新上传</Button>
-            </div>
-          </footer>
         </div>
       </Content>
       <Content style={{ display: isShowFace ? 'block' : 'none' }}>

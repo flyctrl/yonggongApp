@@ -95,6 +95,7 @@ export const FEEDBACK = `${MINE}/feedBack` // 问题反馈
 export const BANKCARDLIST = `${MINE}/bankcardList` // 银行卡
 export const WORKERMANGE = `${MINE}/workList` // 工人管理
 export const CREATEWORKER = `${WORKERMANGE}/createWorker` // 添加工人
+export const CREATEWORKERCODE = `${CREATEWORKER}/code` // 添加工人手机验证码
 export const CREATEWORKERSUCCESS = `${CREATEWORKER}/success` // 添加工人成功
 
 export const LOGIN = `${BASE_URL}/Login/login` // 登录
