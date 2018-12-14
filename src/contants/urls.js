@@ -42,6 +42,7 @@ export const OATTENDDETAIL = `${MYORDER}/attendRecord/detail` // 考勤详情
 export const APPLYSETTLE = `${MYORDER}/applySettle` // 申请结算
 export const CONFIRMSETTLE = `${MYORDER}/applySettle/confirmlist` // 确认结算
 export const SELECTWORKER = `${MYORDER}/selectWorker` // 选择工人
+export const PENDINGSETTLERECORD = `${MYORDER}/pendingSettleRecord` // 待申请结算记录
 export const SETUP = `${MINE}/SetUp` // 我的设置
 export const SETPAYPWD = `${SETUP}/setPayPwd` // 设置支付密码
 export const SETUPSECURITY = `${MINE}/security` // 我的设置》账户与安全

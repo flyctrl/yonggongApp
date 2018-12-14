@@ -1,0 +1,67 @@
+.pending-model {
+  background: #fff;
+  padding-bottom: 10px;
+  margin-top: 10px;
+  &.tobe {
+    & dt {
+      & span {
+        color: #1298FC;
+      }
+    }
+  }
+  &.reject {
+    & dt {
+      & span {
+        color: #FA6B6D;
+      }
+    }
+  }
+  &.apply {
+    & dt {
+      & span {
+        color: #00BECC;
+      }
+    }
+  }
+  & dt {
+    padding: 0 10px;
+    height: 44px;
+    overflow: hidden;
+    & time {
+      float: left;
+      line-height: 44px;
+      color: #666666;
+      font-size:14px;
+    }
+    & span {
+      float: right;
+      font-size:14px;
+      line-height: 44px;
+    }
+  }
+  & dd {
+    padding: 0 10px;
+    overflow: hidden;
+    & span {
+      float: left;
+      height: 30px;
+      line-height: 30px;
+      width: 50%;
+      color: #333;
+      font-size: 14px;
+      & em {
+        color: #999;
+      }
+    }
+    & p {
+      height: 30px;
+      line-height: 30px;
+      width: 100%;
+      color: #333;
+      font-size: 14px;
+      & em {
+        color: #999;
+      }
+    }
+  }
+}

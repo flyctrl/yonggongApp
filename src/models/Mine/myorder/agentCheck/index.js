@@ -60,10 +60,10 @@ class AgentCheck extends Component {
               dataSource.map(item => {
                 return <Item
                   key={item['uid']}
-                  thumb={'http://www.17qq.com/img_qqtouxiang/75180356.jpeg'}
+                  thumb={item['avatar']}
                   multipleLine
                   onClick={() => this.goCheck(item['uid'])}
-                >{item['label']}<Brief>手机号：{item['value']}</Brief></Item>
+                >{item['label']}<Brief>手机号：{item['mobile']}</Brief></Item>
               })
             }
           </List> : dataSource.length === 0 && isloading ? <div className='nodata'>暂无数据</div> : null

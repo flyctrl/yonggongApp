@@ -260,7 +260,13 @@ export default {
       },
       attendUserlist(params) { // 代考勤订单用户列表
         return Fetch(prefix + '/worksheetOrder/attend/userList', params, 'get')
-      }
+      },
+      worksheetOrderData(params) { // 订单转发数据
+        return Fetch(prefix + '/worksheetOrder/detail', params, 'get')
+      },
+      applySettleRecord(params) { // 接单方待申请结算记录
+        return Fetch(prefix + '/settle/accept/apply', params, 'get')
+      },
     },
     account: {
       recharge(params) { // 创建充值订单
@@ -403,7 +409,7 @@ export default {
     },
     checkDetails: {
       info(params) { // 查看企业资料
-        return Fetch(prefix + '/company', params, 'get')
+        return Fetch(prefix + '/company/home', params, 'get')
       }
 
     },

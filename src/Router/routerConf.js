@@ -142,6 +142,10 @@ const SelectWorker = Loadable({ // 选择工人
   loader: () => import(/* webpackChunkName: "selectworker" */ '../models/Mine/myorder/selectWorker'),
   loading: MyLoadingComponent
 })
+const PendingSettleRecord = Loadable({ // 待申请结算记录
+  loader: () => import(/* webpackChunkName: "pendingsettlerecord" */ '../models/Mine/myorder/pendingSettleRecord'),
+  loading: MyLoadingComponent
+})
 const SetUp = Loadable({ // 我的设置
   loader: () => import(/* webpackChunkName: "setup" */ '../models/Mine/SetUp'),
   loading: MyLoadingComponent
@@ -551,6 +555,14 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '选择工人'
+  }, {
+    path: urls.PENDINGSETTLERECORD,
+    exact: true,
+    component: PendingSettleRecord,
+    parent: null,
+    animated: true,
+    showMenu: false,
+    title: '待申请结算记录'
   }, {
     path: urls.SETUP,
     exact: true,

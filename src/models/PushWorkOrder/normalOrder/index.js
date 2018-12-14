@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { List, Button, WingBlank, Radio, Picker } from 'antd-mobile'
 import NewIcon from 'Components/NewIcon'
 import { Header, Content } from 'Components'
+import { paymethod } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './index.css'
@@ -19,19 +20,7 @@ const data = [{
   label: '按量计价',
   value: 1
 }]
-const paymethod = [{
-  label: '日',
-  value: 1
-}, {
-  label: '周',
-  value: 2
-}, {
-  label: '月',
-  value: 3
-}, {
-  label: '年',
-  value: 4
-}]
+
 class SelectClass extends Component {
   constructor(props) {
     super(props)
