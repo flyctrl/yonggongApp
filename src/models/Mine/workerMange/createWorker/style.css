@@ -198,3 +198,43 @@ html:not([data-scale]) :global(.am-list-body::before) {
     color:rgba(255,255,255,1);
   }
 }
+
+/* 手机号验证码*/
+.auth-phone {
+  margin-top: 20px;
+  & .phone-btn {
+    margin-top: 80px;
+    & :global(.am-button) {
+      width:328px;
+      border-radius:3px;
+      line-height: 40px;
+      height: 40px;
+      font-size:18px;
+      font-family:SourceHanSansCN-Regular;
+      font-weight:400;
+      background: #0098F5;
+      color:white;
+      margin-left: 20px;
+    }
+  }
+  & :global(.am-input-extra) {
+    width: 100px;
+    height: 40px;
+    position: relative;
+    overflow: visible;
+    & :global(.am-button) {
+      position: absolute;
+      top: -5px;
+      width:100px;
+      background: #ffffff;
+      color:#1298FC;
+      & .timer {
+        color: #ffffff;
+        background:#1298FC;
+        width: 100px;
+        position: absolute;
+        left: 0;
+      }
+    }
+  }
+}

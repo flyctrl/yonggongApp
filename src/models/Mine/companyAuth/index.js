@@ -26,57 +26,24 @@ class Company extends Component {
       isClickBack: false
     }
   }
-
   componentDidMount() {
   }
 
-  setImgstate = (images, name) => {
-    if (name === 'licenseImg') {
-      this.setState({ licenseImg: images })
-    } else if (name === 'cardfrontImg') {
-      this.setState({ cardfrontImg: images })
-    } else if (name === 'cardbackImg') {
-      this.setState({ cardbackImg: images })
-    }
-  }
-  uploadImg = async (images, name) => {
-    console.log('images', images)
-    if (images[0]) {
-      let formData = new FormData()
-      formData.append('image', images[0].file)
-      if (name === 'licenseImg') {
-        formData.append('type', 4)
-      } else {
-        formData.append('type', 5)
-      }
-      const data = await api.Common.uploadImg(formData) || {}
-      if (data.path) {
-        images[0].path = data.path
-      } else {
-        images = []
-      }
-      Toast.hide()
-      this.setImgstate(images, name)
-    } else {
-      this.setImgstate(images, name)
-    }
-  }
-
-  handleChange = (img, name) => {
-    this.uploadImg(img, name)
-  }
   handleSubmit = () => {
     const validateAry = ['name', 'legal', 'card_no', 'address', 'credit_code', 'mobile', 'license', 'card_front', 'card_back']
     const { validateFields, getFieldError } = this.props.form
+    Toast.loading('提交中...', 0)
     validateFields(async (err, value) => {
-      console.log('value:', value)
       if (!err) {
         console.log('value:', value)
         const data = await api.Mine.companyAuth.aptitude({
           ...value
         }) || false
         if (data) {
-          this.props.match.history.push(urls.MINE)
+          Toast.hide()
+          Toast.success('提交成功', 1.5, () => {
+            this.props.match.history.push(urls.MINE)
+          })
         }
       } else {
         const validateErr = validateAry.find(item => err[item])
@@ -87,9 +54,11 @@ class Company extends Component {
     })
   }
   onSuccess = async(imageURI) => {
+    let { typeName } = this.state
     Toast.loading('上传中...', 0)
-    const data = await api.auth.realNameCharter({
-      image: 'data:image/png;base64,' + imageURI
+    const data = api.Mine.companyAuth.uploadImg({
+      image: 'data:image/png;base64,' + imageURI,
+      type: typeName === 'license' ? 4 : 5
     }) || false
     if (data) {
       Toast.hide()
@@ -178,7 +147,7 @@ class Company extends Component {
         } else {
           formData.type = 5
         }
-        const data = await api.Common.uploadImg(formData) || false
+        const data = await api.Mine.companyAuth.uploadImg(formData) || false
         if (data) {
           Toast.hide()
           Toast.success('上传成功', 1.5)
@@ -309,12 +278,6 @@ class Company extends Component {
                       }]
                     })(
                       <img className={style['img-picker']} style={{ zIndex: isClickCharter ? 1 : 0 }} src={charterImg}/>
-                      // <ImagePicker
-                      //   className={style['img-picker']}
-                      //   files={licenseImg}
-                      //   onChange={(img) => { this.handleChange(img, 'licenseImg') }}
-                      //   selectable={licenseImg.length < 1}
-                      // />
                     )
                   }
                   {
@@ -338,12 +301,6 @@ class Company extends Component {
                       }]
                     })(
                       <img className={style['img-picker']} style={{ zIndex: isClickFront ? 1 : 0 }} src={frontImg}/>
-                      // <ImagePicker
-                      //   className={style['img-picker']}
-                      //   files={cardfrontImg}
-                      //   onChange={(img) => { this.handleChange(img, 'cardfrontImg') }}
-                      //   selectable={cardfrontImg.length < 1}
-                      // />
                     )
                   }{
                     'cordova' in window

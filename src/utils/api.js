@@ -339,13 +339,16 @@ export default {
     },
     companyAuth: {
       aptitude(params) { // 企业认证
-        return FetchSave(prefix + '/aptitude', params)
+        return FetchSave(prefix + '/aptitude', params, 'post', { showloading: false })
       },
       aptitudeDetail(params) { // 企业认证详情
         return Fetch(prefix + '/aptitude', params, 'get')
       },
       getCompanyStuts(params) { // 获取企业所有状态
         return Fetch(prefix + '/company/status', params, 'get')
+      },
+      uploadImg(params) { // 上传照片
+        return Fetch('/common/attach/imageData', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false })
       }
     },
     invoiceMange: { // 发票管理

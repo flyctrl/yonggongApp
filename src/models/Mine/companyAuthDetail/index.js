@@ -72,28 +72,28 @@ class CompanyAuthDetail extends Component {
                 {dataSource['company_name']}
               </List>
               <List renderHeader={() => '法人'}>
-                {dataSource['company_legal']}
+                {dataSource['owner_name']}
               </List>
               <List renderHeader={() => '身份证号码'}>
-                {dataSource['company_card_no']}
+                {dataSource['owner_card_no']}
               </List>
               <List renderHeader={() => '统一社会信用代码'}>
-                {dataSource['company_credit_code']}
+                {dataSource['credit_code']}
               </List>
               <List renderHeader={() => '法人手机号'}>
-                {dataSource['company_mobile']}
+                {dataSource['mobile']}
               </List>
               <List renderHeader={() => '法人地址'}>
-                {dataSource['company_address']}
+                {dataSource['address']}
               </List>
               <List className={ownStyle['img-list']} renderHeader={() => '营业执照'}>
-                <img src={dataSource['company_license']} />
+                <img src={dataSource['license']} />
               </List>
               <List className={ownStyle['img-list']} renderHeader={() => '身份证正面'}>
-                <img src={dataSource['company_card_front']} />
+                <img src={dataSource['card_front']} />
               </List>
               <List className={`${ownStyle['img-list']} ${ownStyle['img-list-last']}`} renderHeader={() => '身份证反面'}>
-                <img src={dataSource['company_card_back']} />
+                <img src={dataSource['card_back']} />
               </List>
             </div> : null
           }
