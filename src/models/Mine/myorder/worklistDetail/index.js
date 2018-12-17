@@ -302,46 +302,45 @@ class WorkListDetail extends Component {
   showOrderOperation = (datasource) => { // 订单操作UI
     let commands = datasource['commands']
     let operatDom = []
-    // let handle = commands['handle']
     let page = commands['page']
     page.map((item, index) => {
       if (item['key'] === 'orderPageQuick') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={'orderPageQuick' + index}>
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
           <NewIcon type='icon-zhuanfakuaidan'/>
           <p>转发快单</p>
         </li>)
       } else if (item['key'] === 'orderPageCommon') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={'orderPageCommon' + index}>
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
           <NewIcon type='icon-zhuanfa-'/>
           <p>转发工单</p>
         </li>)
       } else if (item['key'] === 'orderPageSelectWorker') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={'orderPageSelectWorker' + index}>
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
           <NewIcon type='icon-shenfenxuanze'/>
           <p>选择工人</p>
         </li>)
       } else if (item['key'] === 'orderPageAttend') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={'orderPageAttend' + index}>
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
           <NewIcon type='icon-kaoqin-'/>
           <p>考勤</p>
         </li>)
       } else if (item['key'] === 'orderPageAgentAttend') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={'orderPageAgentAttend' + index}>
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
           <NewIcon type='icon-daikaoqin'/>
           <p>代考勤</p>
         </li>)
       } else if (item['key'] === 'orderPageAgentStartWork') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={'orderPageAgentStartWork' + index}>
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
           <NewIcon type='icon-daikaigongkaobei'/>
           <p>代开工</p>
         </li>)
       } else if (item['key'] === 'orderPageAgentFinishWork') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={'orderPageAgentFinishWork' + index}>
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
           <NewIcon type='icon-daiwangong-'/>
           <p>代完工</p>
         </li>)
       } else if (item['key'] === 'orderPageSubmitSettle') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={'orderPageSubmitSettle' + index}>
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
           <NewIcon type='icon-daijiesuan'/>
           <p>提交结算</p>
         </li>)
@@ -398,19 +397,19 @@ class WorkListDetail extends Component {
             <div className={style['operate-list']}>
               <h4 className={`${style['modal-title']} my-bottom-border`}>订单操作</h4>
               <ul>
-                <li onClick={() => this.handlebtnType('orderViewTasker', datasource)} className={`${viewAry.includes('orderViewTasker') ? '' : style['disabled']}`}>
+                <li onClick={() => viewAry.includes('orderViewTasker') ? this.handlebtnType('orderViewTasker', datasource) : null} className={`${viewAry.includes('orderViewTasker') ? '' : style['disabled']}`}>
                   <NewIcon type='icon-gongrenjiluxuanzhong'/>
                   <p>工人列表</p>
                 </li>
-                <li onClick={() => this.handlebtnType('orderViewWorkPlan', datasource)} className={`${viewAry.includes('orderViewWorkPlan') ? '' : style['disabled']}`}>
+                <li onClick={() => viewAry.includes('orderViewWorkPlan') ? this.handlebtnType('orderViewWorkPlan', datasource) : null} className={`${viewAry.includes('orderViewWorkPlan') ? '' : style['disabled']}`}>
                   <NewIcon type='icon-kaigong'/>
                   <p>开工记录</p>
                 </li>
-                <li onClick={() => this.handlebtnType('orderViewAttend', datasource)} className={`${viewAry.includes('orderViewAttend') ? '' : style['disabled']}`}>
+                <li onClick={() => viewAry.includes('orderViewAttend') ? this.handlebtnType('orderViewAttend', datasource) : null} className={`${viewAry.includes('orderViewAttend') ? '' : style['disabled']}`}>
                   <NewIcon type='icon-kaoqinjiluxuanzhong'/>
                   <p>考勤记录</p>
                 </li>
-                <li onClick={() => this.handlebtnType('orderViewSettle', datasource)} className={`${viewAry.includes('orderViewSettle') ? '' : style['disabled']}`}>
+                <li onClick={() => viewAry.includes('orderViewSettle') ? this.handlebtnType('orderViewSettle', datasource) : null} className={`${viewAry.includes('orderViewSettle') ? '' : style['disabled']}`}>
                   <NewIcon type='icon-jiesuanjiluxuanzhong'/>
                   <p>结算记录</p>
                 </li>
@@ -438,29 +437,20 @@ class WorkListDetail extends Component {
             </div>
             <WhiteSpace />
             {
-              datasource['attachment'].length > 0 ? <ul className={style['file-list']}>
+              datasource['attachment'].length > 0 ? <div>
                 <h4 className={`${style['modal-title']} my-bottom-border`}>附件</h4>
-                {
-                  datasource['attachment'].map((item, index, ary) => {
-                    return (
-                      <li key={index} ><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a onClick={() => this.showImg(item.url)}>{item.name}</a></li>
-                    )
-                  })
-                }
-              </ul> : null
+                <ul className={style['file-list']}>
+                  {
+                    datasource['attachment'].map((item, index, ary) => {
+                      return (
+                        <li key={item.name} onClick={() => this.showImg(item.url)} style={{ backgroundImage: `url(${item.preview_url})`, backgroundSize: 'cover' }}></li>
+                      )
+                    })
+                  }
+                </ul>
+                <WhiteSpace />
+              </div> : null
             }
-            <h4 className={`${style['modal-title']} my-bottom-border`}>附件</h4>
-            <ul className={style['file-list']}>
-              <li onClick={() => this.showImg('https://goss1.vcg.com/creative/vcg/800/new/VCG211180672430.jpg')} style={{ backgroundImage: 'url(https://goss1.vcg.com/creative/vcg/800/new/VCG211180672430.jpg)', backgroundSize: 'cover' }}>
-              </li>
-              <li onClick={() => this.showImg('https://goss2.vcg.com/creative/vcg/800/new/VCG211179537526.jpg')} style={{ backgroundImage: 'url(https://goss2.vcg.com/creative/vcg/800/new/VCG211179537526.jpg)', backgroundSize: 'cover' }}>
-              </li>
-              <li onClick={() => this.showImg('https://goss2.vcg.com/creative/vcg/800/new/VCG211179485422.jpg')} style={{ backgroundImage: 'url(https://goss2.vcg.com/creative/vcg/800/new/VCG211179485422.jpg)', backgroundSize: 'cover' }}>
-              </li>
-              <li onClick={() => this.showImg('https://goss.vcg.com/creative/vcg/800/new/VCG211179292892.jpg')} style={{ backgroundImage: 'url(https://goss.vcg.com/creative/vcg/800/new/VCG211179292892.jpg)', backgroundSize: 'cover' }}>
-              </li>
-            </ul>
-            <WhiteSpace />
           </div> : null
         }
       </Content>

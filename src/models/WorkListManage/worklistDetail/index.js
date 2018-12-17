@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Badge, List, WhiteSpace, Button } from 'antd-mobile'
+import { Badge, WhiteSpace, Button, Toast } from 'antd-mobile'
 import { Header, Content, NewIcon } from 'Components'
 import { worksheetType } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
@@ -7,7 +7,6 @@ import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import style from './index.css'
 
-const Item = List.Item
 const typeicon = {
   1: 'bidicon',
   2: 'sheeticon',
@@ -25,7 +24,8 @@ class WorkListDetail extends Component {
       },
       isLoading: false,
       showimg: false,
-      imgurl: ''
+      imgurl: '',
+      viewAry: []
     }
   }
   componentDidMount() {
@@ -40,7 +40,12 @@ class WorkListDetail extends Component {
       worksheet_no: worksheetno
     }) || false
     if (data) {
+      let viewAry = []
+      data['commands']['view'].map(item => {
+        viewAry.push(item['key'])
+      })
       this.setState({
+        viewAry,
         datasource: data,
         isLoading: true
       })
@@ -60,49 +65,66 @@ class WorkListDetail extends Component {
       console.log(data)
     }
   }
-  showViewList = (datalist, dataObj) => {
-    let itemlist = []
-    if (datalist.length > 0) {
-      console.log(datalist)
-      datalist.map((item, index) => {
-        console.log(item)
-        itemlist.push(<Item key={index} arrow='horizontal' onClick={() => { this.handleViewClick(item['key'], dataObj) }}>{item['value']}</Item>)
-      })
-    }
-    console.log(itemlist)
-    return itemlist.length > 0 ? <div><List>{
-      itemlist.map(item => {
-        return item
-      })
-    }</List><WhiteSpace /></div> : ''
-  }
-  handleViewClick = (key, dataObj) => { // 记录点击
-    switch (key) {
-      case 'viewAttend': // 我发的 - 考勤记录
-        this.handleAttendRecord()
+  handlebtnType = (type, rowData) => { // 根据类型调用方法
+    switch (type) {
+      case 'handleTake': // 接单
         break
-      case 'viewApply': // 我发的 - 接单记录
-        this.handleAccessRecord(dataObj['worksheetno'])
+      case 'handleCancelWorksheet': // 我发的 - 取消工单
+        this.handleCancelWorksheet(rowData)
+        break
+      case 'pageAttend': // 我发的 - 考勤设置
+        this.handleSetAttend(rowData)
+        break
+      case 'viewAttend': // 我发的 - 考勤记录
+        this.handleViewAttend(rowData)
+        break
+      case 'viewTake': // 我发的 - 接单记录
+        this.handleViewApply(rowData)
         break
       case 'viewSettle': // 我发的 - 结算记录
-        this.handleSettleRecord(dataObj['worksheetno'])
+        this.handleViewSettle(rowData)
         break
       case 'viewWorkPlan': // 我发的 - 开工记录
-        this.handleWorkPlan()
+        this.handleViewWorkPlan(rowData)
         break
     }
   }
-  handleAccessRecord = (worksheetno) => { // 接单记录
-    this.props.match.history.push(urls.ACCESSRECORD + '?worksheetno=' + worksheetno)
+  handleCancelWorksheet = async (rowData) => { // 我发的 - 取消工单
+    console.log(rowData)
+    let { dataSource } = this.state
+    let currentIndex
+    dataSource.map((item, index) => {
+      if (item['worksheet_no'] === rowData['worksheet_no']) {
+        currentIndex = index
+      }
+    })
+    Toast.loading('取消中...', 0)
+    let data = await api.WorkListManage.cancelWork({
+      worksheet_no: rowData['worksheet_no']
+    }) || false
+    Toast.hide()
+    if (data) {
+      dataSource[currentIndex] = data
+      this.setState({
+        dataSource
+      })
+      Toast.success('成功取消开工', 1.5)
+    }
   }
-  handleSettleRecord = (worksheetno) => { // 结算记录
-    this.props.match.history.push(urls.SETTLERECORD + '?worksheetno=' + worksheetno)
+  handleSetAttend = (rowData) => { // 我发的 - 考勤设置 worksheetno
+    this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'])
   }
-  handleAttendRecord = () => { // 考勤记录
-    this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + this.state.worksheetno)
+  handleViewAttend = (rowData) => { // 我发的 - 考勤记录
+    this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'])
   }
-  handleWorkPlan = () => { // 开工记录 - 我发的
-    this.props.match.history.push(urls.SENDSTARTWORKRECORD + '?worksheetno=' + this.state.worksheetno)
+  handleViewApply = (rowData) => { // 我发的 - 接单记录
+    this.props.match.history.push(urls.ACCESSRECORD + '?worksheetno=' + rowData['worksheet_no'])
+  }
+  handleViewSettle = (rowData) => { // 我发的 - 结算记录
+    this.props.match.history.push(urls.SETTLERECORD + '?worksheetno=' + rowData['worksheet_no'])
+  }
+  handleViewWorkPlan = (rowData) => { // 我发的 - 开工记录
+    this.props.match.history.push(urls.SENDSTARTWORKRECORD + '?worksheetno=' + rowData['worksheet_no'])
   }
   showImg = (imgurl) => {
     this.setState({
@@ -116,8 +138,22 @@ class WorkListDetail extends Component {
       imgurl: ''
     })
   }
+  showOrderOperation = (datasource) => { // 工单操作UI
+    let commands = datasource['commands']
+    let operatDom = []
+    let page = commands['page']
+    page.map((item, index) => {
+      if (item['key'] === 'pageAttend') {
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
+          <NewIcon type='icon-kaoqinshezhi'/>
+          <p>考勤设置</p>
+        </li>)
+      }
+    })
+    return operatDom
+  }
   render() {
-    let { datasource, isLoading, worksheetno, url, showimg, imgurl } = this.state
+    let { datasource, isLoading, worksheetno, url, showimg, imgurl, viewAry } = this.state
     return <div className='pageBox gray'>
       <Header
         title='工单详情'
@@ -162,34 +198,30 @@ class WorkListDetail extends Component {
               </dd>
             </dl>
             <WhiteSpace />
-            {
-              this.showViewList(datasource['commands']['view'], {
-                worksheetno: datasource['worksheet_no']
-              })
-            }
             <div className={style['operate-list']}>
               <h4 className={`${style['modal-title']} my-bottom-border`}>工单操作</h4>
               <ul>
-                <li>
+                <li onClick={() => viewAry.includes('viewTake') ? this.handlebtnType('viewTake', datasource) : null} className={`${viewAry.includes('viewTake') ? '' : style['disabled']}`}>
                   <NewIcon type='icon-jiedanjilu'/>
                   <p>接单记录</p>
                 </li>
-                <li className={style['disabled']}>
+                <li onClick={() => viewAry.includes('viewWorkPlan') ? this.handlebtnType('viewWorkPlan', datasource) : null} className={`${viewAry.includes('viewWorkPlan') ? '' : style['disabled']}`}>
                   <NewIcon type='icon-kaigong'/>
                   <p>开工记录</p>
                 </li>
-                <li>
+                <li onClick={() => viewAry.includes('viewAttend') ? this.handlebtnType('viewAttend', datasource) : null} className={`${viewAry.includes('viewAttend') ? '' : style['disabled']}`}>
                   <NewIcon type='icon-kaoqinjiluxuanzhong'/>
                   <p>考勤记录</p>
                 </li>
-                <li>
+                <li onClick={() => viewAry.includes('viewSettle') ? this.handlebtnType('viewSettle', datasource) : null} className={`${viewAry.includes('viewSettle') ? '' : style['disabled']}`}>
                   <NewIcon type='icon-jiesuanjiluxuanzhong'/>
                   <p>结算记录</p>
                 </li>
-                <li>
-                  <NewIcon type='icon-kaoqinshezhi'/>
-                  <p>考勤设置</p>
-                </li>
+                {
+                  this.showOrderOperation(datasource).map(item => {
+                    return item
+                  })
+                }
               </ul>
             </div>
             <WhiteSpace />
@@ -227,8 +259,8 @@ class WorkListDetail extends Component {
         }
       </Content>
       {
-        isLoading ? <div className={`${style['btn-box']} ${style['onebtn']}`}>
-          <Button type='primary' inline>接单</Button>
+        isLoading && datasource['commands']['handle'].length > 0 ? <div className={`${style['btn-box']} ${style['onebtn']}`}>
+          <Button onClick={() => this.handlebtnType('handleCancelWorksheet', datasource)} type='primary' inline>取消工单</Button>
         </div> : null
       }
       <div style={{ display: showimg ? 'block' : 'none' }} onClick={this.handleImgMask} className={`showimg-box animated ${showimg ? 'fadeIn' : 'fadeOut'}`}>
