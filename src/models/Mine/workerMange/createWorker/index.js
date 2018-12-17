@@ -40,7 +40,7 @@ class CreateWorker extends Component {
       isBack: getQueryString('orderno'),
       codeDisabled: false,
       codeText: '获取验证码',
-      total: 10,
+      total: 60,
     }
   }
   handleClickNext = () => { // 是否显示人脸识别页面
@@ -90,7 +90,6 @@ class CreateWorker extends Component {
       }) || false
       if (data) {
         Toast.hide()
-        Toast.success('上传成功', 1.5)
         _this.setState({
           fileList: data,
           frontImg: data['front_image'],
@@ -98,6 +97,8 @@ class CreateWorker extends Component {
           isClickBack: false,
           isSuccessFront: true,
           token: data['token']
+        }, () => {
+          Toast.success('上传成功', 1.5)
         })
       }
     }
@@ -122,7 +123,6 @@ class CreateWorker extends Component {
       }) || false
       if (data) {
         Toast.hide()
-        Toast.success('上传成功', 1.5)
         _this.setState({
           fileList: { ...fileList, ...data },
           backImg: data['back_image'],
@@ -130,6 +130,8 @@ class CreateWorker extends Component {
           isSuccessBack: true,
           stepNum: 1,
           token: data['token']
+        }, () => {
+          Toast.success('上传成功', 1.5)
         })
       }
     }
@@ -173,27 +175,6 @@ class CreateWorker extends Component {
       reader.readAsDataURL(file)
     }
   }
-  handleAuthConfirm = async(token, phone) => {
-    Toast.loading('实名认证中...', 0)
-    let { isBack } = this.state
-    const data = await api.Mine.workManage.realNameConfirm({
-      token,
-      mobile: phone
-    }) || false
-    if (data) {
-      Toast.hide()
-      Toast.success('实名成功', 1.5, () => {
-        if (isBack) {
-          this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?orderno=${isBack}`)
-        } else {
-          this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}`)
-        }
-      })
-      this.setState({
-        stepNum: 3
-      })
-    }
-  }
   handleTime = () => {
     this.interval = setInterval(() => {
       if (this.state.total < 1) {
@@ -217,13 +198,19 @@ class CreateWorker extends Component {
         }) || false
         if (data) {
           Toast.hide()
-          Toast.success('实名成功', 1.5, () => {
+          Toast.success('添加成功', 1.5, () => {
             if (isBack) {
               this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?orderno=${isBack}`)
             } else {
               this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}`)
             }
           })
+          this.setState({
+            stepNum: 3
+          })
+        } else {
+          // this.phoneInput.focus()
+          // this.props.form.resetFields()
         }
       } else {
         for (let value of validateAry) {
@@ -364,8 +351,9 @@ class CreateWorker extends Component {
                 ],
               })(
                 <InputItem
+                  ref={ (el) => { this.phoneInput = el } }
                   clear
-                  placeholder='请输入手机号'
+                  placeholder='请输入工人手机号'
                   error={!!getFieldError('mobile')}
                   onErrorClick={() => {
                     Toast.fail(getFieldError('mobile'), 1)
@@ -387,7 +375,7 @@ class CreateWorker extends Component {
                       }
                     </Button>}
                     clear
-                    placeholder='请输入验证码'
+                    placeholder='请输入手机验证码'
                     error={!!getFieldError('verify_code')}
                     onErrorClick={() => {
                       Toast.fail(getFieldError('verify_code'), 1)
