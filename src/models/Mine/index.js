@@ -98,7 +98,7 @@ class Mine extends Component {
     this.getMineDetail()
   }
   getMineDetail = async() => {
-    const data = await api.Mine.checkDetails.info({
+    const data = await api.Mine.checkDetails.home({
     }) || false
     this.setState({
       dataSource: data
@@ -122,7 +122,7 @@ class Mine extends Component {
   }
   render() {
     let { dataSource } = this.state
-    console.log(typeof dataSource['user'] === 'undefined')
+    // console.log(typeof dataSource['user'] === 'undefined')
     return (
       <div className='pageBox'>
         <Content isHeader={false}>

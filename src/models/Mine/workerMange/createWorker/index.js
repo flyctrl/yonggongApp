@@ -21,6 +21,7 @@ const sex = {
   2: '女'
 }
 const Step = Steps.Step
+let TOTAL = 59
 class CreateWorker extends Component {
   constructor(props) {
     super(props)
@@ -40,7 +41,7 @@ class CreateWorker extends Component {
       isBack: getQueryString('orderno'),
       codeDisabled: false,
       codeText: '获取验证码',
-      total: 60,
+      total: TOTAL
     }
   }
   handleClickNext = () => { // 是否显示人脸识别页面
@@ -164,8 +165,12 @@ class CreateWorker extends Component {
           stepNum: 2,
           token: data['token'],
           isPhone: true,
-          isShowFace: false
+          isShowFace: !data['mobile_verify'],
+          isVerifyPhone: data['mobile_verify']
         })
+        if (!data['mobile_verify']) {
+          _this.handelConfim()
+        }
       }
     }
     reader.onerror = function () {
@@ -185,28 +190,40 @@ class CreateWorker extends Component {
       }
     }, 1000)
   }
+  handelConfim = async() => {
+    let { token, isBack } = this.state
+    Toast.loading('提交中...', 0)
+    const data = await api.Mine.workManage.realNameConfirm({
+      token
+    }) || false
+    if (data) {
+      Toast.hide()
+      Toast.success('验证成功', 1.5, () => {
+        if (isBack) {
+          this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?orderno=${isBack}`)
+        } else {
+          this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}`)
+        }
+      })
+    }
+  }
   onSubmit = () => { // 表单提交
-    let { isBack, token } = this.state
+    let { token } = this.state
     Toast.loading('提交中...', 0)
     let validateAry = ['mobile', 'verify_code']
     const { getFieldError } = this.props.form
     this.props.form.validateFields(async (error, values) => {
       if (!error) {
-        const data = await api.Mine.workManage.realNameConfirm({
+        const data = await api.Mine.workManage.postMobile({
           token,
-          mobile: values['mobile']
+          ...values
         }) || false
         if (data) {
           Toast.hide()
-          Toast.success('添加成功', 1.5, () => {
-            if (isBack) {
-              this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?orderno=${isBack}`)
-            } else {
-              this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}`)
-            }
-          })
           this.setState({
-            stepNum: 3
+            token: data['token']
+          }, () => {
+            this.handelConfim()
           })
         } else {
           // this.phoneInput.focus()
@@ -226,10 +243,12 @@ class CreateWorker extends Component {
   handleOver = () => {
     this.setState({
       codeDisabled: false,
-      codeText: '重新发送'
+      codeText: '重新发送',
+      total: TOTAL
     })
   }
   getCode = async() => {
+    Toast.loading('提交中...', 0)
     const phoneErr = this.props.form.getFieldError('mobile')
     const phone = this.props.form.getFieldValue('mobile')
     if (phone === undefined || phone === '') {
@@ -238,11 +257,11 @@ class CreateWorker extends Component {
       Toast.fail('请输入正确格式手机号码', 1)
     }
     if (phoneErr === undefined && phone !== undefined) {
-      const data = await api.auth.getcode({
+      const data = await api.Mine.workManage.getCode({
         mobile: phone,
-        type: 2,
       }) || false
       if (data) {
+        Toast.hide()
         this.handleTime()
         this.setState({
           codeDisabled: true
@@ -256,7 +275,7 @@ class CreateWorker extends Component {
   }
   render() {
     const { getFieldError, getFieldDecorator } = this.props.form
-    let { backImg, frontImg, isClickBack, isClickFront, isSuccessFront, isSuccessBack, stepNum, isShowFace, backFaceImg, fileList, isBack, isPhone } = this.state
+    let { backImg, frontImg, isClickBack, isClickFront, isSuccessFront, isSuccessBack, stepNum, isShowFace, backFaceImg, fileList, isBack, isPhone, isVerifyPhone } = this.state
     return <div className='pageBox'>
       <Header
         title={isShowFace ? '人脸识别' : '身份验证'}
@@ -287,7 +306,7 @@ class CreateWorker extends Component {
             <Steps direction='horizontal' current={stepNum}>
               <Step title='身份验证' />
               <Step title='人脸识别' />
-              <Step title='手机验证' />
+              <Step title='结果完成' />
             </Steps>
           </div>
           <div style={{ display: isPhone ? 'none' : 'block' }}>
@@ -342,7 +361,7 @@ class CreateWorker extends Component {
               </div>
             </footer>
           </div>
-          <div className={style['auth-phone']} style={{ display: isPhone ? 'block' : 'none' }}>
+          <div className={style['auth-phone']} style={{ display: isPhone && !!isVerifyPhone ? 'block' : 'none' }}>
             <List>
               {getFieldDecorator('mobile', {
                 rules: [

@@ -411,10 +411,12 @@ export default {
       }
     },
     checkDetails: {
-      info(params) { // 查看企业资料
+      info(params) { // 查看企业资料详情
+        return Fetch(prefix + '/company', params, 'get')
+      },
+      home(params) { // 获取企业资料
         return Fetch(prefix + '/company/home', params, 'get')
       }
-
     },
     partnerMange: { // 合作方管理
       getPartnerList(params) { // 获取列表
@@ -479,7 +481,13 @@ export default {
       },
       getWorkList(params) {
         return Fetch(prefix + '/worker', params, 'get')
-      }
+      },
+      getCode(params) {
+        return Fetch(prefix + '/worker/verify/code', params, 'post', { showloading: false }) // 发送验证码
+      },
+      postMobile(params) {
+        return Fetch(prefix + '/worker/mobile', params, 'post', { showloading: false }) // 验证手机号
+      },
     }
   },
   Home: {
