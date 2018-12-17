@@ -208,8 +208,17 @@ export default {
       return FetchSave(prefix + '/workPlan/confirmWork', params, 'post', { showloading: false })
     },
     settleRecordSend(params) { // 我发的 - 结算记录
-      return Fetch(prefix + '/worksheet/settle', params, 'get')
+      return Fetch(prefix + '/settle/send', params, 'get')
     },
+    settleSendSettle(params) { // 我发的 - 结算记录结算
+      return FetchSave(prefix + '/settle/send/settle', params)
+    },
+    settleSendConfirm(params) { // 我发的 - 结算记录确认
+      return FetchSave(prefix + '/settle/send/confirm', params)
+    },
+    settleSendCancel(params) { // 我发的 - 结算记录驳回
+      return FetchSave(prefix + '/settle/send/cancel', params)
+    }
   },
   Mine: { // 我的
     myorder: {
@@ -267,6 +276,12 @@ export default {
       applySettleRecord(params) { // 接单方待申请结算记录
         return Fetch(prefix + '/settle/accept/apply', params, 'get')
       },
+      applySettleDetail(params) { // 结算记录详情
+        return Fetch(prefix + '/settle/order/detail', params, 'get')
+      },
+      acceptApply(params) { // 接单方申请结算
+        return FetchSave(prefix + '/settle/accept/apply', params)
+      }
     },
     account: {
       recharge(params) { // 创建充值订单

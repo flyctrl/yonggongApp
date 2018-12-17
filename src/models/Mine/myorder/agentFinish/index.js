@@ -103,12 +103,12 @@ class ApplySettle extends Component {
     return total !== 0 ? total : 0
   }
   handleApply = () => { // 代完工事件
-    let { dataSource } = this.state
+    let { dataSource, valuationWay } = this.state
     let ishas = false
     for (let i = 0; i < dataSource.length; i++) {
       if (dataSource[i].ischeck) {
         ishas = true
-        if (dataSource[i]['currentprice'] <= 0) {
+        if (valuationWay === '1' && dataSource[i]['currentprice'] <= 0) {
           alert('工作量必须大于0')
           return
         }

@@ -2,28 +2,13 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { List, ListView, PullToRefresh } from 'antd-mobile'
 import { Header, Content } from 'Components'
-import * as urls from 'Contants/urls'
+// import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
-import { payModeRadio, paymethod } from 'Contants/fieldmodel'
 import style from './index.css'
 
-const status = {
-  2: '待结算',
-  3: '已结算'
-}
-const cssStatus = {
-  2: 'apply',
-  3: 'reject',
-}
-const valuation = {
-  1: '计量',
-  2: '计时'
-}
-const settletype = {
-  1: '按固定周期',
-  2: '按进度'
-}
+const Item = List.Item
+const Brief = Item.Brief
 const NUM_ROWS = 20
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
@@ -41,7 +26,7 @@ class SettleRecord extends Component {
       nodata: false,
       amount: 0,
       waitAmount: 0,
-      orderno: tooler.getQueryString('orderno')
+      worksheetno: tooler.getQueryString('worksheetno')
     }
   }
   componentDidMount() {
@@ -94,12 +79,12 @@ class SettleRecord extends Component {
   }
 
   genData = async (pIndex = 1) => { // 获取数据
-    let { orderno } = this.state
+    let { worksheetno } = this.state
     this.setState({
       isLoading: true
     })
-    let data = await api.Mine.myorder.settleRecordAccept({
-      workSheetOrderNo: orderno,
+    let data = await api.WorkListManage.settleRecordSend({
+      workSheetNo: worksheetno,
       page: pIndex,
       pagesize: NUM_ROWS
     }) || false
@@ -122,9 +107,6 @@ class SettleRecord extends Component {
     }
     return await data['list']
   }
-  handleDetail = (orderno, status) => {
-    this.props.match.history.push(`${urls.APPLYSETTLE}?orderno=${orderno}&recordStatus=${status}`)
-  }
   render() {
     const { isLoading, nodata, height, dataSource, amount, waitAmount } = this.state
     const footerShow = () => {
@@ -137,35 +119,7 @@ class SettleRecord extends Component {
       }
     }
     const row = (rowData, sectionID, rowID) => {
-      return <dl key={rowData['order_no']} onClick={() => this.handleDetail(rowData['order_no'], rowData['status'])} className={`${style['pending-model']} ${style[cssStatus[rowData['status']]]}`}>
-        <dt className='my-bottom-border'>
-          <time>{rowData['time']}</time>
-          <span>{status[rowData['status']]}</span>
-        </dt>
-        <dd>
-          <span><em>付款方式：</em>{
-            payModeRadio.filter(i => {
-              return i['value'] === rowData['pay_way']
-            })[0]['label']
-          }</span>
-          <span><em>计价方式：</em>{
-            valuation[rowData['pay_way']]
-          }</span>
-        </dd>
-        <dd>
-          <span><em>结算类型：</em>{
-            settletype[rowData['settle_type']]
-          }</span>
-          <span><em>结算周期：</em>{
-            paymethod.filter(i => {
-              return i['value'] === rowData['settle_period']
-            })[0]['label']
-          }</span>
-        </dd>
-        <dd>
-          <p><em>周期：</em>{rowData['period']}</p>
-        </dd>
-      </dl>
+      <Item key={rowID} multipleLine extra={rowData['amount']} thumb={rowData['avatar']}>{rowData['username']} <Brief>{rowData['time']}</Brief></Item>
     }
     return <div className='pageBox gray'>
       <Header
@@ -175,7 +129,7 @@ class SettleRecord extends Component {
         leftClick1={() => { this.props.match.history.go(-1) }}
       />
       <Content style={{ overflow: 'hidden' }}>
-        <List renderHeader={() => !isLoading ? <p><span>已付：¥{amount}</span><span>待付：¥{waitAmount}</span></p> : ''} className={style['settle-list']}>
+        <List renderHeader={() => <p><span>已付：¥{amount}</span><span>待付：¥{waitAmount}</span></p>} className={style['settle-list']}>
           <ListView
             ref={(el) => {
               this.lv = el

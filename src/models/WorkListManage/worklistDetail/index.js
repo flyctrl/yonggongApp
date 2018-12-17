@@ -125,7 +125,7 @@ class WorkListDetail extends Component {
         leftTitle1={url !== '' ? '返回首页' : '返回'}
         leftClick1={() => {
           if (url !== '') {
-            this.props.match.history.push(urls.HOME)
+            this.props.match.history.push(urls[url])
           } else {
             this.props.match.history.go(-1)
           }

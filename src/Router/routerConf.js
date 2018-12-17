@@ -84,6 +84,10 @@ const SettleRecord = Loadable({ // 工单结算记录
   loader: () => import(/* webpackChunkName: "settlerecord" */ '../models/WorkListManage/settleRecord'),
   loading: MyLoadingComponent
 })
+const SettleRecordDetail = Loadable({ // 工单结算记录详情
+  loader: () => import(/* webpackChunkName: "settlerecorddetail" */ '../models/WorkListManage/applySettle'),
+  loading: MyLoadingComponent
+})
 const AttendRecord = Loadable({ // 工单考勤记录
   loader: () => import(/* webpackChunkName: "attendrecord" */ '../models/WorkListManage/attendRecord'),
   loading: MyLoadingComponent
@@ -132,10 +136,6 @@ const Certification = Loadable({ // 认证管理
 })
 const ApplySettle = Loadable({ // 申请结算
   loader: () => import(/* webpackChunkName: "applysettle" */ '../models/Mine/myorder/applySettle'),
-  loading: MyLoadingComponent
-})
-const ConfirmSettle = Loadable({ // 确认结算
-  loader: () => import(/* webpackChunkName: "confirmsettle" */ '../models/Mine/myorder/applySettle/confirmlist'),
   loading: MyLoadingComponent
 })
 const SelectWorker = Loadable({ // 选择工人
@@ -540,14 +540,6 @@ const routes = [
     showMenu: false,
     title: '申请结算'
   }, {
-    path: urls.CONFIRMSETTLE,
-    exact: true,
-    component: ConfirmSettle,
-    parent: null,
-    animated: true,
-    showMenu: false,
-    title: '确认结算'
-  }, {
     path: urls.SELECTWORKER,
     exact: true,
     component: SelectWorker,
@@ -635,6 +627,14 @@ const routes = [
     showMenu: false,
     animated: true,
     title: '工单结算记录'
+  }, {
+    path: urls.SETTLERECORDDETAIL,
+    exact: true,
+    component: SettleRecordDetail,
+    parent: null,
+    showMenu: false,
+    animated: true,
+    title: '工单结算记录详情'
   }, {
     path: urls.ATTENDRECORD,
     exact: true,

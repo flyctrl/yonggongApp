@@ -247,6 +247,7 @@ class WorkListManage extends Component {
         return item['value'] === data['settle_fix_time']
       })[0]['label']
       let urlJson = {
+        orderno: rowData['order_no'],
         proId: data['prj_no'],
         proVal: data['prj_name'],
         ...levelJson,
@@ -272,6 +273,7 @@ class WorkListManage extends Component {
         }
       }
       let urlJson = {
+        orderno: rowData['order_no'],
         proId: data['prj_no'],
         proVal: data['prj_name'],
         classifyId: data['construct'][0]['code'],
@@ -289,11 +291,9 @@ class WorkListManage extends Component {
   }
   handleAttend = (rowData) => { // 我接的 - 考勤 workorderno
     this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
-    console.log('考勤')
   }
   handleGenAttend = (rowData) => { // 我接的 - 代考勤
     this.props.match.history.push(urls.AGENTCHECKLIST + '?orderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
-    console.log('代考勤')
   }
   handleStart = async (rowData) => { // 我接的 - 开工
     console.log('开工')
@@ -322,7 +322,6 @@ class WorkListManage extends Component {
     this.props.match.history.push(urls.AGENTSTARTLIST + '?orderno=' + rowData['order_no'])
   }
   handleFished = async (rowData) => { // 我接的 - 完工
-    console.log('完工')
     let { dataSource } = this.state
     let currentIndex, data
     dataSource.map((item, index) => {
@@ -379,7 +378,7 @@ class WorkListManage extends Component {
     this.props.match.history.push(`${urls.AGENTFINISHLIST}?orderno=${rowData['order_no']}&valuationWay=${rowData['valuation_way']}`)
   }
   handleRefSettle = (rowData) => { // 我接的 - 提交结算
-    this.props.match.history.push(`${urls.PENDINGSETTLERECORD}?orderno=${rowData['order_no']}`)
+    this.props.match.history.push(`${urls.PENDINGSETTLERECORD}?workSheetOrderNo=${rowData['order_no']}`)
   }
   handleOrderViewAttend = (rowData) => { // 我接的 - 考勤记录
     this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'])

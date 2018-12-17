@@ -29,6 +29,7 @@ class ContractMange extends Component {
     this.setState({
       isloading: true
     })
+    console.log('id', id)
     const data = await api.Mine.contractMange.contractList({
       worksheet_id: id
     }) || false

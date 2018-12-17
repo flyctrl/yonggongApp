@@ -3,9 +3,17 @@
   margin-top: 10px;
   overflow-y: auto;
   -webkit-overflow-scrolling:touch;
+  &:global(.am-list .am-list-item.am-checkbox-item .am-list-thumb .am-checkbox-inner) {
+    top: 28px;
+  }
+  &:global(.am-list .am-list-item.am-checkbox-item .am-list-thumb .am-checkbox) {
+    height: 74px;
+  }
 }
-.settle-all {
-  height: 100%;    
+.confirm-list {
+  &:global(.am-list .am-list-item.am-checkbox-item .am-list-thumb) {
+   display: none; 
+  }
 }
 .settle-list {
   & .header {
@@ -36,7 +44,7 @@
     float: right;
     color:rgba(250,107,109,1);
     font-size: 16px;
-    line-height: 62px;
+    line-height: 60px;
   }
 }
 
@@ -48,6 +56,18 @@
   height: 50px;
   background: #fff;
   overflow: hidden;
+  & :global(.am-checkbox-agree) {
+    float: left;
+    padding-top: 14px;
+    & :global(.am-checkbox-agree-label) {
+      font-size: 15px;
+      color:rgba(153,153,153,1);
+      margin-left: 25px;
+    }
+    & :global(.am-checkbox-inner) {
+      top: 15px;
+    }
+  }
   & span {
     float: right;
     line-height: 50px;

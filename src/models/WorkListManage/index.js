@@ -245,7 +245,7 @@ class WorkListManage extends Component {
     this.props.match.history.push(urls.ACCESSRECORD + '?worksheetno=' + rowData['worksheet_no'])
   }
   handleViewSettle = (rowData) => { // 我发的 - 结算记录
-    this.props.match.history.push(urls.SETTLERECORD + '?worksheetno=' + rowData['worksheet_no'] + '&worktype=1')
+    this.props.match.history.push(urls.SETTLERECORD + '?worksheetno=' + rowData['worksheet_no'])
   }
   handleViewWorkPlan = (rowData) => { // 我发的 - 开工记录
     this.props.match.history.push(urls.SENDSTARTWORKRECORD + '?worksheetno=' + rowData['worksheet_no'])
