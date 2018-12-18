@@ -72,6 +72,12 @@ class WorkListDetail extends Component {
       case 'handleCancelWorksheet': // 我发的 - 取消工单
         this.handleCancelWorksheet(rowData)
         break
+      case 'handleAgreeWorksheet': // 我发的 - 通过(招标)
+        this.handleAgreeWorksheet(rowData)
+        break
+      case 'handleRefuseWorksheet': // 我发的 - 驳回(招标)
+        this.handleRefuseWorksheet(rowData)
+        break
       case 'pageAttend': // 我发的 - 考勤设置
         this.handleSetAttend(rowData)
         break
@@ -110,6 +116,10 @@ class WorkListDetail extends Component {
       })
       Toast.success('成功取消开工', 1.5)
     }
+  }
+  handleAgreeWorksheet = (rowData) => { // 我发的 - 通过(招标)
+  }
+  handleRefuseWorksheet = (rowData) => { // 我发的 - 驳回(招标)
   }
   handleSetAttend = (rowData) => { // 我发的 - 考勤设置 worksheetno
     this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'])
@@ -151,6 +161,22 @@ class WorkListDetail extends Component {
       }
     })
     return operatDom
+  }
+  showHandleBtn = (handleAry, datasource) => {
+    let handleName = {
+      'handleCancelWorksheet': '取消工单',
+      'handleAgreeWorksheet': '通过',
+      'handleRefuseWorksheet': '驳回'
+    }
+    let handleDom = []
+    if (handleAry.length === 1) {
+      handleDom.push(<Button key={handleAry[0]['key']} onClick={() => this.handlebtnType(handleAry[0]['key'], datasource)} type='primary' inline>{handleName[handleAry[0]['key']]}</Button>)
+    } else {
+      handleAry.map((item, index) => {
+        handleDom.push(<Button key={`${item['key']}${index}`} onClick={() => this.handlebtnType(item['key'], datasource)} type='primary' inline>{handleName[item['key']]}</Button>)
+      })
+    }
+    return handleDom
   }
   render() {
     let { datasource, isLoading, worksheetno, url, showimg, imgurl, viewAry } = this.state
@@ -259,8 +285,12 @@ class WorkListDetail extends Component {
         }
       </Content>
       {
-        isLoading && datasource['commands']['handle'].length > 0 ? <div className={`${style['btn-box']} ${style['onebtn']}`}>
-          <Button onClick={() => this.handlebtnType('handleCancelWorksheet', datasource)} type='primary' inline>取消工单</Button>
+        isLoading && datasource['commands']['handle'].length > 0 ? <div className={`${style['btn-box']} ${datasource['commands']['handle'].length > 1 ? style['twobtn'] : style['onebtn']}`}>
+          {
+            this.showHandleBtn(datasource['commands']['handle'], datasource).map(item => {
+              return item
+            })
+          }
         </div> : null
       }
       <div style={{ display: showimg ? 'block' : 'none' }} onClick={this.handleImgMask} className={`showimg-box animated ${showimg ? 'fadeIn' : 'fadeOut'}`}>
