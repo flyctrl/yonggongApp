@@ -13,6 +13,7 @@ import style from './style.css'
 import back from 'Src/assets/back.png'
 import front from 'Src/assets/front.png'
 import backFace from 'Src/assets/backimg.png'
+import { onBackKeyDown } from 'Contants/tooler'
 const Item = List.Item
 const sex = {
   1: '男',
@@ -36,8 +37,26 @@ class RealNameAuth extends Component {
       token: ''
     }
   }
-  handleSubmit = () => {
+  componentDidMount () {
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
   }
+  backButtons = (e) => {
+    let { isShowFace } = this.state
+    if (isShowFace) {
+      e.preventDefault()
+      this.setState({
+        isShowFace: false
+      })
+    } else {
+      this.props.match.history.goBack()
+    }
+  }
+  componentWillUnmount () {
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
+  }
+
   handleClickNext = () => { // 是否显示人脸识别页面
     let { isSuccessBack, isSuccessFront } = this.state
     if (isSuccessBack && isSuccessFront) {
@@ -65,101 +84,190 @@ class RealNameAuth extends Component {
       token: ''
     })
   }
+  onSuccessFront = async(imageURI) => {
+    Toast.loading('上传中...', 0)
+    const data = await api.auth.realNameFront({
+      image: 'data:image/png;base64,' + imageURI
+    }) || false
+    if (data) {
+      Toast.hide()
+      Toast.success('上传成功', 1.5)
+      this.setState({
+        fileList: data,
+        frontImg: data['front_image'],
+        isClickFront: true,
+        isClickBack: false,
+        isSuccessFront: true,
+        token: data['token'],
+        img: data['head_image']
+      })
+    }
+  }
+  onFail = (message) => {
+    // Toast.fail(message)
+    console.log(message)
+  }
+
   handleTakeFront = (e) => { // 正面照
-    let file = e.target.files[0]
-    let reader = new FileReader()
-    let _this = this
-    reader.onload = async function () {
-      Toast.loading('上传中...', 0)
-      let url = this.result
-      const data = await api.auth.realNameFront({
-        image: url
-      }) || false
-      if (data) {
-        Toast.hide()
-        Toast.success('上传成功', 1.5)
-        _this.setState({
-          fileList: data,
-          frontImg: data['front_image'],
-          isClickFront: true,
-          isClickBack: false,
-          isSuccessFront: true,
-          token: data['token'],
-          img: data['head_image']
-        })
+    if ('cordova' in window) {
+      navigator.camera.getPicture(this.onSuccessFront, this.onFail, {
+        destinationType: Camera.DestinationType.DATA_URL,
+        quality: 80
+      })
+    } else {
+      let file = e.target.files[0]
+      let reader = new FileReader()
+      let _this = this
+      reader.onload = async function () {
+        Toast.loading('上传中...', 0)
+        let url = this.result
+        const data = await api.auth.realNameFront({
+          image: url
+        }) || false
+        if (data) {
+          Toast.hide()
+          Toast.success('上传成功', 1.5)
+          _this.setState({
+            fileList: data,
+            frontImg: data['front_image'],
+            isClickFront: true,
+            isClickBack: false,
+            isSuccessFront: true,
+            token: data['token'],
+            img: data['head_image']
+          })
+        }
+      }
+      reader.onerror = function () {
+        Toast(reader.error)
+      }
+      if (file) {
+        reader.readAsDataURL(file)
       }
     }
-    reader.onerror = function () {
-      Toast(reader.error)
-    }
-    if (file) {
-      reader.readAsDataURL(file)
-    }
   }
-  handleTakeBack = (e) => { // 反面照
+  onSuccessBack = async(imageURI) => {
     let { token, fileList } = this.state
-    let file = e.target.files[0]
-    let reader = new FileReader()
-    let _this = this
-    reader.onload = async function () {
-      let url = this.result
-      Toast.loading('上传中...', 0)
-      const data = await api.auth.realNameBack({
-        image: url,
-        token
-      }) || false
-      if (data) {
-        Toast.hide()
-        Toast.success('上传成功', 1.5)
-        _this.setState({
-          fileList: { ...fileList, ...data },
-          backImg: data['back_image'],
-          isClickBack: true,
-          isSuccessBack: true,
-          stepNum: 1,
-          token: data['token']
-        })
-      }
-    }
-    reader.onerror = function () {
-      Toast(reader.error)
-    }
-    if (file) {
-      reader.readAsDataURL(file)
+    Toast.loading('上传中...', 0)
+    const data = await api.auth.realNameBack({
+      image: 'data:image/png;base64,' + imageURI,
+      token
+    }) || false
+    if (data) {
+      Toast.hide()
+      Toast.success('上传成功', 1.5)
+      this.setState({
+        fileList: { ...fileList, ...data },
+        backImg: data['back_image'],
+        isClickBack: true,
+        isSuccessBack: true,
+        stepNum: 1,
+        token: data['token']
+      })
     }
   }
-  handleTakeFace = (e) => { // 人脸识别
-    let { token } = this.state
-    let file = e.target.files[0]
-    let reader = new FileReader()
-    let _this = this
-    reader.onload = async function () {
-      Toast.loading('上传中...', 0)
-      let url = this.result
-      const data = await api.auth.realNameFace({
-        image: url,
-        token
-      }) || false
-      if (data) {
-        Toast.hide()
-        Toast.success('上传成功', 1.5)
-        setTimeout(() => {
-          _this.handleAuthConfirm(data['token'])
-        }, 1500)
-        _this.setState({
-          backFaceImg: url,
-          isClickBack: true,
-          isSuccessBack: true,
-          stepNum: 2,
-          token: data['token']
-        })
+
+  handleTakeBack = (e) => { // 反面照
+    if ('cordova' in window) {
+      navigator.camera.getPicture(this.onSuccessBack, this.onFail, {
+        destinationType: Camera.DestinationType.DATA_URL,
+        quality: 80
+      })
+    } else {
+      let { token, fileList } = this.state
+      let file = e.target.files[0]
+      let reader = new FileReader()
+      let _this = this
+      reader.onload = async function () {
+        let url = this.result
+        Toast.loading('上传中...', 0)
+        const data = await api.auth.realNameBack({
+          image: url,
+          token
+        }) || false
+        if (data) {
+          Toast.hide()
+          Toast.success('上传成功', 1.5)
+          _this.setState({
+            fileList: { ...fileList, ...data },
+            backImg: data['back_image'],
+            isClickBack: true,
+            isSuccessBack: true,
+            stepNum: 1,
+            token: data['token']
+          })
+        }
+      }
+      reader.onerror = function () {
+        Toast(reader.error)
+      }
+      if (file) {
+        reader.readAsDataURL(file)
       }
     }
-    reader.onerror = function () {
-      Toast(reader.error)
+  }
+  onSuccessFace = async(imageURI) => {
+    Toast.loading('上传中...', 0)
+    let { token } = this.state
+    const data = await api.auth.realNameFace({
+      image: 'data:image/png;base64,' + imageURI,
+      token
+    }) || false
+    if (data) {
+      Toast.hide()
+      Toast.success('上传成功', 1.5)
+      setTimeout(() => {
+        this.handleAuthConfirm(data['token'])
+      }, 1500)
+      this.setState({
+        backFaceImg: 'data:image/png;base64,' + imageURI,
+        isClickBack: true,
+        isSuccessBack: true,
+        stepNum: 2,
+        token: data['token']
+      })
     }
-    if (file) {
-      reader.readAsDataURL(file)
+  }
+
+  handleTakeFace = (e) => { // 人脸识别
+    if ('cordova' in window) {
+      navigator.camera.getPicture(this.onSuccessFace, this.onFail, {
+        destinationType: Camera.DestinationType.DATA_URL,
+        quality: 80
+      })
+    } else {
+      let { token } = this.state
+      let file = e.target.files[0]
+      let reader = new FileReader()
+      let _this = this
+      reader.onload = async function () {
+        Toast.loading('上传中...', 0)
+        let url = this.result
+        const data = await api.auth.realNameFace({
+          image: url,
+          token
+        }) || false
+        if (data) {
+          Toast.hide()
+          Toast.success('上传成功', 1.5)
+          setTimeout(() => {
+            _this.handleAuthConfirm(data['token'])
+          }, 1500)
+          _this.setState({
+            backFaceImg: url,
+            isClickBack: true,
+            isSuccessBack: true,
+            stepNum: 2,
+            token: data['token']
+          })
+        }
+      }
+      reader.onerror = function () {
+        Toast(reader.error)
+      }
+      if (file) {
+        reader.readAsDataURL(file)
+      }
     }
   }
   handleAuthConfirm = async(token) => {
@@ -207,11 +315,17 @@ class RealNameAuth extends Component {
           <div className={style['auth-des']}>请上传身份证正反面照片</div>
           <div className={style['auth-picture']}>
             <div className={style['auth-pic-front']}>
-              <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/jpg' capture='camera' onChange={this.handleTakeFront}/>
+              {'cordova' in window
+                ? <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='button' onClick={this.handleTakeFront}/>
+                : <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/jpg' capture='camera' onChange={this.handleTakeFront}/>
+              }
               <img src={frontImg} style={{ zIndex: isClickFront ? 1 : 0 }}/>
             </div>
             <div className={style['auth-pic-back']}>
-              <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/jpg' onChange={this.handleTakeBack} />
+              { 'cordova' in window
+                ? <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='button' onClick={this.handleTakeBack} />
+                : <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/jpg' onChange={this.handleTakeBack} />
+              }
               <img src={backImg} onClick={this.handleClick} style={{ zIndex: isClickBack ? 1 : 0 }}/>
             </div>
             {/* <Upload {...uploaderPropsFront} disabled={isClickFront}><img src={frontImg}/></Upload> */}
@@ -266,7 +380,10 @@ class RealNameAuth extends Component {
           </div>
           <div className={style['auth-face-btn']}>
             拍一张照片
-            <input id='btn_camera_face' className={style['input']} type='file' accept='image/jpg' capture='camera' onChange={this.handleTakeFace} />
+            { 'cordova' in window
+              ? <input id='btn_camera_face' className={style['input']} type='button' onClick={this.handleTakeFace} />
+              : <input id='btn_camera_face' className={style['input']} type='file' accept='image/jpg' capture='camera' onChange={this.handleTakeFace} />
+            }
           </div>
         </div>
       </Content>
