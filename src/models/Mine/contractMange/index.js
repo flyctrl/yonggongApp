@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
-import { ListView, PullToRefresh } from 'antd-mobile'
+import { ListView, PullToRefresh, Tabs } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
@@ -11,6 +11,10 @@ let contractType = {
   1: '接包方',
   2: '发包方'
 }
+let tabType = [
+  { title: '发单合同' },
+  { title: '接单合同' }
+]
 class ContractMange extends Component {
   constructor(props) {
     super(props)
@@ -26,7 +30,8 @@ class ContractMange extends Component {
       pageIndex: 1,
       pageNos: 1,
       nodata: false,
-      worksheetId: tooler.getQueryString('id')
+      worksheetId: tooler.getQueryString('id'),
+      tabIndex: tooler.getQueryString('tabIndex') || 0,
     }
   }
   genData = async (pIndex = 1) => {
@@ -98,12 +103,33 @@ class ContractMange extends Component {
       })
     })
   }
+  handleTabsChange = (tabs, index) => {
+    const dataSource = new ListView.DataSource({
+      rowHasChanged: (row1, row2) => row1 !== row2,
+    })
+    this.setState({
+      tabIndex: index,
+      refreshing: true,
+      isLoading: true,
+      pageIndex: 1,
+      pageNos: 1,
+      dataSource
+    })
+    this.genData(1, index).then((rdata) => {
+      this.rData = rdata
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        refreshing: false,
+        isLoading: false,
+      })
+    })
+  }
   handlePact = (e) => {
     let contractNo = e.currentTarget.getAttribute('data-id')
     this.props.match.history.push(`${urls.ELETAGREEMENT}?url=CONTRACTMANGE&contract_no=${contractNo}`)
   }
   render() {
-    let { isLoading, nodata } = this.state
+    let { isLoading, nodata, tabIndex } = this.state
     const footerShow = () => {
       if (isLoading) {
         return null
@@ -115,12 +141,12 @@ class ContractMange extends Component {
     }
     const row = (rowData, sectionID, rowID) => {
       return (
-        <li key={`${rowData.contract_no}-${rowData.id}`} className='my-bottom-border'>
-          <p><span>{`${contractType[rowData['show_work_type']]}: `}</span>{rowData.username}</p>
-          <p><span>合同编号：</span>{rowData.contract_no}</p>
-          <p><span>创建时间: </span>{`${rowData.created_at}`}
-            <a data-id={rowData.contract_no} onClick={this.handlePact}>查看合同</a>
+        <li key={`${rowData.contract_no}-${rowData.id}`}>
+          <p className={`${style['con-p1']} my-bottom-border`}><span></span>{`${rowData.created_at}`}
+            <a onClick={this.handlePact.bind(this, rowData.contract_no) }>查看合同</a>
           </p>
+          <p className={style['con-p2']}><span>{`${contractType[rowData['show_work_type']]}: `}</span>{rowData.username}</p>
+          <p className={style['con-p2']}><span>合同编号：</span>{rowData.contract_no}</p>
         </li>
       )
     }
@@ -135,28 +161,38 @@ class ContractMange extends Component {
           }}
         />
         <Content>
-          <ul className={style['contract-list']} style={{ height: '100%' }}>
-            <ListView
-              ref={(el) => { this.lv = el }}
-              dataSource={this.state.dataSource}
-              renderFooter={() => footerShow()}
-              renderRow={row}
-              style={{
-                height: this.state.height,
-              }}
-              className={style['job-list']}
-              pageSize={NUM_ROWS}
-              // onScroll={(e) => { console.log('onscroll') }}
-              pullToRefresh={<PullToRefresh
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh}
-              />}
-              onEndReachedThreshold={10}
-              initialListSize={NUM_ROWS}
-              scrollRenderAheadDistance={120}
-              onEndReached={this.onEndReached}
-            />
-          </ul>
+          <div id ='contact-page' className={style['contact-page']}>
+            <Tabs tabs={tabType}
+              page={parseInt(tabIndex, 10)}
+              tabBarTextStyle={{ fontSize: '15px', color: '#999999' }}
+              tabBarActiveTextColor='#1298FC'
+              tabBarUnderlineStyle={{ borderColor: '#0098F5', width: '12%', marginLeft: '18.5%' }}
+              onChange={this.handleTabsChange}
+            >
+              <ul className={style['contract-list']} style={{ height: '100%' }}>
+                <ListView
+                  ref={(el) => { this.lv = el }}
+                  dataSource={this.state.dataSource}
+                  renderFooter={() => footerShow()}
+                  renderRow={row}
+                  style={{
+                    height: this.state.height,
+                  }}
+                  className={style['job-list']}
+                  pageSize={NUM_ROWS}
+                  // onScroll={(e) => { console.log('onscroll') }}
+                  pullToRefresh={<PullToRefresh
+                    refreshing={this.state.refreshing}
+                    onRefresh={this.onRefresh}
+                  />}
+                  onEndReachedThreshold={10}
+                  initialListSize={NUM_ROWS}
+                  scrollRenderAheadDistance={120}
+                  onEndReached={this.onEndReached}
+                />
+              </ul>
+            </Tabs>
+          </div>
         </Content>
       </div>
     )

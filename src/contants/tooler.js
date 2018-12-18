@@ -137,3 +137,50 @@ export const stringToDate = (dateString) => { // 字符串转Date类型
   }
   return null
 }
+
+export const onBackKeyDown = function (e) {
+  let backUrl = history.location.pathname.split('/')
+  if (
+    (backUrl[1] === 'Home' && backUrl.length <= 2) ||
+    (backUrl[1] === 'WorkListManage' && backUrl.length <= 2) ||
+    (backUrl[1] === 'Mine' && backUrl.length <= 2) ||
+    (backUrl[1] === 'Message' && backUrl.length <= 2) || backUrl[1] === ''
+  ) {
+    showToast('再点击一次退出!', 2000)
+    document.removeEventListener('backbutton', onBackKeyDown, false) // 注销返回键
+    document.addEventListener('backbutton', exitApp, false) // 绑定退出事件
+    // 2秒后重新注册
+    var intervalID = window.setInterval(function () {
+      window.clearInterval(intervalID)
+      document.removeEventListener('backbutton', exitApp, false) // 注销返回键
+      document.addEventListener('backbutton', onBackKeyDown, false) // 返回键
+    }, 2000)
+  } else {
+    history.goBack()
+  }
+}
+var exitApp = function () {
+  navigator.app.exitApp()
+}
+
+export const showToast = function (msg, duration) {
+  duration = isNaN(duration) ? 3000 : duration
+  var m = document.createElement('div')
+  m.innerHTML = msg
+  m.style.cssText = 'width:60%; min-width:150px; background:#000;opacity: 0.8; height:40px; color:#fff; line-height:40px; text-align:center; border-radius:5px; position:fixed; top:70%; left:20%; z-index:999999; font-weight:bold;'
+  document.body.appendChild(m)
+  setTimeout(function () {
+    var d = 0.8
+    m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in'
+    m.style.opacity = '0'
+    setTimeout(function () {
+      document.body.removeChild(m)
+    }, d * 1000)
+  }, duration)
+}
+export const backButton = function () {
+  document.addEventListener('deviceready', () => {
+    document.addEventListener('backbutton', onBackKeyDown)
+  })
+}
+

@@ -34,7 +34,12 @@ class ContractMange extends Component {
     }) || false
     if (data) {
       this.setState({
-        contractList: data.list || [],
+        contractList: [{
+          created_at: '2019-09-09  09:23',
+          show_work_type: 1,
+          username: '大肉',
+          contract_no: '454321215451212154'
+        }],
         isloading: false
       })
     }
@@ -55,12 +60,12 @@ class ContractMange extends Component {
           { contractList.length !== 0 && !isloading
             ? <ul className={style['contract-list']}>
               { contractList.map((item, index) => {
-                return (<li key={`${item.contract_no}-${item.id}`} className='my-bottom-border'>
-                  <p><span>{`${contractType[item['show_work_type']]}: `}</span>{item.username}</p>
-                  <p><span>合同编号：</span>{item.contract_no}</p>
-                  <p><span>创建时间: </span>{`${item.created_at}`}
+                return (<li key={`${item.contract_no}-${item.id}`}>
+                  <p className={`${style['con-p1']} my-bottom-border`}><span></span>{`${item.created_at}`}
                     <a onClick={this.handlePact.bind(this, item.contract_no) }>查看合同</a>
                   </p>
+                  <p className={style['con-p2']}><span>{`${contractType[item['show_work_type']]}: `}</span>{item.username}</p>
+                  <p className={style['con-p2']}><span>合同编号：</span>{item.contract_no}</p>
                 </li>)
               })}
             </ul> : <div className='nodata'>{ contractList.length === 0 && !isloading ? '暂无数据' : '' }</div>

@@ -13,7 +13,7 @@ import style from './style.css'
 import back from 'Src/assets/back.png'
 import front from 'Src/assets/front.png'
 import backFace from 'Src/assets/backimg.png'
-import { getQueryString } from 'Contants/tooler'
+import { getQueryString, onBackKeyDown } from 'Contants/tooler'
 const Item = List.Item
 let myreg = /^[1][3,4,5,7,8][0-9]{9}$/
 const sex = {
@@ -42,6 +42,31 @@ class CreateWorker extends Component {
       codeDisabled: false,
       codeText: '获取验证码',
       total: TOTAL
+    }
+  }
+  componentDidMount () {
+    document.removeEventListener('backbutton', onBackKeyDown, false)
+    document.addEventListener('backbutton', this.backButtons, false)
+  }
+  backButtons = (e) => {
+    let { isShowFace, isPhone, isBack } = this.state
+    if (isShowFace) {
+      e.preventDefault()
+      this.setState({
+        isShowFace: false
+      })
+    } else if (isPhone) {
+      e.preventDefault()
+      this.setState({
+        isPhone: false,
+        isShowFace: true
+      })
+    } else {
+      if (isBack) {
+        this.props.match.history.push(`${urls['SELECTWORKER']}?orderno=${isBack}`)
+      } else {
+        this.props.match.history.goBack()
+      }
     }
   }
   handleClickNext = () => { // 是否显示人脸识别页面
@@ -79,105 +104,196 @@ class CreateWorker extends Component {
       isPhone: false
     })
   }
+  onFail = (message) => {
+    console.log(message, 'messge')
+    // Toast.fail(message)
+  }
+  onSuccessFront = async(imageURI) => {
+    Toast.loading('上传中...', 0)
+    const data = await api.Mine.workManage.realNameFront({
+      image: 'data:image/png;base64,' + imageURI
+    }) || false
+    if (data) {
+      Toast.hide()
+      Toast.success('上传成功', 1.5)
+      this.setState({
+        fileList: data,
+        frontImg: data['front_image'],
+        isClickFront: true,
+        isClickBack: false,
+        isSuccessFront: true,
+        token: data['token']
+      })
+    }
+  }
+
   handleTakeFront = (e) => { // 正面照
-    let file = e.target.files[0]
-    let reader = new FileReader()
-    let _this = this
-    reader.onload = async function () {
-      Toast.loading('上传中...', 0)
-      let url = this.result
-      const data = await api.Mine.workManage.realNameFront({
-        image: url
-      }) || false
-      if (data) {
-        Toast.hide()
-        _this.setState({
-          fileList: data,
-          frontImg: data['front_image'],
-          isClickFront: true,
-          isClickBack: false,
-          isSuccessFront: true,
-          token: data['token']
-        }, () => {
-          Toast.success('上传成功', 1.5)
-        })
-      }
-    }
-    reader.onerror = function () {
-      Toast(reader.error)
-    }
-    if (file) {
-      reader.readAsDataURL(file)
-    }
-  }
-  handleTakeBack = (e) => { // 反面照
-    let { token, fileList } = this.state
-    let file = e.target.files[0]
-    let reader = new FileReader()
-    let _this = this
-    reader.onload = async function () {
-      let url = this.result
-      Toast.loading('上传中...', 0)
-      const data = await api.Mine.workManage.realNameBack({
-        image: url,
-        token
-      }) || false
-      if (data) {
-        Toast.hide()
-        _this.setState({
-          fileList: { ...fileList, ...data },
-          backImg: data['back_image'],
-          isClickBack: true,
-          isSuccessBack: true,
-          stepNum: 1,
-          token: data['token']
-        }, () => {
-          Toast.success('上传成功', 1.5)
-        })
-      }
-    }
-    reader.onerror = function () {
-      Toast(reader.error)
-    }
-    if (file) {
-      reader.readAsDataURL(file)
-    }
-  }
-  handleTakeFace = (e) => { // 人脸识别
-    let { token } = this.state
-    let file = e.target.files[0]
-    let reader = new FileReader()
-    let _this = this
-    reader.onload = async function () {
-      Toast.loading('上传中...', 0)
-      let url = this.result
-      const data = await api.Mine.workManage.realNameFace({
-        image: url,
-        token
-      }) || false
-      if (data) {
-        Toast.hide()
-        Toast.success('上传成功', 1.5)
-        _this.setState({
-          backFaceImg: url,
-          isClickBack: true,
-          isSuccessBack: true,
-          stepNum: 2,
-          token: data['token'],
-          isPhone: true,
-          isShowFace: !data['mobile_verify'],
-          isVerifyPhone: data['mobile_verify']
-        })
-        if (!data['mobile_verify']) {
-          _this.handelConfim()
+    if ('cordova' in window) {
+      navigator.camera.getPicture(this.onSuccessFront, this.onFail, {
+        destinationType: Camera.DestinationType.DATA_URL,
+        quality: 80,
+      })
+    } else {
+      let file = e.target.files[0]
+      let reader = new FileReader()
+      let _this = this
+      reader.onload = async function () {
+        Toast.loading('上传中...', 0)
+        let url = this.result
+        const data = await api.Mine.workManage.realNameFront({
+          image: url
+        }) || false
+        if (data) {
+          Toast.hide()
+          _this.setState({
+            fileList: data,
+            frontImg: data['front_image'],
+            isClickFront: true,
+            isClickBack: false,
+            isSuccessFront: true,
+            token: data['token']
+          }, () => {
+            Toast.success('上传成功', 1.5)
+          })
         }
       }
+      reader.onerror = function () {
+        Toast(reader.error)
+      }
+      if (file) {
+        reader.readAsDataURL(file)
+      }
     }
-    reader.onerror = function () {
-      Toast(reader.error)
+  }
+  onSuccessBack = async(imageURI) => {
+    let { token, fileList } = this.state
+    Toast.loading('上传中...', 0)
+    const data = await api.Mine.workManage.realNameBack({
+      image: 'data:image/png;base64,' + imageURI,
+      token
+    }) || false
+    if (data) {
+      Toast.hide()
+      Toast.success('上传成功', 1.5)
+      this.setState({
+        fileList: { ...fileList, ...data },
+        backImg: data['back_image'],
+        isClickBack: true,
+        isSuccessBack: true,
+        stepNum: 1,
+        token: data['token']
+      })
     }
-    if (file) {
-      reader.readAsDataURL(file)
+  }
+
+  handleTakeBack = (e) => { // 反面照
+    if ('cordova' in window) {
+      navigator.camera.getPicture(this.onSuccessBack, this.onFail, {
+        destinationType: Camera.DestinationType.DATA_URL,
+        quality: 80
+      })
+    } else {
+      let { token, fileList } = this.state
+      let file = e.target.files[0]
+      let reader = new FileReader()
+      let _this = this
+      reader.onload = async function () {
+        let url = this.result
+        Toast.loading('上传中...', 0)
+        const data = await api.Mine.workManage.realNameBack({
+          image: url,
+          token
+        }) || false
+        if (data) {
+          Toast.hide()
+          _this.setState({
+            fileList: { ...fileList, ...data },
+            backImg: data['back_image'],
+            isClickBack: true,
+            isSuccessBack: true,
+            stepNum: 1,
+            token: data['token']
+          }, () => {
+            Toast.success('上传成功', 1.5)
+          })
+        }
+      }
+      reader.onerror = function () {
+        Toast(reader.error)
+      }
+      if (file) {
+        reader.readAsDataURL(file)
+      }
+    }
+  }
+  onSuccessFace = async(imageURI) => {
+    Toast.loading('上传中...', 0)
+    let { token } = this.state
+    const data = await api.Mine.workManage.realNameFace({
+      image: 'data:image/png;base64,' + imageURI,
+      token
+    }) || false
+    if (data) {
+      Toast.hide()
+      Toast.success('上传成功', 1.5)
+      this.setState({
+        backFaceImg: 'data:image/png;base64,' + imageURI,
+        isClickBack: true,
+        isSuccessBack: true,
+        stepNum: 2,
+        token: data['token'],
+        isPhone: true,
+        isShowFace: !data['mobile_verify'],
+        isVerifyPhone: data['mobile_verify']
+      })
+      if (!data['mobile_verify']) {
+        this.handelConfim()
+      }
+    }
+  }
+
+  handleTakeFace = (e) => { // 人脸识别
+    if ('cordova' in window) {
+      navigator.camera.getPicture(this.onSuccessFace, this.onFail, {
+        destinationType: Camera.DestinationType.DATA_URL,
+        quality: 80
+      })
+    } else {
+      let { token } = this.state
+      let file = e.target.files[0]
+      let reader = new FileReader()
+      let _this = this
+      reader.onload = async function () {
+        Toast.loading('上传中...', 0)
+        let url = this.result
+        const data = await api.Mine.workManage.realNameFace({
+          image: url,
+          token
+        }) || false
+        if (data) {
+          Toast.hide()
+          Toast.success('上传成功', 1.5)
+          _this.setState({
+            backFaceImg: url,
+            isClickBack: true,
+            isSuccessBack: true,
+            stepNum: 2,
+            token: data['token'],
+            isPhone: true,
+            isShowFace: !data['mobile_verify'],
+            isVerifyPhone: data['mobile_verify']
+          })
+          if (!data['mobile_verify']) {
+            _this.handelConfim()
+          }
+        }
+      }
+      reader.onerror = function () {
+        Toast(reader.error)
+      }
+      if (file) {
+        reader.readAsDataURL(file)
+      }
     }
   }
   handleTime = () => {
@@ -271,8 +387,13 @@ class CreateWorker extends Component {
     }
   }
   componentWillUnmount () {
-    clearInterval(this.interval)
+    if (this.interval) {
+      clearInterval(this.interval)
+    }
+    document.removeEventListener('backbutton', this.backButtons)
+    document.addEventListener('backbutton', onBackKeyDown, false)
   }
+
   render() {
     const { getFieldError, getFieldDecorator } = this.props.form
     let { backImg, frontImg, isClickBack, isClickFront, isSuccessFront, isSuccessBack, stepNum, isShowFace, backFaceImg, fileList, isBack, isPhone, isVerifyPhone } = this.state
@@ -313,11 +434,19 @@ class CreateWorker extends Component {
             <div className={style['work-des']}>请上传身份证正反面照片</div>
             <div className={style['work-picture']}>
               <div className={style['work-pic-front']}>
-                <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFront} />
+                {
+                  'cordova' in window
+                    ? <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='button' onClick={this.handleTakeFront} />
+                    : <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFront} />
+                }
                 <img src={frontImg} style={{ zIndex: isClickFront ? 1 : 0 }}/>
               </div>
               <div className={style['work-pic-back']}>
-                <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/*' capture='camera' onChange={this.handleTakeBack} />
+                {
+                  'cordova' in window
+                    ? <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='button' onClick={this.handleTakeBack} />
+                    : <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/*' capture='camera' onChange={this.handleTakeBack} />
+                }
                 <img src={backImg} onClick={this.handleClick} style={{ zIndex: isClickBack ? 1 : 0 }}/>
               </div>
               {/* <Upload {...uploaderProps} disabled={isClickFront}><img src={frontImg}/></Upload>
@@ -419,7 +548,11 @@ class CreateWorker extends Component {
           </div>
           <div className={style['work-face-btn']}>
             拍一张照片
-            <input id='btn_camera_face' className={style['input']} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFace} />
+            {
+              'cordova' in window
+                ? <input id='btn_camera_face' className={style['input']} type='button' onClick={this.handleTakeFace} />
+                : <input id='btn_camera_face' className={style['input']} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFace} />
+            }
           </div>
         </div>
       </Content>
