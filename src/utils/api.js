@@ -218,6 +218,9 @@ export default {
     },
     settleSendCancel(params) { // 我发的 - 结算记录驳回
       return FetchSave(prefix + '/settle/send/cancel', params)
+    },
+    worksheetReview(params) { // 我发的 - 审批工单
+      return FetchSave(prefix + '/worksheet/review', params, 'post', { showloading: false })
     }
   },
   Mine: { // 我的

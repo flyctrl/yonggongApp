@@ -38,8 +38,10 @@ class RealNameAuth extends Component {
     }
   }
   componentDidMount () {
-    document.removeEventListener('backbutton', onBackKeyDown, false)
-    document.addEventListener('backbutton', this.backButtons, false)
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
   }
   backButtons = (e) => {
     let { isShowFace } = this.state
@@ -53,8 +55,10 @@ class RealNameAuth extends Component {
     }
   }
   componentWillUnmount () {
-    document.removeEventListener('backbutton', this.backButtons)
-    document.addEventListener('backbutton', onBackKeyDown, false)
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
   }
 
   handleClickNext = () => { // 是否显示人脸识别页面

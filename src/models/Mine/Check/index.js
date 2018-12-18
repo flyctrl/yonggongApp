@@ -59,8 +59,10 @@ class Check extends Component {
         time: new Date().Format('hh:mm'),
       })
     }, 1000)
-    document.removeEventListener('backbutton', onBackKeyDown, false)
-    document.addEventListener('backbutton', this.backButtons, false)
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
   }
   backButtons = (e) => {
     if (newAlert) {
@@ -520,8 +522,10 @@ class Check extends Component {
   componentWillUnmount() {
     clearInterval(setTime)
     clearInterval(successTime)
-    document.removeEventListener('backbutton', this.backButtons)
-    document.addEventListener('backbutton', onBackKeyDown, false)
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
     if (newAlert) {
       newAlert.close()
     }

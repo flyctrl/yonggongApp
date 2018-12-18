@@ -157,7 +157,7 @@ class WorkListManage extends Component {
   }
   showContorlBtn = (rowData) => {
     let btnDom = []
-    let handleAry = rowData['commands']['handle']
+    // let handleAry = rowData['commands']['handle']
     let pageAry = rowData['commands']['page']
     let viewAry = rowData['commands']['view']
     if (viewAry.length > 0) {
@@ -174,11 +174,11 @@ class WorkListManage extends Component {
         btnDom.push(this.showTotalBtn('page', rowData))
       }
     }
-    if (handleAry.length > 0) {
-      handleAry.map(item => {
-        btnDom.push(<Button type='primary' size='small' onClick={(e) => { this.handleContorl(e, item['key'], rowData) }} inline>{item['value']}</Button>)
-      })
-    }
+    // if (handleAry.length > 0) {
+    //   handleAry.map(item => {
+    //     btnDom.push(<Button type='primary' size='small' onClick={(e) => { this.handleContorl(e, item['key'], rowData) }} inline>{item['value']}</Button>)
+    //   })
+    // }
     return btnDom.length > 0 ? <div className={`${style['btn-box']} my-top-border`}>{
       btnDom.map((item, index) => {
         return <div key={index} className={style['item-btn']}>{item}</div>
@@ -198,6 +198,9 @@ class WorkListManage extends Component {
         break
       case 'pageAttend': // 我发的 - 考勤设置
         this.handleSetAttend(rowData)
+        break
+      case 'pageUpdateWorksheet': // 我发的 - 编辑
+        this.pageUpdateWorksheet(rowData)
         break
       case 'viewAttend': // 我发的 - 考勤记录
         this.handleViewAttend(rowData)
@@ -237,6 +240,8 @@ class WorkListManage extends Component {
   }
   handleSetAttend = (rowData) => { // 我发的 - 考勤设置 worksheetno
     this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'])
+  }
+  pageUpdateWorksheet = (rowData) => { // 我发的 - 编辑
   }
   handleViewAttend = (rowData) => { // 我发的 - 考勤记录
     this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'])

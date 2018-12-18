@@ -191,39 +191,23 @@ class WorkListDetail extends Component {
     this.props.match.history.push(urls.AGENTCHECKLIST + '?orderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
   }
   handleStart = async (rowData) => { // 我接的 - 开工
-    console.log('开工')
     console.log(rowData)
-    let { dataSource } = this.state
-    let currentIndex
-    dataSource.map((item, index) => {
-      if (item['order_no'] === rowData['order_no']) {
-        currentIndex = index
-      }
-    })
     Toast.loading('提交中...', 0)
     let data = await api.Mine.myorder.startWork({
       order_no: rowData['order_no']
     }) || false
     Toast.hide()
     if (data) {
-      dataSource[currentIndex] = data
-      this.setState({
-        dataSource
+      Toast.success('成功开工', 1.5, () => {
+        this.getOrderDetail()
       })
-      Toast.success('成功开工', 1.5)
     }
   }
   handleAgentStart = (rowData) => { // 我接的 - 代开工
     this.props.match.history.push(urls.AGENTSTARTLIST + '?orderno=' + rowData['order_no'])
   }
   handleFished = async (rowData) => { // 我接的 - 完工
-    let { dataSource } = this.state
-    let currentIndex, data
-    dataSource.map((item, index) => {
-      if (item['order_no'] === rowData['order_no']) {
-        currentIndex = index
-      }
-    })
+    let data
     let valuationWay = rowData['valuation_way']
     if (valuationWay === 1) {
       prompt('工作量', `（单位：${rowData['valuation_unit']})`, [
@@ -241,11 +225,8 @@ class WorkListDetail extends Component {
               }) || false
               Toast.hide()
               if (data) {
-                dataSource[currentIndex] = data
-                this.setState({
-                  dataSource
-                })
                 Toast.success('操作成功', 1.5)
+                this.getOrderDetail()
               }
             } else {
               reject()
@@ -261,11 +242,9 @@ class WorkListDetail extends Component {
       }) || false
       Toast.hide()
       if (data) {
-        dataSource[currentIndex] = data
-        this.setState({
-          dataSource
+        Toast.success('操作成功', 1.5, () => {
+          this.getOrderDetail()
         })
-        Toast.success('操作成功', 1.5)
       }
     }
   }
