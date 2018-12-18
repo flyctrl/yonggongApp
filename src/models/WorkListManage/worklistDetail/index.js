@@ -97,29 +97,44 @@ class WorkListDetail extends Component {
   }
   handleCancelWorksheet = async (rowData) => { // 我发的 - 取消工单
     console.log(rowData)
-    let { dataSource } = this.state
-    let currentIndex
-    dataSource.map((item, index) => {
-      if (item['worksheet_no'] === rowData['worksheet_no']) {
-        currentIndex = index
-      }
-    })
     Toast.loading('取消中...', 0)
     let data = await api.WorkListManage.cancelWork({
       worksheet_no: rowData['worksheet_no']
     }) || false
     Toast.hide()
     if (data) {
-      dataSource[currentIndex] = data
-      this.setState({
-        dataSource
+      Toast.success('成功取消工单', 1.5, () => {
+        this.getOrderDetail()
       })
-      Toast.success('成功取消开工', 1.5)
     }
   }
-  handleAgreeWorksheet = (rowData) => { // 我发的 - 通过(招标)
+  handleAgreeWorksheet = async (rowData) => { // 我发的 - 通过(招标)
+    Toast.loading('通过中...', 0)
+    let data = await api.WorkListManage.worksheetReview({
+      worksheet_no: rowData['worksheet_no'],
+      type: 1,
+      view: ''
+    }) || false
+    Toast.hide()
+    if (data) {
+      Toast.success('成功通过！', 1.5, () => {
+        this.getOrderDetail()
+      })
+    }
   }
-  handleRefuseWorksheet = (rowData) => { // 我发的 - 驳回(招标)
+  handleRefuseWorksheet = async (rowData) => { // 我发的 - 驳回(招标)
+    Toast.loading('驳回中...', 0)
+    let data = await api.WorkListManage.worksheetReview({
+      worksheet_no: rowData['worksheet_no'],
+      type: 0,
+      view: ''
+    }) || false
+    Toast.hide()
+    if (data) {
+      Toast.success('成功驳回！', 1.5, () => {
+        this.getOrderDetail()
+      })
+    }
   }
   handleSetAttend = (rowData) => { // 我发的 - 考勤设置 worksheetno
     this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'])

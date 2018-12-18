@@ -200,7 +200,7 @@ class WorkListManage extends Component {
         this.handleSetAttend(rowData)
         break
       case 'pageUpdateWorksheet': // 我发的 - 编辑
-        this.handleSetAttend(rowData)
+        this.pageUpdateWorksheet(rowData)
         break
       case 'viewAttend': // 我发的 - 考勤记录
         this.handleViewAttend(rowData)
@@ -240,6 +240,8 @@ class WorkListManage extends Component {
   }
   handleSetAttend = (rowData) => { // 我发的 - 考勤设置 worksheetno
     this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'])
+  }
+  pageUpdateWorksheet = (rowData) => { // 我发的 - 编辑
   }
   handleViewAttend = (rowData) => { // 我发的 - 考勤记录
     this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'])
