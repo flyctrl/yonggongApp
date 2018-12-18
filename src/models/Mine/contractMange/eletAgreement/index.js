@@ -6,7 +6,7 @@
 */
 import React, { Component } from 'react'
 import { Header, Content } from 'Components'
-import * as urls from 'Contants/urls'
+// import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 // import agree from 'Src/assets/agree.png'
 import api from 'Util/api'
@@ -27,10 +27,10 @@ class EletAgreement extends Component {
     let contract = tooler.getQueryString('contract_no')
     const data = await api.Mine.contractMange.contractDetail({
       contract_no: contract
-    }) || {}
+    }) || false
     if (data) {
       this.setState({
-        contractDetail: data.img_list || [],
+        contractDetail: data.img_list,
         isLoading: false
       })
     }
@@ -41,7 +41,7 @@ class EletAgreement extends Component {
       <div className='pageBox'>
         <Header
           leftClick1={() => {
-            this.props.match.history.push(`${urls.CONTRACTMANGE}`)
+            this.props.match.history.go(-1)
           }}
           title='电子合同'
           leftIcon='icon-back'

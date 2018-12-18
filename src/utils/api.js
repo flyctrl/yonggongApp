@@ -421,7 +421,10 @@ export default {
       }
     },
     contractMange: { // 合同管理
-      contractList(params) { // 合同列表
+      contractListAccept(params) { // 接合同列表
+        return Fetch(prefix + '/contract/list/order', params, 'get')
+      },
+      contractListSend(params) { // 发合同列表
         return Fetch(prefix + '/contract/list', params, 'get')
       },
       contractDetail(params) { // 合同详情

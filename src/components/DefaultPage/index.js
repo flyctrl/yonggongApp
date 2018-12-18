@@ -36,6 +36,12 @@ class DefaultPage extends Component {
         url: require('Src/assets/defaultpic/noorder.png'),
         btn: null
       },
+      {
+        name: 'nocontract',
+        desc: '暂时没有合同',
+        url: require('Src/assets/defaultpic/nocontract.png'),
+        btn: null
+      },
     ]
   }
   render() {

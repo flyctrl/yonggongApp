@@ -8,8 +8,8 @@ import api from 'Util/api'
 import ReactDOM from 'react-dom'
 const NUM_ROWS = 20
 let contractType = {
-  1: '接包方',
-  2: '发包方'
+  0: '接包方',
+  1: '发包方'
 }
 let tabType = [
   { title: '发单合同' },
@@ -30,16 +30,25 @@ class ContractMange extends Component {
       pageIndex: 1,
       pageNos: 1,
       nodata: false,
-      worksheetId: tooler.getQueryString('id'),
+      worksheetId: tooler.getQueryString('id') || '',
       tabIndex: tooler.getQueryString('tabIndex') || 0,
     }
   }
-  genData = async (pIndex = 1) => {
-    const data = await api.Mine.contractMange.contractList({
-      worksheet_id: this.state.worksheetId,
-      page: pIndex,
-      pageSize: NUM_ROWS
-    }) || false
+  genData = async (pIndex = 1, tabIndex = 0) => {
+    let { worksheetId } = this.state
+    let data
+    if (tabIndex === 0 || tabIndex === '0') {
+      data = await api.Mine.contractMange.contractListSend({
+        worksheet_no: worksheetId,
+        page: pIndex,
+        limit: NUM_ROWS
+      }) || false
+    } else if (tabIndex === 1 || tabIndex === '1') {
+      data = await api.Mine.contractMange.contractListAccept({
+        page: pIndex,
+        limit: NUM_ROWS
+      }) || false
+    }
     if (data['currPageNo'] === 1 && data['list'].length === 0) {
       document.body.style.overflow = 'hidden'
       this.setState({
@@ -56,8 +65,9 @@ class ContractMange extends Component {
     return await data['list'] || []
   }
   componentDidMount() {
-    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 45
-    this.genData().then((rdata) => {
+    let { tabIndex } = this.state
+    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 80 - 9
+    this.genData(1, tabIndex).then((rdata) => {
       this.rData = rdata
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(this.rData),
@@ -72,7 +82,7 @@ class ContractMange extends Component {
     if (this.state.isLoading) {
       return
     }
-    let { pageIndex, pageNos } = this.state
+    let { pageIndex, pageNos, tabIndex } = this.state
     // console.log('reach end', event)
     this.setState({ isLoading: true })
     let newIndex = pageIndex + 1
@@ -80,7 +90,7 @@ class ContractMange extends Component {
       return false
     }
     console.log('pageIndex', newIndex)
-    this.genData(newIndex).then((rdata) => {
+    this.genData(newIndex, tabIndex).then((rdata) => {
       this.rData = [...this.rData, ...rdata]
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(this.rData),
@@ -91,10 +101,11 @@ class ContractMange extends Component {
   }
 
   onRefresh = () => {
+    let { tabIndex } = this.state
     console.log('onRefresh')
     this.setState({ refreshing: true, isLoading: true, pageIndex: 1 })
     // simulate initial Ajax
-    this.genData(1).then((rdata) => {
+    this.genData(1, tabIndex).then((rdata) => {
       this.rData = rdata
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(this.rData),
@@ -104,6 +115,7 @@ class ContractMange extends Component {
     })
   }
   handleTabsChange = (tabs, index) => {
+    this.props.match.history.replace(`?tabIndex=${index}`)
     const dataSource = new ListView.DataSource({
       rowHasChanged: (row1, row2) => row1 !== row2,
     })
@@ -134,24 +146,24 @@ class ContractMange extends Component {
       if (isLoading) {
         return null
       } else if (nodata) {
-        return <DefaultPage type='noworklist' />
+        return <DefaultPage type='nocontract' />
       } else {
         return ''
       }
     }
     const row = (rowData, sectionID, rowID) => {
       return (
-        <li key={`${rowData.contract_no}-${rowData.id}`}>
+        <li key={`${rowData.contract_no}`}>
           <p className={`${style['con-p1']} my-bottom-border`}><span></span>{`${rowData.created_at}`}
-            <a onClick={this.handlePact.bind(this, rowData.contract_no) }>查看合同</a>
+            <a data-id={rowData.contract_no} onClick={this.handlePact}>查看合同</a>
           </p>
-          <p className={style['con-p2']}><span>{`${contractType[rowData['show_work_type']]}: `}</span>{rowData.username}</p>
-          <p className={style['con-p2']}><span>合同编号：</span>{rowData.contract_no}</p>
+          <p className={style['con-p2']}><span>{`${contractType[tabIndex]}: `}</span>{rowData.username}</p>
+          <p className={style['con-p2']}><span>工单标题：</span>{rowData.worksheet_title}</p>
         </li>
       )
     }
     return (
-      <div className='pageBox'>
+      <div className='pageBox gray'>
         <Header
           title='合同列表'
           leftIcon='icon-back'
@@ -161,7 +173,7 @@ class ContractMange extends Component {
           }}
         />
         <Content>
-          <div id ='contact-page' className={style['contact-page']}>
+          <div className={style['contact-page']}>
             <Tabs tabs={tabType}
               page={parseInt(tabIndex, 10)}
               tabBarTextStyle={{ fontSize: '15px', color: '#999999' }}
