@@ -38,10 +38,12 @@ class SelectClass extends Component {
       showtech: false,
       url: tooler.getQueryString('url') || 'HOME',
       orderno: tooler.getQueryString('orderno') || '',
-      starttime: tooler.getQueryString('starttime') || ''
+      starttime: tooler.getQueryString('starttime') || '',
+      edittype: tooler.getQueryString('edittype')
     }
   }
   componentDidMount() {
+    console.log(typeof this.state.edittype)
   }
   onChange = (value) => {
     this.setState({
