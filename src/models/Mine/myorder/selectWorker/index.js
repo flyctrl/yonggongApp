@@ -97,7 +97,7 @@ class ApplySettle extends Component {
     } else {
       dataSource.map(item => {
         if (item['uid'] === id) {
-          if (item['currentprice'] > item['price']) {
+          if (Number(item['currentprice']) > Number(item['price'])) {
             alert('金额超过最大范围', null, [{
               text: '确认',
               onPress: () => {

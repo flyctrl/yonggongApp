@@ -127,7 +127,7 @@ class Register extends Component {
                 {...getFieldProps('mobile', {
                   rules: [
                     { required: true, message: '请输入您的手机号' },
-                    { pattern: /^(1[358479]\d{9})$/, message: '请输入正确格式的手机号码' }
+                    { pattern: /^(1[3456879]\d{9})$/, message: '请输入正确格式的手机号码' }
                   ],
                 })}
                 clear
