@@ -45,8 +45,10 @@ class CreateWorker extends Component {
     }
   }
   componentDidMount () {
-    document.removeEventListener('backbutton', onBackKeyDown, false)
-    document.addEventListener('backbutton', this.backButtons, false)
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
   }
   backButtons = (e) => {
     let { isShowFace, isPhone, isBack } = this.state
@@ -390,8 +392,10 @@ class CreateWorker extends Component {
     if (this.interval) {
       clearInterval(this.interval)
     }
-    document.removeEventListener('backbutton', this.backButtons)
-    document.addEventListener('backbutton', onBackKeyDown, false)
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
   }
 
   render() {
