@@ -5,3 +5,18 @@
 * @Last Modified time: 2018-05-22 16:04:35
 */
 
+.guide-box {
+  width: 100%;
+  height: 100%!important;
+  & :global(.slider-frame) {
+    height: 100%!important;
+  }
+  & :global(.slider-slide) {
+    & a {
+      display: block;
+      & img {
+        width: 100%;
+      }
+    }
+  }
+}

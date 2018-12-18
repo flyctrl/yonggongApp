@@ -36,7 +36,7 @@ class SelectClass extends Component {
       constructType: tooler.getQueryString('constructType') || '',
       showform: false,
       showtech: false,
-      url: tooler.getQueryString('url'),
+      url: tooler.getQueryString('url') || 'HOME',
       orderno: tooler.getQueryString('orderno') || '',
       starttime: tooler.getQueryString('starttime') || ''
     }
@@ -122,11 +122,11 @@ class SelectClass extends Component {
         proVal: proId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : proVal
       })
     } else {
-      let { orderno, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, proId, proVal, starttime } = this.state
+      let { url, orderno, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, proId, proVal, starttime } = this.state
       if (parentClassId !== 'skill' || showtech === false) {
         teachId = 'null'
       }
-      let urlJson = { url: 'HOME', orderno, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, proId, proVal, starttime }
+      let urlJson = { url: url, orderno, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, proId, proVal, starttime }
       console.log('urlJson:', urlJson)
       let skipurl = tooler.parseJsonUrl(urlJson)
       console.log('skipurl:', skipurl)

@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-import { Badge, List, WhiteSpace, Button } from 'antd-mobile'
+import { Badge, WhiteSpace, Button, Toast } from 'antd-mobile'
 import { Header, Content, NewIcon } from 'Components'
-import { worksheetType } from 'Contants/fieldmodel'
+import { worksheetType, paymethod } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import style from './index.css'
 
-const Item = List.Item
 const typeicon = {
   1: 'bidicon',
   2: 'sheeticon',
@@ -24,7 +23,8 @@ class WorkListDetail extends Component {
       },
       isLoading: false,
       showimg: false,
-      imgurl: ''
+      imgurl: '',
+      viewAry: []
     }
   }
   componentDidMount() {
@@ -39,7 +39,12 @@ class WorkListDetail extends Component {
       worksheet_no: worksheetno
     }) || false
     if (data) {
+      let viewAry = []
+      data['commands']['view'].map(item => {
+        viewAry.push(item['key'])
+      })
       this.setState({
+        viewAry,
         datasource: data,
         isLoading: true
       })
@@ -59,43 +64,228 @@ class WorkListDetail extends Component {
       console.log(data)
     }
   }
-  showViewList = (datalist, dataObj) => {
-    let itemlist = []
-    if (datalist.length > 0) {
-      console.log(datalist)
-      datalist.map((item, index) => {
-        console.log(item)
-        itemlist.push(<Item key={index} arrow='horizontal' onClick={() => { this.handleViewClick(item['key'], dataObj) }}>{item['value']}</Item>)
-      })
-    }
-    console.log(itemlist)
-    return itemlist.length > 0 ? <div><List>{
-      itemlist.map(item => {
-        return item
-      })
-    }</List><WhiteSpace /></div> : ''
-  }
-  handleViewClick = (key, dataObj) => { // 记录点击
-    switch (key) {
-      case 'orderViewWorkPlan': // 我接的 - 开工记录
-        this.handleOrderWorkplan()
+  handlebtnType = (type, rowData) => { // 根据类型调用方法
+    switch (type) {
+      case 'handleTake': // 接单
+        break
+      case 'orderPageCommon': // 我接的 - 发工单
+        this.handlePushNormal(rowData)
+        break
+      case 'orderPageQuick': // 我接的 - 发快单
+        this.handlePushQuick(rowData)
+        break
+      case 'orderPageSelectWorker': // 我接的 - 选择工人
+        this.handleSelectWorker(rowData)
+        break
+      case 'orderPageAttend': // 我接的 - 考勤
+        this.handleAttend(rowData)
+        break
+      case 'orderPageAgentAttend': // 我接的 - 代考勤
+        this.handleGenAttend(rowData)
+        break
+      case 'orderHandleStartWork': // 我接的 - 开工
+        this.handleStart(rowData)
+        break
+      case 'orderPageAgentStartWork': // 我接的 - 代开工
+        this.handleAgentStart(rowData)
+        break
+      case 'orderHandleFinishWork': // 我接的 - 完工
+        this.handleFished(rowData)
+        break
+      case 'orderPageAgentFinishWork': // 我接的 - 代完工
+        this.handleAgentFished(rowData)
+        break
+      case 'orderPageSubmitSettle': // 我接的 - 提交结算
+        this.handleRefSettle(rowData)
         break
       case 'orderViewAttend': // 我接的 - 考勤记录
-        this.handleAttendRecord()
+        this.handleOrderViewAttend(rowData)
         break
       case 'orderViewSettle': // 我接的 - 结算记录
-        this.handleSettleRecord(dataObj['worksheetno'])
+        this.handleOrderViewSettle(rowData)
+        break
+      case 'orderViewWorkPlan': // 我接的 - 开工记录
+        this.handleOrderViewWorkPlan(rowData)
+        break
+      case 'orderViewTasker': // 我接的 - 工人记录
+        this.handleOrderViewTasker(rowData)
         break
     }
   }
-  handleSettleRecord = (worksheetno) => { // 结算记录
-    this.props.match.history.push(urls.OSETTLERECORD + '?worksheetno=' + worksheetno)
+  handlePushNormal = async (rowData) => { // 我接的 - 发工单
+    let data = await api.Mine.myorder.worksheetOrderData({
+      order_no: rowData['order_no']
+    }) || false
+    if (data) {
+      let levelJson = {}
+      let constructJson = {}
+      let settleJson = {}
+      if (data['professional_level'].length !== 0) {
+        levelJson = {
+          teachId: data['professional_level']['id'],
+          teachVal: data['professional_level']['name']
+        }
+      }
+      if (data['construct'].length !== 0) {
+        constructJson = {
+          classifyId: data['construct'][0]['code'],
+          classifyVal: data['construct'][0]['name'],
+          constructType: data['construct'][0]['construct_type']
+        }
+      }
+      if (data['valuation_way'] !== '') {
+        settleJson = {
+          settleValue: data['valuation_way']
+        }
+      }
+      let paymethodVal = paymethod.filter(item => {
+        return item['value'] === data['settle_fix_time']
+      })[0]['label']
+      let urlJson = {
+        orderno: rowData['order_no'],
+        proId: data['prj_no'],
+        proVal: data['prj_name'],
+        ...levelJson,
+        ...constructJson,
+        ...settleJson,
+        paymethodId: data['settle_fix_time'],
+        paymethodVal,
+        starttime: data['start_time']
+      }
+      this.props.match.history.push(`${urls.PUSHNORMALORDER}?${tooler.parseJsonUrl(urlJson)}`)
+    }
   }
-  handleAttendRecord = (type) => { // 考勤记录
-    this.props.match.history.push(urls.OATTENDDETAIL + '?orderno=' + this.state.orderno)
+  handlePushQuick = async (rowData) => { // 我接的 - 发快单
+    let data = await api.Mine.myorder.worksheetOrderData({
+      order_no: rowData['order_no']
+    }) || false
+    if (data) {
+      let levelJson = {}
+      if (data['professional_level'].length !== 0) {
+        levelJson = {
+          teachId: data['professional_level']['id'],
+          teachVal: data['professional_level']['name']
+        }
+      }
+      let urlJson = {
+        orderno: rowData['order_no'],
+        proId: data['prj_no'],
+        proVal: data['prj_name'],
+        classifyId: data['construct'][0]['code'],
+        classifyVal: data['construct'][0]['name'],
+        constructType: data['construct'][0]['construct_type'],
+        ...levelJson,
+        settleValue: data['valuation_way'],
+        starttime: data['start_time']
+      }
+      this.props.match.history.push(`${urls.PUSHQUICKORDER}?${tooler.parseJsonUrl(urlJson)}`)
+    }
   }
-  handleOrderWorkplan = () => { // 开工记录 - 我接的
-    this.props.match.history.push(urls.OORDERSTARTWORKRECORD + '?orderno=' + this.state.orderno)
+  handleSelectWorker = (rowData) => { // 我接的 - 选择工人
+    this.props.match.history.push(urls.SELECTWORKER + '?orderno=' + rowData['order_no'])
+  }
+  handleAttend = (rowData) => { // 我接的 - 考勤 workorderno
+    this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
+  }
+  handleGenAttend = (rowData) => { // 我接的 - 代考勤
+    this.props.match.history.push(urls.AGENTCHECKLIST + '?orderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
+  }
+  handleStart = async (rowData) => { // 我接的 - 开工
+    console.log('开工')
+    console.log(rowData)
+    let { dataSource } = this.state
+    let currentIndex
+    dataSource.map((item, index) => {
+      if (item['order_no'] === rowData['order_no']) {
+        currentIndex = index
+      }
+    })
+    Toast.loading('提交中...', 0)
+    let data = await api.Mine.myorder.startWork({
+      order_no: rowData['order_no']
+    }) || false
+    Toast.hide()
+    if (data) {
+      dataSource[currentIndex] = data
+      this.setState({
+        dataSource
+      })
+      Toast.success('成功开工', 1.5)
+    }
+  }
+  handleAgentStart = (rowData) => { // 我接的 - 代开工
+    this.props.match.history.push(urls.AGENTSTARTLIST + '?orderno=' + rowData['order_no'])
+  }
+  handleFished = async (rowData) => { // 我接的 - 完工
+    let { dataSource } = this.state
+    let currentIndex, data
+    dataSource.map((item, index) => {
+      if (item['order_no'] === rowData['order_no']) {
+        currentIndex = index
+      }
+    })
+    let valuationWay = rowData['valuation_way']
+    if (valuationWay === 1) {
+      prompt('工作量', `（单位：${rowData['valuation_unit']})`, [
+        { text: '取消' },
+        {
+          text: '确认',
+          onPress: value => new Promise(async (resolve, reject) => {
+            const regzs = /^[1-9]\d*(\.\d+)?$/i
+            if (regzs.test(value)) {
+              resolve()
+              Toast.loading('提交中...', 0)
+              data = await api.Mine.myorder.finshedWork({
+                order_no: rowData['order_no'],
+                workload: value
+              }) || false
+              Toast.hide()
+              if (data) {
+                dataSource[currentIndex] = data
+                this.setState({
+                  dataSource
+                })
+                Toast.success('操作成功', 1.5)
+              }
+            } else {
+              reject()
+              Toast.info('工作量为大于0的数字', 2)
+            }
+          })
+        }
+      ], 'default', null, ['请输入工作量'])
+    } else {
+      Toast.loading('提交中...', 0)
+      data = await api.Mine.myorder.finshedWork({
+        order_no: rowData['order_no']
+      }) || false
+      Toast.hide()
+      if (data) {
+        dataSource[currentIndex] = data
+        this.setState({
+          dataSource
+        })
+        Toast.success('操作成功', 1.5)
+      }
+    }
+  }
+  handleAgentFished = (rowData) => { // 我接的 - 代完工
+    this.props.match.history.push(`${urls.AGENTFINISHLIST}?orderno=${rowData['order_no']}&valuationWay=${rowData['valuation_way']}`)
+  }
+  handleRefSettle = (rowData) => { // 我接的 - 提交结算
+    this.props.match.history.push(`${urls.PENDINGSETTLERECORD}?workSheetOrderNo=${rowData['order_no']}`)
+  }
+  handleOrderViewAttend = (rowData) => { // 我接的 - 考勤记录
+    this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'])
+  }
+  handleOrderViewSettle = (rowData) => { // 我接的 - 结算记录
+    this.props.match.history.push(urls.OSETTLERECORD + '?orderno=' + rowData['order_no'])
+  }
+  handleOrderViewWorkPlan = (rowData) => { // 我接的 - 开工记录
+    this.props.match.history.push(urls.OORDERSTARTWORKRECORD + '?orderno=' + rowData['order_no'])
+  }
+  handleOrderViewTasker = (rowData) => { // 我接的 - 工人列表
+    this.props.match.history.push(urls.ORDERWORKERLIST + '?orderno=' + rowData['order_no'])
   }
   showImg = (imgurl) => {
     this.setState({
@@ -109,8 +299,57 @@ class WorkListDetail extends Component {
       imgurl: ''
     })
   }
+  showOrderOperation = (datasource) => { // 订单操作UI
+    let commands = datasource['commands']
+    let operatDom = []
+    let page = commands['page']
+    page.map((item, index) => {
+      if (item['key'] === 'orderPageQuick') {
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
+          <NewIcon type='icon-zhuanfakuaidan'/>
+          <p>转发快单</p>
+        </li>)
+      } else if (item['key'] === 'orderPageCommon') {
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
+          <NewIcon type='icon-zhuanfa-'/>
+          <p>转发工单</p>
+        </li>)
+      } else if (item['key'] === 'orderPageSelectWorker') {
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
+          <NewIcon type='icon-shenfenxuanze'/>
+          <p>选择工人</p>
+        </li>)
+      } else if (item['key'] === 'orderPageAttend') {
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
+          <NewIcon type='icon-kaoqin-'/>
+          <p>考勤</p>
+        </li>)
+      } else if (item['key'] === 'orderPageAgentAttend') {
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
+          <NewIcon type='icon-daikaoqin'/>
+          <p>代考勤</p>
+        </li>)
+      } else if (item['key'] === 'orderPageAgentStartWork') {
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
+          <NewIcon type='icon-daikaigongkaobei'/>
+          <p>代开工</p>
+        </li>)
+      } else if (item['key'] === 'orderPageAgentFinishWork') {
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
+          <NewIcon type='icon-daiwangong-'/>
+          <p>代完工</p>
+        </li>)
+      } else if (item['key'] === 'orderPageSubmitSettle') {
+        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
+          <NewIcon type='icon-daijiesuan'/>
+          <p>提交结算</p>
+        </li>)
+      }
+    })
+    return operatDom
+  }
   render() {
-    let { datasource, isLoading, url, showimg, imgurl } = this.state
+    let { datasource, isLoading, url, showimg, imgurl, viewAry } = this.state
     return <div className='pageBox gray'>
       <Header
         title='订单详情'
@@ -155,62 +394,30 @@ class WorkListDetail extends Component {
               </dd>
             </dl>
             <WhiteSpace />
-            {
-              this.showViewList(datasource['commands']['view'], {
-                worksheetno: datasource['worksheet_no']
-              })
-            }
             <div className={style['operate-list']}>
               <h4 className={`${style['modal-title']} my-bottom-border`}>订单操作</h4>
               <ul>
-                <li>
+                <li onClick={() => viewAry.includes('orderViewTasker') ? this.handlebtnType('orderViewTasker', datasource) : null} className={`${viewAry.includes('orderViewTasker') ? '' : style['disabled']}`}>
                   <NewIcon type='icon-gongrenjiluxuanzhong'/>
-                  <p>工人记录</p>
+                  <p>工人列表</p>
                 </li>
-                <li className={style['disabled']}>
+                <li onClick={() => viewAry.includes('orderViewWorkPlan') ? this.handlebtnType('orderViewWorkPlan', datasource) : null} className={`${viewAry.includes('orderViewWorkPlan') ? '' : style['disabled']}`}>
                   <NewIcon type='icon-kaigong'/>
                   <p>开工记录</p>
                 </li>
-                <li>
+                <li onClick={() => viewAry.includes('orderViewAttend') ? this.handlebtnType('orderViewAttend', datasource) : null} className={`${viewAry.includes('orderViewAttend') ? '' : style['disabled']}`}>
                   <NewIcon type='icon-kaoqinjiluxuanzhong'/>
                   <p>考勤记录</p>
                 </li>
-                <li>
+                <li onClick={() => viewAry.includes('orderViewSettle') ? this.handlebtnType('orderViewSettle', datasource) : null} className={`${viewAry.includes('orderViewSettle') ? '' : style['disabled']}`}>
                   <NewIcon type='icon-jiesuanjiluxuanzhong'/>
                   <p>结算记录</p>
                 </li>
-                <li>
-                  <NewIcon type='icon-zhuanfa-'/>
-                  <p>转发工单</p>
-                </li>
-                <li>
-                  <NewIcon type='icon-zhuanfakuaidan'/>
-                  <p>转发快单</p>
-                </li>
-                <li>
-                  <NewIcon type='icon-shenfenxuanze'/>
-                  <p>选择工人</p>
-                </li>
-                <li>
-                  <NewIcon type='icon-kaoqin-'/>
-                  <p>考勤</p>
-                </li>
-                <li>
-                  <NewIcon type='icon-daikaoqin'/>
-                  <p>代考勤</p>
-                </li>
-                <li>
-                  <NewIcon type='icon-daikaigongkaobei'/>
-                  <p>代开工</p>
-                </li>
-                <li>
-                  <NewIcon type='icon-daiwangong-'/>
-                  <p>代完工</p>
-                </li>
-                <li>
-                  <NewIcon type='icon-daijiesuan'/>
-                  <p>提交结算</p>
-                </li>
+                {
+                  this.showOrderOperation(datasource).map(item => {
+                    return item
+                  })
+                }
               </ul>
             </div>
             <WhiteSpace />
@@ -230,35 +437,31 @@ class WorkListDetail extends Component {
             </div>
             <WhiteSpace />
             {
-              datasource['attachment'].length > 0 ? <ul className={style['file-list']}>
+              datasource['attachment'].length > 0 ? <div>
                 <h4 className={`${style['modal-title']} my-bottom-border`}>附件</h4>
-                {
-                  datasource['attachment'].map((item, index, ary) => {
-                    return (
-                      <li key={index} ><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a onClick={() => this.showImg(item.url)}>{item.name}</a></li>
-                    )
-                  })
-                }
-              </ul> : null
+                <ul className={style['file-list']}>
+                  {
+                    datasource['attachment'].map((item, index, ary) => {
+                      return (
+                        <li key={item.name} onClick={() => this.showImg(item.url)} style={{ backgroundImage: `url(${item.preview_url})`, backgroundSize: 'cover' }}></li>
+                      )
+                    })
+                  }
+                </ul>
+                <WhiteSpace />
+              </div> : null
             }
-            <h4 className={`${style['modal-title']} my-bottom-border`}>附件</h4>
-            <ul className={style['file-list']}>
-              <li onClick={() => this.showImg('https://goss1.vcg.com/creative/vcg/800/new/VCG211180672430.jpg')} style={{ backgroundImage: 'url(https://goss1.vcg.com/creative/vcg/800/new/VCG211180672430.jpg)', backgroundSize: 'cover' }}>
-              </li>
-              <li onClick={() => this.showImg('https://goss2.vcg.com/creative/vcg/800/new/VCG211179537526.jpg')} style={{ backgroundImage: 'url(https://goss2.vcg.com/creative/vcg/800/new/VCG211179537526.jpg)', backgroundSize: 'cover' }}>
-              </li>
-              <li onClick={() => this.showImg('https://goss2.vcg.com/creative/vcg/800/new/VCG211179485422.jpg')} style={{ backgroundImage: 'url(https://goss2.vcg.com/creative/vcg/800/new/VCG211179485422.jpg)', backgroundSize: 'cover' }}>
-              </li>
-              <li onClick={() => this.showImg('https://goss.vcg.com/creative/vcg/800/new/VCG211179292892.jpg')} style={{ backgroundImage: 'url(https://goss.vcg.com/creative/vcg/800/new/VCG211179292892.jpg)', backgroundSize: 'cover' }}>
-              </li>
-            </ul>
-            <WhiteSpace />
           </div> : null
         }
       </Content>
       {
-        isLoading ? <div className={`${style['btn-box']} ${style['onebtn']}`}>
-          <Button type='primary' inline>接单</Button>
+        isLoading && datasource['commands']['handle'].length > 0 ? <div className={`${style['btn-box']} ${style['onebtn']}`}>
+          {
+            datasource['commands']['handle'][0]['key'] === 'orderHandleStartWork' ? <Button onClick={() => this.handlebtnType('orderHandleStartWork', datasource)} type='primary' inline>开工</Button> : ''
+          }
+          {
+            datasource['commands']['handle'][0]['key'] === 'orderHandleFinishWork' ? <Button onClick={() => this.handlebtnType('orderHandleFinishWork', datasource)} type='primary' inline>完工</Button> : ''
+          }
         </div> : null
       }
       <div style={{ display: showimg ? 'block' : 'none' }} onClick={this.handleImgMask} className={`showimg-box animated ${showimg ? 'fadeIn' : 'fadeOut'}`}>

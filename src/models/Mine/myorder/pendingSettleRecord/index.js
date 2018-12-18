@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Header, Content } from 'Components'
 import api from 'Util/api'
+import * as urls from 'Contants/urls'
 import { payModeRadio, paymethod } from 'Contants/fieldmodel'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
@@ -29,7 +30,7 @@ class PendingSettleRecord extends Component {
     super(props)
     this.state = {
       dataSource: [],
-      orderno: tooler.getQueryString('orderno'),
+      workSheetOrderNo: tooler.getQueryString('workSheetOrderNo'),
       isloading: false
     }
   }
@@ -40,9 +41,9 @@ class PendingSettleRecord extends Component {
     this.setState({
       isloading: false
     })
-    let { orderno } = this.state
+    let { workSheetOrderNo } = this.state
     let data = await api.Mine.myorder.applySettleRecord({
-      workSheetOrderNo: orderno,
+      workSheetOrderNo: workSheetOrderNo,
       page: 1,
       pageSize: 500
     }) || false
@@ -52,6 +53,10 @@ class PendingSettleRecord extends Component {
         isloading: true
       })
     }
+  }
+  handleDetail = (orderno, status) => {
+    let { workSheetOrderNo } = this.state
+    this.props.match.history.push(`${urls.APPLYSETTLE}?orderno=${orderno}&workSheetOrderNo=${workSheetOrderNo}&status=${status}`)
   }
   render() {
     let { dataSource, isloading } = this.state
@@ -67,7 +72,7 @@ class PendingSettleRecord extends Component {
       <Content>
         {
           isloading && dataSource.length !== 0 ? dataSource.map(item => {
-            return <dl key={item['order_no']} className={`${style['pending-model']} ${style[cssStatus[item['status']]]}`}>
+            return <dl key={item['order_no']} onClick={() => this.handleDetail(item['order_no'], item['status'])} className={`${style['pending-model']} ${style[cssStatus[item['status']]]}`}>
               <dt className='my-bottom-border'>
                 <time>{item['time']}</time>
                 <span>{status[item['status']]}</span>

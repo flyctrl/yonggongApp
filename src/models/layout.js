@@ -6,8 +6,12 @@
 */
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
+import { Carousel } from 'antd-mobile'
+import * as urls from 'Contants/urls'
+import storage from '../utils/storage'
 import AppMenu from 'Components/Menus'
 import history from 'Util/history'
+import style from './style.css'
 
 class MainLayout extends Component {
   constructor(props) {
@@ -103,11 +107,33 @@ class MainLayout extends Component {
     })
     return routeObj
   }
+  startPage() {
+    console.log(history)
+    if (history.location.pathname) {
+      history.push(history.location.pathname + history.location.search)
+    } else {
+      history.push(urls.HOME)
+    }
+    storage.set('firstload', 1)
+  }
+  showGuidePage() {
+    return <Carousel
+      className={style['guide-box']}
+      autoplay={false}
+      dots={false}
+      infinite={false}
+    >
+      <a><img src={require('../../src/assets/guide/guide1.png')} /></a>
+      <a><img src={require('../../src/assets/guide/guide3.png')} /></a>
+      <a><img src={require('../../src/assets/guide/guide2.png')} /></a>
+      <a onClick={this.startPage}><img src={require('../../src/assets/guide/guide4.png')} /></a>
+    </Carousel>
+  }
   render() {
     return (
       <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
         {
-          this.showMenu()
+          storage.get('firstload') !== 1 ? this.showGuidePage() : this.showMenu()
         }
       </div>
     )
