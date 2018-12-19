@@ -139,13 +139,15 @@ class Mine extends Component {
                 <p>{typeof dataSource['user'] !== 'undefined' ? '账号：' + dataSource['user']['username'] : ''}</p>
               </dd>
             </dl>
-            <div className={style['company-detail']}>
-              <p>
-                <span>{typeof dataSource['company'] !== 'undefined' ? dataSource['company']['name'] : ''}</span>
-                <a onClick={this.handleSeeClick}>公司详情>></a>
-              </p>
-              <content>{typeof dataSource['company'] !== 'undefined' ? dataSource['company']['description'] : ''}</content>
-            </div>
+            {
+              typeof dataSource['company'] !== 'undefined' ? dataSource['company']['company_status'] === 0 || dataSource['company']['company_status'] === 3 ? <div className={`${style['company-detail']} ${style['noauth-company']}`}><NewIcon type='icon-gongsijianjie' /><p>未认证暂无公司简介</p></div> : <div className={style['company-detail']}>
+                <p>
+                  <span>{typeof dataSource['company'] !== 'undefined' ? dataSource['company']['name'] : ''}</span>
+                  <a onClick={this.handleSeeClick}>公司详情>></a>
+                </p>
+                <content>{typeof dataSource['company'] !== 'undefined' ? dataSource['company']['description'] : ''}</content>
+              </div> : ''
+            }
             {
               typeof dataSource['user'] !== 'undefined' ? this.showAttest(dataSource) : null
             }

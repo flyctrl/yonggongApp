@@ -9,6 +9,7 @@ import NewIcon from 'Components/NewIcon'
 import api from 'Util/api'
 import style from './index.css'
 import Address from 'Components/Address'
+import storage from 'Util/storage'
 
 const Item = List.Item
 let Upload = Loadable({
@@ -36,8 +37,6 @@ class FormBox extends Component {
       urlJson: tooler.parseURLParam(),
       remark: ''
     }
-  }
-  componentDidMount() {
   }
   handleRemarkClick = () => {
     this.setState({
@@ -93,7 +92,7 @@ class FormBox extends Component {
   }
   onSubmit = () => { // 提交
     let { addressObj, fileList } = this.state
-    let { teachId, proId, receiveType, bidwayId, paymethodId, paymodeId } = this.state.urlJson
+    let { teachId, proId, receiveType, bidwayId, paymethodId, paymodeId, settleValue } = this.state.urlJson
     let attachment = []
     fileList.map(item => {
       attachment.push(item['path'])
@@ -104,7 +103,7 @@ class FormBox extends Component {
         let postJson = {
           ...{ worksheet_type: 1 },
           ...formJson,
-          ...{ prj_no: proId, taker_type: receiveType, tender_way: bidwayId, settle_fix_time: paymethodId, pay_way: paymodeId },
+          ...{ prj_no: proId, taker_type: receiveType, tender_way: bidwayId, settle_fix_time: paymethodId, pay_way: paymodeId, valuation_way: settleValue },
           ...{ start_time: tooler.formatDate(formJson['start_time']), end_time: tooler.formatDate(formJson['end_time']), bid_end_time: tooler.formatDate(formJson['bid_end_time']) },
           ...{ coordinate: { lng: addressObj.position.lng, lat: addressObj.position.lat }},
           ...{ city_code: addressObj.position.cityCode },
@@ -117,6 +116,7 @@ class FormBox extends Component {
         if (data) {
           Toast.hide()
           Toast.success('发布成功', 1, () => {
+            storage.remove('bidsData')
             this.props.match.history.push(`${urls.BIDORDERRESULT}?worksheetno=${data['worksheet_no']}`)
           })
         }
@@ -191,6 +191,7 @@ class FormBox extends Component {
                   ],
                 })}
                 type='digit'
+                extra='元'
                 clear
                 error={!!getFieldError('tender_amount')}
                 onErrorClick={() => this.onErrorClick('tender_amount')}

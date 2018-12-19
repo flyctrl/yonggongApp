@@ -7,6 +7,9 @@
 .settle-all {
   height: 100%;    
 }
+html:not([data-scale]) .settle-list :global(.am-list-body::after) {
+  display: none;
+}
 .settle-list {
   & .header {
     float: left;
@@ -40,6 +43,13 @@
   }
 }
 
+html:not([data-scale]) .btn-box :global(.am-list-body::after) {
+  left: 42px;
+  width: 90px;
+}
+html:not([data-scale]) .btn-box :global(.am-list-body::before) {
+  display: none;
+}
 .btn-box {
   position: fixed;
   left: 0;
@@ -56,6 +66,15 @@
     margin-right: 10px;
     & em {
       color: #FA6B6D;
+    }
+    & :global(.am-list) {
+      width: 170px;
+      & :global(.am-list-item.am-input-item) {
+        padding-left: 0;
+      }
+      & :global(.am-list-item .am-input-label.am-input-label-5) {
+        width: auto;
+      }
     }
   }
   & a {

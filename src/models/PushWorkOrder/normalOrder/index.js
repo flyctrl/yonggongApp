@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { List, Button, WingBlank, Radio, Picker } from 'antd-mobile'
 import NewIcon from 'Components/NewIcon'
 import { Header, Content } from 'Components'
-import { paymethod } from 'Contants/fieldmodel'
+import { paymethod, valuationWay } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './index.css'
@@ -10,17 +10,10 @@ import Classify from './classify'
 import ClassifyList from './classifyList'
 import TeachList from './teachList'
 import ProjectList from './projectList'
+import storage from 'Util/storage'
 
 const Item = List.Item
 const RadioItem = Radio.RadioItem
-const data = [{
-  label: '按时间计价',
-  value: 2
-}, {
-  label: '按量计价',
-  value: 1
-}]
-
 class SelectClass extends Component {
   constructor(props) {
     super(props)
@@ -42,10 +35,27 @@ class SelectClass extends Component {
       showtech: false,
       url: tooler.getQueryString('url'),
       orderno: tooler.getQueryString('orderno') || '',
+      starttime: tooler.getQueryString('starttime') || '',
+      edittype: tooler.getQueryString('edittype') || 0
     }
   }
   componentDidMount() {
-    let { paymethodId } = this.state
+    if (this.state.edittype === '2') {
+      this.getEditData()
+      this.contestPaymethod()
+    } else {
+      this.contestPaymethod()
+    }
+  }
+  getEditData = () => { // 获取编辑数据
+    console.log('获取编辑数据')
+    storage.set('normalData', {
+      name: '我是工单',
+      age: 2,
+      sex: 'girl'
+    })
+  }
+  contestPaymethod = (paymethodId = this.state.paymethodId) => {
     let newary = []
     let newVal = ''
     if (paymethodId !== '') {
@@ -155,11 +165,11 @@ class SelectClass extends Component {
         paymethodVal: paymethodId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : paymethodVal,
       })
     } else {
-      let { settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, proId, proVal } = this.state
+      let { settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, starttime, proId, proVal, edittype } = this.state
       if (parentClassId !== 'skill' || showtech === false) {
         teachId = 'null'
       }
-      let urlJson = { url: 'HOME', settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, proId, proVal, paymethodId, paymethodVal }
+      let urlJson = { url: 'HOME', settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, starttime, proId, proVal, paymethodId, paymethodVal, edittype }
       console.log('urlJson:', urlJson)
       let skipurl = tooler.parseJsonUrl(urlJson)
       console.log('skipurl:', skipurl)
@@ -201,7 +211,7 @@ class SelectClass extends Component {
             </Picker>
           </List>
           <List renderHeader={() => '选择计价方式'} className={`${style['select-class-list']} ${style['settle-type-list']}`}>
-            {data.map(i => (
+            {valuationWay.map(i => (
               <RadioItem key={i.value} checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
                 {i.label}
               </RadioItem>

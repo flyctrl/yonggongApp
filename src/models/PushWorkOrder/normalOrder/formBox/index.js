@@ -9,6 +9,7 @@ import NewIcon from 'Components/NewIcon'
 import api from 'Util/api'
 import style from './index.css'
 import Address from 'Components/Address'
+import storage from 'Util/storage'
 
 const Item = List.Item
 let Upload = Loadable({
@@ -148,6 +149,7 @@ class FormBox extends Component {
         if (data) {
           Toast.hide()
           Toast.success('发布成功', 1, () => {
+            storage.remove('normalData')
             this.props.match.history.push(`${urls.NLORDERRESULT}?worksheetno=${data['worksheet_no']}`)
           })
         }

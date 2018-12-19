@@ -1,29 +1,3 @@
-const priceModeData = [
-  { value: 'A01', label: '面积' },
-  { value: 'A02', label: '体积' },
-  { value: 'A03', label: '数量' },
-  { value: 'B01', label: '日' },
-  { value: 'B02', label: '周' },
-  { value: 'B03', label: '月' },
-  { value: 'B04', label: '年' },
-]
-const unitPrice = {
-  'A01': '平方米',
-  'A02': '立方米',
-  'A03': '个',
-  'B01': '天',
-  'B02': '周',
-  'B03': '月',
-  'B04': '年'
-}
-
-const settleRadio = [
-  // { value: 'B01', label: '工程进度' },
-  { value: 'A01', label: '日' },
-  { value: 'A02', label: '周' },
-  { value: 'A03', label: '月' }
-]
-
 const payModeRadio = [
   { value: 1, label: '直接付款' },
   { value: 2, label: '委托付款' }
@@ -32,11 +6,6 @@ const payModeRadio = [
 const rightWrongRadio = [
   { value: 0, label: '否' },
   { value: 1, label: '是' }
-]
-
-const assignTypeRadio = [
-  { value: 0, label: '公开' },
-  // { value: 1, label: '邀请' }
 ]
 
 const projectStatus = [
@@ -154,12 +123,31 @@ const paymethod = [{ // 结算方式
   label: '年',
   value: 4
 }]
+const valuationWay = [{
+  label: '按时间计价',
+  value: 2
+}, {
+  label: '按量计价',
+  value: 1
+}]
+const urlCode = {
+  'YA1001': 'ACCESSRECORD', // 接单记录
+  'YB1001': 'WORKLISTDETAIL', // 工单详情
+  'YB1002': 'ORDERLISTDETAIL', // 订单的工单详情
+  'YA1002': 'SENDSTARTWORKRECORD', // 工单的开工记录
+  'YA1003': 'OORDERSTARTWORKRECORD', // 订单的开工记录
+  'YA1004': 'SETTLERECORD', // 工单结算记录
+  'YA1005': 'OSETTLERECORD', // 订单结算记录
+  'YC1001': 'CHECK', // 考勤打卡
+  'YB1003': 'REALNAMEAUTHDETAIL', // 实名认证详情
+  'YB1004': 'COMPANYAUTHDETAIL', // 企业认证详情
+  'YB1005': 'PROJECTDETAIL', // 项目详情
+  'YA1006': 'ACCOUNTDETAIL', // 账户的支出列表
+  'YA1007': 'ACCOUNTDETAIL', // 账户的收入列表
+}
 export {
-  priceModeData,
-  settleRadio,
   payModeRadio,
   rightWrongRadio,
-  unitPrice,
   projectStatus,
   balanceType,
   worksheetType,
@@ -167,7 +155,6 @@ export {
   attendanceList,
   attendanceDetailStatus,
   attendanceDetailType,
-  assignTypeRadio,
   tenderWayRadio,
   applyInvoice,
   invoiceStatus,
@@ -176,5 +163,7 @@ export {
   workplanStatus,
   receiveTypeRadio,
   msgStatus,
-  paymethod
+  paymethod,
+  valuationWay,
+  urlCode
 }

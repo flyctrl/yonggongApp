@@ -2,27 +2,17 @@ import React, { Component } from 'react'
 import { List, Button, WingBlank, Radio, Picker } from 'antd-mobile'
 import NewIcon from 'Components/NewIcon'
 import { Header, Content } from 'Components'
-import { tenderWayRadio, receiveTypeRadio, payModeRadio } from 'Contants/fieldmodel'
+import { tenderWayRadio, receiveTypeRadio, payModeRadio, paymethod, valuationWay } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './index.css'
 import TeachList from './teachList'
 import ProjectList from './projectList'
+import api from 'Util/api'
+import storage from 'Util/storage'
 
 const Item = List.Item
-const paymethod = [{
-  label: '日',
-  value: 1
-}, {
-  label: '周',
-  value: 2
-}, {
-  label: '月',
-  value: 3
-}, {
-  label: '年',
-  value: 4
-}]
+const RadioItem = Radio.RadioItem
 class SelectClass extends Component {
   constructor(props) {
     super(props)
@@ -39,15 +29,50 @@ class SelectClass extends Component {
       paymodeVal: tooler.getQueryString('paymodeVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('paymodeVal'))) : '直接付款',
       teachVal: tooler.getQueryString('teachVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('teachVal'))) : '不限',
       teachId: tooler.getQueryString('teachId') || '0',
+      settleValue: parseInt(tooler.getQueryString('settleValue')) || 2,
       showform: false,
       showtech: false,
-      url: tooler.getQueryString('url')
+      url: tooler.getQueryString('url'),
+      edittype: tooler.getQueryString('edittype') || 0,
+      editSheetno: tooler.getQueryString('editSheetno') || 0
     }
   }
   componentDidMount() {
-    let { receiveType } = this.state
+    if (this.state.edittype === '1') {
+      this.getEditData()
+    } else {
+      let { receiveType } = this.state
+      this.setState({
+        showtech: parseInt(receiveType) === 2
+      })
+    }
+  }
+  getEditData = async () => { // 获取编辑数据
+    let { editSheetno } = this.state
+    let data = await api.PushOrder.tenderDetail({
+      worksheet_no: editSheetno
+    }) || false
+    if (data) {
+      storage.set('bidsData', data)
+      this.setState({
+        proId: data['prj_no'],
+        proVal: '',
+        receiveType: data['taker_type'],
+        showtech: parseInt(data['taker_type']) === 2,
+        teachId: data['aptitude_list'].length > 0 && data['taker_type'] === 2 ? data['aptitude_list'][0] : '0',
+        teachVal: data['aptitude_list'].length > 0 && data['taker_type'] === 2 ? data['aptitude_list'][0] : '不限',
+        bidwayId: '',
+        bidwayVal: '',
+        paymethodId: data['settle_fix_time'],
+        paymethodVal: '',
+        paymodeId: data['pay_way'],
+        paymodeVal: ''
+      })
+    }
+  }
+  onChange = (value) => {
     this.setState({
-      showtech: parseInt(receiveType) === 2
+      settleValue: value
     })
   }
   handleProject = (value) => { // 选择项目
@@ -120,7 +145,7 @@ class SelectClass extends Component {
     console.log(value)
   }
   handleNextStep = () => { // 下一步
-    let { teachVal, teachId, showtech, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal, receiveType } = this.state
+    let { teachVal, teachId, showtech, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal, settleValue, receiveType, edittype, editSheetno } = this.state
     if (proId === '' || paymethodId === '' || bidwayId === '' || paymodeId === '') {
       this.setState({
         proVal: proId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : proVal,
@@ -132,7 +157,7 @@ class SelectClass extends Component {
       if (showtech === false) {
         teachId = 'null'
       }
-      let urlJson = { url: 'HOME', teachVal, teachId, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal, receiveType }
+      let urlJson = { url: 'HOME', teachVal, teachId, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal, settleValue, receiveType, edittype, editSheetno }
       console.log('urlJson:', urlJson)
       let skipurl = tooler.parseJsonUrl(urlJson)
       console.log('skipurl:', skipurl)
@@ -140,7 +165,7 @@ class SelectClass extends Component {
     }
   }
   render() {
-    let { url, showIndex, teachVal, showtech, proId, proVal, paymethodVal, bidwayVal, paymodeVal, receiveType } = this.state
+    let { url, showIndex, teachVal, showtech, proId, proVal, paymethodVal, bidwayVal, paymodeVal, settleValue, receiveType } = this.state
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
         <Header
@@ -191,6 +216,13 @@ class SelectClass extends Component {
             <Picker data={payModeRadio} cols={1} extra={paymodeVal} onOk={this.handlePayMode}>
               <Item arrow='horizontal' thumb={<NewIcon type='icon-daifukuan' className={style['icon-class-haiwai']} />}>支付方式</Item>
             </Picker>
+          </List>
+          <List renderHeader={() => '选择计价方式'} className={`${style['select-class-list']} ${style['settle-type-list']}`}>
+            {valuationWay.map(i => (
+              <RadioItem key={i.value} checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
+                {i.label}
+              </RadioItem>
+            ))}
           </List>
           <WingBlank className={style['classnext-step-btn']}><Button type='primary' onClick={this.handleNextStep}>下一步</Button></WingBlank>
         </Content>
