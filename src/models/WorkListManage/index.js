@@ -242,6 +242,14 @@ class WorkListManage extends Component {
     this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'])
   }
   pageUpdateWorksheet = (rowData) => { // 我发的 - 编辑
+    let type = rowData['worksheet_type']
+    if (type === 1) { // 招标
+      this.props.match.history.push(`${urls.PUSHBIDORDER}?edittype=1&editSheetno=${rowData['worksheet_no']}`)
+    } else if (type === 2) { // 工单
+      this.props.match.history.push(`${urls.PUSHNORMALORDER}?edittype=2`)
+    } else if (type === 3) { // 快单
+      this.props.match.history.push(`${urls.PUSHQUICKORDER}?edittype=3`)
+    }
   }
   handleViewAttend = (rowData) => { // 我发的 - 考勤记录
     this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'])

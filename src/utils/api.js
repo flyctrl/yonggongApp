@@ -177,6 +177,24 @@ export default {
     },
     tender(params) { // 发布招标
       return FetchSave(prefix + '/worksheet/add/tendering', params, 'post', { showloading: false })
+    },
+    tenderDetail(params) { // 招标详情数据
+      return Fetch(prefix + '/worksheet/tendering/detail', params, 'get')
+    },
+    normalDetail(params) { // 工单详情数据
+      return Fetch(prefix + '/worksheet/common/detail', params, 'get')
+    },
+    quickDetail(params) { // 快单详情数据
+      return Fetch(prefix + '/worksheet/quick/detail', params, 'get')
+    },
+    editTender(params) { // 编辑招标
+      return FetchSave(prefix + '/worksheet/edit/tendering', params, 'post', { showloading: false })
+    },
+    editNormal(params) { // 编辑工单
+      return FetchSave(prefix + '/worksheet/edit/common', params, 'post', { showloading: false })
+    },
+    editQuick(params) { // 编辑快单
+      return FetchSave(prefix + '/worksheet/edit/quick', params, 'post', { showloading: false })
     }
   },
   WorkListManage: {

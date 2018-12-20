@@ -7,25 +7,83 @@
     margin-right: 10px;
   }
   &:global(.am-list .am-list-item.am-checkbox-item .am-list-thumb .am-checkbox-inner) {
-    top: 28px;
+    top: 22px;
+    left: 10px;
   }
   &:global(.am-list .am-list-item.am-checkbox-item .am-list-thumb .am-checkbox) {
     height: 74px;
   }
+  & :global(.am-list-item) {
+    padding-left: 10px;
+  }
+  & :global(.am-list-item .am-list-thumb:first-child) {
+    margin-right: 5px;
+  }
   & :global(.am-list-item .am-input-extra) {
     color:rgba(153,153,153,1);
     font-size: 14px;
+    max-height: none;
+    height: 34px;
+    line-height: 34px;
   }
   & :global(.am-list-item .am-input-control) {
     height: 100%;
     & input {
       height: 100%;
       text-align: center;
+      position: relative;
+      box-sizing: border-box;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      border: 1px solid #eaeaea;
+      transform-origin: 0 0;
+      &::before {
+        content: "\0020";
+        overflow: hidden;
+        position: absolute;
+      }
+    }
+  }
+  & :global(.am-list-item .am-list-line) {
+    padding-right: 5px;
+  }
+  & .price-unit {
+    height: 100%;
+    &.unit-error {
+      color: red;
+    }
+  }
+}
+@media (min--moz-device-pixel-ratio: 1.5) and (max--moz-device-pixel-ratio: 2.49), (-webkit-min-device-pixel-ratio: 1.5) and (-webkit-max-device-pixel-ratio: 2.49), (min-device-pixel-ratio: 1.5) and (max-device-pixel-ratio: 2.49), (min-resolution: 144dpi) and (max-resolution: 239dpi), (min-resolution: 1.5dppx) and (max-resolution: 2.49dppx) {
+  .settle-list {
+    & :global(.am-list-item .am-input-control) {
+      & input {
+        &::before {
+          width: 200%;
+          height: 200%;
+          transform: scale(.5);
+        }
+      }
+    }
+  }
+}
+@media (min--moz-device-pixel-ratio: 2.5), (-webkit-min-device-pixel-ratio: 2.5), (min-device-pixel-ratio: 2.5), (min-resolution: 240dpi), (min-resolution: 2.5dppx) {
+  .settle-list {
+    & :global(.am-list-item .am-input-control) {
+      & input {
+        &::before {
+          width: 300%;
+          height: 300%;
+          transform: scale(.33333);
+        }
+      }
     }
   }
 }
 html:not([data-scale]) :global(.am-list-body div:not(:last-child)) .price :global(.am-list-line::after) {
-  width: 70px;
+  display: none;
 }
 .confirm-list {
   &:global(.am-list .am-list-item.am-checkbox-item .am-list-thumb) {
@@ -42,15 +100,18 @@ html:not([data-scale]) :global(.am-list-body div:not(:last-child)) .price :globa
   }
   & .header {
     float: left;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     margin-right: 10px;
   }
   & .settle-info {
     float: left;
-    width: 120px;
+    width: 140px;
     margin-top: 10px;
+    margin-right: 5px;
     & h2 {
+      width: 130px;
+      height: 20px;
       line-height: 20px;
       color: #333;
       font-size: 14px;
@@ -71,7 +132,7 @@ html:not([data-scale]) :global(.am-list-body div:not(:last-child)) .price :globa
     height: 44px;
     & :global(.am-list-item.am-input-item) {
       padding-left: 5px;
-      width: 110px;
+      width: 134px;
       & :global(.am-list-line) {
         padding-right: 0;
         margin-top: 10px;

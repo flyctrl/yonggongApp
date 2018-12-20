@@ -1,19 +1,25 @@
 import React, { Component } from 'react'
-import { Header, Content, DefaultPage } from 'Components'
-import { List, Checkbox, Modal, Button, WingBlank, InputItem } from 'antd-mobile'
+import { Header, Content, DefaultPage, NewIcon } from 'Components'
+import { List, Checkbox, Modal, Button, WingBlank, InputItem, Picker } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
 const CheckboxItem = Checkbox.CheckboxItem
 const alert = Modal.alert
-const numReg = /^(([1-9][0-9]*\.[0-9][0-9]*)|([0]\.[0-9][0-9]*)|([1-9][0-9]*)|([0]{1}))$/
+// const numReg = /^(([1-9][0-9]*\.[0-9][0-9]*)|([0]\.[0-9][0-9]*)|([1-9][0-9]*)|([0]{1}))$/
+const numReg = /^[1-9]{1,}[\d]*$/
+const isnumReg = /^[0-9]+.?[0-9]*$/
 class ApplySettle extends Component {
   constructor(props) {
     super(props)
     this.state = {
       orderno: tooler.getQueryString('orderno'),
       dataSource: [],
+      pickerDisable: false,
+      unitData: [],
+      pickerValue: [],
+      selectUid: '',
       showConfirm: false,
       isloading: false
     }
@@ -37,6 +43,8 @@ class ApplySettle extends Component {
         dataSource.push({
           ...data['list'][j],
           ...{ ischeck: false },
+          ...{ selectUnit: '' },
+          ...{ selectError: false },
           ...{ currentprice: data['list'][j]['price'] }
         })
       }
@@ -78,8 +86,8 @@ class ApplySettle extends Component {
   }
   handleBlurprice = (id, value) => { // 失去焦点检测
     let { dataSource } = this.state
-    if (!numReg.test(value)) {
-      alert('金额格式错误', null, [
+    if (!isnumReg.test(value) || !numReg.test(Number(value))) {
+      alert('金额格式为正整数', null, [
         {
           text: '确认',
           onPress: () => {
@@ -97,7 +105,7 @@ class ApplySettle extends Component {
     } else {
       dataSource.map(item => {
         if (item['uid'] === id) {
-          if (Number(item['currentprice']) > Number(item['price'])) {
+          if (Number(item['price']) !== 0 && Number(item['currentprice']) > Number(item['price'])) {
             alert('金额超过最大范围', null, [{
               text: '确认',
               onPress: () => {
@@ -127,6 +135,7 @@ class ApplySettle extends Component {
   handleNextStep = () => { // 下一步
     let { dataSource } = this.state
     let ishas = false
+    let selethas = false
     for (let i = 0; i < dataSource.length; i++) {
       if (dataSource[i].ischeck) {
         ishas = true
@@ -135,8 +144,23 @@ class ApplySettle extends Component {
         ishas = false
       }
     }
+    for (let i = 0; i < dataSource.length; i++) {
+      if (dataSource[i].ischeck && dataSource[i]['choice_unit'] === 1 && dataSource[i]['selectUnit'] === '') {
+        dataSource[i]['selectError'] = true
+        selethas = true
+      }
+    }
     if (!ishas) {
       alert('请选择工人')
+    } else if (selethas) {
+      alert('未选择计价单位', null, [{
+        text: '确认',
+        onPress: () => {
+          this.setState({
+            dataSource
+          })
+        }
+      }])
     } else {
       this.setState({
         showConfirm: true
@@ -155,7 +179,8 @@ class ApplySettle extends Component {
       if (dataSource[i].ischeck) {
         newary.push({
           uid: dataSource[i]['uid'],
-          price: dataSource[i]['currentprice']
+          price: dataSource[i]['currentprice'],
+          unit: dataSource[i]['selectUnit']
         })
       }
     }
@@ -167,8 +192,42 @@ class ApplySettle extends Component {
       this.props.match.history.go(-1)
     }
   }
+  getNameByKey = (key, data) => {
+    return data.filter(item => {
+      return item['value'] === key
+    })[0]['label']
+  }
+  onChangeUnit = (value) => {
+    console.log(value)
+    let { dataSource, selectUid } = this.state
+    for (let i = 0; i < dataSource.length; i++) {
+      if (dataSource[i].uid === selectUid) {
+        dataSource[i]['selectUnit'] = value[0]
+        dataSource[i]['selectError'] = false
+      }
+    }
+    // this.setState({
+    //   pickerValue: value
+    // })
+  }
+  showPicker = (uid, unitData) => {
+    console.log(unitData)
+    this.setState({
+      unitData,
+      selectUid: uid,
+      pickerDisable: true
+    })
+  }
+  showSelect = (dataSource) => {
+    return <div className={`${style['price-unit']} ${dataSource['selectError'] ? style['unit-error'] : ''}`} onClick={() => {
+      this.showPicker(dataSource['uid'], dataSource['unit_list'])
+    }}>{
+        dataSource['selectUnit'] !== '' ? this.getNameByKey(dataSource['selectUnit'], dataSource['unit_list']) : dataSource['selectError'] ? '未选择' : '选择单位'
+      }<NewIcon type='icon-youjiantou' /></div>
+  }
   render() {
-    let { dataSource, showConfirm, isloading, orderno } = this.state
+    let { dataSource, showConfirm, isloading, orderno, unitData, pickerDisable } = this.state
+    console.log('dataSource', dataSource)
     return <div className='pageBox gray'>
       <Header
         title='选择工人'
@@ -178,7 +237,7 @@ class ApplySettle extends Component {
           if (showConfirm) {
             this.closeConfirm()
           } else {
-            this.props.match.history.go(-1)
+            this.props.match.history.push(urls.MYORDER)
           }
         }}
         rightTitle={ showConfirm ? null : '添加工人'}
@@ -194,7 +253,7 @@ class ApplySettle extends Component {
                   <h2>{i.realname}</h2>
                   <p>{i.mobile}</p>
                 </div>
-                <span className={style['price']}>{i.currentprice}元/{i.unit}</span>
+                <span className={style['price']}>{i.currentprice}{i['choice_unit'] === 1 ? this.getNameByKey(i['selectUnit'], i['unit_list']) : i.unit}</span>
               </CheckboxItem> : null
             ))}
           </List>
@@ -207,14 +266,14 @@ class ApplySettle extends Component {
               <CheckboxItem key={i.uid} activeStyle={{ backgroundColor: '#fff' }} disabled={i.status === 1} checked={i.ischeck || i.status === 1} onChange={() => this.onChange(i)}>
                 <img className={style['header']} src={i.avatar} />
                 <div className={style['settle-info']}>
-                  <h2>{i.realname}</h2>
+                  <h2 className='ellipsis'>{i.realname}</h2>
                   <p>{i.mobile}</p>
                 </div>
                 <span className={style['price']}>
                   <InputItem
                     placeholder=''
                     disabled={i.status === 1}
-                    extra={`元/${i.unit}`}
+                    extra={i['choice_unit'] === 1 ? this.showSelect(i) : i.unit}
                     defaultValue={i.price}
                     value={i.currentprice}
                     onChange={(value) => this.handlePrice(i.uid, value)}
@@ -227,6 +286,21 @@ class ApplySettle extends Component {
           <div className={style['btn-box']}>
             <WingBlank><Button type='primary' onClick={this.handleNextStep}>下一步</Button></WingBlank>
           </div>
+          {
+            pickerDisable ? <Picker
+              title='选择计价单位'
+              data={unitData}
+              visible={pickerDisable}
+              cols={1}
+              onChange={this.onChangeUnit}
+              onOk={(value) => this.setState({
+                pickerDisable: false
+              })}
+              onDismiss={() => this.setState({
+                pickerDisable: false
+              })}
+            /> : null
+          }
         </Content> : dataSource.length === 0 && isloading ? <DefaultPage type='noworklist' /> : null)
       }
     </div>

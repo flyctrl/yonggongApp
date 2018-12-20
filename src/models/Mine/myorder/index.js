@@ -254,7 +254,7 @@ class WorkListManage extends Component {
         ...constructJson,
         ...settleJson,
         paymethodId: data['settle_fix_time'],
-        paymethodVal,
+        paymethodVal: paymethodVal,
         starttime: data['start_time']
       }
       this.props.match.history.push(`${urls.PUSHNORMALORDER}?${tooler.parseJsonUrl(urlJson)}`)

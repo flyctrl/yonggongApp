@@ -8,10 +8,12 @@ import React from 'react'
 import { Icon } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import Loadable from 'react-loadable'
+import history from 'Util/history'
+import style from './style.css'
 
 function MyLoadingComponent({ error, pastDelay }) {
   if (error) {
-    return <div style={{ width: '100%', height: '400px', lineHeight: '400px', textAlign: 'center' }}>网络异常，请重新加载！</div>
+    return <div className={style['nonet']}><img src={require('Src/assets/nonet.png')} /><p>网络异常，请重新加载！</p><a onClick={() => history.go(0)}>刷 新</a></div>
   } else if (pastDelay) {
     return <div style={{ width: '100%', height: '400px', lineHeight: '400px', textAlign: 'center' }}><Icon type='loading' size='lg' /></div>
   } else {
