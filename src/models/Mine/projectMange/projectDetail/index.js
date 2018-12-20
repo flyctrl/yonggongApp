@@ -127,7 +127,7 @@ class ProjectDetail extends Component {
                     {
                       fileList.map((item, index) => {
                         return (
-                          <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item}</a></li>
+                          <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a></li>
                         )
                       })
                     }

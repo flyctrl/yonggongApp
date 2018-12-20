@@ -183,7 +183,7 @@ class Company extends Component {
     } else if (type === '3') {
       this.setState({
         backImg,
-        isClickFront: false
+        isClickBack: false
       })
       this.props.form.setFieldsValue({
         card_back: undefined

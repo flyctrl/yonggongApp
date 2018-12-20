@@ -327,6 +327,9 @@ export default {
       },
       projectDetail(params) { // 项目详情
         return Fetch(prefix + '/project/detail', params, 'get')
+      },
+      editProject(params) { // 编辑项目
+        return Fetch(prefix + '/project/edit', params, 'post', { showloading: false })
       }
     },
     balanceMange: { // 结算管理
@@ -356,13 +359,13 @@ export default {
     },
     invoiceMange: { // 发票管理
       invoiceListOne(params) { // 代收 发票管理
-        return Fetch(prefix + '/invoice/list/worksheet', params, 'get')
+        return Fetch(prefix + '/invoice/list/to_apply', params, 'get')
       },
       applyInvoice(params) { // 代收申请发票
         return FetchSave(prefix + '/invoice/apply', params, 'post', { showloading: false })
       },
       invoiceListTwo(params) { // 代开 发票管理
-        return Fetch(prefix + '/invoice/list/grant', params, 'get')
+        return Fetch(prefix + '/invoice/list', params, 'get')
       },
       invoiceDetail(params) { // 代开发票详情
         return Fetch(prefix + '/invoice/show', params, 'get')

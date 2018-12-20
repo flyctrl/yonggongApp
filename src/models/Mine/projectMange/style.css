@@ -50,12 +50,24 @@
         line-height: 20px;
       }
     }
-    & a {
+    & .prj-btn {
       float: right;
-      font-size: 12px;
-      color: #8A96A0;
-      height: 60px;
-      line-height: 60px;
+      display: flex;
+      flex-direction: column;
+      height: 64px;
+      justify-content: space-around;
+      & a {
+        font-size: 12px;
+        color: #8A96A0;
+        text-align:center;
+      }
+      & :global(.am-button) {
+        height: 26px;
+        line-height: 26px;
+        background: #ffffff;
+        color: #1298FC;
+        width:50px
+      }
     }
   }
   & .nodata {

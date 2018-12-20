@@ -41,7 +41,7 @@ const assignTypeRadio = [
 
 const projectStatus = [
   { title: '全部' },
-  { title: '审核中' },
+  { title: '待审核' },
   { title: '已审核' },
   { title: '未通过' }
 ]

@@ -1,24 +1,52 @@
-
-html .invoice-list :global(.am-button-ghost::before) {
-  border-color: #0467E0;
-}
-.invoiceBox {
-  background: #F3F4F5;
-  & .invoice-list {
+.invoice-page {
+  & :global(.am-tabs) {
+    & :global(.am-tabs-tab-bar-wrap) {
+      & :global(.am-tabs-default-bar-tab::after) {
+        height: 0;
+      }
+    }
+  }
+ & .invoice-list {
+    width: 100%;
+    overflow-y: auto;
+    & :global(.am-list-body) {
+      background: #F6F5FA;
+    }
     & li {
-      padding: 20px;
-      height: 25px;
-      background: #fff;
-      overflow: hidden;
-      margin-top: 10px;
-          & span {
-            color: #8A96A0;
-            float: left;
-            line-height: 20px;
-          }
-      & nav {
-        float: right;
-        line-height: 25px;
+      padding: 0 16px 5px;
+      margin-top:8px;
+      background:white;
+      & p {
+        height: 14px;
+        line-height: 16px;
+        margin: 10px 0;
+        color:#333333;
+        font-size: 14px;
+        font-weight: 400;
+        & span {
+          color: #666666;
+          font-size:14px;
+          font-weight: 400;
+        }
+        & a {
+          float: right;
+          color: #1298FC;
+          font-size: 15px;
+          font-weight: 400
+        }
+      }
+      & .invoice-p1 {
+        line-height: 45px;
+        height: 45px;
+        font-size: 14px;
+        color: #666666;
+        margin: 0;
+        font-weight: 100;
+      }
+      & .invoice-p2 {
+        & span {
+          color: #999999;
+        }
       }
     }
   }
