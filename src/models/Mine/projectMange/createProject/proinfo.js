@@ -43,6 +43,9 @@ class Construct extends Component {
       this.setState({
         fileList: newFileList
       })
+      this.props.onDelete({
+        fileList: newFileList
+      })
     }
   }
   onErrorClick = (field) => {

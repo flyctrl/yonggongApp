@@ -8,10 +8,37 @@
   color: #db1818;
   vertical-align: middle;
 }
-html :global(.am-list-item .am-list-line .am-list-content) {
-  padding: 0;
-  width:120px;
-} 
+.pushOrderForm{
+  & :global(.am-list-item .am-list-line .am-list-content) {
+    padding: 0;
+    width:120px;
+  } 
+  & :global(.am-list-item ) {
+    & :global(.am-list-line) {
+       & :global(.am-input-label) {
+        width:120px;
+       }
+    }
+  }
+  & .con-amount {
+    position: relative;
+    & span {
+      position: absolute;
+      top: 14px;
+      z-index: 100;
+      right: 122px
+    }
+  }
+  & .con-area {
+    position: relative;
+    & span {
+      position: absolute;
+      z-index: 100;
+      top: 14px;
+      right: 95px
+    }
+  }
+}
 .input-ellipsis {
   & :global(.am-list-item .am-list-line .am-list-content) {
     padding: 0;
@@ -29,16 +56,6 @@ html :global(.am-list-item .am-list-line .am-list-content) {
     }
   }
 }
-
-html :global(.am-list-item ) {
-    & :global(.am-list-line) {
-       & :global(.am-input-label) {
-        width:120px;
-       }
-  }
-}
-
-
 .pro-btn {
   width:328px;
   height:40px;
@@ -54,16 +71,17 @@ html :global(.am-list-item ) {
   margin-top:30px;
 }
 
-html .push-form-upload :global(.am-list-body) {
-  background-color: transparent;
-  &::before {
-    height: 0;
+.push-form-upload{
+  & :global(.am-list-body) {
+    background-color: transparent;
+    &::before {
+      height: 0;
+    }
+    &::after {
+      height: 0;
+    }
   }
-  &::after {
-    height: 0;
-  }
-}
-
+} 
 .push-form-upload {
   padding-left: 20px;
   & .push-title {

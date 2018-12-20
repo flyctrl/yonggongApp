@@ -63,6 +63,7 @@ class CreateProject extends Component {
           workNum: data['licence_no'], // 施工单位编号
           workCode: data['prj_construct_unit_code'], // 统一社会代码
           proText: data['prj_brief'], // 项目概况
+          coordinate: data['coordinate']
         })
       }
     } else {
@@ -125,7 +126,6 @@ class CreateProject extends Component {
     })
   }
   submitConstrct = (data) => { // 中标信息取值
-    console.log(data, 'con')
     this.setState({
       constructInfo: data['unit'],
       constructShow: false,
@@ -138,7 +138,6 @@ class CreateProject extends Component {
     })
   }
   submitWork = (data) => { // 施工信息取值
-    console.log(data, 'work')
     this.setState({
       workInfo: data['unit'],
       workShow: false,
@@ -153,12 +152,16 @@ class CreateProject extends Component {
     })
   }
   submitProject = (data) => { // 项目概况
-    console.log(data, 'pro')
     this.setState({
       proText: data['info'],
       proInfo: data['info'],
       fileList: data['fileList'],
       proShow: false
+    })
+  }
+  submitDeleteUp = (data) => { // 删除附件
+    this.setState({
+      fileList: data['fileList']
     })
   }
   onErrorClick = (field) => {
@@ -248,7 +251,7 @@ class CreateProject extends Component {
                     >项目编号</InputItem>
                   )}
                 </div>
-                <div>
+                <div className={style['con-amount']}>
                   {getFieldDecorator('construction_amount', {
                     initialValue: dataSource['construction_amount'] ? dataSource['construction_amount'].split('元')[0] : '',
                     rules: [
@@ -256,22 +259,26 @@ class CreateProject extends Component {
                     ]
                   })(
                     <InputItem
+                      // maxLength={12}
                       error={!!getFieldError('construction_amount')}
                       onErrorClick={() => this.onErrorClick('construction_amount')}
                       clear
-                      placeholder='请输入总投资'
+                      placeholder='请输入总投资/ 元'
                     >总投资</InputItem>
                   )}
+                  {/* <span>元</span> */}
                 </div>
-                <div>
+                <div className={style['con-area']}>
                   {getFieldDecorator('construction_area', {
                     initialValue: dataSource['construction_area']
                   })(
                     <InputItem
+                      // maxLength={12}
                       clear
-                      placeholder='请输入总面积'
+                      placeholder='请输入总面积/ 平方米'
                     >总面积</InputItem>
                   )}
+                  {/* <span>平方米</span> */}
                 </div>
                 <div className={style['input-ellipsis']} onClick={this.handleSelectMap}>
                   <Item arrow='horizontal' extra={getFieldError('construction_place') ? <div className='colorRed'>未选择</div> : address}>施工地址<em className={style['asterisk']}>*</em></Item>
@@ -337,13 +344,13 @@ class CreateProject extends Component {
           mapShow ? <Address title='施工地址' onClose={() => this.closeAddress()} onSubmit={(mapJson) => this.submitAddress(mapJson)} /> : null
         }
         {
-          constructShow ? <Construct unit={constrUnit} num={constrNum} onClose={() => this.closeConstrct()} onSubmit={(conJson) => this.submitConstrct(conJson)}/> : null
+          constructShow ? <Construct unit={constrUnit} num={constrNum} onClose={this.closeConstrct} onSubmit={(conJson) => this.submitConstrct(conJson)}/> : null
         }
         {
-          workShow ? <Work unit={workUnit} num={workNum} code={workCode} onClose={() => this.closeWork()} onSubmit={(workJson) => this.submitWork(workJson)}/> : null
+          workShow ? <Work unit={workUnit} num={workNum} code={workCode} onClose={this.closeWork} onSubmit={(workJson) => this.submitWork(workJson)}/> : null
         }
         {
-          proShow ? <Projetct info={proText} fileList={fileList} onClose={() => this.closeProject()} onSubmit={(proJson) => this.submitProject(proJson)}/> : null
+          proShow ? <Projetct info={proText} onDelete={this.submitDeleteUp} fileList={fileList} onClose={this.closeProject} onSubmit={(proJson) => this.submitProject(proJson)}/> : null
         }
       </div>
     )

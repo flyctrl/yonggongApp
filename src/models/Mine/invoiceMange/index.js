@@ -46,7 +46,7 @@ class InvoiceMange extends Component {
     if (data['currPageNo'] === 1 && data['list'].length === 0) {
       document.body.style.overflow = 'hidden'
       this.setState({
-        nodata: false,
+        nodata: true,
         pageNos: data['pageNos']
       })
     } else {

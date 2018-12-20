@@ -351,8 +351,11 @@ export default {
       }
     },
     balanceMange: { // 结算管理
-      settleList(params) { // 结算列表
-        return Fetch(prefix + '/worksheetManage/settle', params, 'get')
+      settleListSend(params) { // 发单方所有结算记录 列表
+        return Fetch(prefix + '/settle/send/all', params, 'get')
+      },
+      settleListAccept(params) { // 接单方所有结算记录列表
+        return Fetch(prefix + '/settle/accept/all', params, 'get')
       },
       settleBalance(params) { // 结算
         return Fetch(prefix + '/worksheetOrder/settle', params, 'post', { showloading: false })

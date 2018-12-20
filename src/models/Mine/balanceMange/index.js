@@ -1,16 +1,22 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
-import { ListView, PullToRefresh, Tabs } from 'antd-mobile'
+import { ListView, PullToRefresh, Tabs, Badge, Button } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
 import api from 'Util/api'
 import ReactDOM from 'react-dom'
+import { worksheetType } from 'Contants/fieldmodel'
 const NUM_ROWS = 20
 let tabType = [
   { title: '工单结算' },
   { title: '订单结算' }
 ]
+let balanceType = {
+  0: '待结算',
+  1: '部分结算',
+  2: '已结算'
+}
 class BalanceMange extends Component {
   constructor(props) {
     super(props)
@@ -32,20 +38,20 @@ class BalanceMange extends Component {
   genData = async (pIndex = 1, tabIndex = 0) => {
     let data
     if (tabIndex === 0 || tabIndex === '0') {
-      data = await api.Mine.balanceMange.balanceListSend({
+      data = await api.Mine.balanceMange.settleListSend({
         page: pIndex,
-        limit: NUM_ROWS
+        pageSize: NUM_ROWS
       }) || false
     } else if (tabIndex === 1 || tabIndex === '1') {
-      data = await api.Mine.balanceMange.balanceListAccept({
+      data = await api.Mine.balanceMange.settleListAccept({
         page: pIndex,
-        limit: NUM_ROWS
+        pageSize: NUM_ROWS
       }) || false
     }
     if (data['currPageNo'] === 1 && data['list'].length === 0) {
       document.body.style.overflow = 'hidden'
       this.setState({
-        nodata: false,
+        nodata: true,
         pageNos: data['pageNos']
       })
     } else {
@@ -59,7 +65,7 @@ class BalanceMange extends Component {
   }
   componentDidMount() {
     let { tabIndex } = this.state
-    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 80 - 9
+    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 98.5
     this.genData(1, tabIndex).then((rdata) => {
       this.rData = rdata
       this.setState({
@@ -129,9 +135,14 @@ class BalanceMange extends Component {
       })
     })
   }
-  handlePact = (e) => {
+  handleClick = (e) => {
+    let { tabIndex } = this.state
     let balanceNo = e.currentTarget.getAttribute('data-id')
-    this.props.match.history.push(`${urls.ELETAGREEMENT}?url=CONTRACTMANGE&balance_no=${balanceNo}`)
+    if (parseInt(tabIndex, 10) === 0) {
+      this.props.match.history.push(`${urls.SETTLERECORD}?orderno=${balanceNo}`)
+    } else if (parseInt(tabIndex, 10) === 1) {
+      this.props.match.history.push(`${urls.SETTLERECORD}?worksheetno=${balanceNo}`)
+    }
   }
   render() {
     let { isLoading, nodata, tabIndex } = this.state
@@ -139,25 +150,58 @@ class BalanceMange extends Component {
       if (isLoading) {
         return null
       } else if (nodata) {
-        return <DefaultPage type='nobalance' />
+        return <DefaultPage type='nosettle' />
       } else {
         return ''
       }
     }
     const row = (rowData, sectionID, rowID) => {
       return (
-        <li key={`${rowData.balance_no}`}>
-          <p className={`${style['con-p1']} my-bottom-border`}><span>{rowData.created_at}</span>
-            <a data-id={rowData.balance_no} onClick={this.handlePact}>查看合同</a>
-          </p>
-          <p className={style['con-p2']}><span>工单标题: </span>{rowData.worksheet_title}</p>
-        </li>
+        <dl key={rowData['id']}>
+          <dt className='my-bottom-border'>
+            <Badge className={`${style['typericon']}`} text={worksheetType[rowData['worksheet_type']]} />
+            <p className={`${style['prj-title']} ellipsis`} >{rowData['title']}</p>
+            <Badge className={`${style['statusicon']} ${rowData['status'] === 0 ? style['yellow'] : rowData['status'] === 1 ? style['pink'] : rowData['status'] === 2 ? style['blue'] : style['default']}`} text={
+              balanceType[rowData['status']]
+            } />
+          </dt>
+          <dd>
+            <p>
+              <span>总金额：</span><em>{rowData['amount']}{rowData['unit']}</em>
+            </p>
+            <p className={`ellipsis`}>
+              <span>项目名称：</span><em>{rowData['prj_name']}</em>
+            </p>
+            <div className='my-bottom-border'></div>
+            {
+              parseInt(tabIndex, 10) === 0
+                ? rowData['status'] === 0 || rowData['status'] === 1
+                  ? <p className={style['wait-price']}>
+                    <span>应付金额：</span><em>{rowData['wait_amount']}{rowData['wait_unit']}</em>
+                    <Button data-id={rowData['worksheet_no']} onClick={this.handleClick}>去结算</Button>
+                  </p>
+                  : <p className={style['wait-price']}>
+                    <Button data-id={rowData['worksheet_no']} onClick={this.handleClick}>查看详情</Button>
+                  </p>
+                : parseInt(tabIndex, 10) === 1
+                  ? rowData['status'] === 0 || rowData['status'] === 1
+                    ? <p className={style['wait-price']}>
+                      <span>应付金额：</span><em>{rowData['wait_amount']}{rowData['wait_unit']}</em>
+                      <Button data-id={rowData['worksheet_order_no']} onClick={this.handleClick}>去结算</Button>
+                    </p>
+                    : <p className={style['wait-price']}>
+                      <Button data-id={rowData['worksheet_order_no']} onClick={this.handleClick}>查看详情</Button>
+                    </p>
+                  : null
+            }
+          </dd>
+        </dl>
       )
     }
     return (
       <div className='pageBox gray'>
         <Header
-          title='合同列表'
+          title='结算管理'
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
