@@ -24,7 +24,8 @@ class ProjectDetail extends Component {
       fileList: [],
       dataSource: {},
       isLoading: true,
-      tabIndex: tooler.getQueryString('tabIndex')
+      tabIndex: tooler.getQueryString('tabIndex'),
+      url: tooler.getQueryString('url')
     }
   }
   getProjectDetail = async () => {
@@ -46,7 +47,7 @@ class ProjectDetail extends Component {
     this.getProjectDetail()
   }
   render() {
-    let { fileList, dataSource, isLoading, tabIndex } = this.state
+    let { fileList, dataSource, isLoading, tabIndex, url } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -54,7 +55,11 @@ class ProjectDetail extends Component {
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
-            this.props.match.history.push(`${urls.PROJECTMANGE}?tabIndex=${tabIndex}`)
+            if (url) {
+              this.props.match.history.push(`${urls[url]}?tabIndex=${tabIndex}`)
+            } else {
+              this.props.match.history.go(-1)
+            }
           }}
         />
         <Content>

@@ -143,6 +143,9 @@ class SettleRecord extends Component {
           <span>{status[rowData['status']]}</span>
         </dt>
         <dd>
+          <span><em>价格：</em>{rowData['amount']}</span>
+        </dd>
+        <dd>
           <span><em>付款方式：</em>{
             payModeRadio.filter(i => {
               return i['value'] === rowData['pay_way']
@@ -163,7 +166,11 @@ class SettleRecord extends Component {
           }</span>
         </dd>
         <dd>
-          <p><em>周期：</em>{rowData['period']}</p>
+          <p><em>周期：</em>{
+            rowData['period'].length > 1 ? rowData['period'].map((item, index) => {
+              return index === 0 ? <i key={index}>{item} ~ </i> : <i key={index}>{item}</i>
+            }) : rowData['period'][0]
+          }</p>
         </dd>
       </dl>
     }

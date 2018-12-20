@@ -289,7 +289,7 @@ class FormBox extends Component {
             <div>
               <DatePicker
                 mode='date'
-                minDate={orderno !== '' && typeof starttime !== 'undefined' ? new Date(Date.parse(starttime.replace(/-/g, '/'))) : new Date()}
+                minDate={starttime !== '' && typeof orderno !== 'undefined' ? new Date(Date.parse(starttime.replace(/-/g, '/'))) : new Date()}
                 maxDate={endDate}
                 title='开工时间'
                 extra={getFieldError('start_time') ? <div className='colorRed'>未选择</div> : '请选择开工时间'}

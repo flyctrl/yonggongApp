@@ -5,9 +5,8 @@
  */
 import React, { Component } from 'react'
 import { Tabs, List } from 'antd-mobile'
-import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
-import { addCommas } from 'Contants/tooler'
+import { addCommas, getQueryString } from 'Contants/tooler'
 import api from 'Util/api'
 import style from './style.css'
 
@@ -24,13 +23,17 @@ class Detail extends Component {
     super(props)
     this.state = {
       data: [],
-      tabsIndex: 0,
+      tabsIndex: getQueryString('tabsIndex') || 0,
       isloading: false
     }
   }
 
   componentDidMount() {
-    this.handleChange('', 0)
+    let { tabsIndex } = this.state
+    this.setState({
+      isloading: true
+    })
+    this.getDetailList(tabsIndex)
   }
 
   getDetailList = async (type) => {
@@ -53,18 +56,17 @@ class Detail extends Component {
 
   render() {
     let { data, tabsIndex, isloading } = this.state
-    console.log(data)
     return <div className={`${style.detail} pageBox`}>
       <Header
         title='账户详情'
         leftIcon='icon-back'
         leftTitle1='返回'
         leftClick1={() => {
-          this.props.match.history.push(urls.ACCOUNT)
+          this.props.match.history.go(-1)
         }}
       />
       <Content>
-        <Tabs tabs={tabs} onChange={this.handleChange} initialPage={0} page={tabsIndex} swipeable={false}>
+        <Tabs tabs={tabs} onChange={this.handleChange} page={parseInt(tabsIndex)} swipeable={false}>
           <div>
             <List className={data.length !== 0 ? '' : style['nodatalist'] }>
               {

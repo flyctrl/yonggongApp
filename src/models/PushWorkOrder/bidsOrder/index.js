@@ -56,17 +56,17 @@ class SelectClass extends Component {
       storage.set('bidsData', data)
       this.setState({
         proId: data['prj_no'],
-        proVal: '',
+        proVal: data['prj_name'],
         receiveType: data['taker_type'],
         showtech: parseInt(data['taker_type']) === 2,
-        teachId: data['aptitude_list'].length > 0 && data['taker_type'] === 2 ? data['aptitude_list'][0] : '0',
-        teachVal: data['aptitude_list'].length > 0 && data['taker_type'] === 2 ? data['aptitude_list'][0] : '不限',
-        bidwayId: '',
-        bidwayVal: '',
+        teachId: data['aptitude_code_list'].length > 0 && data['taker_type'] === 2 ? data['aptitude_code_list'][0] : '0',
+        teachVal: data['aptitude_list_name'].length > 0 && data['taker_type'] === 2 ? data['aptitude_list_name'][0] : '不限',
+        bidwayId: data['tender_way'],
+        bidwayVal: data['tender_way_name'],
         paymethodId: data['settle_fix_time'],
-        paymethodVal: '',
+        paymethodVal: data['settle_cn'],
         paymodeId: data['pay_way'],
-        paymodeVal: ''
+        paymodeVal: data['pay_way_name']
       })
     }
   }
@@ -166,6 +166,7 @@ class SelectClass extends Component {
   }
   render() {
     let { url, showIndex, teachVal, showtech, proId, proVal, paymethodVal, bidwayVal, paymodeVal, settleValue, receiveType } = this.state
+    console.log(proVal)
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
         <Header

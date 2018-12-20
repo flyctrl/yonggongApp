@@ -126,7 +126,7 @@ class ProjectMange extends Component {
   handleDetail = (e) => { // 项目详情
     let { tabIndex } = this.state
     let id = e.currentTarget.getAttribute('data-id')
-    history.push(urls.PROJECTDETAIL + '?id=' + id + '&tabIndex=' + tabIndex)
+    history.push(urls.PROJECTDETAIL + '?id=' + id + '&tabIndex=' + tabIndex + '&url=PROJECTMANGE')
   }
   render() {
     let { tabIndex, isLoading, nodata } = this.state
