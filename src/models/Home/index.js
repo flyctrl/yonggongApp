@@ -93,7 +93,7 @@ class Home extends Component {
     this.props.match.history.push(urls.BALANCEMANGE)
   }
   handleClickCheck = () => { // 考勤
-    this.props.match.history.push(urls.ATTENDRECORD)
+    this.props.match.history.push(urls.ENGINREALITY)
   }
   render() {
     const { sysInforms, bannerList, isLoading, dataList, isInfoLoading } = this.state

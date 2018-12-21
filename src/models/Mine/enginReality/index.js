@@ -190,7 +190,7 @@ class EnginReality extends Component {
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {
-              history.push(urls.MINE)
+              history.go(-1)
             }}
           />
           <Content>
