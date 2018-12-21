@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { List, ListView, PullToRefresh } from 'antd-mobile'
-import { Header, Content } from 'Components'
+import { Header, Content, NewIcon } from 'Components'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
@@ -146,27 +146,32 @@ class SettleRecord extends Component {
           <span>{status[rowData['status']]}</span>
         </dt>
         <dd>
-          <span><em>付款方式：</em>{
-            payModeRadio.filter(i => {
-              return i['value'] === rowData['pay_way']
-            })[0]['label']
-          }</span>
-          <span><em>计价方式：</em>{
-            valuation[rowData['pay_way']]
-          }</span>
-        </dd>
-        <dd>
-          <span><em>结算类型：</em>{
-            settletype[rowData['settle_type']]
-          }</span>
-          <span><em>结算周期：</em>{
-            paymethod.filter(i => {
-              return i['value'] === rowData['settle_period']
-            })[0]['label']
-          }</span>
-        </dd>
-        <dd>
-          <p><em>周期：</em>{rowData['period']}</p>
+          <div className={style['user-info']}>
+            <img src={rowData['avatar']} />
+            <div className={style['info-right']}>
+              <h4>{rowData['username']}</h4>
+              <p>{rowData['amount']}</p>
+              <time>{
+                rowData['period'].length > 1 ? rowData['period'].map((item, index) => {
+                  return index === 0 ? <i key={index}>{item} ~ </i> : <i key={index}>{item}</i>
+                }) : rowData['period'][0]
+              }</time>
+            </div>
+          </div>
+          <footer className='my-top-border'>
+            <p><NewIcon type='icon-jiesuanleixing' /><span>{settletype[rowData['settle_type']]}</span></p>
+            <p><NewIcon type='icon-jiesuanzhouqi' /><span>按{
+              paymethod.filter(i => {
+                return i['value'] === rowData['settle_period']
+              })[0]['label']
+            }计算</span></p>
+            <p><NewIcon type='icon-fukuanfangshi' /><span>{
+              payModeRadio.filter(i => {
+                return i['value'] === rowData['pay_way']
+              })[0]['label']
+            }</span></p>
+            <p><NewIcon type='icon-jijiafangshi' /><span>{valuation[rowData['pay_way']]}</span></p>
+          </footer>
         </dd>
       </dl>
     }
@@ -178,7 +183,7 @@ class SettleRecord extends Component {
         leftClick1={() => { this.props.match.history.go(-1) }}
       />
       <Content style={{ overflow: 'hidden' }}>
-        <List renderHeader={() => !isLoading ? <p><span>已付：¥{amount}</span><span>待付：¥{waitAmount}</span></p> : ''} className={style['settle-list']}>
+        <List renderHeader={() => !isLoading ? <p><span>已付：{amount}</span><span>待付：<i>{waitAmount}</i></span></p> : ''} className={style['settle-list']}>
           <ListView
             ref={(el) => {
               this.lv = el

@@ -555,6 +555,9 @@ export default {
     },
     getNoticeDetail(params) {
       return Fetch(prefix + '/message/notice/show', params, 'get')
+    },
+    noticeRead(params) { // 读消息
+      return FetchSave(prefix + '/message/mm/read', params)
     }
   }
 }

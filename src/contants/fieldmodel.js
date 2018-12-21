@@ -131,19 +131,19 @@ const valuationWay = [{
   value: 1
 }]
 const urlCode = {
-  'YA1001': 'ACCESSRECORD', // 接单记录
-  'YB1001': 'WORKLISTDETAIL', // 工单详情
-  'YB1002': 'ORDERLISTDETAIL', // 订单的工单详情
-  'YA1002': 'SENDSTARTWORKRECORD', // 工单的开工记录
-  'YA1003': 'OORDERSTARTWORKRECORD', // 订单的开工记录
-  'YA1004': 'SETTLERECORD', // 工单结算记录
-  'YA1005': 'OSETTLERECORD', // 订单结算记录
-  'YC1001': 'CHECK', // 考勤打卡
-  'YB1003': 'REALNAMEAUTHDETAIL', // 实名认证详情
-  'YB1004': 'COMPANYAUTHDETAIL', // 企业认证详情
-  'YB1005': 'PROJECTDETAIL', // 项目详情
-  'YA1006': 'ACCOUNTDETAIL', // 账户的支出列表
-  'YA1007': 'ACCOUNTDETAIL', // 账户的收入列表
+  'YA1001': { name: 'ACCESSRECORD', params: false }, // 接单记录
+  'YB1001': { name: 'WORKLISTDETAIL', params: false }, // 工单详情
+  'YB1002': { name: 'ORDERLISTDETAIL', params: false }, // 订单的工单详情
+  'YA1002': { name: 'SENDSTARTWORKRECORD', params: false }, // 工单的开工记录
+  'YA1003': { name: 'OORDERSTARTWORKRECORD', params: false }, // 订单的开工记录
+  'YA1004': { name: 'SETTLERECORD', params: false }, // 工单结算记录
+  'YA1005': { name: 'OSETTLERECORD', params: false }, // 订单结算记录
+  'YC1001': { name: 'CHECK', params: false }, // 考勤打卡
+  'YB1003': { name: 'REALNAMEAUTHDETAIL', params: false }, // 实名认证详情
+  'YB1004': { name: 'COMPANYAUTHDETAIL', params: false }, // 企业认证详情
+  'YB1005': { name: 'PROJECTDETAIL', params: false }, // 项目详情
+  'YA1006': { name: 'ACCOUNTDETAIL', params: { tabsIndex: 2 }}, // 账户的支出列表
+  'YA1007': { name: 'ACCOUNTDETAIL', params: { tabsIndex: 1 }}, // 账户的收入列表
 }
 export {
   payModeRadio,

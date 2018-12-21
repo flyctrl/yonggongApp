@@ -5,8 +5,8 @@ import NewIcon from 'Components/NewIcon'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import style from './style.css'
-import { msgStatus } from 'Contants/fieldmodel'
-import { getQueryString } from 'Contants/tooler'
+import { msgStatus, urlCode } from 'Contants/fieldmodel'
+import { getQueryString, parseJsonUrl } from 'Contants/tooler'
 import ReactDOM from 'react-dom'
 import { ListView, PullToRefresh, Tabs, Badge } from 'antd-mobile'
 const iconData = {
@@ -19,15 +19,16 @@ const iconData = {
   7: 'icon-projectManagement'
 }
 const NUM_ROWS = 20
+const defaultSource = new ListView.DataSource({
+  rowHasChanged: (row1, row2) => row1 !== row2,
+})
 class Message extends Component {
   constructor(props) {
     super(props)
-    const dataSource = new ListView.DataSource({
-      rowHasChanged: (row1, row2) => row1 !== row2,
-    })
     this.state = {
       isLoading: true,
-      dataSource,
+      dataSource: [],
+      defaultSource,
       refreshing: true,
       height: document.documentElement.clientHeight,
       pageIndex: 1,
@@ -66,7 +67,7 @@ class Message extends Component {
     this.genData().then((rdata) => {
       this.rData = rdata
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         height: hei,
         refreshing: false,
         isLoading: false,
@@ -89,7 +90,7 @@ class Message extends Component {
     this.genData(newIndex).then((rdata) => {
       this.rData = [...this.rData, ...rdata]
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         isLoading: false,
         pageIndex: newIndex
       })
@@ -103,68 +104,72 @@ class Message extends Component {
     this.genData(1).then((rdata) => {
       this.rData = rdata
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         refreshing: false,
         isLoading: false,
       })
     })
   }
-  handleSysNotice = (e) => {
-    let id = e.currentTarget.getAttribute('data-id')
-    let { tabIndex } = this.state
-    this.props.match.history.push(urls.SHOWINFODETAIL + '?id=' + id + '&index=' + tabIndex)
-  }
-  handlebtnType = (e) => { // 根据类型跳转页面
-    // let id = e.currentTarget.getAttribute('data-id')[0]
-    // let type = e.currentTarget.getAttribute('type')[0]
-    // let { tabIndex } = this.state
-    // switch (type) {
-    //   case '1': // 用户
-    //     // this.props.match.history.push(urls.ACCESSRECORD + '&tabIndex=' + tabIndex)
-    //     break
-    //   case '2': // 接单记录
-    //     this.props.match.history.push(urls.ACCESSRECORD + '&tabIndex=' + tabIndex)
-    //     break
-    //   case '3': // 账户明细
-    //     this.props.match.history.push(urls.ACCOUNTDETAIL + '&tabIndex=' + tabIndex)
-    //     break
-    //   case '4': // 公告
-    //     // this.props.match.history.push(urls.ACCOUNTDETAIL + '&tabIndex=' + tabIndex)
-    //     break
-    //   case '5': // 考勤明细
-    //     this.props.match.history.push(urls.ATTENDRECORD + '&tabIndex=' + tabIndex)
-    //     break
-    //   case '6': // 个人账户
-    //     this.props.match.history.push(urls.ACCOUNT + '&tabIndex=' + tabIndex)
-    //     break
-    //   case '7': // 项目
-    //     // this.props.match.history.push(urls.ATTENDRECORD + '&tabIndex=' + tabIndex)
-    //     break
-    // }
+  handlebtnType = async (msgno) => { // 根据类型跳转页面
+    let data = await api.Message.noticeRead({
+      msg_no: msgno
+    }) || false
+    if (data) {
+      console.log('data', data)
+      let extras = data['extras']
+      console.log('extras', extras)
+      if (extras !== {} && extras !== []) { // 跳转
+        console.log('params', extras['params'])
+        if (extras['in_out'] === '1') { // 内部跳转
+          if (extras['params'] !== {} && extras['params'] !== []) {
+            this.props.match.history.push(`${urls[urlCode[extras['page_code']].name]}?${parseJsonUrl(extras['params'])}${urlCode[extras['page_code']].params ? parseJsonUrl(urlCode[extras['page_code']].params) : ''}`)
+          } else {
+            this.props.match.history.push(`${urls[urlCode[extras['page_code']].name]}${urlCode[extras['page_code']].params ? '?' + parseJsonUrl(urlCode[extras['page_code']].params) : ''}`)
+          }
+        }
+      } else if (extras === {} || extras === []) { // 无跳转刷新数据
+        let { dataSource } = this.state
+        let currentIndex
+        dataSource.map((item, index) => {
+          if (item['msg_no'] === data['msg_no']) {
+            currentIndex = index
+          }
+        })
+        dataSource[currentIndex] = {
+          msg_no: data['msg_no'],
+          msg_type: data['msg_type'],
+          title: data['title'],
+          content: data['content'],
+          status: data['status'],
+          show_time: data['show_time']
+        }
+        this.setState({
+          dataSource
+        })
+      }
+    }
   }
   handleTabsChange = (tabs, index) => {
-    const dataSource = new ListView.DataSource({
-      rowHasChanged: (row1, row2) => row1 !== row2,
-    })
+    this.props.match.history.replace(`?tabIndex=${index}`)
     this.setState({
       tabIndex: index,
       refreshing: true,
       isLoading: true,
       pageIndex: 1,
       pageNos: 1,
-      dataSource
+      dataSource: []
     })
     this.genData(1, index).then((rdata) => {
       this.rData = rdata
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         refreshing: false,
         isLoading: false,
       })
     })
   }
   render() {
-    let { isLoading, nodata, tabIndex } = this.state
+    let { isLoading, nodata, tabIndex, dataSource } = this.state
     const footerShow = () => {
       if (isLoading) {
         return null
@@ -176,7 +181,7 @@ class Message extends Component {
     }
     const row = (rowData, sectionID, rowID) => {
       return (
-        <div data-id={rowData['id']} key={rowData['id']} type={rowData['msg_type']} onClick={this.handlebtnType} className={`${style['notice-box']}`}>
+        <div data-id={rowData['id']} key={rowData['id']} type={rowData['msg_type']} onClick={() => this.handlebtnType(rowData['msg_no'])} className={`${style['notice-box']}`}>
           <dl>
             <dt>
               <div className={style['icon-box']}>
@@ -209,7 +214,7 @@ class Message extends Component {
             <div className={style['msg-box']} style={{ height: '100%' }} >
               <ListView
                 ref={(el) => { this.lv = el }}
-                dataSource={this.state.dataSource}
+                dataSource={this.state.defaultSource.cloneWithRows(dataSource)}
                 renderFooter={() => footerShow()}
                 renderRow={row}
                 style={{
