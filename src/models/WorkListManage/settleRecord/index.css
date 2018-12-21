@@ -8,6 +8,9 @@ html:not([data-scale]) .settle-list :global(.am-list-body .am-list-item:last-chi
     & p {
       & span {
         margin-right: 10px;
+        & i {
+          color: #FA6B6D;
+        }
       }
     }
   }

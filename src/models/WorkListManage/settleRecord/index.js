@@ -183,7 +183,7 @@ class SettleRecord extends Component {
         leftClick1={() => { this.props.match.history.go(-1) }}
       />
       <Content style={{ overflow: 'hidden' }}>
-        <List renderHeader={() => !isLoading ? <p><span>已付：¥{amount}</span><span>待付：¥{waitAmount}</span></p> : ''} className={style['settle-list']}>
+        <List renderHeader={() => !isLoading ? <p><span>已付：{amount}</span><span>待付：<i>{waitAmount}</i></span></p> : ''} className={style['settle-list']}>
           <ListView
             ref={(el) => {
               this.lv = el

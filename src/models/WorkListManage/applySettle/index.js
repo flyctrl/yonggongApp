@@ -91,17 +91,17 @@ class ApplySettle extends Component {
       <Content>
         {
           isloading && dataSource.length !== 0 ? <div style={{ height: '100%', 'overflow': 'hidden' }}>
-            <p className={`${style['settle-total']} my-bottom-border`}>合计：<em>{amount}元</em></p>
+            <p className={`${style['settle-total']} my-bottom-border`}>合计：<em>{amount}</em></p>
             <List className={`${style['settle-list']} ${status === 3 ? style['settle-all'] : ''}`}>
               {dataSource.map(i => (
                 <List.Item key={i.uid} activeStyle={{ backgroundColor: '#fff' }}>
                   <img className={style['header']} src={i['avatar']} />
                   <div className={style['settle-info']}>
                     <h2>{i.username}</h2>
-                    <p>单价：{i.price}元/{i.unit}</p>
-                    <p>工作量：{i.workload}{i.unit}</p>
+                    <p>单价：{i.price}{i.unit}</p>
+                    <p>工作量：{i.workload}{i['workload_unit']}</p>
                   </div>
-                  <span className={style['price']}>¥{i.amount}</span>
+                  <span className={style['price']}>{i.amount}</span>
                 </List.Item>
               ))}
             </List>
