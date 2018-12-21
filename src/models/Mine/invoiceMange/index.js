@@ -13,16 +13,17 @@ let tabType = [
   { title: '代收发票' },
   { title: '代开发票' }
 ]
+const defaultSource = new ListView.DataSource({
+  rowHasChanged: (row1, row2) => row1 !== row2,
+})
 class InvoiceMange extends Component {
   constructor(props) {
     super(props)
-    const dataSource = new ListView.DataSource({
-      rowHasChanged: (row1, row2) => row1 !== row2,
-    })
     this.state = {
       invoiceList: [],
       isLoading: true,
-      dataSource,
+      dataSource: [],
+      defaultSource,
       refreshing: true,
       height: document.documentElement.clientHeight,
       pageIndex: 1,
@@ -61,11 +62,11 @@ class InvoiceMange extends Component {
   }
   componentDidMount() {
     let { tabIndex } = this.state
-    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 98.5
+    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 88.5
     this.genData(1, tabIndex).then((rdata) => {
       this.rData = rdata
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         height: hei,
         refreshing: false,
         isLoading: false,
@@ -88,7 +89,7 @@ class InvoiceMange extends Component {
     this.genData(newIndex, tabIndex).then((rdata) => {
       this.rData = [...this.rData, ...rdata]
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         isLoading: false,
         pageIndex: newIndex
       })
@@ -103,7 +104,7 @@ class InvoiceMange extends Component {
     this.genData(1, tabIndex).then((rdata) => {
       this.rData = rdata
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         refreshing: false,
         isLoading: false,
       })
@@ -111,21 +112,18 @@ class InvoiceMange extends Component {
   }
   handleTabsChange = (tabs, index) => {
     this.props.match.history.replace(`?tabIndex=${index}`)
-    const dataSource = new ListView.DataSource({
-      rowHasChanged: (row1, row2) => row1 !== row2,
-    })
     this.setState({
       tabIndex: index,
       refreshing: true,
       isLoading: true,
       pageIndex: 1,
       pageNos: 1,
-      dataSource
+      dataSource: []
     })
     this.genData(1, index).then((rdata) => {
       this.rData = rdata
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         refreshing: false,
         isLoading: false,
       })
@@ -140,7 +138,7 @@ class InvoiceMange extends Component {
     this.props.match.history.push(`${urls.APPLYINVOICE}?order_no=${applyId}`)
   }
   render() {
-    let { isLoading, nodata, tabIndex } = this.state
+    let { isLoading, nodata, tabIndex, dataSource } = this.state
     const footerShow = () => {
       if (isLoading) {
         return null
@@ -208,7 +206,7 @@ class InvoiceMange extends Component {
               <ul className={style['invoice-list']} style={{ height: '100%' }}>
                 <ListView
                   ref={(el) => { this.lv = el }}
-                  dataSource={this.state.dataSource}
+                  dataSource={this.state.defaultSource.cloneWithRows(dataSource)}
                   renderFooter={() => footerShow()}
                   renderRow={row}
                   style={{

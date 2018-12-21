@@ -7,15 +7,16 @@ import api from 'Util/api'
 import style from './style.css'
 import ReactDOM from 'react-dom'
 const NUM_ROWS = 20
+const defaultSource = new ListView.DataSource({
+  rowHasChanged: (row1, row2) => row1 !== row2,
+})
 class WorkList extends Component {
   constructor(props) {
     super(props)
-    const dataSource = new ListView.DataSource({
-      rowHasChanged: (row1, row2) => row1 !== row2,
-    })
     this.state = {
       isLoading: true,
-      dataSource,
+      defaultSource,
+      dataSource: [],
       refreshing: true,
       height: document.documentElement.clientHeight,
       pageIndex: 1,
@@ -47,11 +48,11 @@ class WorkList extends Component {
     return await data['list'] || []
   }
   componentDidMount() {
-    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 60
+    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 45
     this.genData().then((rdata) => {
       this.rData = rdata
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         height: hei,
         refreshing: false,
         isLoading: false,
@@ -74,7 +75,7 @@ class WorkList extends Component {
     this.genData(newIndex).then((rdata) => {
       this.rData = [...this.rData, ...rdata]
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         isLoading: false,
         pageIndex: newIndex
       })
@@ -88,14 +89,14 @@ class WorkList extends Component {
     this.genData(1).then((rdata) => {
       this.rData = rdata
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         refreshing: false,
         isLoading: false,
       })
     })
   }
   render() {
-    let { isLoading, nodata } = this.state
+    let { isLoading, nodata, dataSource } = this.state
     const footerShow = () => {
       if (isLoading) {
         return null
@@ -135,7 +136,7 @@ class WorkList extends Component {
         <div className={style['box']} style={{ height: '100%' }}>
           <ListView
             ref={(el) => { this.lv = el }}
-            dataSource={this.state.dataSource}
+            dataSource={this.state.defaultSource.cloneWithRows(dataSource)}
             renderFooter={() => footerShow()}
             renderRow={row}
             style={{

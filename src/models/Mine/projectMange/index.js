@@ -10,15 +10,16 @@ import { getQueryString } from 'Contants/tooler'
 import ReactDOM from 'react-dom'
 import { ListView, PullToRefresh, Tabs, Button } from 'antd-mobile'
 const NUM_ROWS = 20
+const defaultSource = new ListView.DataSource({
+  rowHasChanged: (row1, row2) => row1 !== row2,
+})
 class ProjectMange extends Component {
   constructor(props) {
     super(props)
-    const dataSource = new ListView.DataSource({
-      rowHasChanged: (row1, row2) => row1 !== row2,
-    })
     this.state = {
       isLoading: true,
-      dataSource,
+      dataSource: [],
+      defaultSource,
       refreshing: true,
       height: document.documentElement.clientHeight,
       pageIndex: 1,
@@ -56,7 +57,7 @@ class ProjectMange extends Component {
     this.genData().then((rdata) => {
       this.rData = rdata
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         height: hei,
         refreshing: false,
         isLoading: false,
@@ -79,7 +80,7 @@ class ProjectMange extends Component {
     this.genData(newIndex).then((rdata) => {
       this.rData = [...this.rData, ...rdata]
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         isLoading: false,
         pageIndex: newIndex
       })
@@ -93,28 +94,25 @@ class ProjectMange extends Component {
     this.genData(1).then((rdata) => {
       this.rData = rdata
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         refreshing: false,
         isLoading: false,
       })
     })
   }
   handleTabsChange = (tabs, index) => {
-    const dataSource = new ListView.DataSource({
-      rowHasChanged: (row1, row2) => row1 !== row2,
-    })
     this.setState({
       tabIndex: index,
       refreshing: true,
       isLoading: true,
       pageIndex: 1,
       pageNos: 1,
-      dataSource
+      dataSource: []
     })
     this.genData(1, index).then((rdata) => {
       this.rData = rdata
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        dataSource: this.rData,
         refreshing: false,
         isLoading: false,
       })
@@ -134,7 +132,7 @@ class ProjectMange extends Component {
     this.props.match.history.push(`${urls['CREATEPROJECT']}?prjNo=${prjNo}`)
   }
   render() {
-    let { tabIndex, isLoading, nodata } = this.state
+    let { tabIndex, isLoading, nodata, dataSource } = this.state
     const footerShow = () => {
       if (isLoading) {
         return null
@@ -190,7 +188,7 @@ class ProjectMange extends Component {
               <ul style={{ height: '100%' }} className={style['project-mange-list']}>
                 <ListView
                   ref={(el) => { this.lv = el }}
-                  dataSource={this.state.dataSource}
+                  dataSource={this.state.defaultSource.cloneWithRows(dataSource)}
                   renderFooter={() => footerShow()}
                   renderRow={row}
                   style={{
