@@ -29,7 +29,7 @@ class RealNameAuth extends Component {
     let { isBack } = this.state
     return <div className='pageBox'>
       <Header
-        title='验证成功'
+        title='添加成功'
         leftIcon='icon-back'
         leftTitle1={ isBack ? '返回选择列表' : '返回' }
         leftClick1={() => {
@@ -44,7 +44,7 @@ class RealNameAuth extends Component {
         <div className={style['work-icon']}>
           <Icon type= 'check-circle' color='#1298FC'/>
         </div>
-        <p className={style['work-success']}>验证成功</p>
+        <p className={style['work-success']}>添加成功</p>
         <div className={style['work-s-text']}>
           工人实名认证成功，您可以将工人添加到您接的工单中
         </div>

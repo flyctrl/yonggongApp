@@ -321,7 +321,8 @@ class CreateWorker extends Component {
       Toast.hide()
       Toast.success('验证成功', 1.5, () => {
         if (isBack) {
-          this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?orderno=${isBack}`)
+          // this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}?orderno=${isBack}`)
+          this.props.match.history.push(`${urls['SELECTWORKER']}?orderno=${isBack}`)
         } else {
           this.props.match.history.push(`${urls['CREATEWORKERSUCCESS']}`)
         }

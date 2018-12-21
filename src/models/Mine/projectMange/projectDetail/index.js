@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { List } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import NewIcon from 'Components/NewIcon'
-import * as urls from 'Contants/urls'
+// import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import { projectStatus } from 'Contants/fieldmodel'
@@ -47,7 +47,7 @@ class ProjectDetail extends Component {
     this.getProjectDetail()
   }
   render() {
-    let { fileList, dataSource, isLoading, tabIndex, url } = this.state
+    let { fileList, dataSource, isLoading } = this.state
     return (
       <div className='pageBox'>
         <Header
@@ -55,11 +55,12 @@ class ProjectDetail extends Component {
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
-            if (url) {
-              this.props.match.history.push(`${urls[url]}?tabIndex=${tabIndex}`)
-            } else {
-              this.props.match.history.go(-1)
-            }
+            // if (url) {
+            //   this.props.match.history.push(`${urls[url]}?tabIndex=${tabIndex}`)
+            // } else {
+            //   this.props.match.history.go(-1)
+            // }
+            this.props.match.history.go(-1)
           }}
         />
         <Content>

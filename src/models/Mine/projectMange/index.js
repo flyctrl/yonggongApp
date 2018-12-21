@@ -101,6 +101,7 @@ class ProjectMange extends Component {
     })
   }
   handleTabsChange = (tabs, index) => {
+    this.props.match.history.replace(`?tabIndex=${index}`)
     this.setState({
       tabIndex: index,
       refreshing: true,
@@ -168,7 +169,7 @@ class ProjectMange extends Component {
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
-            history.push(urls.MINE)
+            history.go(-1)
           }}
           rightTitle={<NewIcon type='icon-add-default' />}
           rightClick={() => {

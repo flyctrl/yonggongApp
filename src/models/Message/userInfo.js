@@ -92,10 +92,10 @@ class UserInfo extends Component {
                     companyDetail.info.business ? <dd><span>所属行业</span><p>{companyDetail.info.business}</p></dd> : null
                   }
                   {
-                    companyDetail.info.started_at ? <dd><span>统一社会信用代码</span><p>{companyDetail.info.started_at}</p></dd> : null
+                    companyDetail.info.started_at ? <dd><span>成立日期</span><p>{companyDetail.info.started_at}</p></dd> : null
                   }
                   {
-                    companyDetail.info.credit_code ? <dd><span>成立日期/注册日期</span><p>{companyDetail.info.credit_code}</p></dd> : null
+                    companyDetail.info.credit_code ? <dd><span>统一社会信用代码</span><p>{companyDetail.info.credit_code}</p></dd> : null
                   }
                   {
                     companyDetail.info.operating_period ? <dd><span>营业期限</span><p>{companyDetail.info.operating_period}</p></dd> : null
@@ -107,13 +107,10 @@ class UserInfo extends Component {
                     companyDetail.info.telephone ? <dd><span>电话</span><p>{companyDetail.info.telephone}</p></dd> : null
                   }
                   {
-                    companyDetail.info.mobile ? <dd><span>手机号</span><p>{companyDetail.info.mobile}</p></dd> : null
-                  }
-                  {
                     companyDetail.info.region ? <dd><span>地区编码</span><p>{companyDetail.info.region}</p></dd> : null
                   }
                   {
-                    companyDetail.info.address ? <dd><span>街道地址</span><p>{companyDetail.info.address}</p></dd> : null
+                    companyDetail.info.address ? <dd><span>注册地址</span><p>{companyDetail.info.address}</p></dd> : null
                   }
                   {
                     companyDetail.info.scope ? <dd><span>经营范围</span><p>{companyDetail.info.scope}</p></dd> : null

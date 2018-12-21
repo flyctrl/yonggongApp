@@ -19,6 +19,7 @@ class Home extends Component {
       sysInforms: [],
       isLoading: true,
       isBannerLoading: true,
+      isInfoLoading: true,
       dataList: {}
     }
   }
@@ -40,6 +41,9 @@ class Home extends Component {
     }
   }
   getSystemInforms = async () => {
+    this.setState({
+      isLoading: true
+    })
     const data = await api.Message.getNoticeList({ // 获取系统通告
     }) || false
     if (data) {
@@ -48,7 +52,8 @@ class Home extends Component {
         return index < 6
       })
       this.setState({
-        sysInforms: newData
+        sysInforms: newData,
+        isInfoLoading: false
       })
     }
   }
@@ -78,8 +83,20 @@ class Home extends Component {
   handleClickMsg = () => {
     this.props.match.history.push(urls.MESSAGE)
   }
+  handleClickPrj = () => {
+    this.props.match.history.push(urls.PROJECTMANGE)
+  }
+  handleClickOrder = () => {
+    this.props.match.history.push(urls.WORKLISTMANAGE)
+  }
+  handleClickSettle = () => {
+    this.props.match.history.push(urls.BALANCEMANGE)
+  }
+  handleClickCheck = () => { // 考勤
+    this.props.match.history.push(urls.ATTENDRECORD)
+  }
   render() {
-    const { sysInforms, bannerList, isLoading, dataList } = this.state
+    const { sysInforms, bannerList, isLoading, dataList, isInfoLoading } = this.state
     let { project = {}, worksheet = {}, settle = {}, attend = [] } = dataList
     return (
       <div className='contentBox antdgray'>
@@ -123,7 +140,7 @@ class Home extends Component {
             <div className={`${style['notice-container']}`}>
               <img src={noticeicon} />
               {
-                sysInforms.length !== 0 ? <WingBlank>
+                sysInforms.length !== 0 && !isInfoLoading ? <WingBlank>
                   <Carousel className={style['my-carousel']}
                     vertical
                     dots={false}
@@ -134,11 +151,11 @@ class Home extends Component {
                   >
                     {
                       sysInforms.map((item, index) => {
-                        return <div key={`${index}${item['msg_code']}`} className={style['v-item']}><p> <span></span>{item.content}</p></div>
+                        return <div key={`${index}${item['msg_no']}`} className={sysInforms.length === 1 ? `${style['v-item-one']}` : style['v-item']}><p className='ellipsis'> <span></span>{item.content}</p></div>
                       })
                     }
                   </Carousel>
-                </WingBlank> : <div className={style['data']}>暂无数据</div>
+                </WingBlank> : sysInforms.length === 0 && !isInfoLoading ? <div className={style['data']}>暂时没有消息~</div> : null
               }
               <div className={style['home-more']} onClick={this.handleClickMsg}>更多<Icon type='right' size='lg' /></div>
             </div>
@@ -146,7 +163,7 @@ class Home extends Component {
               !isLoading
                 ? <div className={style['home-list']}>
                   <dl>
-                    <dt className={`${style['home-head']}`}><em></em>项目 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dt className={`${style['home-head']}`}><em></em>项目 <div onClick={this.handleClickPrj}>查看全部<Icon type='right' size='lg' /></div></dt>
                     <dd>
                       <div >
                         <span>{project['prj_num'] || 0}</span>
@@ -163,7 +180,7 @@ class Home extends Component {
                     </dd>
                   </dl>
                   <dl>
-                    <dt className={`${style['home-head']}`}><em></em>工单 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dt className={`${style['home-head']}`}><em></em>工单 <div onClick={this.handleClickOrder}>查看全部<Icon type='right' size='lg' /></div></dt>
                     <dd>
                       <div >
                         <span>{worksheet['wait_construct_num'] || 0}</span>
@@ -180,7 +197,7 @@ class Home extends Component {
                     </dd>
                   </dl>
                   <dl>
-                    <dt className={`${style['home-head']}`}><em></em>结算 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dt className={`${style['home-head']}`}><em></em>结算 <div onClick={this.handleClickSettle}>查看全部<Icon type='right' size='lg' /></div></dt>
                     <dd>
                       <div >
                         <span>{settle['wait_pay'] || 0}</span>
@@ -194,7 +211,7 @@ class Home extends Component {
                     </dd>
                   </dl>
                   <dl>
-                    <dt className={`${style['home-head']}`}><em></em>考勤 <div>查看全部<Icon type='right' size='lg' /></div></dt>
+                    <dt className={`${style['home-head']}`}><em></em>考勤 <div onClick={this.handleClickCheck}>查看全部<Icon type='right' size='lg' /></div></dt>
                     <dd>
                       <div>
                         <span>{attend[0] || 0}</span>
