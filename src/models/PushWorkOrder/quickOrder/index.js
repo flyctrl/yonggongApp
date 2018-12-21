@@ -143,7 +143,10 @@ class SelectClass extends Component {
   }
   render() {
     console.log(this.state)
-    let { orderno, settleValue, classifyVal, showIndex, parentClassId, teachId, teachVal, showtech, classifyId, proId, proVal, settleId, url } = this.state
+    let { orderno, settleValue, classifyVal, showIndex, parentClassId, teachId, teachVal, showtech, classifyId, proId, proVal, settleId, url, constructType } = this.state
+    console.log(constructType)
+    console.log(classifyVal)
+    console.log(classifyId)
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
         <Header
@@ -165,8 +168,8 @@ class SelectClass extends Component {
             }} thumb={<NewIcon type='icon-xiangmuxiaoxi' className={style['icon-class-haiwai']} />}>项目<em className={style['asterisk']}>*</em></Item>
           </List>
           <List renderHeader={() => '发布所需要的工种或机械'} className={style['select-class-list']}>
-            <Item extra={classifyVal} arrow={orderno !== '' ? '' : 'horizontal'} onClick={() => {
-              orderno !== '' ? null : this.handleSelectClassify()
+            <Item extra={classifyVal} arrow={orderno !== '' ? (classifyId === '' && constructType === '' ? 'horizontal' : '') : 'horizontal'} onClick={() => {
+              orderno !== '' ? (classifyId === '' && constructType === '' ? this.handleSelectClassify() : null) : this.handleSelectClassify()
             }} thumb={<NewIcon type='icon-haiwai' className={style['icon-class-haiwai']} />}>工种/机械<em className={style['asterisk']}>*</em></Item>
           </List>
           <List style={{ display: (parentClassId === 'skill' && showtech === true) || (orderno !== '' && teachId !== '0') ? 'block' : 'none' }} renderHeader={() => '技能要求只能允许满足相关技能要求的个人接单'} className={style['select-class-list']}>
