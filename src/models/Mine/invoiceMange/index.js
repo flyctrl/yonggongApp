@@ -61,7 +61,7 @@ class InvoiceMange extends Component {
   }
   componentDidMount() {
     let { tabIndex } = this.state
-    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 80 - 9
+    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 98.5
     this.genData(1, tabIndex).then((rdata) => {
       this.rData = rdata
       this.setState({
@@ -154,12 +154,12 @@ class InvoiceMange extends Component {
     if (parseInt(tabIndex, 10) === 0) {
       row = (rowData, sectionID, rowID) => {
         return (
-          <li key={`${rowData.invoice_no}`} data-id={rowData['order_no']} onClick={this.handleApplyInvoice}>
-            <p><span>接包方: </span> {rowData.worker_name}</p>
-            <p><span>工单编号: </span> {rowData.order_no}</p>
-            <p><span>工单名称: </span> {rowData.worksheet_title}</p>
+          <li key={`${rowData.invoice_no}`}>
+            <p className={style['in-acp']}><span>接包方: </span> {rowData.worker_name}</p>
+            <p className={style['in-acp']}><span>工单编号: </span> {rowData.order_no}</p>
+            <p className={style['in-acp']}><span>工单名称: </span> {rowData.worksheet_title}</p>
             <div className={style['invoice-btn']}>
-              <Button>开票</Button>
+              <Button data-id={rowData['order_no']} onClick={this.handleApplyInvoice}>开票</Button>
             </div>
           </li>
         )
@@ -168,8 +168,8 @@ class InvoiceMange extends Component {
       row = (rowData, sectionID, rowID) => {
         return (
           <li key={`${rowData.invoice_no}`} onClick={this.handleClick} data-id={rowData['invoice_no']}>
-            <p><span>抬头: </span> {rowData.title}</p>
-            <p><span>发票金额: </span> ￥{rowData.amount}</p>
+            <p className={rowData['status'] === 3 ? style['in-send-title'] : style['in-send']}><span>抬头: </span> {rowData.title}</p>
+            <p className={style['in-send']}><span>发票金额: </span> ￥{rowData.amount}</p>
             <div className={style['invoice-right']}>
               {
                 rowData['status'] === 3
@@ -189,11 +189,11 @@ class InvoiceMange extends Component {
     return (
       <div className='pageBox gray'>
         <Header
-          title='合同列表'
+          title='发票列表'
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
-            this.props.match.history.go(-1)
+            this.props.match.history.push(urls.MINE)
           }}
         />
         <Content>

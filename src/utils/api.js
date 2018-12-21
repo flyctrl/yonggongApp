@@ -386,7 +386,7 @@ export default {
         return FetchSave(prefix + '/invoice/apply', params, 'post', { showloading: false })
       },
       invoiceListTwo(params) { // 代开 发票管理
-        return Fetch(prefix + '/invoice/list', params, 'get')
+        return Fetch(prefix + '/invoice/list/grant', params, 'get')
       },
       invoiceDetail(params) { // 代开发票详情
         return Fetch(prefix + '/invoice/show', params, 'get')

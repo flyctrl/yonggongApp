@@ -9,8 +9,8 @@ import { getQueryString } from 'Contants/tooler'
 import style from './style.css'
 import api from 'Util/api'
 const valModeData = [
-  { value: 1, label: '平台开票' },
-  { value: 2, label: '收款方开票' }
+  { value: 1, label: '亚雀平台' },
+  { value: 2, label: '收款企业' }
 ]
 const totalRadio = [
   { value: 1, label: '纸质发票' },
@@ -71,7 +71,7 @@ class Detail extends Component {
     let { valModeDataValue, totalRadioValue, settleRadioValue } = this.state
     let validateAry
     if (totalRadioValue === 1 && settleRadioValue === 1) {
-      validateAry = ['title', 'content', 'tax_no', 'recv_name', 'recv_mobile', 'recv_address', 'amount']
+      validateAry = ['title', 'content', 'tax_no', 'recv_name', 'recv_mobile', 'recv_address']
       this.props.form.setFields({
         recv_email: {
           value: undefined
@@ -79,7 +79,7 @@ class Detail extends Component {
       })
     }
     if (totalRadioValue === 1 && settleRadioValue === 2) {
-      validateAry = ['title', 'content', 'recv_name', 'recv_mobile', 'recv_email', 'recv_address', 'amount']
+      validateAry = ['title', 'content', 'recv_name', 'recv_mobile', 'recv_email', 'recv_address']
       this.props.form.setFields({
         tax_no: {
           value: undefined
@@ -87,7 +87,7 @@ class Detail extends Component {
       })
     }
     if (totalRadioValue === 2 && settleRadioValue === 1) {
-      validateAry = ['title', 'content', 'tax_no', 'recv_email', 'amount']
+      validateAry = ['title', 'content', 'tax_no', 'recv_email']
       this.props.form.setFields({
         recv_name: {
           value: undefined
@@ -101,7 +101,7 @@ class Detail extends Component {
       })
     }
     if (totalRadioValue === 2 && settleRadioValue === 2) {
-      validateAry = ['title', 'content', 'recv_email', 'amount']
+      validateAry = ['title', 'content', 'recv_email']
       this.props.form.setFields({
         recv_name: {
           value: undefined
@@ -144,7 +144,7 @@ class Detail extends Component {
     const { getFieldProps, getFieldDecorator } = this.props.form
     const { valModeDataValue, totalRadioValue, settleRadioValue, invoiceType, isLoading } = this.state
     return (
-      <div className='pageBox'>
+      <div className={`${style['invoice-box']} pageBox`}>
         <div>
           <Header
             title='申请发票'
@@ -194,18 +194,6 @@ class Detail extends Component {
                       })}
                       clear
                       placeholder='请输入发票抬头'
-                      ref={(el) => { this.autoFocusInst = el }}
-                    ></InputItem>
-                  </List>
-                  <List className={`${style['input-form-list']}`} renderHeader={() => '开票金额(元)'}>
-                    <InputItem
-                      {...getFieldProps('amount', {
-                        rules: [
-                          { required: true, message: '请填写开票金额' },
-                        ]
-                      })}
-                      clear
-                      placeholder='请输入开票金额'
                       ref={(el) => { this.autoFocusInst = el }}
                     ></InputItem>
                   </List>

@@ -139,9 +139,9 @@ class BalanceMange extends Component {
     let { tabIndex } = this.state
     let balanceNo = e.currentTarget.getAttribute('data-id')
     if (parseInt(tabIndex, 10) === 0) {
-      this.props.match.history.push(`${urls.SETTLERECORD}?orderno=${balanceNo}`)
-    } else if (parseInt(tabIndex, 10) === 1) {
       this.props.match.history.push(`${urls.SETTLERECORD}?worksheetno=${balanceNo}`)
+    } else if (parseInt(tabIndex, 10) === 1) {
+      this.props.match.history.push(`${urls.OSETTLERECORD}?orderno=${balanceNo}`)
     }
   }
   render() {

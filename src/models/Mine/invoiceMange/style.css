@@ -23,13 +23,19 @@
         line-height: 23px;
         color:#333333;
         font-size: 14px;
-        font-weight: 500;
-        width:200px;
         & span {
           color: #999999;
           font-size:14px;
-          font-weight: 400;
         }
+      }
+      & .in-acp {
+        width: 254px;
+      }
+      & .in-send {
+        width:254px;
+      }
+      & .in-send-title {
+        width: 210px;
       }
       & .invoice-right {
         float: right;
@@ -37,7 +43,7 @@
           width: 64px;
           height: 51px;
           position: absolute;
-          top: 15px;
+          top: 11px;
           right: 78px;
           border: 1px dashed #666666;
         }
