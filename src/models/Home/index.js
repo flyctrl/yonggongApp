@@ -175,7 +175,7 @@ class Home extends Component {
                       </div>
                       <div>
                         <span className={style['home-mark']}>{project['expense'] || 0}</span>
-                        <b>支出 (万元)</b>
+                        <b>支出 </b>
                       </div>
                     </dd>
                   </dl>
@@ -201,12 +201,11 @@ class Home extends Component {
                     <dd>
                       <div >
                         <span>{settle['wait_pay'] || 0}</span>
-                        <b>代付款 (万元)
-                        </b>
+                        <b>代付款 </b>
                       </div>
                       <div>
                         <span className={style['home-mark']}>{settle['paid'] || 0}</span>
-                        <b>已付款 (万元)</b>
+                        <b>已付款 </b>
                       </div>
                     </dd>
                   </dl>
