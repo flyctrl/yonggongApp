@@ -165,11 +165,11 @@ class SelectClass extends Component {
         paymethodVal: paymethodId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : paymethodVal,
       })
     } else {
-      let { settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, starttime, proId, proVal, edittype } = this.state
+      let { settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, starttime, proId, proVal, edittype, orderno } = this.state
       if (parentClassId !== 'skill' || showtech === false) {
         teachId = 'null'
       }
-      let urlJson = { url: 'HOME', settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, starttime, proId, proVal, paymethodId, paymethodVal, edittype }
+      let urlJson = { url: 'HOME', settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, starttime, proId, proVal, paymethodId, paymethodVal, edittype, orderno }
       console.log('urlJson:', urlJson)
       let skipurl = tooler.parseJsonUrl(urlJson)
       console.log('skipurl:', skipurl)

@@ -276,9 +276,9 @@ class WorkListManage extends Component {
         orderno: rowData['order_no'],
         proId: data['prj_no'],
         proVal: data['prj_name'],
-        classifyId: data['construct'][0]['code'],
-        classifyVal: data['construct'][0]['name'],
-        constructType: data['construct'][0]['construct_type'],
+        classifyId: data['construct'].length > 0 ? data['construct'][0]['code'] : '',
+        classifyVal: data['construct'].length > 0 ? data['construct'][0]['name'] : '',
+        constructType: data['construct'].length > 0 ? data['construct'][0]['construct_type'] : '',
         ...levelJson,
         settleValue: data['valuation_way'],
         starttime: data['start_time']

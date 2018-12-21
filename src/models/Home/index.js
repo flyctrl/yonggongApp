@@ -101,7 +101,7 @@ class Home extends Component {
     return (
       <div className='contentBox antdgray'>
         <div className={style['usr-home-content']}>
-          <Content className={style['home-content']} style={{ top: 0 }}>
+          <Content className={style['home-content']} style={{ top: 0, overflowY: 'scroll' }}>
             <div className={style['home-silder']}>
               {
                 bannerList.length !== 0 ? <div>
