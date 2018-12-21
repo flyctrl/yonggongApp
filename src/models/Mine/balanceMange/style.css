@@ -104,7 +104,7 @@
             float:right;
             width:64px;
             height:28px;
-            line-height: 22px;
+            line-height: 23px;
             margin-top: -7px;
             border:1px solid rgba(18,152,252,1);
             border-radius:3px;
@@ -114,6 +114,9 @@
               font-weight:400;
               color:rgba(18,152,252,1);
             }
+          }
+          & :global(.am-button::before) {
+              border: none
           }
         }
       }
