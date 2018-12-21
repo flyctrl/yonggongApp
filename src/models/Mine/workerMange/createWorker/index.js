@@ -142,6 +142,7 @@ class CreateWorker extends Component {
       reader.onload = async function () {
         Toast.loading('上传中...', 0)
         let url = this.result
+        console.log(url, '1')
         const data = await api.Mine.workManage.realNameFront({
           image: url
         }) || false
@@ -157,6 +158,8 @@ class CreateWorker extends Component {
           }, () => {
             Toast.success('上传成功', 1.5)
           })
+        } else {
+          console.log(url, 2)
         }
       }
       reader.onerror = function () {

@@ -154,11 +154,11 @@ class ContractMange extends Component {
     const row = (rowData, sectionID, rowID) => {
       return (
         <li key={`${rowData.contract_no}`}>
-          <p className={`${style['con-p1']} my-bottom-border`}><span></span>{`${rowData.created_at}`}
+          <p className={`${style['con-p1']} my-bottom-border`}><span>{rowData.created_at}</span>
             <a data-id={rowData.contract_no} onClick={this.handlePact}>查看合同</a>
           </p>
           <p className={style['con-p2']}><span>{`${contractType[tabIndex]}: `}</span>{rowData.username}</p>
-          <p className={style['con-p2']}><span>工单标题：</span>{rowData.worksheet_title}</p>
+          <p className={style['con-p2']}><span>工单标题: </span>{rowData.worksheet_title}</p>
         </li>
       )
     }

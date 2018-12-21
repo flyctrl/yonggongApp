@@ -1,3 +1,4 @@
+
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:21:55
@@ -68,9 +69,7 @@ export const REALNAMEAUTHSUCCESS = `${REALNAMEAUTH}/success` // 个人认证成�
 export const COMPANYAUTHDETAIL = `${MINE}/companyAuthDetail` // 企业认证详情
 export const REALNAMEAUTHDETAIL = `${MINE}/realNameDetail` // 个人认证详情
 export const INVOICEMANGE = `${MINE}/invoiceMange` // 发票管理
-export const INVOICELISTONE = `${INVOICEMANGE}/invoiceListOne` // 代收发票管理
-export const INVOICELISTTWO = `${INVOICEMANGE}/invoiceListTwo` // 代开发票管理
-export const INVOICELISTTWODETAIL = `${INVOICELISTTWO}/detail` // 代开发票详情
+export const INVOICELISTTWODETAIL = `${INVOICEMANGE}/detail` // 代开发票详情
 export const APPLYINVOICE = `${MINE}/invoiceMange/applyInvoice` // 申请发票
 export const CONTRACTMANGE = `${MINE}/contractMange` // 合同管理
 export const ELETAGREEMENT = `${CONTRACTMANGE}/contractMange/eletAgreement` // 电子合同

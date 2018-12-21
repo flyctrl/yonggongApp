@@ -12,6 +12,7 @@ import Address from 'Components/Address'
 import Work from './work'
 import Construct from './construct'
 import Projetct from './proinfo'
+import { getQueryString } from 'Contants/tooler'
 const Item = List.Item
 class CreateProject extends Component {
   constructor(props) {
@@ -34,9 +35,43 @@ class CreateProject extends Component {
       workNum: '', // 施工单位编号
       workCode: '', // 统一社会代码
       proText: '', // 项目概况
+      prjNo: getQueryString('prjNo'), // 是否编辑
+      dataSource: {},
+      isLoading: true
     }
   }
-
+  async componentDidMount () {
+    this.setState({ isLoading: true })
+    let { prjNo } = this.state
+    if (prjNo) {
+      const data = await api.Mine.projectMange.projectDetail({
+        prj_no: prjNo
+      }) || false
+      // console.log(data)
+      if (data) {
+        this.setState({
+          dataSource: data,
+          fileList: data['attachment'] || [],
+          isLoading: false,
+          address: data['construction_place'],
+          constructInfo: data['prj_win_bid_unit'],
+          workInfo: data['prj_construct_unit'],
+          proInfo: data['prj_brief'],
+          constrUnit: data['prj_win_bid_unit'], // 中标单位名称
+          constrNum: data['prj_win_bid_notice_no'], // 中标通知书编号
+          workUnit: data['prj_construct_unit'], // 施工单位名称
+          workNum: data['licence_no'], // 施工单位编号
+          workCode: data['prj_construct_unit_code'], // 统一社会代码
+          proText: data['prj_brief'], // 项目概况
+          coordinate: data['coordinate']
+        })
+      }
+    } else {
+      this.setState({
+        isLoading: false
+      })
+    }
+  }
   handleSelectMap = () => { // 打开地图
     this.setState({
       mapShow: true
@@ -91,7 +126,6 @@ class CreateProject extends Component {
     })
   }
   submitConstrct = (data) => { // 中标信息取值
-    console.log(data, 'con')
     this.setState({
       constructInfo: data['unit'],
       constructShow: false,
@@ -104,7 +138,6 @@ class CreateProject extends Component {
     })
   }
   submitWork = (data) => { // 施工信息取值
-    console.log(data, 'work')
     this.setState({
       workInfo: data['unit'],
       workShow: false,
@@ -119,7 +152,6 @@ class CreateProject extends Component {
     })
   }
   submitProject = (data) => { // 项目概况
-    console.log(data, 'pro')
     this.setState({
       proText: data['info'],
       proInfo: data['info'],
@@ -127,26 +159,37 @@ class CreateProject extends Component {
       proShow: false
     })
   }
+  submitDeleteUp = (data) => { // 删除附件
+    this.setState({
+      fileList: data['fileList']
+    })
+  }
   onErrorClick = (field) => {
     Toast.info(this.props.form.getFieldError(field).join('、'))
   }
   onHandleSubmit = () => { // 提交数据
     let validateAry = ['prj_name', 'construction_place', 'prj_win_bid_unit', 'prj_construct_unit']
-    let { fileList, constrNum, workCode, workNum, proText, coordinate } = this.state
+    let { fileList, constrNum, workCode, workNum, proText, coordinate, prjNo } = this.state
     let postFile = []
     fileList.map((item, index, ary) => {
-      postFile.push(item['path'])
+      postFile.push({ path: item['path'], org_name: item['org_name'] })
     })
     const { getFieldError } = this.props.form
-    Toast.loading('发布中...', 0)
+    Toast.loading('提交中...', 0)
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
         let postData = { ...{ attachment: postFile }, ...values, ...{ prj_win_bid_notice_no: constrNum, prj_construct_unit_code: workCode, licence_no: workNum, prj_brief: proText, coordinate }}
         console.log(postData)
-        const data = await api.Mine.projectMange.createProject(postData) || false
+        let data
+        if (prjNo) {
+          console.log(postData, '1')
+          data = await api.Mine.projectMange.editProject({ prj_no: prjNo, ...postData }) || false
+        } else {
+          data = await api.Mine.projectMange.createProject(postData) || false
+        }
         if (data) {
           Toast.hide()
-          Toast.success('发布成功', 1.5, () => {
+          Toast.success('操作成功', 1.5, () => {
             this.props.match.history.push(urls.PROJECTMANGE)
           })
         }
@@ -166,13 +209,13 @@ class CreateProject extends Component {
 
   render() {
     const { getFieldDecorator, getFieldError, getFieldProps } = this.props.form
-    let { address, workInfo, constructInfo, proInfo, mapShow, constructShow, workShow, proShow } = this.state
+    let { address, workInfo, constructInfo, proInfo, mapShow, constructShow, workShow, proShow, dataSource = {}, prjNo } = this.state
     let { constrUnit, constrNum, workCode, workNum, workUnit, proText, fileList } = this.state
     return (
       <div>
         <div className='pageBox gray' style={{ display: mapShow || constructShow || workShow || proShow ? 'none' : 'block' }}>
           <Header
-            title='创建项目'
+            title={ prjNo ? '编辑项目' : '创建项目'}
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {
@@ -184,6 +227,7 @@ class CreateProject extends Component {
               <List renderHeader={() => '项目信息'}>
                 <div>
                   {getFieldDecorator('prj_name', {
+                    initialValue: dataSource['prj_name'],
                     rules: [
                       { required: true, message: '请输入项目名称' },
                       { pattern: /^.{1,30}$/, message: '项目字数1~30字' }
@@ -198,40 +242,50 @@ class CreateProject extends Component {
                   )}
                 </div>
                 <div>
-                  {getFieldDecorator('project_no')(
+                  {getFieldDecorator('project_no', {
+                    initialValue: dataSource['project_no']
+                  })(
                     <InputItem
                       clear
                       placeholder='请输入项目编号'
                     >项目编号</InputItem>
                   )}
                 </div>
-                <div>
+                <div className={style['con-amount']}>
                   {getFieldDecorator('construction_amount', {
+                    initialValue: dataSource['construction_amount'] ? dataSource['construction_amount'].split('元')[0] : '',
                     rules: [
-                      { pattern: /^[0-9]*$/, message: '格式错误' }
+                      { pattern: /^\d+(\.\d+)?$/, message: '格式错误' }
                     ]
                   })(
                     <InputItem
+                      // maxLength={12}
                       error={!!getFieldError('construction_amount')}
                       onErrorClick={() => this.onErrorClick('construction_amount')}
                       clear
-                      placeholder='请输入总投资'
+                      placeholder='请输入总投资/ 元'
                     >总投资</InputItem>
                   )}
+                  {/* <span>元</span> */}
                 </div>
-                <div>
-                  {getFieldDecorator('construction_area')(
+                <div className={style['con-area']}>
+                  {getFieldDecorator('construction_area', {
+                    initialValue: dataSource['construction_area']
+                  })(
                     <InputItem
+                      // maxLength={12}
                       clear
-                      placeholder='请输入总面积'
+                      placeholder='请输入总面积/ 平方米'
                     >总面积</InputItem>
                   )}
+                  {/* <span>平方米</span> */}
                 </div>
                 <div className={style['input-ellipsis']} onClick={this.handleSelectMap}>
                   <Item arrow='horizontal' extra={getFieldError('construction_place') ? <div className='colorRed'>未选择</div> : address}>施工地址<em className={style['asterisk']}>*</em></Item>
                   <div style={{ display: 'none' }}>
                     <InputItem
                       {...getFieldProps('construction_place', {
+                        initialValue: dataSource['construction_place'],
                         rules: [
                           { required: true, message: '请选择施工地址' }
                         ],
@@ -246,6 +300,7 @@ class CreateProject extends Component {
                   <div style={{ display: 'none' }}>
                     <InputItem
                       {...getFieldProps('prj_win_bid_unit', {
+                        initialValue: dataSource['prj_win_bid_unit'],
                         rules: [
                           { required: true, message: '请选择中标单位信息' }
                         ],
@@ -260,6 +315,7 @@ class CreateProject extends Component {
                   <div style={{ display: 'none' }}>
                     <InputItem
                       {...getFieldProps('prj_construct_unit', {
+                        initialValue: dataSource['prj_construct_unit'],
                         rules: [
                           { required: true, message: '请选择中标单位信息' }
                         ],
@@ -274,12 +330,13 @@ class CreateProject extends Component {
                   <div style={{ display: 'none' }}>
                     <InputItem
                       {...getFieldProps('prj_brief', {
+                        initialValue: dataSource['prj_brief']
                       })}
                     />
                   </div>
                 </div>
               </List>
-              <div className={style['pro-btn']} onClick={this.onHandleSubmit}>创建项目</div>
+              <div className={style['pro-btn']} onClick={this.onHandleSubmit}>{ prjNo ? '编辑项目' : '创建项目'}</div>
             </form>
           </Content>
         </div>
@@ -287,13 +344,13 @@ class CreateProject extends Component {
           mapShow ? <Address title='施工地址' onClose={() => this.closeAddress()} onSubmit={(mapJson) => this.submitAddress(mapJson)} /> : null
         }
         {
-          constructShow ? <Construct unit={constrUnit} num={constrNum} onClose={() => this.closeConstrct()} onSubmit={(conJson) => this.submitConstrct(conJson)}/> : null
+          constructShow ? <Construct unit={constrUnit} num={constrNum} onClose={this.closeConstrct} onSubmit={(conJson) => this.submitConstrct(conJson)}/> : null
         }
         {
-          workShow ? <Work unit={workUnit} num={workNum} code={workCode} onClose={() => this.closeWork()} onSubmit={(workJson) => this.submitWork(workJson)}/> : null
+          workShow ? <Work unit={workUnit} num={workNum} code={workCode} onClose={this.closeWork} onSubmit={(workJson) => this.submitWork(workJson)}/> : null
         }
         {
-          proShow ? <Projetct info={proText} fileList={fileList} onClose={() => this.closeProject()} onSubmit={(proJson) => this.submitProject(proJson)}/> : null
+          proShow ? <Projetct info={proText} onDelete={this.submitDeleteUp} fileList={fileList} onClose={this.closeProject} onSubmit={(proJson) => this.submitProject(proJson)}/> : null
         }
       </div>
     )

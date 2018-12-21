@@ -1,36 +1,234 @@
 import React, { Component } from 'react'
-import { Header, Content } from 'Components'
-import { Icon } from 'antd-mobile'
-import history from 'Util/history'
+import { Header, Content, DefaultPage } from 'Components'
+import { ListView, PullToRefresh, Tabs, Button, Icon } from 'antd-mobile'
 import * as urls from 'Contants/urls'
+import * as tooler from 'Contants/tooler'
 import style from './style.css'
+import api from 'Util/api'
+import ReactDOM from 'react-dom'
+import zuofei from 'Src/assets/zuofei.png'
+import { invoiceStatus } from 'Contants/fieldmodel'
+const NUM_ROWS = 20
+let tabType = [
+  { title: '代收发票' },
+  { title: '代开发票' }
+]
 class InvoiceMange extends Component {
+  constructor(props) {
+    super(props)
+    const dataSource = new ListView.DataSource({
+      rowHasChanged: (row1, row2) => row1 !== row2,
+    })
+    this.state = {
+      invoiceList: [],
+      isLoading: true,
+      dataSource,
+      refreshing: true,
+      height: document.documentElement.clientHeight,
+      pageIndex: 1,
+      pageNos: 1,
+      nodata: false,
+      tabIndex: tooler.getQueryString('tabIndex') || 0,
+    }
+  }
+  genData = async (pIndex = 1, tabIndex = 0) => {
+    let data
+    if (tabIndex === 0 || tabIndex === '0') {
+      data = await api.Mine.invoiceMange.invoiceListOne({
+        page: pIndex,
+        limit: NUM_ROWS
+      }) || false
+    } else if (tabIndex === 1 || tabIndex === '1') {
+      data = await api.Mine.invoiceMange.invoiceListTwo({
+        page: pIndex,
+        limit: NUM_ROWS
+      }) || false
+    }
+    if (data['currPageNo'] === 1 && data['list'].length === 0) {
+      document.body.style.overflow = 'hidden'
+      this.setState({
+        nodata: true,
+        pageNos: data['pageNos']
+      })
+    } else {
+      document.body.style.overflow = 'auto'
+      this.setState({
+        nodata: false,
+        pageNos: data['pageNos']
+      })
+    }
+    return await data['list'] || []
+  }
+  componentDidMount() {
+    let { tabIndex } = this.state
+    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 80 - 9
+    this.genData(1, tabIndex).then((rdata) => {
+      this.rData = rdata
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        height: hei,
+        refreshing: false,
+        isLoading: false,
+      })
+    })
+  }
+  onEndReached = (event) => {
+    console.log('onEndReached')
+    if (this.state.isLoading) {
+      return
+    }
+    let { pageIndex, pageNos, tabIndex } = this.state
+    // console.log('reach end', event)
+    this.setState({ isLoading: true })
+    let newIndex = pageIndex + 1
+    if (newIndex > pageNos) {
+      return false
+    }
+    console.log('pageIndex', newIndex)
+    this.genData(newIndex, tabIndex).then((rdata) => {
+      this.rData = [...this.rData, ...rdata]
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        isLoading: false,
+        pageIndex: newIndex
+      })
+    })
+  }
+
+  onRefresh = () => {
+    let { tabIndex } = this.state
+    console.log('onRefresh')
+    this.setState({ refreshing: true, isLoading: true, pageIndex: 1 })
+    // simulate initial Ajax
+    this.genData(1, tabIndex).then((rdata) => {
+      this.rData = rdata
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        refreshing: false,
+        isLoading: false,
+      })
+    })
+  }
+  handleTabsChange = (tabs, index) => {
+    this.props.match.history.replace(`?tabIndex=${index}`)
+    const dataSource = new ListView.DataSource({
+      rowHasChanged: (row1, row2) => row1 !== row2,
+    })
+    this.setState({
+      tabIndex: index,
+      refreshing: true,
+      isLoading: true,
+      pageIndex: 1,
+      pageNos: 1,
+      dataSource
+    })
+    this.genData(1, index).then((rdata) => {
+      this.rData = rdata
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.rData),
+        refreshing: false,
+        isLoading: false,
+      })
+    })
+  }
+  handleClick = (e) => { // 查看详情
+    let invoiceNo = e.currentTarget.getAttribute('data-id')
+    this.props.match.history.push(`${urls.INVOICELISTTWODETAIL}?id=${invoiceNo}`)
+  }
+  handleApplyInvoice = (e) => { // 申请开票
+    let applyId = e.currentTarget.getAttribute('data-id')
+    this.props.match.history.push(`${urls.APPLYINVOICE}?order_no=${applyId}`)
+  }
   render() {
+    let { isLoading, nodata, tabIndex } = this.state
+    const footerShow = () => {
+      if (isLoading) {
+        return null
+      } else if (nodata) {
+        return <DefaultPage type='noinvoice' />
+      } else {
+        return ''
+      }
+    }
+    let row
+    if (parseInt(tabIndex, 10) === 0) {
+      row = (rowData, sectionID, rowID) => {
+        return (
+          <li key={`${rowData.invoice_no}`} data-id={rowData['order_no']} onClick={this.handleApplyInvoice}>
+            <p><span>接包方: </span> {rowData.worker_name}</p>
+            <p><span>工单编号: </span> {rowData.order_no}</p>
+            <p><span>工单名称: </span> {rowData.worksheet_title}</p>
+            <div className={style['invoice-btn']}>
+              <Button>开票</Button>
+            </div>
+          </li>
+        )
+      }
+    } else {
+      row = (rowData, sectionID, rowID) => {
+        return (
+          <li key={`${rowData.invoice_no}`} onClick={this.handleClick} data-id={rowData['invoice_no']}>
+            <p><span>抬头: </span> {rowData.title}</p>
+            <p><span>发票金额: </span> ￥{rowData.amount}</p>
+            <div className={style['invoice-right']}>
+              {
+                rowData['status'] === 3
+                  ? <img src={zuofei}/>
+                  : null
+              }
+              <div
+                className={style['invoice-status']}
+                style={{ color: rowData['status'] === 1 ? '#FCA424' : rowData['status'] === 2 ? '#00BECC' : '#999999' }}>
+                {invoiceStatus[rowData['status']]}<Icon type='right' size='lg' />
+              </div>
+            </div>
+          </li>
+        )
+      }
+    }
     return (
-      <div className={`${style['invoiceBox']} pageBox`}>
+      <div className='pageBox gray'>
         <Header
-          title='发票管理'
+          title='合同列表'
           leftIcon='icon-back'
           leftTitle1='返回'
           leftClick1={() => {
-            history.push(urls.MINE)
+            this.props.match.history.go(-1)
           }}
         />
         <Content>
-          <ul className={style['invoice-list']}>
-            <li onClick={() => { history.push(urls.INVOICELISTONE) }}>
-              <span>待收发票</span>
-              <nav >
-                <Icon type='right' size='md' color='#ccc'/>
-              </nav>
-            </li>
-            <li onClick={() => { history.push(urls.INVOICELISTTWO) }}>
-              <span>待开发票</span>
-              <nav >
-                <Icon type='right' size='md' color='#ccc'/>
-              </nav>
-            </li>
-          </ul>
+          <div className={style['invoice-page']}>
+            <Tabs tabs={tabType}
+              page={parseInt(tabIndex, 10)}
+              tabBarTextStyle={{ fontSize: '15px', color: '#999999' }}
+              tabBarActiveTextColor='#1298FC'
+              tabBarUnderlineStyle={{ borderColor: '#0098F5', width: '12%', marginLeft: '18.5%' }}
+              onChange={this.handleTabsChange}
+            >
+              <ul className={style['invoice-list']} style={{ height: '100%' }}>
+                <ListView
+                  ref={(el) => { this.lv = el }}
+                  dataSource={this.state.dataSource}
+                  renderFooter={() => footerShow()}
+                  renderRow={row}
+                  style={{
+                    height: this.state.height,
+                  }}
+                  className={style['job-list']}
+                  pageSize={NUM_ROWS}
+                  // onScroll={(e) => { console.log('onscroll') }}
+                  pullToRefresh={<PullToRefresh
+                    refreshing={this.state.refreshing}
+                    onRefresh={this.onRefresh}
+                  />}
+                  onEndReachedThreshold={10}
+                  initialListSize={NUM_ROWS}
+                  scrollRenderAheadDistance={120}
+                  onEndReached={this.onEndReached}
+                />
+              </ul>
+            </Tabs>
+          </div>
         </Content>
       </div>
     )

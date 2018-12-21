@@ -16,19 +16,23 @@ dl, dt, dd, p, span {
 html :global(.am-list-footer) {
   text-align: center;
 }
-html .message-content :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab::after) {
-  height: 0;
-}
 .message-content {
-  & :global(.am-list-body::before) {
-    height: 0!important;
+  & .msg-box {
+    & :global(.am-list-body::before) {
+      height: 0;
+    }
+    & :global(.am-list-body::after) {
+      height: 0;
+    }
   }
-  & :global(.am-list-body::after) {
-    height: 0!important;
+  & :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab::after) {
+    height: 0;
+  }
+  & :global(.am-tabs-content-wrap) {
+    margin-top:10px;
   }
 }
 .msg-box {
-  margin-top: 10px;
   width: 100%;
   overflow-y: auto;
 }

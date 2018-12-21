@@ -42,6 +42,18 @@ class DefaultPage extends Component {
         url: require('Src/assets/defaultpic/nocontract.png'),
         btn: null
       },
+      {
+        name: 'nosettle',
+        desc: '暂无结算',
+        url: require('Src/assets/defaultpic/nosettle.png'),
+        btn: null
+      },
+      {
+        name: 'noinvoice',
+        desc: '没有发票',
+        url: require('Src/assets/defaultpic/noinvoice.png'),
+        btn: null
+      },
     ]
   }
   render() {

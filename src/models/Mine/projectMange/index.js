@@ -8,7 +8,7 @@ import history from 'Util/history'
 import style from './style.css'
 import { getQueryString } from 'Contants/tooler'
 import ReactDOM from 'react-dom'
-import { ListView, PullToRefresh, Tabs } from 'antd-mobile'
+import { ListView, PullToRefresh, Tabs, Button } from 'antd-mobile'
 const NUM_ROWS = 20
 class ProjectMange extends Component {
   constructor(props) {
@@ -128,6 +128,11 @@ class ProjectMange extends Component {
     let id = e.currentTarget.getAttribute('data-id')
     history.push(urls.PROJECTDETAIL + '?id=' + id + '&tabIndex=' + tabIndex + '&url=PROJECTMANGE')
   }
+  handleEdit = (e) => {
+    let prjNo = e.currentTarget.getAttribute('data-id')
+    e.stopPropagation()
+    this.props.match.history.push(`${urls['CREATEPROJECT']}?prjNo=${prjNo}`)
+  }
   render() {
     let { tabIndex, isLoading, nodata } = this.state
     const footerShow = () => {
@@ -144,13 +149,17 @@ class ProjectMange extends Component {
         <li key={rowData['prj_no']} data-id={rowData['prj_no']} onClick={this.handleDetail} className='my-bottom-border'>
           <section>
             <h4>{rowData['prj_name']}</h4>
-            {
-              // <p><span>{rowData['construction_amount']}元</span><em>{rowData['construction_area']}㎡</em></p>
-            }
             <p className='ellipsis'>施工地址：{rowData['construction_place']}</p>
             <time>{rowData['created_at']}</time>
           </section>
-          <a>{projectStatus[rowData['status']]['title']}</a>
+          <div className={style['prj-btn']}>
+            {
+              rowData['status'] === 1
+                ? <Button data-id={rowData['prj_no']} onClick={this.handleEdit} type='primary'>编辑</Button>
+                : null
+            }
+            <a>{projectStatus[rowData['status']]['title']}</a>
+          </div>
         </li>
       )
     }
@@ -172,9 +181,9 @@ class ProjectMange extends Component {
           <div className={style['project-mange-box']}>
             <Tabs tabs={projectStatus}
               page={parseInt(tabIndex, 10)}
-              tabBarTextStyle={{ fontSize: '12px', color: '#B2B6BC' }}
-              tabBarActiveTextColor='#0467e0'
-              tabBarUnderlineStyle={{ borderColor: '#0467e0', width: '12%', marginLeft: '6.5%' }}
+              tabBarTextStyle={{ fontSize: '12px', color: '#999999' }}
+              tabBarActiveTextColor='#1298FC'
+              tabBarUnderlineStyle={{ borderColor: '#0098F5', width: '12%', marginLeft: '6.5%' }}
               onChange={this.handleTabsChange}
             >
 

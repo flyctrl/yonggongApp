@@ -1,25 +1,91 @@
-
-html .invoice-list :global(.am-button-ghost::before) {
-  border-color: #0467E0;
-}
-.invoiceBox {
-  background: #F3F4F5;
-  & .invoice-list {
-    & li {
-      padding: 20px;
-      height: 25px;
-      background: #fff;
-      overflow: hidden;
-      margin-top: 10px;
-          & span {
-            color: #8A96A0;
-            float: left;
-            line-height: 20px;
-          }
-      & nav {
-        float: right;
-        line-height: 25px;
+.invoice-page {
+  & :global(.am-tabs) {
+    & :global(.am-tabs-tab-bar-wrap) {
+      & :global(.am-tabs-default-bar-tab::after) {
+        height: 0;
       }
+    }
+  }
+ & .invoice-list {
+    width: 100%;
+    overflow-y: auto;
+    & :global(.am-list-body) {
+      background: #F6F5FA;
+    }
+    & li {
+      position: relative;
+      overflow: hidden;
+      padding:15px;
+      margin-top:8px;
+      background:white;
+      & p {
+        float: left;
+        line-height: 23px;
+        color:#333333;
+        font-size: 14px;
+        font-weight: 500;
+        width:200px;
+        & span {
+          color: #999999;
+          font-size:14px;
+          font-weight: 400;
+        }
+      }
+      & .invoice-right {
+        float: right;
+        & img {
+          width: 64px;
+          height: 51px;
+          position: absolute;
+          top: 15px;
+          right: 78px;
+          border: 1px dashed #666666;
+        }
+        & .invoice-status {
+          position: absolute;
+          right:10px;
+          top:25px;
+          display: flex;
+          font-size:16px;
+          align-items: center;
+          & svg {
+            width:25px;
+            height:26px;
+            color:#999999;
+          }
+        }
+      }
+     
+      & .invoice-btn {
+        float: right;
+        margin-top: -26px;
+        & :global(.am-button) {
+          width:62px;
+          height: 30px;
+          border:1px solid rgba(18,152,252,1);
+          border-radius:3px;
+          line-height: 26px;
+          & span {
+            font-size: 14px;
+            font-family:SourceHanSansCN-Regular;
+            font-weight:400;
+            color:rgba(18,152,252,1);
+          }
+        }
+      }
+    }
+  }
+}
+.detail-box {
+  .control-btn {
+    width: 100%;
+    padding: 20px 0;
+    overflow: hidden;
+    & :global(.am-button-primary) {
+      width: 140px;
+      background: rgba(4, 103, 244, 1.0);
+      float: left;
+      margin-left: 10px;
     }
   }
 }

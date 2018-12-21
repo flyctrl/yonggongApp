@@ -13,34 +13,40 @@
       background: #F6F5FA;
     }
     & li {
-      padding: 0 16px 10px;
+      padding: 0 16px 5px;
       margin-top:8px;
       background:white;
       & p {
-        height: 16px;
+        height: 14px;
         line-height: 16px;
-        margin: 15px 0;
+        margin: 10px 0;
         color:#333333;
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 400;
         & span {
-          color: #999999;
-          font-size:15px;
+          color: #666666;
+          font-size:14px;
+          font-weight: 400;
         }
         & a {
           float: right;
           color: #1298FC;
-          color: 16px;
+          font-size: 15px;
           font-weight: 400
         }
       }
       & .con-p1 {
         line-height: 45px;
         height: 45px;
-        font-size: 15px;
+        font-size: 14px;
         color: #666666;
         margin: 0;
         font-weight: 100;
+      }
+      & .con-p2 {
+        & span {
+          color: #999999;
+        }
       }
     }
   }
