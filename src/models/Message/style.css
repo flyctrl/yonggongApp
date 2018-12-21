@@ -16,9 +16,6 @@ dl, dt, dd, p, span {
 html :global(.am-list-footer) {
   text-align: center;
 }
-html .message-content :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab::after) {
-  height: 0;
-}
 .message-content {
   & :global(.am-list-body::before) {
     height: 0!important;
@@ -26,9 +23,11 @@ html .message-content :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab:
   & :global(.am-list-body::after) {
     height: 0!important;
   }
+  & :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab::after) {
+    height: 0;
+  }
 }
 .msg-box {
-  margin-top: 10px;
   width: 100%;
   overflow-y: auto;
 }

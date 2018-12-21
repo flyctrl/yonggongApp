@@ -382,7 +382,7 @@ export default {
       invoiceListOne(params) { // 代收 发票管理
         return Fetch(prefix + '/invoice/list/to_apply', params, 'get')
       },
-      applyInvoice(params) { // 代收申请发票
+      applyInvoice(params) { // 发包方用户申请开票
         return FetchSave(prefix + '/invoice/apply', params, 'post', { showloading: false })
       },
       invoiceListTwo(params) { // 代开 发票管理
@@ -391,7 +391,7 @@ export default {
       invoiceDetail(params) { // 代开发票详情
         return Fetch(prefix + '/invoice/show', params, 'get')
       },
-      applyInvoices(params) { // 代开 申请发票
+      applyInvoices(params) { // 收款企业的开票审核
         return FetchSave(prefix + '/invoice/grant', params, 'post', { showloading: false })
       },
       applyInvoicePlatform(params) { // 申请发票可选平台

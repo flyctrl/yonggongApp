@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
-import { ListView, PullToRefresh, Tabs, Button } from 'antd-mobile'
+import { ListView, PullToRefresh, Tabs, Button, Icon } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
 import api from 'Util/api'
 import ReactDOM from 'react-dom'
-// import { invoiceStatus } from 'Contants/fieldmodel'
+import zuofei from 'Src/assets/zuofei.png'
+import { invoiceStatus } from 'Contants/fieldmodel'
 const NUM_ROWS = 20
 let tabType = [
   { title: '代收发票' },
@@ -130,9 +131,13 @@ class InvoiceMange extends Component {
       })
     })
   }
-  handlePact = (e) => {
+  handleClick = (e) => { // 查看详情
     let invoiceNo = e.currentTarget.getAttribute('data-id')
-    this.props.match.history.push(`${urls.ELETAGREEMENT}?url=CONTRACTMANGE&invoice_no=${invoiceNo}`)
+    this.props.match.history.push(`${urls.INVOICELISTTWODETAIL}?id=${invoiceNo}`)
+  }
+  handleApplyInvoice = (e) => { // 申请开票
+    let applyId = e.currentTarget.getAttribute('data-id')
+    this.props.match.history.push(`${urls.APPLYINVOICE}?order_no=${applyId}`)
   }
   render() {
     let { isLoading, nodata, tabIndex } = this.state
@@ -145,17 +150,41 @@ class InvoiceMange extends Component {
         return ''
       }
     }
-    const row = (rowData, sectionID, rowID) => {
-      return (
-        <li key={`${rowData.invoice_no}`}>
-          <p className={style['invoice-p2']}><span>接包方: </span>{rowData.worker_name}</p>
-          <p className={style['invoice-p2']}><span>工单编号: </span>{rowData.order_no}</p>
-          <p className={style['invoice-p2']}><span>工单名称: </span>{rowData.worksheet_title}</p>
-          <div className={style['invoice-btn']}>
-            <Button>开票</Button>
-          </div>
-        </li>
-      )
+    let row
+    if (parseInt(tabIndex, 10) === 0) {
+      row = (rowData, sectionID, rowID) => {
+        return (
+          <li key={`${rowData.invoice_no}`} data-id={rowData['order_no']} onClick={this.handleApplyInvoice}>
+            <p><span>接包方: </span> {rowData.worker_name}</p>
+            <p><span>工单编号: </span> {rowData.order_no}</p>
+            <p><span>工单名称: </span> {rowData.worksheet_title}</p>
+            <div className={style['invoice-btn']}>
+              <Button>开票</Button>
+            </div>
+          </li>
+        )
+      }
+    } else {
+      row = (rowData, sectionID, rowID) => {
+        return (
+          <li key={`${rowData.invoice_no}`} onClick={this.handleClick} data-id={rowData['invoice_no']}>
+            <p><span>抬头: </span> {rowData.title}</p>
+            <p><span>发票金额: </span> ￥{rowData.amount}</p>
+            <div className={style['invoice-right']}>
+              {
+                rowData['status'] === 3
+                  ? <img src={zuofei}/>
+                  : null
+              }
+              <div
+                className={style['invoice-status']}
+                style={{ color: rowData['status'] === 1 ? '#FCA424' : rowData['status'] === 2 ? '#00BECC' : '#999999' }}>
+                {invoiceStatus[rowData['status']]}<Icon type='right' size='lg' />
+              </div>
+            </div>
+          </li>
+        )
+      }
     }
     return (
       <div className='pageBox gray'>
