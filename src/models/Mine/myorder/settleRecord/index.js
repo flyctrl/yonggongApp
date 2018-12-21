@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { List, ListView, PullToRefresh } from 'antd-mobile'
-import { Header, Content } from 'Components'
+import { Header, Content, NewIcon } from 'Components'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
@@ -143,30 +143,28 @@ class SettleRecord extends Component {
           <span>{status[rowData['status']]}</span>
         </dt>
         <dd>
-          <span><em>价格：</em>{rowData['amount']}</span>
-        </dd>
-        <dd>
-          <span><em>付款方式：</em>{
+          <span><NewIcon type='icon-fukuanfangshi' />{
             payModeRadio.filter(i => {
               return i['value'] === rowData['pay_way']
             })[0]['label']
           }</span>
-          <span><em>计价方式：</em>{
+          <span><NewIcon type='icon-jijiafangshi' />{
             valuation[rowData['pay_way']]
           }</span>
+          <span><NewIcon type='icon-jine' /><i>{rowData['amount']}</i></span>
         </dd>
         <dd>
-          <span><em>结算类型：</em>{
+          <span><NewIcon type='icon-jiesuanleixing' />{
             settletype[rowData['settle_type']]
           }</span>
-          <span><em>结算周期：</em>{
+          <span><NewIcon type='icon-jiesuanzhouqi' />按{
             paymethod.filter(i => {
               return i['value'] === rowData['settle_period']
             })[0]['label']
-          }</span>
+          }结算</span>
         </dd>
         <dd>
-          <p><em>周期：</em>{
+          <p><NewIcon type='icon-zhouqi' />{
             rowData['period'].length > 1 ? rowData['period'].map((item, index) => {
               return index === 0 ? <i key={index}>{item} ~ </i> : <i key={index}>{item}</i>
             }) : rowData['period'][0]
@@ -182,7 +180,7 @@ class SettleRecord extends Component {
         leftClick1={() => { this.props.match.history.go(-1) }}
       />
       <Content style={{ overflow: 'hidden' }}>
-        <List renderHeader={() => !isLoading ? <p><span>已付：¥{amount}</span><span>待付：¥{waitAmount}</span></p> : ''} className={style['settle-list']}>
+        <List renderHeader={() => !isLoading ? <p><span>已付：{amount}</span><span>待付：<i>{waitAmount}</i></span></p> : ''} className={style['settle-list']}>
           <ListView
             ref={(el) => {
               this.lv = el

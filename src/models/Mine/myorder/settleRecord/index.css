@@ -8,6 +8,9 @@ html:not([data-scale]) .settle-list :global(.am-list-body .am-list-item:last-chi
     & p {
       & span {
         margin-right: 10px;
+        & i {
+          color: #FA6B6D;
+        }
       }
     }
   }
@@ -16,7 +19,7 @@ html:not([data-scale]) .settle-list :global(.am-list-body .am-list-item:last-chi
   }
   & .pending-model {
     background: #fff;
-    padding-bottom: 10px;
+    padding-bottom: 8px;
     margin-top: 10px;
     &.tobe {
       & dt {
@@ -43,6 +46,7 @@ html:not([data-scale]) .settle-list :global(.am-list-body .am-list-item:last-chi
       padding: 0 10px;
       height: 44px;
       overflow: hidden;
+      margin-bottom: 5px;
       & time {
         float: left;
         line-height: 44px;
@@ -62,11 +66,21 @@ html:not([data-scale]) .settle-list :global(.am-list-body .am-list-item:last-chi
         float: left;
         height: 30px;
         line-height: 30px;
-        width: 50%;
+        width: 32%;
+        margin-right: 1%;
         color: #333;
         font-size: 14px;
-        & em {
-          color: #999;
+        & svg {
+          color: #999999;
+          width: 14px;
+          height: 14px;
+          margin-right: 5px;
+        }
+        &:nth-child(3) {
+          text-indent: 10px;
+          & i {
+            color: #FA6B6D;
+          }
         }
       }
       & p {
@@ -75,8 +89,11 @@ html:not([data-scale]) .settle-list :global(.am-list-body .am-list-item:last-chi
         width: 100%;
         color: #333;
         font-size: 14px;
-        & em {
-          color: #999;
+        & svg {
+          color: #999999;
+          width: 14px;
+          height: 14px;
+          margin-right: 5px;
         }
       }
     }
