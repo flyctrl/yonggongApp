@@ -20,6 +20,7 @@ class SelectClass extends Component {
     super(props)
     this.state = {
       showIndex: 0,
+      settleId: parseInt(tooler.getQueryString('settleValue')),
       settleValue: parseInt(tooler.getQueryString('settleValue')) || 2,
       proId: tooler.getQueryString('proId') || '',
       proVal: tooler.getQueryString('proVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('proVal'))) : '请选择',
@@ -75,9 +76,10 @@ class SelectClass extends Component {
   contestPaymethod = (paymethodId = this.state.paymethodId) => {
     let newary = []
     let newVal = ''
-    if (paymethodId !== '') {
+    let { orderno } = this.state
+    if (paymethodId !== '' && orderno !== '') {
       paymethod.map(item => {
-        if (paymethodId <= item['value']) {
+        if (Number(paymethodId) >= item['value']) {
           newary.push(item)
           if (parseInt(paymethodId) === item['value']) {
             newVal = item['label']
@@ -195,7 +197,7 @@ class SelectClass extends Component {
     }
   }
   render() {
-    let { orderno, url, settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, paymethodVal, paymethodAry, teachId } = this.state
+    let { orderno, url, settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, paymethodVal, paymethodAry, teachId, settleId } = this.state
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
         <Header
@@ -229,7 +231,7 @@ class SelectClass extends Component {
           </List>
           <List renderHeader={() => '选择计价方式'} className={`${style['select-class-list']} ${style['settle-type-list']}`}>
             {valuationWay.map(i => (
-              <RadioItem key={i.value} checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
+              <RadioItem key={i.value} disabled={ orderno !== '' && settleId === 2 } checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
                 {i.label}
               </RadioItem>
             ))}
