@@ -86,6 +86,9 @@ export default {
     getAptitude(params) { // 获取工种列表和企业资质列表
       return Fetch('/common/aptitude', params, 'get')
     },
+    getCompanyApte(params) { // 获取企业资质
+      return Fetch('/common/company/aptitude', params, 'get')
+    },
     getCate(params) { // 获取施工内容
       return Fetch('/common/aptitude/cate', params, 'get')
     },

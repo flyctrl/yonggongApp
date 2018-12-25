@@ -23,8 +23,8 @@ const valuation = {
   2: '计时'
 }
 const settletype = {
-  1: '按固定周期',
-  2: '按进度'
+  1: '按周期结算',
+  2: '按进度结算'
 }
 const NUM_ROWS = 20
 const defaultSource = new ListView.DataSource({
@@ -164,13 +164,13 @@ class SettleRecord extends Component {
               paymethod.filter(i => {
                 return i['value'] === rowData['settle_period']
               })[0]['label']
-            }计算</span></p>
+            }计价</span></p>
             <p><NewIcon type='icon-fukuanfangshi' /><span>{
               payModeRadio.filter(i => {
                 return i['value'] === rowData['pay_way']
               })[0]['label']
             }</span></p>
-            <p><NewIcon type='icon-jijiafangshi' /><span>{valuation[rowData['pay_way']]}</span></p>
+            <p><NewIcon type='icon-jijiafangshi' /><span>{valuation[rowData['valuation_way']]}</span></p>
           </footer>
         </dd>
       </dl>

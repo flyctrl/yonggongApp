@@ -37,15 +37,41 @@ class FormBox extends Component {
       valuationUnit: '',
       chargeSizeData: [],
       urlJson: tooler.parseURLParam(),
-      remark: ''
+      remark: '',
+      quickData: {}
     }
   }
   componentDidMount() {
+    let { edittype } = this.state.urlJson
+    if (edittype === '3') {
+      let quickData = storage.get('quickData')
+      this.setState({
+        quickData: quickData,
+        valuationUnit: [quickData['valuation_unit_code']],
+        fileList: quickData['attachment'],
+        addressObj: {
+          position: {
+            lng: quickData['coordinate']['lng'],
+            lat: quickData['coordinate']['lat'],
+            cityCode: quickData['city_code']
+          }
+        },
+        address: quickData['construction_place'],
+        remark: quickData['remark']
+      })
+    }
     this.getValuationUnit()
   }
   getValuationUnit = async () => {
-    let { settleValue } = this.state.urlJson
+    let { settleValue, orderno } = this.state.urlJson
+    let repush = {}
+    if (orderno !== '' && typeof orderno !== 'undefined') {
+      repush = {
+        p_order_no: orderno
+      }
+    }
     let data = await api.Common.getUnitlist({
+      ...repush,
       type: settleValue,
       worksheet_type: 3
     })
@@ -76,14 +102,9 @@ class FormBox extends Component {
         newFileList.push(item)
       }
     })
-    const data = await api.Common.delAttch({
-      path: param['path']
-    }) || false
-    if (data) {
-      this.setState({
-        fileList: newFileList
-      })
-    }
+    this.setState({
+      fileList: newFileList
+    })
   }
   handleSelectMap = () => {
     this.setState({
@@ -114,7 +135,7 @@ class FormBox extends Component {
   }
   onSubmit = () => { // 提交
     let { addressObj, fileList } = this.state
-    let { classifyId, constructType, teachId, proId, orderno } = this.state.urlJson
+    let { classifyId, constructType, teachId, proId, orderno, edittype, editSheetno } = this.state.urlJson
     let attachment = []
     fileList.map(item => {
       attachment.push(item['path'])
@@ -144,13 +165,28 @@ class FormBox extends Component {
         }
         console.log(postJson)
         Toast.loading('提交中...', 0)
-        let data = await api.PushOrder.quick(postJson) || false
+        let data
+        if (edittype === '3') {
+          let newPostJson = {
+            ...postJson,
+            worksheet_no: editSheetno
+          }
+          data = await api.PushOrder.editQuick(newPostJson) || false
+        } else {
+          data = await api.PushOrder.quick(postJson) || false
+        }
         if (data) {
           Toast.hide()
-          Toast.success('发布成功', 1, () => {
-            storage.remove('quickData')
-            this.props.match.history.push(`${urls.QKORDERRESULT}?worksheetno=${data['worksheet_no']}`)
-          })
+          if (edittype === '3') {
+            Toast.success('修改成功', 1, () => {
+              storage.remove('quickData')
+              this.props.match.history.push(`${urls.WORKLISTMANAGE}?listType=3`)
+            })
+          } else {
+            Toast.success('发布成功', 1, () => {
+              this.props.match.history.push(`${urls.QKORDERRESULT}?worksheetno=${data['worksheet_no']}`)
+            })
+          }
         }
       }
     })
@@ -158,9 +194,9 @@ class FormBox extends Component {
   render() {
     console.log(this.state)
     const { getFieldProps, getFieldError, getFieldValue } = this.props.form
-    let { fileList, remarkShow, startDate, endDate, mapShow, address, valuationUnit, chargeSizeData, remark } = this.state
+    let { fileList, remarkShow, startDate, endDate, mapShow, address, valuationUnit, chargeSizeData, remark, quickData } = this.state
     console.log('fileList:', fileList)
-    let { settleValue, starttime, orderno } = this.state.urlJson
+    let { settleValue, starttime, orderno, edittype } = this.state.urlJson
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
@@ -216,6 +252,7 @@ class FormBox extends Component {
                     { required: true, message: '请输入标题' },
                     { pattern: /^.{5,30}$/, message: '标题字数5~30字' }
                   ],
+                  initialValue: edittype === '3' ? quickData['title'] : ''
                 })}
                 clear
                 error={!!getFieldError('title')}
@@ -230,6 +267,7 @@ class FormBox extends Component {
                     { required: true, message: '请输入人数' },
                     { pattern: /^[0-9]*[1-9][0-9]*$/, message: '人数格式错误' }
                   ],
+                  initialValue: edittype === '3' ? quickData['people_number'] : ''
                 })}
                 type='digit'
                 clear
@@ -244,6 +282,7 @@ class FormBox extends Component {
                       { required: true, message: '请输入单价' },
                       { pattern: /^[1-9]|([1-9][0-9]+)$/, message: '单价需要大于1元' }
                     ],
+                    initialValue: edittype === '3' ? Number(quickData['valuation_unit_price']) / 100 : ''
                   })}
                   type='digit'
                   clear
@@ -263,6 +302,7 @@ class FormBox extends Component {
                     rules: [
                       { required: true, message: '请选择计价单位' }
                     ],
+                    initialValue: edittype === '3' ? [quickData['valuation_unit_code']] : '',
                     valuePropName: 'checked'
                   })}
                 >
@@ -276,6 +316,7 @@ class FormBox extends Component {
                       { required: true, message: '请输入工作总量' },
                       { pattern: /^[1-9]|([1-9][0-9]+)$/, message: '工作总量需要大于1' }
                     ],
+                    initialValue: edittype === '3' ? quickData['valuation_quantity'] : ''
                   })}
                   type='digit'
                   extra={ qtyUnit ? qtyUnit.split('/')[1] : '' }
@@ -299,6 +340,7 @@ class FormBox extends Component {
                   rules: [
                     { required: true, message: '请选择开工时间' }
                   ],
+                  initialValue: edittype === '3' && quickData['start_time'] ? new Date(Date.parse(quickData['start_time'].replace(/-/g, '/'))) : ''
                 })}
               >
                 <Item arrow='horizontal'>开工时间<em className={style['asterisk']}>*</em></Item>
@@ -314,6 +356,7 @@ class FormBox extends Component {
                   rules: [
                     { required: true, message: '请选择结束时间' }
                   ],
+                  initialValue: edittype === '3' && quickData['end_time'] ? new Date(Date.parse(quickData['end_time'].replace(/-/g, '/'))) : ''
                 })}
               >
                 <Item arrow='horizontal'>结束时间<em className={style['asterisk']}>*</em></Item>
@@ -327,6 +370,7 @@ class FormBox extends Component {
                     rules: [
                       { required: true, message: '请选择施工地址' }
                     ],
+                    initialValue: edittype === '3' ? quickData['construction_place'] : ''
                   })}
                 />
               </div>
@@ -335,14 +379,14 @@ class FormBox extends Component {
               <Item arrow='horizontal' extra={remark}>快单备注</Item>
             </div>
           </List>
-          <WingBlank><Button onClick={this.onSubmit} className={style['push-btn']} type='primary'>发布快单</Button></WingBlank>
+          <WingBlank><Button onClick={this.onSubmit} className={style['push-btn']} type='primary'>{edittype === '3' ? '保存快单' : '发布快单'}</Button></WingBlank>
           <WhiteSpace />
         </Content>
         <Content style={{ display: remarkShow ? 'block' : 'none' }}>
           <div>
             <TextareaItem
               {...getFieldProps('remark', {
-                initialValue: '',
+                initialValue: edittype === '3' ? quickData['remark'] : '',
                 rules: [
                   { pattern: /^.{20,500}$/, message: '描述字数为20~500字' }
                 ],
@@ -361,7 +405,7 @@ class FormBox extends Component {
               {
                 fileList.map((item, index, ary) => {
                   return (
-                    <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={() => { this.delUploadList(item) }}>&#10005;</i></li>
+                    <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{edittype === '3' ? item.name : item.org_name}</a><i onClick={() => { this.delUploadList(item) }}>&#10005;</i></li>
                   )
                 })
               }

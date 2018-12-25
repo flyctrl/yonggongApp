@@ -93,8 +93,8 @@ class ApplySettle extends Component {
           isloading && dataSource.length !== 0 ? <div style={{ height: '100%', 'overflow': 'hidden' }}>
             <p className={`${style['settle-total']} my-bottom-border`}>合计：<em>{amount}</em></p>
             <List className={`${style['settle-list']} ${status === 3 ? style['settle-all'] : ''}`}>
-              {dataSource.map(i => (
-                <List.Item key={i.uid} activeStyle={{ backgroundColor: '#fff' }}>
+              {dataSource.map((i, index) => (
+                <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>
                   <img className={style['header']} src={i['avatar']} />
                   <div className={style['settle-info']}>
                     <h2>{i.username}</h2>
