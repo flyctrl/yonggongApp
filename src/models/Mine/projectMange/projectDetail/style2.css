@@ -1,0 +1,432 @@
+.insure-box {
+  & .box-top {
+    background:white;
+    margin-bottom:8px;
+    & img {
+      display: block;
+      width:375px;
+      height: 308px;
+    }
+    & .box-top-title {
+      padding: 15px 16px;
+      font-size:18px;
+      font-family:SourceHanSansCN-Medium;
+      font-weight:500;
+      color:rgba(51,51,51,1);
+      & span {
+        font-weight:500;
+        color:rgba(250,107,109,1);
+        float: right;
+      }
+    }
+    & div {
+      font-size:12px;
+      font-family:SourceHanSansCN-Regular;
+      font-weight:400;
+      color:rgba(153,153,153,1);
+      padding: 5px 16px 15px 16px;
+      & span {
+          margin-right: 15px;
+      }
+    }
+  }
+  & .box-prj {
+    margin-bottom: 8px;
+    background:white;
+    & .box-prj-title {
+      & .title {
+        font-size:16px;
+        font-family:SourceHanSansCN-Medium;
+        font-weight:500;
+        color:rgba(51,51,51,1);
+        padding: 18px 16px;
+        & span {
+          padding: 0 1px;
+          background:#1298FC;
+          margin-right:8px;
+        }
+      }
+    }
+  }
+  & .box-prj-feature {
+    & .list {
+      padding: 14px 16px 5px 16px;
+      & li {
+        line-height: 33px;
+        font-size:14px;
+        font-family:SourceHanSansCN-Regular;
+        font-weight:400;
+        color:rgba(102,102,102,1);
+        line-height:18px;
+        margin-bottom: 3px;
+        position: relative;
+        margin-left: 6px;
+        & em {
+          display: block;
+          width:3px;
+          height: 3px;
+          border-radius: 50%;
+          background: #1298FC;
+          position: absolute;
+          top:8px;
+          left: -7px;
+        }
+      }
+    }
+  }
+  & .box-prj-detail {
+    & .content {
+      padding: 15px;
+      & .content-list {
+        line-height: 21px;
+        color: #999999;
+        font-size: 14px;
+        & span {
+          color: #666666;
+          font-size: 14px;
+          margin-left: 20px;
+          & em {
+            color: #1298FC;
+          }
+        }
+      }
+      & .content-list-last {
+        margin-bottom: 27px;
+      }
+      & dl {
+        margin-bottom: 26px;
+        display: flex;
+        & dt {
+          & img {
+            height: 45px;
+            width: 45px;
+            margin-right: 12px;
+          }
+        }
+        & dd {
+          & .content-dd-title {
+            font-size:14px;
+            font-family:SourceHanSansCN-Regular;
+            font-weight:400;
+            color:rgba(51,51,51,1);
+            margin-bottom: 8px;
+            & span {
+              float: right;
+            }
+          }
+          & .content-dd-desp {
+            font-size:12px;
+            font-family:SourceHanSansCN-Regular;
+            font-weight:400;
+            color:rgba(153,153,153,1);
+            line-height:17px;
+          }
+          & .content-dd-remark {
+            font-size:11px;
+            font-family:SourceHanSansCN-Regular;
+            font-weight:400;
+            color:rgba(250,107,109,1);
+            line-height:17px;
+            margin-top: 5px;
+          }
+        }
+      }
+      & .check-info {
+        position: relative;
+        font-size:13px;
+        font-family:SourceHanSansCN-Regular;
+        font-weight:400;
+        color:rgba(18,152,252,1);
+        line-height:36px;
+        height: 36px;
+        margin-bottom: -7px;
+        & svg {
+          position: absolute;
+          left: 74px;
+          width: 25px;
+        }
+      }
+    }
+  }
+  & .box-prj-insure {
+    & .insure-info {
+      padding: 15px;
+      & .step {
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        & dl {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          & img {
+            display: block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+          }
+          & dd {
+            margin-top: 10px;
+            font-size:13px;
+            font-family:SourceHanSansCN-Regular;
+            font-weight:400;
+            color:rgba(51,51,51,1);
+            line-height:17px;
+          }
+        }
+        & .my-borders {
+          position: absolute;
+          width: 60px;
+          height: 1px;
+          background:rgba(18,152,252,1);
+        }
+        & .my-borders-left {
+          top: 20px;
+          left: 82px;
+        }
+        & .my-borders-right {
+          top: 20px;
+          left: 223px;
+        }
+      }
+      & .insure-list {
+        & li {
+          font-size:13px;
+          font-family:SourceHanSansCN-Regular;
+          font-weight:400;
+          color:rgba(153,153,153,1);
+          line-height:21px;
+          margin-bottom: 1px;
+        }
+      }
+    }
+  }
+  & .box-prj-server {
+    & .server-info {
+      padding: 15px 16px;
+      & .title {
+        font-size:11px;
+        font-family:SourceHanSansCN-Regular;
+        font-weight:400;
+        color:rgba(153,153,153,1);
+        line-height:17px;
+      }
+      & .server-step {
+        margin: 15px 0;
+        & :global(.am-steps-item-title){
+          font-size:14px;
+          font-family:SourceHanSansCN-Regular;
+          font-weight:400;
+          color:rgba(51,51,51,1);
+          line-height:17px;
+        }
+        & :global(.am-steps-item-description) {
+          font-size:13px;
+          font-family:SourceHanSansCN-Regular;
+          font-weight:400;
+          color:rgba(18,152,252,1);
+          margin-bottom: 20px;
+          & svg {
+            position: absolute;
+            left: 48px;
+            width: 25px;
+            top: -7px
+          }
+        }
+      }
+    }
+  }
+  & .box-prj-footer {
+    background:white;
+    padding: 5px 16px;
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    & em {
+      font-size:20px;
+      font-family:SourceHanSansCN-Bold;
+      font-weight:bold;
+      color:rgba(250,107,109,1)
+    }
+    & :global(.am-button) {
+      width:170px;
+      height:40px;
+      background:linear-gradient(0deg,rgba(18,152,252,1) 0%,rgba(91,185,255,1) 100%);
+      border-radius:3px;
+      line-height:40px;
+      & span {
+        font-size:15px;
+        font-family:SourceHanSansCN-Regular;
+        font-weight:400;
+        color:rgba(254,254,254,1);
+        
+      }
+    }
+  }
+}
+html :global(.am-modal-body) {
+  & .modal-box-1314 {
+    width:375px;
+    height:492px;
+    border-radius:10px 10px 0px 0px;
+    padding: 15px;
+    box-sizing: border-box;
+    & .modal-dl {
+      display: flex;
+      & dt {
+        margin-right: 19px;
+        & img {
+          display: block;
+          width:126px;
+          height: 103px;
+        }
+      }
+      & dd {
+        & p {
+          font-size:18px;
+          font-family:SourceHanSansCN-Medium;
+          font-weight:500;
+          color:rgba(250,107,109,1);
+          margin-top: 23px;
+        }
+        & span {
+          display: block;
+          font-size:12px;
+          font-family:SourceHanSansCN-Regular;
+          font-weight:400;
+          color:rgba(153,153,153,1);
+          text-align: left;
+        }
+      }
+    }
+    & .modal-list-bao {
+      margin-top: 34px;
+      text-align: left;
+      & .bao-title {
+        font-size:14px;
+        font-family:SourceHanSansCN-Regular;
+        font-weight:400;
+        color:rgba(51,51,51,1);
+      }
+      & .bao-list {
+        padding: 0;
+        display: flex;
+        justify-content:flex-start;
+        flex-direction: row;
+        width:296px; 
+        margin-top: 10px;
+        flex-wrap: wrap;
+        & .bao-list-item-no {
+          margin-right: 15px;
+          margin-bottom: 15px;
+          & :global(.am-list-item.am-list-item-active) {
+            min-height: 30px;
+            background: #ffffff;
+          }
+          & :global(.am-list-item){
+            padding: 0;
+            min-height: 30px;
+            & :global(.am-list-line) {
+              padding: 0;
+              background:rgba(245,245,245,1);
+              border-radius:5px;
+              width:58px;
+              height:30px;
+              & :global(.am-list-content) {
+                text-align: center;
+                padding: 0;
+                margin: 0;
+                font-size:12px;
+                font-family:SourceHanSansCN-Regular;
+                font-weight:400;
+                color:rgba(51,51,51,1);
+              }
+              & :global(.am-list-extra) {
+                display: none;
+              }
+            }
+          }
+        }
+        & .bao-list-item-yes {
+          margin-right: 15px;
+          margin-bottom: 15px;
+          & :global(.am-list-item.am-list-item-active) {
+            min-height: 30px;
+            background: #ffffff;
+          }
+          & :global(.am-list-item){
+            padding: 0;
+            min-height: 30px;
+            & :global(.am-list-line) {
+              padding: 0;
+              background:white;
+              border-radius:5px;
+              width:58px;
+              height:30px;
+              border:1px solid rgba(18,152,252,1);
+              border-radius:5px;
+              & :global(.am-list-content) {
+                text-align: center;
+                padding: 0;
+                margin: 0;
+                font-size:12px;
+                font-family:SourceHanSansCN-Regular;
+                font-weight:400;
+                color:rgba(18,152,252,1);
+              }
+              & :global(.am-list-extra) {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+    }
+    & .bao-submit {
+      position: fixed;
+      bottom: 15px;
+      left: 20px;
+      & :global(.am-button) {
+        width:335px;
+        height:40px;
+        background:linear-gradient(0deg,rgba(18,152,252,1) 0%,rgba(91,185,255,1) 100%);
+        border-radius:3px;
+        line-height: 40px;
+        & span {
+          font-size:15px;
+          font-family:SourceHanSansCN-Regular;
+          font-weight:400;
+          color:rgba(254,254,254,1);
+        }
+      }
+    }
+  }
+}
+
+.remind {
+  background: white;
+  padding: 15px;
+  box-sizing: border-box;
+  & .remind-title {
+    margin-bottom: 7px;
+    & span {
+      font-size:15px;
+      font-family:SourceHanSansCN-Regular;
+      font-weight:400;
+      color:rgba(51,51,51,1);
+      line-height:21px;
+    }
+  }
+  & ul {
+    margin-bottom: 14px;
+    & li {
+      font-size:14px;
+      font-family:SourceHanSansCN-Regular;
+      font-weight:400;
+      color:rgba(102,102,102,1);
+      line-height:21px;
+      margin-bottom: 3px;
+    }
+  }
+}

@@ -105,7 +105,7 @@ class ProjectDetail extends Component {
                       <Item extra={dataSource['prj_construct_unit']}>施工单位</Item>
                     </div>
                     <div className={style['input-ellipsis']}>
-                      <Item extra={dataSource['prj_construct_unit_code']}>施工单位统一社 会信用代码</Item>
+                      <Item extra={dataSource['prj_construct_unit_code']}>施工单位统一社会信用代码</Item>
                     </div>
                     <div className={style['input-ellipsis']}>
                       <Item extra={dataSource['construction_amount']}>项目施工金额</Item>
@@ -126,16 +126,20 @@ class ProjectDetail extends Component {
                     <div className={`${style['input-detail-about']}`}>
                       {dataSource['prj_brief']}
                     </div>
-                    <ul className={`${style['input-detail-fujian']} my-top-border`}>
-                      <span>附件</span>
-                      {
-                        fileList.map((item, index) => {
-                          return (
-                            <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a></li>
-                          )
-                        })
-                      }
-                    </ul>
+                    {
+                      fileList.length !== 0
+                        ? <ul className={`${style['input-detail-fujian']} my-top-border`}>
+                          <span>附件</span>
+                          {
+                            fileList.map((item, index) => {
+                              return (
+                                <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a></li>
+                              )
+                            })
+                          }
+                        </ul>
+                        : null
+                    }
                   </List>
                 </div>
               </div>
