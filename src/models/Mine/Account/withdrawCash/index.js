@@ -93,15 +93,9 @@ class WithdrawCash extends Component {
     )
   }
   handleCashAll = () => { // 全部提现
-    let { amount, bankval } = this.state
-    let cashValue = 0
-    if (Number(bankval['withdraw_amount']) > Number(amount)) {
-      cashValue = Number(amount)
-    } else {
-      cashValue = Number(bankval['withdraw_amount'])
-    }
+    let { bankval } = this.state
     this.setState({
-      cashValue
+      cashValue: Number(bankval['withdraw_amount'])
     })
   }
   handleChangeBank = async () => { // 选择银行按钮
@@ -176,7 +170,7 @@ class WithdrawCash extends Component {
             <div className={`${style['withdraw-cash']} contentBox`}>
               <Item
                 arrow='horizontal'
-                thumb={bankval['bank_logo']}
+                thumb={bankval['logo']}
                 onClick={this.handleChangeBank}
               >
                 <span className={style['title']}>{bankval['bank_name']}</span><Brief className={style['subtitle']}>尾号{bankval['card_no_back']}</Brief>

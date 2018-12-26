@@ -28,9 +28,6 @@ html :global(.am-list-footer) {
   & :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab::after) {
     height: 0;
   }
-  & :global(.am-tabs-content-wrap) {
-    margin-top:10px;
-  }
 }
 .msg-box {
   width: 100%;
