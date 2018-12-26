@@ -63,7 +63,7 @@ class Message extends Component {
     return await data['list'] || []
   }
   componentDidMount() {
-    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 138.5
+    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 110
     this.genData().then((rdata) => {
       this.rData = rdata
       this.setState({
