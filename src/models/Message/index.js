@@ -7,7 +7,7 @@ import api from 'Util/api'
 import style from './style.css'
 import { msgStatus, urlCode } from 'Contants/fieldmodel'
 import { getQueryString, parseJsonUrl } from 'Contants/tooler'
-import ReactDOM from 'react-dom'
+// import ReactDOM from 'react-dom'
 import { ListView, PullToRefresh, Tabs, Badge } from 'antd-mobile'
 const iconData = {
   1: 'icon-user',
@@ -63,7 +63,7 @@ class Message extends Component {
     return await data['list'] || []
   }
   componentDidMount() {
-    const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 130
+    const hei = document.documentElement.clientHeight - 43 - 42 - 48
     this.genData().then((rdata) => {
       this.rData = rdata
       this.setState({
