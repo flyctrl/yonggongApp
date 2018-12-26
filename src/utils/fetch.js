@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2018-12-06 19:41:43
+* @Last Modified time: 2018-12-26 15:17:30
 */
 import * as Loading from './load.js'
 import storage from '../utils/storage'
@@ -32,7 +32,12 @@ fetcher.interceptors.request.use(function (config) {
   if (config.showloading) {
     Loading.showLoading(config.loadtitle)
   }
-  const Authorization = storage.get('Authorization')
+  let Authorization = ''
+  if (typeof OCBridge !== 'undefined') {
+    Authorization = OCBridge.token()
+  } else {
+    Authorization = storage.get('Authorization')
+  }
   if (Authorization) {
     config.headers.Authorization = Authorization
   }
@@ -46,21 +51,33 @@ fetcher.interceptors.response.use(function (response) {
     Loading.hideLoading()
   }
   if (response.data.code === 10013) { // 未登录
-    history.push('/Login/login')
+    if (typeof OCBridge !== 'undefined') {
+      OCBridge.login({
+        data: window.location.href
+      })
+    } else {
+      history.push('/Login/login')
+    }
   } else if (response.data.code === 10011) { // token过期
-    let refreshToken = storage.get('refreshToken')
-    axios.post(baseUrl + '/employ/refresh', { refresh_token: refreshToken }).then(function(res) {
-      console.log(res)
-      if (res.data.code === 10012) {
-        history.push('/Login/login')
-      }
-      storage.set('Authorization', 'Bearer ' + res.data.data.access_token)
-      storage.set('refreshToken', res.data.data.refresh_token)
-      // window.location.reload()
-      history.go(0)
-    }).catch(function(err) {
-      console.log(err)
-    })
+    if (typeof OCBridge !== 'undefined') {
+      OCBridge.refreshToken({
+        data: window.location.href
+      })
+    } else {
+      let refreshToken = storage.get('refreshToken')
+      axios.post(baseUrl + '/employ/refresh', { refresh_token: refreshToken }).then(function(res) {
+        console.log(res)
+        if (res.data.code === 10012) {
+          history.push('/Login/login')
+        }
+        storage.set('Authorization', 'Bearer ' + res.data.data.access_token)
+        storage.set('refreshToken', res.data.data.refresh_token)
+        // window.location.reload()
+        history.go(0)
+      }).catch(function(err) {
+        console.log(err)
+      })
+    }
   } else if (response.data.code === 16020006) { // 实名认证 未通过
     history.push('/Mine/realNameAuth')
   } else if (response.data.code === 16020012) { // 实名认证 审核中
