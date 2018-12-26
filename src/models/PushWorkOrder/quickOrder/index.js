@@ -10,6 +10,7 @@ import Classify from './classify'
 import ClassifyList from './classifyList'
 import TeachList from './teachList'
 import ProjectList from './projectList'
+import api from 'Util/api'
 import storage from 'Util/storage'
 
 const Item = List.Item
@@ -34,7 +35,8 @@ class SelectClass extends Component {
       url: tooler.getQueryString('url') || 'HOME',
       orderno: tooler.getQueryString('orderno') || '',
       starttime: tooler.getQueryString('starttime') || '',
-      edittype: tooler.getQueryString('edittype') || 0
+      edittype: tooler.getQueryString('edittype') || 0,
+      editSheetno: tooler.getQueryString('editSheetno') || 0
     }
   }
   componentDidMount() {
@@ -42,13 +44,26 @@ class SelectClass extends Component {
       this.getEditData()
     }
   }
-  getEditData = () => { // 获取编辑数据
-    console.log('获取编辑数据')
-    storage.set('quickData', {
-      name: '我是快单',
-      age: 3,
-      sex: 'boy'
-    })
+  getEditData = async () => { // 获取编辑数据
+    let { editSheetno } = this.state
+    let data = await api.PushOrder.quickDetail({
+      worksheet_no: editSheetno
+    }) || false
+    if (data) {
+      storage.set('quickData', data)
+      this.setState({
+        proId: data['prj_no'],
+        proVal: data['prj_name'],
+        classifyId: data['construct_ids'],
+        classifyVal: data['construct_name_list'][data['construct_ids']],
+        constructType: data['construct_type'],
+        showtech: parseInt(data['construct_type']) === 1,
+        parentClassId: parseInt(data['construct_type']) === 1 ? 'skill' : 0,
+        teachId: data['professional_level'] !== '' && data['construct_type'] === 1 ? data['professional_level'] : '0',
+        teachVal: data['professional_level'] !== '' && data['construct_type'] === 1 ? data['professional_level_name_list'][data['professional_level']] : '不限',
+        settleValue: data['valuation_way']
+      })
+    }
   }
   onChange = (value) => {
     this.setState({
@@ -129,11 +144,11 @@ class SelectClass extends Component {
         proVal: proId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : proVal
       })
     } else {
-      let { url, orderno, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, proId, proVal, starttime, edittype } = this.state
+      let { url, orderno, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, proId, proVal, starttime, edittype, editSheetno } = this.state
       if (parentClassId !== 'skill' || showtech === false) {
         teachId = 'null'
       }
-      let urlJson = { url: url, orderno, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, proId, proVal, starttime, edittype }
+      let urlJson = { url: url, orderno, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, proId, proVal, starttime, edittype, editSheetno }
       console.log('urlJson:', urlJson)
       let skipurl = tooler.parseJsonUrl(urlJson)
       console.log('skipurl:', skipurl)

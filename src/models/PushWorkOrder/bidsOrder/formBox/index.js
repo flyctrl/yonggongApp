@@ -35,7 +35,27 @@ class FormBox extends Component {
       addressObj: {},
       fileList: [],
       urlJson: tooler.parseURLParam(),
-      remark: ''
+      remark: '',
+      bidsData: {}
+    }
+  }
+  componentDidMount() {
+    let { edittype } = this.state.urlJson
+    if (edittype === '1') {
+      let bidsData = storage.get('bidsData')
+      this.setState({
+        bidsData: bidsData,
+        fileList: bidsData['attachment'],
+        addressObj: {
+          position: {
+            lng: bidsData['coordinate']['lng'],
+            lat: bidsData['coordinate']['lat'],
+            cityCode: bidsData['city_code']
+          }
+        },
+        address: bidsData['construction_place'],
+        remark: bidsData['remark']
+      })
     }
   }
   handleRemarkClick = () => {
@@ -46,7 +66,7 @@ class FormBox extends Component {
   onErrorClick = (field) => {
     Toast.info(this.props.form.getFieldError(field).join('、'))
   }
-  delUploadList = async (param) => { // 删除附件
+  delUploadList = (param) => { // 删除附件
     const { fileList } = this.state
     let newFileList = []
     fileList.map((item) => {
@@ -54,14 +74,9 @@ class FormBox extends Component {
         newFileList.push(item)
       }
     })
-    const data = await api.Common.delAttch({
-      path: param['path']
-    }) || false
-    if (data) {
-      this.setState({
-        fileList: newFileList
-      })
-    }
+    this.setState({
+      fileList: newFileList
+    })
   }
   handleSelectMap = () => {
     this.setState({
@@ -92,7 +107,7 @@ class FormBox extends Component {
   }
   onSubmit = () => { // 提交
     let { addressObj, fileList } = this.state
-    let { teachId, proId, receiveType, bidwayId, paymethodId, paymodeId, settleValue } = this.state.urlJson
+    let { teachId, proId, receiveType, bidwayId, paymethodId, paymodeId, settleValue, edittype, editSheetno } = this.state.urlJson
     let attachment = []
     fileList.map(item => {
       attachment.push(item['path'])
@@ -112,22 +127,38 @@ class FormBox extends Component {
         }
         console.log(postJson)
         Toast.loading('提交中...', 0)
-        let data = await api.PushOrder.tender(postJson) || false
+        let data
+        if (edittype === '1') {
+          let newPostJson = {
+            ...postJson,
+            worksheet_no: editSheetno
+          }
+          data = await api.PushOrder.editTender(newPostJson) || false
+        } else {
+          data = await api.PushOrder.tender(postJson) || false
+        }
         if (data) {
           Toast.hide()
-          Toast.success('发布成功', 1, () => {
-            storage.remove('bidsData')
-            this.props.match.history.push(`${urls.BIDORDERRESULT}?worksheetno=${data['worksheet_no']}`)
-          })
+          if (edittype === '1') {
+            Toast.success('修改成功', 1, () => {
+              storage.remove('bidsData')
+              this.props.match.history.push(`${urls.WORKLISTMANAGE}?listType=1`)
+            })
+          } else {
+            Toast.success('发布成功', 1, () => {
+              this.props.match.history.push(`${urls.BIDORDERRESULT}?worksheetno=${data['worksheet_no']}`)
+            })
+          }
         }
       }
     })
   }
   render() {
     const { getFieldProps, getFieldError, getFieldValue } = this.props.form
-    let { fileList, remarkShow, startDate, endDate, mapShow, address, remark } = this.state
+    let { fileList, remarkShow, startDate, endDate, mapShow, address, remark, bidsData } = this.state
     console.log('fileList:', fileList)
-    let { bidwayId } = this.state.urlJson
+    console.log('bidsData:', bidsData)
+    let { bidwayId, edittype } = this.state.urlJson
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
@@ -176,6 +207,7 @@ class FormBox extends Component {
                   { required: true, message: '请输入标题' },
                   { pattern: /^.{5,30}$/, message: '标题字数5~30字' }
                 ],
+                initialValue: edittype === '1' ? bidsData['title'] : ''
               })}
               clear
               error={!!getFieldError('title')}
@@ -189,6 +221,7 @@ class FormBox extends Component {
                     { required: true, message: '请输入总价' },
                     { pattern: /^[1-9]|([1-9][0-9]+)$/, message: '总价需要大于1' }
                   ],
+                  initialValue: edittype === '1' ? Number(bidsData['tender_amount']) / 100 : ''
                 })}
                 type='digit'
                 extra='元'
@@ -209,6 +242,7 @@ class FormBox extends Component {
                 rules: [
                   { required: true, message: '请选择截标时间' }
                 ],
+                initialValue: edittype === '1' && bidsData['bid_end_time'] ? new Date(Date.parse(bidsData['bid_end_time'].replace(/-/g, '/'))) : ''
               })}
             >
               <Item arrow='horizontal'>截标时间<em className={style['asterisk']}>*</em></Item>
@@ -225,6 +259,7 @@ class FormBox extends Component {
                 rules: [
                   { required: true, message: '请选择开工时间' }
                 ],
+                initialValue: edittype === '1' && bidsData['start_time'] ? new Date(Date.parse(bidsData['start_time'].replace(/-/g, '/'))) : ''
               })}
             >
               <Item arrow='horizontal'>开工时间<em className={style['asterisk']}>*</em></Item>
@@ -240,6 +275,7 @@ class FormBox extends Component {
                 rules: [
                   { required: true, message: '请选择结束时间' }
                 ],
+                initialValue: edittype === '1' && bidsData['end_time'] ? new Date(Date.parse(bidsData['end_time'].replace(/-/g, '/'))) : ''
               })}
             >
               <Item arrow='horizontal'>结束时间<em className={style['asterisk']}>*</em></Item>
@@ -252,12 +288,15 @@ class FormBox extends Component {
                     rules: [
                       { required: true, message: '请选择施工地址' }
                     ],
+                    initialValue: edittype === '1' ? bidsData['construction_place'] : ''
                   })}
                 />
               </div>
             </div>
             <InputItem
-              {...getFieldProps('tender_contract')}
+              {...getFieldProps('tender_contract', {
+                initialValue: edittype === '1' ? bidsData['tender_contract'] : ''
+              })}
               clear
               error={!!getFieldError('tender_contract')}
               onErrorClick={() => this.onErrorClick('tender_contract')}
@@ -268,6 +307,7 @@ class FormBox extends Component {
                 rules: [
                   { pattern: /^1[345789]\d{9}$/, message: '手机号格式错误' }
                 ],
+                initialValue: edittype === '1' ? bidsData['tender_contract_way'] : ''
               })}
               clear
               error={!!getFieldError('tender_contract_way')}
@@ -278,14 +318,14 @@ class FormBox extends Component {
               <Item arrow='horizontal' extra={remark}>工单备注</Item>
             </div>
           </List>
-          <WingBlank><Button onClick={this.onSubmit} className={style['push-btn']} type='primary'>发布招标</Button></WingBlank>
+          <WingBlank><Button onClick={this.onSubmit} className={style['push-btn']} type='primary'>{edittype === '1' ? '保存招标' : '发布招标'}</Button></WingBlank>
           <WhiteSpace />
         </Content>
         <Content style={{ display: remarkShow ? 'block' : 'none' }}>
           <div>
             <TextareaItem
               {...getFieldProps('remark', {
-                initialValue: '',
+                initialValue: edittype === '1' ? bidsData['remark'] : '',
                 rules: [
                   { pattern: /^.{20,500}$/, message: '描述字数为20~500字' }
                 ],
@@ -304,7 +344,7 @@ class FormBox extends Component {
               {
                 fileList.map((item, index, ary) => {
                   return (
-                    <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={() => { this.delUploadList(item) }}>&#10005;</i></li>
+                    <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{edittype === '1' ? item.name : item.org_name}</a><i onClick={() => { this.delUploadList(item) }}>&#10005;</i></li>
                   )
                 })
               }

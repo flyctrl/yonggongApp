@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Header, Content } from 'Components'
 import { List, InputItem, Modal } from 'antd-mobile'
-import * as urls from 'Contants/urls'
+// import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
@@ -64,7 +64,7 @@ class ApplySettle extends Component {
       amount: inputAmount
     }) || false
     if (data) {
-      this.props.match.history.push(urls.MYORDER)
+      this.props.match.history.go(-1)
     }
   }
   handleInputNum = (value) => {
@@ -94,8 +94,8 @@ class ApplySettle extends Component {
         {
           isloading && dataSource.length !== 0 ? <div style={{ height: '100%', 'overflow': 'hidden' }}>
             <List className={`${style['settle-list']}`}>
-              {dataSource.map(i => (
-                <List.Item key={i.uid} activeStyle={{ backgroundColor: '#fff' }}>
+              {dataSource.map((i, index) => (
+                <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>
                   <img className={style['header']} src={i['avatar']} />
                   <div className={style['settle-info']}>
                     <h2>{i.username}</h2>

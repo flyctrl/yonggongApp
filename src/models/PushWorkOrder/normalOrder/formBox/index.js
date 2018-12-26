@@ -37,10 +37,29 @@ class FormBox extends Component {
       valuationUnit: '',
       chargeSizeData: [],
       urlJson: tooler.parseURLParam(),
-      remark: ''
+      remark: '',
+      normalData: {}
     }
   }
   componentDidMount() {
+    let { edittype } = this.state.urlJson
+    if (edittype === '2') {
+      let normalData = storage.get('normalData')
+      this.setState({
+        normalData: normalData,
+        valuationUnit: [normalData['valuation_unit_code']],
+        fileList: normalData['attachment'],
+        addressObj: {
+          position: {
+            lng: normalData['coordinate']['lng'],
+            lat: normalData['coordinate']['lat'],
+            cityCode: normalData['city_code']
+          }
+        },
+        address: normalData['construction_place'],
+        remark: normalData['remark']
+      })
+    }
     this.getValuationUnit()
   }
   getValuationUnit = async () => {
@@ -76,14 +95,9 @@ class FormBox extends Component {
         newFileList.push(item)
       }
     })
-    const data = await api.Common.delAttch({
-      path: param['path']
-    }) || false
-    if (data) {
-      this.setState({
-        fileList: newFileList
-      })
-    }
+    this.setState({
+      fileList: newFileList
+    })
   }
   handleSelectMap = () => {
     this.setState({
@@ -114,7 +128,7 @@ class FormBox extends Component {
   }
   onSubmit = () => { // 提交
     let { addressObj, fileList } = this.state
-    let { classifyId, constructType, teachId, proId, orderno, paymethodId } = this.state.urlJson
+    let { classifyId, constructType, teachId, proId, orderno, paymethodId, edittype, editSheetno } = this.state.urlJson
     let attachment = []
     fileList.map(item => {
       attachment.push(item['path'])
@@ -145,22 +159,37 @@ class FormBox extends Component {
         }
         console.log(postJson)
         Toast.loading('提交中...', 0)
-        let data = await api.PushOrder.normal(postJson) || false
+        let data
+        if (edittype === '2') {
+          let newPostJson = {
+            ...postJson,
+            worksheet_no: editSheetno
+          }
+          data = await api.PushOrder.editNormal(newPostJson) || false
+        } else {
+          data = await api.PushOrder.normal(postJson) || false
+        }
         if (data) {
           Toast.hide()
-          Toast.success('发布成功', 1, () => {
-            storage.remove('normalData')
-            this.props.match.history.push(`${urls.NLORDERRESULT}?worksheetno=${data['worksheet_no']}`)
-          })
+          if (edittype === '2') {
+            Toast.success('修改成功', 1, () => {
+              storage.remove('normalData')
+              this.props.match.history.push(`${urls.WORKLISTMANAGE}?listType=2`)
+            })
+          } else {
+            Toast.success('发布成功', 1, () => {
+              this.props.match.history.push(`${urls.NLORDERRESULT}?worksheetno=${data['worksheet_no']}`)
+            })
+          }
         }
       }
     })
   }
   render() {
     const { getFieldProps, getFieldError, getFieldValue } = this.props.form
-    let { fileList, remarkShow, startDate, endDate, mapShow, address, valuationUnit, chargeSizeData, remark } = this.state
+    let { fileList, remarkShow, startDate, endDate, mapShow, address, valuationUnit, chargeSizeData, remark, normalData } = this.state
     console.log('fileList:', fileList)
-    let { settleValue, starttime, orderno } = this.state.urlJson
+    let { settleValue, starttime, orderno, edittype } = this.state.urlJson
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
@@ -216,6 +245,7 @@ class FormBox extends Component {
                     { required: true, message: '请输入标题' },
                     { pattern: /^.{5,30}$/, message: '标题字数5~30字' }
                   ],
+                  initialValue: edittype === '2' ? normalData['title'] : ''
                 })}
                 clear
                 error={!!getFieldError('title')}
@@ -230,6 +260,7 @@ class FormBox extends Component {
                     { required: true, message: '请输入人数' },
                     { pattern: /^[0-9]*[1-9][0-9]*$/, message: '人数格式错误' }
                   ],
+                  initialValue: edittype === '2' ? normalData['people_number'] : ''
                 })}
                 type='digit'
                 clear
@@ -244,6 +275,7 @@ class FormBox extends Component {
                       { required: true, message: '请输入单价' },
                       { pattern: /^[1-9]|([1-9][0-9]+)$/, message: '单价需要大于1元' }
                     ],
+                    initialValue: edittype === '2' ? Number(normalData['valuation_unit_price']) / 100 : ''
                   })}
                   type='digit'
                   clear
@@ -263,6 +295,7 @@ class FormBox extends Component {
                     rules: [
                       { required: true, message: '请选择计价单位' }
                     ],
+                    initialValue: edittype === '2' ? [normalData['valuation_unit_code']] : '',
                     valuePropName: 'checked'
                   })}
                 >
@@ -276,6 +309,7 @@ class FormBox extends Component {
                       { required: true, message: '请输入工作总量' },
                       { pattern: /^[1-9]|([1-9][0-9]+)$/, message: '工作总量需要大于1' }
                     ],
+                    initialValue: edittype === '2' ? normalData['valuation_quantity'] : ''
                   })}
                   type='digit'
                   extra={ qtyUnit ? qtyUnit.split('/')[1] : '' }
@@ -299,6 +333,7 @@ class FormBox extends Component {
                   rules: [
                     { required: true, message: '请选择开工时间' }
                   ],
+                  initialValue: edittype === '2' && normalData['start_time'] ? new Date(Date.parse(normalData['start_time'].replace(/-/g, '/'))) : ''
                 })}
               >
                 <Item arrow='horizontal'>开工时间<em className={style['asterisk']}>*</em></Item>
@@ -314,6 +349,7 @@ class FormBox extends Component {
                   rules: [
                     { required: true, message: '请选择结束时间' }
                   ],
+                  initialValue: edittype === '2' && normalData['end_time'] ? new Date(Date.parse(normalData['end_time'].replace(/-/g, '/'))) : ''
                 })}
               >
                 <Item arrow='horizontal'>结束时间<em className={style['asterisk']}>*</em></Item>
@@ -327,6 +363,7 @@ class FormBox extends Component {
                     rules: [
                       { required: true, message: '请选择施工地址' }
                     ],
+                    initialValue: edittype === '2' ? normalData['construction_place'] : ''
                   })}
                 />
               </div>
@@ -335,19 +372,19 @@ class FormBox extends Component {
               <Item arrow='horizontal' extra={remark}>工单备注</Item>
             </div>
           </List>
-          <WingBlank><Button onClick={this.onSubmit} className={style['push-btn']} type='primary'>发布工单</Button></WingBlank>
+          <WingBlank><Button onClick={this.onSubmit} className={style['push-btn']} type='primary'>{edittype === '2' ? '保存工单' : '发布工单'}</Button></WingBlank>
           <WhiteSpace />
         </Content>
         <Content style={{ display: remarkShow ? 'block' : 'none' }}>
           <div>
             <TextareaItem
               {...getFieldProps('remark', {
-                initialValue: '',
+                initialValue: edittype === '2' ? normalData['remark'] : '',
                 rules: [
                   { pattern: /^.{20,500}$/, message: '描述字数为20~500字' }
                 ],
               })}
-              placeholder='描述你快单的具体要求，能更快找到合适你的工人，如：工作环境、工作要求等（至少20个字）'
+              placeholder='描述你工单的具体要求，能更快找到合适你的工人，如：工作环境、工作要求等（至少20个字）'
               error={!!getFieldError('remark')}
               onErrorClick={() => this.onErrorClick('remark')}
               rows={4}
@@ -361,7 +398,7 @@ class FormBox extends Component {
               {
                 fileList.map((item, index, ary) => {
                   return (
-                    <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a><i onClick={() => { this.delUploadList(item) }}>&#10005;</i></li>
+                    <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{edittype === '2' ? item.name : item.org_name}</a><i onClick={() => { this.delUploadList(item) }}>&#10005;</i></li>
                   )
                 })
               }

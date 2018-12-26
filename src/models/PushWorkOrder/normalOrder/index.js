@@ -10,6 +10,7 @@ import Classify from './classify'
 import ClassifyList from './classifyList'
 import TeachList from './teachList'
 import ProjectList from './projectList'
+import api from 'Util/api'
 import storage from 'Util/storage'
 
 const Item = List.Item
@@ -19,6 +20,7 @@ class SelectClass extends Component {
     super(props)
     this.state = {
       showIndex: 0,
+      settleId: parseInt(tooler.getQueryString('settleValue')),
       settleValue: parseInt(tooler.getQueryString('settleValue')) || 2,
       proId: tooler.getQueryString('proId') || '',
       proVal: tooler.getQueryString('proVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('proVal'))) : '请选择',
@@ -36,7 +38,8 @@ class SelectClass extends Component {
       url: tooler.getQueryString('url'),
       orderno: tooler.getQueryString('orderno') || '',
       starttime: tooler.getQueryString('starttime') || '',
-      edittype: tooler.getQueryString('edittype') || 0
+      edittype: tooler.getQueryString('edittype') || 0,
+      editSheetno: tooler.getQueryString('editSheetno') || 0
     }
   }
   componentDidMount() {
@@ -47,20 +50,36 @@ class SelectClass extends Component {
       this.contestPaymethod()
     }
   }
-  getEditData = () => { // 获取编辑数据
-    console.log('获取编辑数据')
-    storage.set('normalData', {
-      name: '我是工单',
-      age: 2,
-      sex: 'girl'
-    })
+  getEditData = async () => { // 获取编辑数据
+    let { editSheetno } = this.state
+    let data = await api.PushOrder.normalDetail({
+      worksheet_no: editSheetno
+    }) || false
+    if (data) {
+      storage.set('normalData', data)
+      this.setState({
+        proId: data['prj_no'],
+        proVal: data['prj_name'],
+        classifyId: data['construct_ids'],
+        classifyVal: data['construct_name_list'][data['construct_ids']],
+        constructType: data['construct_type'],
+        showtech: parseInt(data['construct_type']) === 1,
+        parentClassId: parseInt(data['construct_type']) === 1 ? 'skill' : 0,
+        teachId: data['professional_level'] !== '' && data['construct_type'] === 1 ? data['professional_level'] : '0',
+        teachVal: data['professional_level'] !== '' && data['construct_type'] === 1 ? data['professional_level_name_list'][data['professional_level']] : '不限',
+        paymethodVal: data['settle_cn'],
+        paymethodId: data['settle_fix_time'],
+        settleValue: data['valuation_way']
+      })
+    }
   }
   contestPaymethod = (paymethodId = this.state.paymethodId) => {
     let newary = []
     let newVal = ''
-    if (paymethodId !== '') {
+    let { orderno } = this.state
+    if (paymethodId !== '' && orderno !== '') {
       paymethod.map(item => {
-        if (paymethodId <= item['value']) {
+        if (Number(paymethodId) >= item['value']) {
           newary.push(item)
           if (parseInt(paymethodId) === item['value']) {
             newVal = item['label']
@@ -165,11 +184,11 @@ class SelectClass extends Component {
         paymethodVal: paymethodId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : paymethodVal,
       })
     } else {
-      let { settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, starttime, proId, proVal, edittype, orderno } = this.state
+      let { settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, starttime, proId, proVal, edittype, editSheetno, orderno } = this.state
       if (parentClassId !== 'skill' || showtech === false) {
         teachId = 'null'
       }
-      let urlJson = { url: 'HOME', settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, starttime, proId, proVal, paymethodId, paymethodVal, edittype, orderno }
+      let urlJson = { url: 'HOME', settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, starttime, proId, proVal, paymethodId, paymethodVal, edittype, editSheetno, orderno }
       console.log('urlJson:', urlJson)
       let skipurl = tooler.parseJsonUrl(urlJson)
       console.log('skipurl:', skipurl)
@@ -178,7 +197,7 @@ class SelectClass extends Component {
     }
   }
   render() {
-    let { orderno, url, settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, paymethodVal, paymethodAry, teachId } = this.state
+    let { orderno, url, settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, paymethodVal, paymethodAry, teachId, settleId } = this.state
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
         <Header
@@ -212,7 +231,7 @@ class SelectClass extends Component {
           </List>
           <List renderHeader={() => '选择计价方式'} className={`${style['select-class-list']} ${style['settle-type-list']}`}>
             {valuationWay.map(i => (
-              <RadioItem key={i.value} checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
+              <RadioItem key={i.value} disabled={ orderno !== '' && settleId === 2 } checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
                 {i.label}
               </RadioItem>
             ))}

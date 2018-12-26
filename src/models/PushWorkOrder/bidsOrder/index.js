@@ -6,6 +6,7 @@ import { tenderWayRadio, receiveTypeRadio, payModeRadio, paymethod, valuationWay
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './index.css'
+import Teach from './teach'
 import TeachList from './teachList'
 import ProjectList from './projectList'
 import api from 'Util/api'
@@ -60,13 +61,14 @@ class SelectClass extends Component {
         receiveType: data['taker_type'],
         showtech: parseInt(data['taker_type']) === 2,
         teachId: data['aptitude_code_list'].length > 0 && data['taker_type'] === 2 ? data['aptitude_code_list'][0] : '0',
-        teachVal: data['aptitude_list_name'].length > 0 && data['taker_type'] === 2 ? data['aptitude_list_name'][0] : '不限',
+        teachVal: data['aptitude_code_list'].length > 0 && data['taker_type'] === 2 ? data['aptitude_list_name'][data['aptitude_code_list'][0]] : '不限',
         bidwayId: data['tender_way'],
         bidwayVal: data['tender_way_name'],
         paymethodId: data['settle_fix_time'],
         paymethodVal: data['settle_cn'],
         paymodeId: data['pay_way'],
-        paymodeVal: data['pay_way_name']
+        paymodeVal: data['pay_way_name'],
+        parentTeachId: 0
       })
     }
   }
@@ -115,13 +117,27 @@ class SelectClass extends Component {
   }
   handleSelectTech = () => { // 资质要求
     this.setState({
-      showIndex: 3
+      showIndex: 2
     })
   }
   closeDialog = (index) => {
     this.setState({
       showIndex: index
     })
+  }
+  teachSubmit = (item) => {
+    if (item['child'] === 1) {
+      this.setState({
+        showIndex: 3,
+        parentTeachId: item['value']
+      })
+    } else {
+      this.setState({
+        showIndex: 0,
+        teachId: item['value'].toString(),
+        teachVal: item['label']
+      })
+    }
   }
   teachListSubmit = (postJson) => {
     this.setState({
@@ -165,7 +181,7 @@ class SelectClass extends Component {
     }
   }
   render() {
-    let { url, showIndex, teachVal, showtech, proId, proVal, paymethodVal, bidwayVal, paymodeVal, settleValue, receiveType } = this.state
+    let { url, showIndex, teachVal, showtech, proId, proVal, paymethodVal, bidwayVal, paymodeVal, settleValue, receiveType, parentTeachId } = this.state
     console.log(proVal)
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
@@ -229,7 +245,10 @@ class SelectClass extends Component {
         </Content>
       </div>
       {
-        showIndex === 3 ? <TeachList onClose={() => this.closeDialog(0)} onSubmit={(postJson) => this.teachListSubmit(postJson)} /> : null
+        showIndex === 2 ? <Teach onClose={() => this.closeDialog(0)} onSubmit={(id) => this.teachSubmit(id)} /> : null
+      }
+      {
+        showIndex === 3 ? <TeachList id={parentTeachId} onClose={() => this.closeDialog(2)} onSubmit={(postJson) => this.teachListSubmit(postJson)} /> : null
       }
       {
         showIndex === 4 ? <ProjectList match={this.props.match} data={{ proId }} onClose={() => this.closeDialog(0)} onSubmit={(postJson) => this.projectListSubmit(postJson)} /> : null

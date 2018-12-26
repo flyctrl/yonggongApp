@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Radio } from 'antd-mobile'
+import { List, Radio, Toast } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import api from 'Util/api'
 
@@ -21,21 +21,21 @@ class ClassifyList extends Component {
     this.getClassifyList()
   }
   getClassifyList = async () => {
-    let data = await api.Common.getAptitude({
-      type: 'company'
+    let data = await api.Common.getCompanyApte({
+      code: this.props.id
     }) || []
-    let defaultData = [{ label: '不限', value: 0 }]
     if (data) {
-      data.map(item => {
-        defaultData.push(item)
-      })
       this.setState({
-        datasource: defaultData
+        datasource: data
       })
     }
   }
   onSubmit = () => {
     let { value, datasource } = this.state
+    if (value === 0) {
+      Toast.fail('请选择一项资质要求', 1.5)
+      return
+    }
     let checkJson = datasource.find(item => {
       return item['value'] === value
     })

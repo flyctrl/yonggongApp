@@ -246,9 +246,9 @@ class WorkListManage extends Component {
     if (type === 1) { // 招标
       this.props.match.history.push(`${urls.PUSHBIDORDER}?edittype=1&editSheetno=${rowData['worksheet_no']}`)
     } else if (type === 2) { // 工单
-      this.props.match.history.push(`${urls.PUSHNORMALORDER}?edittype=2`)
+      this.props.match.history.push(`${urls.PUSHNORMALORDER}?edittype=2&editSheetno=${rowData['worksheet_no']}`)
     } else if (type === 3) { // 快单
-      this.props.match.history.push(`${urls.PUSHQUICKORDER}?edittype=3`)
+      this.props.match.history.push(`${urls.PUSHQUICKORDER}?edittype=3&editSheetno=${rowData['worksheet_no']}`)
     }
   }
   handleViewAttend = (rowData) => { // 我发的 - 考勤记录
