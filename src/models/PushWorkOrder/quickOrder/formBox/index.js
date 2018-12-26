@@ -42,12 +42,12 @@ class FormBox extends Component {
     }
   }
   componentDidMount() {
-    let { edittype } = this.state.urlJson
+    let { edittype, settleValue } = this.state.urlJson
     if (edittype === '3') {
       let quickData = storage.get('quickData')
       this.setState({
         quickData: quickData,
-        valuationUnit: [quickData['valuation_unit_code']],
+        valuationUnit: Number(quickData['valuation_way']) === Number(settleValue) ? [quickData['valuation_unit_code']] : '',
         fileList: quickData['attachment'],
         addressObj: {
           position: {
@@ -302,7 +302,7 @@ class FormBox extends Component {
                     rules: [
                       { required: true, message: '请选择计价单位' }
                     ],
-                    initialValue: edittype === '3' ? [quickData['valuation_unit_code']] : '',
+                    initialValue: edittype === '3' && Number(quickData['valuation_way']) === Number(settleValue) ? [quickData['valuation_unit_code']] : '',
                     valuePropName: 'checked'
                   })}
                 >
