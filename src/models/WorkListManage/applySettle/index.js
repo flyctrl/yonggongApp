@@ -13,7 +13,8 @@ class ApplySettle extends Component {
       orderno: tooler.getQueryString('orderno'),
       status: 0,
       dataSource: [],
-      isloading: false
+      isloading: false,
+      payWay: 0
     }
   }
   componentDidMount() {
@@ -33,6 +34,7 @@ class ApplySettle extends Component {
       this.setState({
         status: data['status'],
         amount: data['amount'],
+        payWay: data['pay_way'],
         dataSource: data['list'],
         isloading: true
       })
@@ -49,13 +51,17 @@ class ApplySettle extends Component {
     }
   }
   handleSure = async () => { // 确认
-    let { worksheetno, orderno } = this.state
+    let { worksheetno, orderno, payWay } = this.state
     let data = await api.WorkListManage.settleSendConfirm({
       workSheetNo: worksheetno,
       orderNo: orderno
     }) || false
     if (data) {
-      this.getDatalist()
+      if (payWay === 2) {
+        this.props.match.history.go(-1)
+      } else {
+        this.getDatalist()
+      }
     }
   }
   handleReject = async () => { // 驳回
@@ -69,14 +75,14 @@ class ApplySettle extends Component {
     }
   }
   render() {
-    let { dataSource, amount, isloading, status } = this.state
+    let { dataSource, amount, isloading, status, payWay } = this.state
     let statusDom = {
       1: <div className={style['btn-box']}>
         <a className={style['reject-btn']} onClick={this.handleReject}>驳回</a><a onClick={this.handleSure}>确认</a>
       </div>,
-      2: <div className={style['btn-box']}>
+      2: payWay === 1 ? <div className={style['btn-box']}>
         <a className={style['settle-btn']} onClick={this.handleApply}>结算</a>
-      </div>,
+      </div> : '',
       3: ''
     }
     return <div className='pageBox gray'>
