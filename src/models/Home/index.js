@@ -155,7 +155,7 @@ class Home extends Component {
                   >
                     {
                       sysInforms.map((item, index) => {
-                        return <div key={`${index}${item['msg_no']}`} onClick={this.handleClickMsgOne} data-type={item['msg_type']} className={sysInforms.length === 1 ? `${style['v-item-one']}` : style['v-item']}><p className='ellipsis'> <span></span>{item.content}</p></div>
+                        return <div key={`${index}${item['msg_no']}`} onClick={this.handleClickMsgOne} data-type={item['msg_type']} className={sysInforms.length === 1 ? `${style['v-item-one']}` : index % 2 === 0 ? `${style['v-item-even']}` : `${style['v-item-odd']}`}><p className='ellipsis'> <span></span>{item.content}</p></div>
                       })
                     }
                   </Carousel>

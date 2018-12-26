@@ -45,7 +45,7 @@ class ProjectDetail extends Component {
         dataSource: data,
         fileList: data['attachment'],
         isLoading: false,
-        coordinate: data['coordinate']
+        coordinate: data['coordinate'] || '{}'
       })
     }
   }
@@ -117,30 +117,34 @@ class ProjectDetail extends Component {
                       <Item extra={dataSource['construction_place']}>项目施工地址</Item>
                     </div>
                     <div className={style['input-ellipsis']}>
-                      <Item extra={<span>{`经度:${JSON.parse(coordinate)['lng']}`}<br/>{`纬度:${JSON.parse(coordinate)['lat']}`}</span>}>项目施工坐标</Item>
+                      <Item extra={<span>{`经度: ${coordinate !== '{}' ? JSON.parse(coordinate)['lng'] : '无'}`}<br/>{`纬度: ${coordinate !== '{}' ? JSON.parse(coordinate)['lat'] : '无'}`}</span>}>项目施工坐标</Item>
                     </div>
                   </List>
                 </div>
                 <div className={style['detail-about']}>
-                  <List renderHeader={() => '项目概括'}>
-                    <div className={`${style['input-detail-about']}`}>
-                      {dataSource['prj_brief']}
-                    </div>
-                    {
-                      fileList.length !== 0
-                        ? <ul className={`${style['input-detail-fujian']} my-top-border`}>
-                          <span>附件</span>
-                          {
-                            fileList.map((item, index) => {
-                              return (
-                                <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a></li>
-                              )
-                            })
-                          }
-                        </ul>
-                        : null
-                    }
-                  </List>
+                  {
+                    dataSource['prj_brief']
+                      ? <List renderHeader={() => '项目概括'}>
+                        <div className={`${style['input-detail-about']}`}>
+                          {dataSource['prj_brief']}
+                        </div>
+                      </List>
+                      : null
+                  }
+                  {
+                    fileList.length !== 0
+                      ? <ul className={`${style['input-detail-fujian']} my-top-border`}>
+                        <span>附件</span>
+                        {
+                          fileList.map((item, index) => {
+                            return (
+                              <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a></li>
+                            )
+                          })
+                        }
+                      </ul>
+                      : null
+                  }
                 </div>
               </div>
               : null

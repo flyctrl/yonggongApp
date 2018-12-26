@@ -65,8 +65,9 @@ html :global(.am-list-footer) {
           height: 30px;
         }
         & :global(.am-badge-dot){
-          top:-27px;
-          right: -5px;
+          position: absolute;
+          top:-32px;
+          right: -8px;
         }
       }
     }

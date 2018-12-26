@@ -362,7 +362,8 @@ class Check extends Component {
             this.props.match.history.push(`${urls['AGENTCHECKLIST']}?orderno=${workorderno}`)
           } else {
             this.setState({
-              visible: false
+              visible: false,
+              succTime: 5
             })
           }
         } else {
