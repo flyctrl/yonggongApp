@@ -37,7 +37,7 @@ html :global(.am-list-footer) {
   overflow-y: auto;
 }
 .notice-box {
-  padding: 15px;
+  padding: 15px 15px 15px 10px;
   height: 80px;
   background: #fff;
   font-family:SourceHanSansCN-Regular;
@@ -49,24 +49,24 @@ html :global(.am-list-footer) {
     right: 0;
   }
   & dl {
-    overflow: hidden;
     & dt {
       float: left;
       & .icon-box {
         display: block;
-        width: 50px;
-        height: 50px;
+        width: 45px;
+        height: 45px;
         line-height: 64px;
+        margin-top: 5px;
         /* background: rgba(4, 103, 224, 1); */
         border-radius: 50%;
         text-align: center;
         & .notice-icon {
-          width: 30px;
-          height: 30px;
+          width: 42px;
+          height: 42px;
         }
         & :global(.am-badge-dot){
           position: absolute;
-          top:-32px;
+          top:-38px;
           right: -8px;
         }
       }
@@ -74,7 +74,7 @@ html :global(.am-list-footer) {
     & dd {
       float: left;
       width: 280px;
-      margin-left: 10px;
+      margin-left: 12px;
       & p {
         width: 100%;
         font-size: 16px;
@@ -92,8 +92,8 @@ html :global(.am-list-footer) {
         font-size: 14px;
         color: #999999;
         display: block;
-        height: 20px;
-        margin-top: 10px;
+        height: 40px;
+        line-height: 30px;
         width:90%;
       }
     }
