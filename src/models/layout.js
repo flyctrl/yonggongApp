@@ -123,17 +123,17 @@ class MainLayout extends Component {
       dots={false}
       infinite={false}
     >
-      <a><img src={require('../../src/assets/guide/guide1.png')} /></a>
-      <a><img src={require('../../src/assets/guide/guide3.png')} /></a>
-      <a><img src={require('../../src/assets/guide/guide2.png')} /></a>
-      <a onClick={this.startPage}><img src={require('../../src/assets/guide/guide4.png')} /></a>
+      <a style={{ backgroundImage: 'url(' + require('../../src/assets/guide/guide1.png') + ')' }}></a>
+      <a style={{ backgroundImage: 'url(' + require('../../src/assets/guide/guide2.png') + ')' }}></a>
+      <a style={{ backgroundImage: 'url(' + require('../../src/assets/guide/guide3.png') + ')' }}></a>
+      <a style={{ backgroundImage: 'url(' + require('../../src/assets/guide/guide4.png') + ')' }} onClick={this.startPage}></a>
     </Carousel>
   }
   render() {
     return (
       <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
         {
-          storage.get('firstload') !== 1 ? this.showGuidePage() : this.showMenu()
+          storage.get('firstload') !== 1 && typeof OCBridge === 'undefined' ? this.showGuidePage() : this.showMenu()
         }
       </div>
     )
