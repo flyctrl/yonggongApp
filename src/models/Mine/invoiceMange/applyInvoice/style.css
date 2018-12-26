@@ -167,7 +167,7 @@
     &.btn-form-list {
       margin: 20px 0;
       & :global(.am-button-primary) {
-        background: #0467E0;
+        background: #1298fc;
       }
     }
   }

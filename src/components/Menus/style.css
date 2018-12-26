@@ -160,7 +160,7 @@ html:not([data-scale]) .bottom-menu-box :global(.am-tab-bar-bar::before) {
   bottom: 0;
   height: 56px;
   background: url('../../assets/tab_back.png');
-  background-size: contain;
+  background-size: cover;
 }
 
 .tabBody-fix-iphoneX .bottom-menu-box :global(.am-tabs-pane-wrap-inactive),
