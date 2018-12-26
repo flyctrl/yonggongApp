@@ -209,7 +209,7 @@ class WorkListDetail extends Component {
         }}
         rightTitle={'合同'}
         rightClick={() => {
-          this.props.match.history.push(`${urls.CONTRACTMANGE}?worksheetno=${worksheetno}`)
+          this.props.match.history.push(`${urls.CONTRACTLIST}?worksheetno=${worksheetno}`)
         }}
       />
       <Content className={style['worklist-detail-box']}>

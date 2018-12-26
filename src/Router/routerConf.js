@@ -248,6 +248,10 @@ const ContractMange = Loadable({ // 合同管理
   loader: () => import(/* webpackChunkName: "contractmange" */ '../models/Mine/contractMange'),
   loading: MyLoadingComponent
 })
+const ContractList = Loadable({ // 我发的合同列表
+  loader: () => import(/* webpackChunkName: "contractList" */ '../models/Mine/contractList'),
+  loading: MyLoadingComponent
+})
 const EletAgreement = Loadable({ // 电子合同
   loader: () => import(/* webpackChunkName: "eletagreement" */ '../models/Mine/contractMange/eletAgreement'),
   loading: MyLoadingComponent
@@ -855,6 +859,14 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '合同管理'
+  }, {
+    path: urls.CONTRACTLIST,
+    exact: true,
+    component: ContractList,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '我发的合同列表'
   }, {
     path: urls.ELETAGREEMENT,
     exact: true,

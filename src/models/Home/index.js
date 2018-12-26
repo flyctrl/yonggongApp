@@ -83,6 +83,10 @@ class Home extends Component {
   handleClickMsg = () => {
     this.props.match.history.push(urls.MESSAGE)
   }
+  handleClickMsgOne = (e) => {
+    let index = e.currentTarget.getAttribute('data-type')
+    this.props.match.history.push(urls.MESSAGE + '?tabIndex=' + index)
+  }
   handleClickPrj = () => {
     this.props.match.history.push(urls.PROJECTMANGE)
   }
@@ -151,7 +155,7 @@ class Home extends Component {
                   >
                     {
                       sysInforms.map((item, index) => {
-                        return <div key={`${index}${item['msg_no']}`} className={sysInforms.length === 1 ? `${style['v-item-one']}` : style['v-item']}><p className='ellipsis'> <span></span>{item.content}</p></div>
+                        return <div key={`${index}${item['msg_no']}`} onClick={this.handleClickMsgOne} data-type={item['msg_type']} className={sysInforms.length === 1 ? `${style['v-item-one']}` : style['v-item']}><p className='ellipsis'> <span></span>{item.content}</p></div>
                       })
                     }
                   </Carousel>

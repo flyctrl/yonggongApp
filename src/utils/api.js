@@ -481,6 +481,9 @@ export default {
       getworkSheetList(params) { // 获取工单列表
         return Fetch(prefix + '/worksheet/attend/select', params, 'get')
       },
+      getPrjList(params) { // 获取项目列表
+        return Fetch(prefix + '/project/list/select', params, 'get')
+      }
     },
     feedback: (params) => {
       return FetchSave('/common/feedback', params, 'post', { showloading: false })

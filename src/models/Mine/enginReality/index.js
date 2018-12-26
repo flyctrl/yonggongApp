@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { List, Picker, Icon, Calendar } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import { createForm } from 'rc-form'
-// import Loadable from 'react-loadable'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import { attendanceList } from 'Contants/fieldmodel'
@@ -10,19 +9,6 @@ import history from 'Util/history'
 import style from './style.css'
 import api from 'Util/api'
 // const now = new Date()
-
-// let RadioOrder = Loadable({
-//   loader: () => import('Components'),
-//   modules: ['./RadioOrder'],
-//   loading: () => {
-//     return null
-//   },
-//   render(loaded, props) {
-//     console.log(loaded)
-//     let RadioOrder = loaded.RadioOrder
-//     return <RadioOrder {...props}/>
-//   }
-// })
 class EnginReality extends Component {
   constructor(props) {
     super(props)
@@ -62,8 +48,7 @@ class EnginReality extends Component {
   }
   getProjectList = async () => { // 获取项目
     this.setState({ isLoadProj: true })
-    const proData = await api.Common.getProList({
-      status: 1
+    const proData = await api.Mine.engineeringLive.getPrjList({
     }) || false
     if (proData) {
       this.setState({
@@ -74,13 +59,14 @@ class EnginReality extends Component {
   }
   getEngList = async () => { // 获取考勤打卡统计
     // console.log(tooler.formatDate(startTime))
-    const { worksheetId, startTime, endTime } = this.state
+    const { worksheetId, startTime, endTime, proId } = this.state
+    history.replace(`?worksheetId=${worksheetId}&startTime=${tooler.formatDate(new Date(startTime))}&endTime=${tooler.formatDate(new Date(endTime))}&proId=${proId}`)
     this.setState({ isLoading: true })
     const data = await api.Mine.engineeringLive.getEngList({
       worksheet_id: worksheetId,
-      start_date: startTime,
-      end_date: endTime
-    }) || []
+      start_date: tooler.formatDate(new Date(startTime)),
+      end_date: tooler.formatDate(new Date(endTime))
+    }) || false
     if (data) {
       this.setState({
         attendanceData: data,
@@ -89,7 +75,7 @@ class EnginReality extends Component {
     }
   }
 
-  onProChange = async (val, id) => { // 选择项目
+  onProChange = async (val, id = '') => { // 选择工单
     // let { proData } = this.state
     // let proLabel
     // for (const i of proData) {
@@ -99,7 +85,7 @@ class EnginReality extends Component {
     // }
     this.setState({ isLoadWork: true })
     const worksheetData = await api.Mine.engineeringLive.getworkSheetList({ // 获取工单列表
-      prj_id: val[0]
+      prj_no: val[0]
     }) || false
     if (worksheetData) {
       this.setState({
@@ -109,15 +95,10 @@ class EnginReality extends Component {
         isLoading: true,
         worksheetData,
         isLoadWork: false,
-        worksheetId: id || ''
+        worksheetId: id
       })
     }
   }
-  // handleChangeOrder = () => { // 选择工单
-  //   this.setState({
-  //     showOrder: true
-  //   })
-  // }
   onWorkSheetChange = (val) => {
     const { startTime, endTime } = this.state
     this.setState({
@@ -128,24 +109,6 @@ class EnginReality extends Component {
       }
     })
   }
-  // onClickBack = () => {
-  //   this.setState({
-  //     showOrder: false
-  //   })
-  // }
-  // onHandleSure = (worksheetId, worksheetNo) => {
-  //   const { startTime, endTime } = this.state
-  //   this.setState({
-  //     showOrder: false,
-  //     worksheetId,
-  //     worksheetNo
-  //   }, () => {
-  //     if (worksheetId && startTime && endTime) {
-  //       this.getEngList()
-  //     }
-  //   })
-  // }
-
   hanleShowCalendar = () => {
     this.setState({
       dateShow: true
@@ -196,12 +159,12 @@ class EnginReality extends Component {
           <Content>
             { !isLoadProj
               ? <div className={style['engin-reality']}>
-                <List className={`${style['input-form-list']} ${proSelect ? style['selected-form-list'] : ''}`} renderHeader={() => '项目名称'}>
+                <List className={`${style['input-form-list']}`} renderHeader={() => '项目名称'}>
                   {/* <Picker extra='请选择项目' className='myPicker' onChange={this.onProChange} data={proData} cols={1}>
                     <List.Item arrow='horizontal'></List.Item>
                   </Picker> */}
                   {getFieldDecorator('prj_id', {
-                    initialValue: [parseInt(proId, 10)],
+                    initialValue: [proId],
                     rules: [
                       { required: true, message: '请选择项目' }
                     ]
@@ -211,27 +174,12 @@ class EnginReality extends Component {
                     </Picker>
                   )}
                 </List>
-                {/* {
-                  proSelect
-                    ? <List className={`${style['input-form-list']}`} renderHeader={() => '工单名称'}>
-                      <div onClick={this.handleChangeOrder}>
-                        <InputItem
-                          disabled
-                          defaultValue={ worksheetNo }
-                          value={ worksheetNo }
-                          placeholder='请选择工单名称'
-                        ></InputItem>
-                        <Icon type='right' color='#ccc' />
-                      </div>
-                    </List>
-                    : null
-                } */}
                 {
                   proSelect
                     ? !isLoadWork
-                      ? <List className={`${style['input-form-list']} ${proSelect ? style['selected-form-list'] : ''} `} renderHeader={() => '工单名称'}>
+                      ? <List className={`${style['input-form-list']}`} renderHeader={() => '工单名称'}>
                         {getFieldDecorator('worksheet_id', {
-                          initialValue: [parseInt(worksheetId, 10)],
+                          initialValue: [worksheetId],
                           rules: [
                             { required: true, message: '请选择工单' }
                           ]
@@ -245,16 +193,8 @@ class EnginReality extends Component {
                     : null
                 }
                 <div className={style['engin-user']}>
-                  {/* <img src='https://gw.alipayobjects.com/zos/rmsportal/WXoqXTHrSnRcUwEaQgXJ.png' />
-                  <span>刘德华</span> */}
                   <a onClick={this.hanleShowCalendar}>{ startTime && endTime ? (new Date(startTime)).toLocaleDateString() + ' ~ ' + (new Date(endTime)).toLocaleDateString() : '请选择日期范围' } <Icon type='right' size='md' color=''/></a>
                 </div>
-                {/* <ul className={style['attend']}>
-                  <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>正常打卡</p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
-                  <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>异常<span>迟到</span><span>早退</span><span>未打卡</span></p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
-                  <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>外勤</p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
-                  <li onClick={this.handleLeavesitu} className='my-bottom-border'><p>加班</p><Icon type='right' size='md' color='#ccc'/><em>0</em></li>
-                </ul> */}
                 <ul className={style['attend']}>
                   {
                     attendanceData.length !== 0 && !isLoading
@@ -279,13 +219,10 @@ class EnginReality extends Component {
             visible={dateShow}
             onCancel={this.handleDateCancel}
             onConfirm={this.handleDateConfirm}
-            defaultDate={new Date(startTime || new Date())}
-            defaultValue={[new Date(startTime), new Date(endTime)]}
+            // defaultDate={new Date()}
+            defaultValue={[new Date(startTime || new Date()), new Date(endTime || new Date())]}
           />
         </div>
-        {/* {
-          showOrder ? <RadioOrder proData={proData} onClickBack={this.onClickBack} onClickSure={this.onHandleSure} proId={proId} /> : null
-        } */}
       </div>
     )
   }

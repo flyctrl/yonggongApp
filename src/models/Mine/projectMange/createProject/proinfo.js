@@ -36,17 +36,12 @@ class Construct extends Component {
         newFileList.push(item)
       }
     })
-    const data = await api.Common.delAttch({
-      path: param['path']
-    }) || false
-    if (data) {
-      this.setState({
-        fileList: newFileList
-      })
-      this.props.onDelete({
-        fileList: newFileList
-      })
-    }
+    // const data = await api.Common.delAttch({
+    //   path: param['path']
+    // }) || false
+    this.setState({
+      fileList: newFileList
+    })
   }
   onErrorClick = (field) => {
     Toast.info(this.props.form.getFieldError(field).join('、'))

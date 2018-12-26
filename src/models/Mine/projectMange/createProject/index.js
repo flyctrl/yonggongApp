@@ -159,11 +159,6 @@ class CreateProject extends Component {
       proShow: false
     })
   }
-  submitDeleteUp = (data) => { // 删除附件
-    this.setState({
-      fileList: data['fileList']
-    })
-  }
   onErrorClick = (field) => {
     Toast.info(this.props.form.getFieldError(field).join('、'))
   }
@@ -174,8 +169,8 @@ class CreateProject extends Component {
     fileList.map((item, index, ary) => {
       postFile.push({ path: item['path'], org_name: item['org_name'] })
     })
-    const { getFieldError } = this.props.form
     Toast.loading('提交中...', 0)
+    const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
         let postData = { ...{ attachment: postFile }, ...values, ...{ prj_win_bid_notice_no: constrNum, prj_construct_unit_code: workCode, licence_no: workNum, prj_brief: proText, coordinate }}
@@ -197,6 +192,7 @@ class CreateProject extends Component {
           postData
         })
       } else {
+        Toast.hide()
         for (let value of validateAry) {
           if (error[value]) {
             Toast.fail(getFieldError(value), 1)
@@ -253,7 +249,7 @@ class CreateProject extends Component {
                 </div>
                 <div className={style['con-amount']}>
                   {getFieldDecorator('construction_amount', {
-                    initialValue: dataSource['construction_amount'] ? dataSource['construction_amount'].split('元')[0] : '',
+                    initialValue: dataSource['construction_amount'],
                     rules: [
                       { pattern: /^\d+(\.\d+)?$/, message: '格式错误' }
                     ]
@@ -350,7 +346,7 @@ class CreateProject extends Component {
           workShow ? <Work unit={workUnit} num={workNum} code={workCode} onClose={this.closeWork} onSubmit={(workJson) => this.submitWork(workJson)}/> : null
         }
         {
-          proShow ? <Projetct info={proText} onDelete={this.submitDeleteUp} fileList={fileList} onClose={this.closeProject} onSubmit={(proJson) => this.submitProject(proJson)}/> : null
+          proShow ? <Projetct info={proText} fileList={fileList} onClose={this.closeProject} onSubmit={(proJson) => this.submitProject(proJson)}/> : null
         }
       </div>
     )

@@ -1,24 +1,16 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
-import { ListView, PullToRefresh, Tabs } from 'antd-mobile'
+import { ListView, PullToRefresh } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
-import style from './style.css'
+import style from 'Src/models/Mine/contractMange/style.css'
 import api from 'Util/api'
 import ReactDOM from 'react-dom'
 const NUM_ROWS = 20
-let contractType = {
-  0: '接包方',
-  1: '发包方'
-}
-let tabType = [
-  { title: '发单合同' },
-  { title: '接单合同' }
-]
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
 })
-class ContractMange extends Component {
+class Contract extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -31,25 +23,16 @@ class ContractMange extends Component {
       pageIndex: 1,
       pageNos: 1,
       nodata: false,
-      worksheetId: tooler.getQueryString('id') || '',
-      tabIndex: tooler.getQueryString('tabIndex') || 0,
+      worksheetNo: tooler.getQueryString('worksheetno') || '',
     }
   }
-  genData = async (pIndex = 1, tabIndex = 0) => {
-    let { worksheetId } = this.state
-    let data
-    if (tabIndex === 0 || tabIndex === '0') {
-      data = await api.Mine.contractMange.contractListSend({
-        worksheet_no: worksheetId,
-        page: pIndex,
-        limit: NUM_ROWS
-      }) || false
-    } else if (tabIndex === 1 || tabIndex === '1') {
-      data = await api.Mine.contractMange.contractListAccept({
-        page: pIndex,
-        limit: NUM_ROWS
-      }) || false
-    }
+  genData = async (pIndex = 1) => {
+    let { worksheetNo } = this.state
+    let data = await api.Mine.contractMange.contractListSend({
+      worksheet_no: worksheetNo,
+      page: pIndex,
+      limit: NUM_ROWS
+    }) || false
     if (data['currPageNo'] === 1 && data['list'].length === 0) {
       document.body.style.overflow = 'hidden'
       this.setState({
@@ -66,9 +49,8 @@ class ContractMange extends Component {
     return await data['list'] || []
   }
   componentDidMount() {
-    let { tabIndex } = this.state
-    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 88.5
-    this.genData(1, tabIndex).then((rdata) => {
+    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 45
+    this.genData(1).then((rdata) => {
       this.rData = rdata
       this.setState({
         dataSource: this.rData,
@@ -83,7 +65,7 @@ class ContractMange extends Component {
     if (this.state.isLoading) {
       return
     }
-    let { pageIndex, pageNos, tabIndex } = this.state
+    let { pageIndex, pageNos } = this.state
     // console.log('reach end', event)
     this.setState({ isLoading: true })
     let newIndex = pageIndex + 1
@@ -91,7 +73,7 @@ class ContractMange extends Component {
       return false
     }
     console.log('pageIndex', newIndex)
-    this.genData(newIndex, tabIndex).then((rdata) => {
+    this.genData(newIndex).then((rdata) => {
       this.rData = [...this.rData, ...rdata]
       this.setState({
         dataSource: this.rData,
@@ -102,30 +84,10 @@ class ContractMange extends Component {
   }
 
   onRefresh = () => {
-    let { tabIndex } = this.state
     console.log('onRefresh')
     this.setState({ refreshing: true, isLoading: true, pageIndex: 1 })
     // simulate initial Ajax
-    this.genData(1, tabIndex).then((rdata) => {
-      this.rData = rdata
-      this.setState({
-        dataSource: this.rData,
-        refreshing: false,
-        isLoading: false,
-      })
-    })
-  }
-  handleTabsChange = (tabs, index) => {
-    this.props.match.history.replace(`?tabIndex=${index}`)
-    this.setState({
-      tabIndex: index,
-      refreshing: true,
-      isLoading: true,
-      pageIndex: 1,
-      pageNos: 1,
-      dataSource: []
-    })
-    this.genData(1, index).then((rdata) => {
+    this.genData(1).then((rdata) => {
       this.rData = rdata
       this.setState({
         dataSource: this.rData,
@@ -139,7 +101,7 @@ class ContractMange extends Component {
     this.props.match.history.push(`${urls.ELETAGREEMENT}?contract_no=${contractNo}`)
   }
   render() {
-    let { isLoading, nodata, tabIndex, dataSource } = this.state
+    let { isLoading, nodata, dataSource } = this.state
     const footerShow = () => {
       if (isLoading) {
         return null
@@ -155,7 +117,7 @@ class ContractMange extends Component {
           <p className={`${style['con-p1']} my-bottom-border`}><span>{rowData.created_at}</span>
             <a data-id={rowData.contract_no} onClick={this.handlePact}>查看合同</a>
           </p>
-          <p className={style['con-p2']}><span>{`${contractType[tabIndex]}: `}</span>{rowData.username}</p>
+          <p className={style['con-p2']}><span>发包方：</span>{rowData.username}</p>
           <p className={style['con-p2']}><span>工单标题: </span>{rowData.worksheet_title}</p>
         </li>
       )
@@ -172,36 +134,28 @@ class ContractMange extends Component {
         />
         <Content>
           <div className={style['contact-page']}>
-            <Tabs tabs={tabType}
-              page={parseInt(tabIndex, 10)}
-              tabBarTextStyle={{ fontSize: '15px', color: '#999999' }}
-              tabBarActiveTextColor='#1298FC'
-              tabBarUnderlineStyle={{ borderColor: '#0098F5', width: '12%', marginLeft: '18.5%' }}
-              onChange={this.handleTabsChange}
-            >
-              <ul className={style['contract-list']} style={{ height: '100%' }}>
-                <ListView
-                  ref={(el) => { this.lv = el }}
-                  dataSource={this.state.defaultSource.cloneWithRows(dataSource)}
-                  renderFooter={() => footerShow()}
-                  renderRow={row}
-                  style={{
-                    height: this.state.height,
-                  }}
-                  className={style['job-list']}
-                  pageSize={NUM_ROWS}
-                  // onScroll={(e) => { console.log('onscroll') }}
-                  pullToRefresh={<PullToRefresh
-                    refreshing={this.state.refreshing}
-                    onRefresh={this.onRefresh}
-                  />}
-                  onEndReachedThreshold={10}
-                  initialListSize={NUM_ROWS}
-                  scrollRenderAheadDistance={120}
-                  onEndReached={this.onEndReached}
-                />
-              </ul>
-            </Tabs>
+            <ul className={style['contract-list']} style={{ height: '100%' }}>
+              <ListView
+                ref={(el) => { this.lv = el }}
+                dataSource={this.state.defaultSource.cloneWithRows(dataSource)}
+                renderFooter={() => footerShow()}
+                renderRow={row}
+                style={{
+                  height: this.state.height,
+                }}
+                className={style['job-list']}
+                pageSize={NUM_ROWS}
+                // onScroll={(e) => { console.log('onscroll') }}
+                pullToRefresh={<PullToRefresh
+                  refreshing={this.state.refreshing}
+                  onRefresh={this.onRefresh}
+                />}
+                onEndReachedThreshold={10}
+                initialListSize={NUM_ROWS}
+                scrollRenderAheadDistance={120}
+                onEndReached={this.onEndReached}
+              />
+            </ul>
           </div>
         </Content>
       </div>
@@ -209,4 +163,4 @@ class ContractMange extends Component {
   }
 }
 
-export default ContractMange
+export default Contract

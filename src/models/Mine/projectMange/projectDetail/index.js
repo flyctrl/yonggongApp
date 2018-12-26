@@ -108,7 +108,7 @@ class ProjectDetail extends Component {
                       <Item extra={dataSource['prj_construct_unit_code']}>施工单位统一社会信用代码</Item>
                     </div>
                     <div className={style['input-ellipsis']}>
-                      <Item extra={dataSource['construction_amount']}>项目施工金额</Item>
+                      <Item extra={dataSource['construction_amount_show']}>项目施工金额</Item>
                     </div>
                     <div className={style['input-ellipsis']}>
                       <Item extra={`${dataSource['construction_area']}平方米`}>项目施工面积</Item>
