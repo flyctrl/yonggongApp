@@ -476,10 +476,10 @@ export default {
     },
     engineeringLive: { // 工程实况
       getEngList(params) { // 考勤打卡统计
-        return Fetch(prefix + '/worksheetOrder/attend/stat', params, 'get')
+        return Fetch(prefix + '/worksheet/attend/statusStat', params, 'get')
       },
       getEngDetail(params) { // 考勤详情
-        return Fetch(prefix + '/worksheetOrder/attend/list', params, 'get')
+        return Fetch(prefix + '/worksheet/attend/list', params, 'get')
       },
       getworkSheetList(params) { // 获取工单列表
         return Fetch(prefix + '/worksheet/attend/select', params, 'get')

@@ -140,8 +140,11 @@ class Detail extends Component {
   componentDidMount() {
     this.getInvoiceList()
   }
+  onErrorClick = (field) => {
+    Toast.info(this.props.form.getFieldError(field).join('、'))
+  }
   render() {
-    const { getFieldProps, getFieldDecorator } = this.props.form
+    const { getFieldProps, getFieldDecorator, getFieldError } = this.props.form
     const { valModeDataValue, totalRadioValue, settleRadioValue, invoiceType, isLoading } = this.state
     return (
       <div className={`${style['invoice-box']} pageBox`}>
@@ -216,8 +219,14 @@ class Detail extends Component {
                           getFieldDecorator('tax_no', {
                             rules: [
                               { required: !!(settleRadioValue === 1), message: '请填写税号' },
+                              { pattern: /^[A-Z0-9]{15}$|^[A-Z0-9]{17}$|^[A-Z0-9]{18}$|^[A-Z0-9]{20}$/, message: '15或者17或者18或者20位字母、数字组成' }
                             ]
-                          })(<InputItem placeholder='填写纳税人识别号' ref={(el) => { this.taxNo = el }} />)
+                          })(<InputItem
+                            placeholder='填写纳税人识别号'
+                            ref={(el) => { this.taxNo = el }}
+                            error={!!getFieldError('tax_no')}
+                            onErrorClick={() => this.onErrorClick('tax_no')}
+                          />)
                         }
                       </List>
                       : ''
@@ -243,10 +252,13 @@ class Detail extends Component {
                         getFieldDecorator('recv_mobile', {
                           rules: [
                             { required: !!(totalRadioValue === 1), message: '请填写收件人手机号' },
+                            { pattern: /^1[345789]\d{9}$/, message: '格式错误' }
                           ]
                         })(<InputItem
                           clear
                           placeholder='填写收件人手机号'
+                          error={!!getFieldError('recv_mobile')}
+                          onErrorClick={() => this.onErrorClick('recv_mobile')}
                         />)
                       }
                     </List>
@@ -258,10 +270,13 @@ class Detail extends Component {
                         getFieldDecorator('recv_email', {
                           rules: [
                             { required: !!(totalRadioValue === 2), message: '请填写邮箱' },
+                            { pattern: /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/, message: '填写正确的邮箱' }
                           ]
                         })(<InputItem
                           clear
                           placeholder='填写电子邮箱'
+                          error={!!getFieldError('recv_email')}
+                          onErrorClick={() => this.onErrorClick('recv_email')}
                         ></InputItem>)
                       }
                     </List>

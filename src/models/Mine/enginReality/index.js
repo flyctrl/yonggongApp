@@ -39,7 +39,7 @@ class EnginReality extends Component {
           this.onProChange([toolers.proId], toolers.worksheetId)
           setTimeout(() => {
             this.getEngList()
-          }, 500)
+          }, 1000)
         })
       } else {
         this.setState({ ...toolers, proSelect: false })
@@ -63,7 +63,7 @@ class EnginReality extends Component {
     history.replace(`?worksheetId=${worksheetId}&startTime=${tooler.formatDate(new Date(startTime))}&endTime=${tooler.formatDate(new Date(endTime))}&proId=${proId}`)
     this.setState({ isLoading: true })
     const data = await api.Mine.engineeringLive.getEngList({
-      worksheet_id: worksheetId,
+      worksheet_no: worksheetId,
       start_date: tooler.formatDate(new Date(startTime)),
       end_date: tooler.formatDate(new Date(endTime))
     }) || false
