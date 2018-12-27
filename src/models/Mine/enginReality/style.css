@@ -128,3 +128,34 @@ html .engin-reality :global(.am-list-body div:not(:last-child) .am-list-line::af
     }
   }
 }
+.calendar-box {
+  height: 100%;
+  width: 100%;
+  & :global(.am-calendar){
+    & :global(.content) {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      & :global(.date-picker) {
+        position: absolute;
+        top: 30px;
+        left: 0;
+        right: 0;
+        bottom: 51px;
+        & :global(.wrapper) {
+          position: absolute;
+          top: 25px;
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
+      }
+      & :global(.confirm-panel) {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+      }
+    }
+  }
+}

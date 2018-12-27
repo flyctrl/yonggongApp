@@ -215,13 +215,15 @@ class EnginReality extends Component {
               : null
             }
           </Content>
-          <Calendar
-            visible={dateShow}
-            onCancel={this.handleDateCancel}
-            onConfirm={this.handleDateConfirm}
-            // defaultDate={new Date()}
-            defaultValue={[new Date(startTime || new Date()), new Date(endTime || new Date())]}
-          />
+          <div className={style['calendar-box']}>
+            <Calendar
+              visible={dateShow}
+              onCancel={this.handleDateCancel}
+              onConfirm={this.handleDateConfirm}
+              // defaultDate={new Date()}
+              defaultValue={[new Date(startTime || new Date()), new Date(endTime || new Date())]}
+            />
+          </div>
         </div>
       </div>
     )
