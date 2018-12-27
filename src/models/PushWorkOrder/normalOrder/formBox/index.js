@@ -63,11 +63,12 @@ class FormBox extends Component {
     this.getValuationUnit()
   }
   getValuationUnit = async () => {
-    let { settleValue } = this.state.urlJson
+    let { settleValue, paymethodId } = this.state.urlJson
     let data = await api.Common.getUnitlist({
+      settle_fix_time: paymethodId,
       type: settleValue,
       worksheet_type: 2
-    })
+    }) || []
     let newData = []
     data.map(item => {
       newData.push({

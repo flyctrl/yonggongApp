@@ -136,7 +136,6 @@ class WorkListManage extends Component {
   }
   showContorlBtn = (rowData) => {
     let btnDom = []
-    console.log('rowData:', rowData)
     let handleAry = rowData['commands']['handle']
     let pageAry = rowData['commands']['page']
     let viewAry = rowData['commands']['view']
@@ -218,6 +217,10 @@ class WorkListManage extends Component {
     }
   }
   handlePushNormal = async (rowData) => { // 我接的 - 发工单
+    if (typeof OCBridge !== 'undefined') {
+      OCBridge.transmitNormalOrder(rowData['order_no'])
+      return
+    }
     let data = await api.Mine.myorder.worksheetOrderData({
       order_no: rowData['order_no']
     }) || false
@@ -261,6 +264,10 @@ class WorkListManage extends Component {
     }
   }
   handlePushQuick = async (rowData) => { // 我接的 - 发快单
+    if (typeof OCBridge !== 'undefined') {
+      OCBridge.transmitQuickOrder(rowData['order_no'])
+      return
+    }
     let data = await api.Mine.myorder.worksheetOrderData({
       order_no: rowData['order_no']
     }) || false
@@ -290,7 +297,19 @@ class WorkListManage extends Component {
     this.props.match.history.push(urls.SELECTWORKER + '?orderno=' + rowData['order_no'])
   }
   handleAttend = (rowData) => { // 我接的 - 考勤 workorderno
-    this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
+    if (typeof OCBridge !== 'undefined') {
+      OCBridge.attendWithWorkerId({
+        order_no: rowData['order_no'],
+        attend_config: {
+          attend_place_coordinate: {
+            lat: rowData['latitude'],
+            lng: rowData['longitude']
+          }
+        }
+      })
+    } else {
+      this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
+    }
   }
   handleGenAttend = (rowData) => { // 我接的 - 代考勤
     this.props.match.history.push(urls.AGENTCHECKLIST + '?orderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])

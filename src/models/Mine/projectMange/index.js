@@ -120,7 +120,11 @@ class ProjectMange extends Component {
     })
   }
   handleCreateProject = () => {
-    history.push(urls.CREATEPROJECT)
+    if (typeof OCBridge !== 'undefined') {
+      OCBridge.addOrEditProject()
+    } else {
+      history.push(urls.CREATEPROJECT)
+    }
   }
   handleDetail = (e) => { // 项目详情
     let { tabIndex } = this.state
@@ -130,7 +134,11 @@ class ProjectMange extends Component {
   handleEdit = (e) => {
     let prjNo = e.currentTarget.getAttribute('data-id')
     e.stopPropagation()
-    this.props.match.history.push(`${urls['CREATEPROJECT']}?prjNo=${prjNo}`)
+    if (typeof OCBridge !== 'undefined') {
+      OCBridge.addOrEditProject(prjNo)
+    } else {
+      this.props.match.history.push(`${urls['CREATEPROJECT']}?prjNo=${prjNo}`)
+    }
   }
   render() {
     let { tabIndex, isLoading, nodata, dataSource } = this.state

@@ -557,7 +557,7 @@ export default {
       return Fetch(prefix + '/message/mm/list', params, 'get')
     },
     unReadMsg(params) {
-      return Fetch(prefix + '/message/mm/unreadStatus', params, 'get')
+      return Fetch(prefix + '/message/mm/unreadStatus', params, 'get', { showloading: false })
     },
     getNoticeDetail(params) {
       return Fetch(prefix + '/message/notice/show', params, 'get')

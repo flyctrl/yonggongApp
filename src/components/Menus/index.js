@@ -15,6 +15,8 @@ import normalorder from 'Src/assets/home/normalorder.png'
 import quickorder from 'Src/assets/home/quickorder.png'
 import initeorder from 'Src/assets/home/initeorder.png'
 import TouchFeedback from 'Util/touchFeedback.js'
+import PubSub from 'pubsub-js'
+import api from 'Util/api'
 
 const data = [
   {
@@ -55,7 +57,8 @@ class AppMenu extends Component {
     super(props)
     this.state = {
       selectedTab: (history.location.pathname).slice(1) || 'Home',
-      visible: false
+      visible: false,
+      unread: 0
     }
   }
 
@@ -74,15 +77,33 @@ class AppMenu extends Component {
     })
   }
   componentDidMount() {
+    this.unReadMsg()
+    this.pubsub_token = PubSub.subscribe('PubSubClickMessage', (topic, message) => {
+      console.log('message', message)
+      this.setState({
+        unread: Number(message)
+      })
+    })
     new TouchFeedback('.am-tabs-tab-bar-wrap')
+  }
+  componentWillUnmount() {
+    PubSub.unsubscribe(this.pubsub_token)
   }
   handleCloseMask = () => {
     this.setState({
       visible: false
     })
   }
+  unReadMsg = async () => {
+    let data = await api.Message.unReadMsg({}) || false
+    if (data) {
+      this.setState({
+        unread: data['unread']
+      })
+    }
+  }
   render() {
-    let { visible, selectedTab } = this.state
+    let { visible, selectedTab, unread } = this.state
     return (
       <div className={ menuStyle['tabBody'] }>
         {
@@ -108,6 +129,7 @@ class AppMenu extends Component {
                       item['title'] !== null ? <svg className={menuStyle['icon-menu']} aria-hidden='true'><use xlinkHref={item['onIcon']}></use></svg> : <span className={menuStyle['pushorder-btn']}><NewIcon type='icon-add-default' /></span>
                     }
                     selected={selectedTab === (item['key'] || '/')}
+                    badge={item['key'] === 'Message' && unread !== 0 ? unread : null}
                     onPress={() => {
                       this.setState({
                         selectedTab: item['key'],

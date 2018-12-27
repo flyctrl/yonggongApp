@@ -98,7 +98,9 @@ class PendingSettleRecord extends Component {
                 }</span>
               </dd>
               <dd>
-                <p><em>周期：</em>{item['period']}</p>
+                <p><em>周期：</em>{
+                  item['period'].length > 1 ? item['period'][0] + ' ~ ' + item['period'][1] : item['period'][0]
+                }</p>
               </dd>
             </dl>
           }) : dataSource.length === 0 && isloading ? <div className='nodata'>暂无数据</div> : null

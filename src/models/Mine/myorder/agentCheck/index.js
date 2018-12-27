@@ -40,7 +40,19 @@ class AgentCheck extends Component {
   }
   goCheck = (uid) => {
     let { orderno, lat, lng, radius } = this.state
-    this.props.match.history.push(`${urls.CHECK}?workorderno=${orderno}&lat=${lat}&lng=${lng}&radius=${radius}&workerUid=${uid}`)
+    if (typeof OCBridge !== 'undefined') {
+      OCBridge.attendWithWorkerId({
+        order_no: orderno,
+        attend_config: {
+          attend_place_coordinate: {
+            lat: lat,
+            lng: lng
+          }
+        }
+      }, uid)
+    } else {
+      this.props.match.history.push(`${urls.CHECK}?workorderno=${orderno}&lat=${lat}&lng=${lng}&radius=${radius}&workerUid=${uid}`)
+    }
   }
   render () {
     let { dataSource, isloading } = this.state

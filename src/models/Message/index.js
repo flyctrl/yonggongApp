@@ -9,6 +9,7 @@ import { msgStatus, urlCode } from 'Contants/fieldmodel'
 import { getQueryString, parseJsonUrl } from 'Contants/tooler'
 // import ReactDOM from 'react-dom'
 import { ListView, PullToRefresh, Tabs, Badge } from 'antd-mobile'
+import PubSub from 'pubsub-js'
 const iconData = {
   1: 'icon-user',
   2: 'icon-order1',
@@ -110,24 +111,25 @@ class Message extends Component {
       })
     })
   }
-  handlebtnType = async (msgno) => { // 根据类型跳转页面
+  handlebtnType = async (status, msgno) => { // 根据类型跳转页面
     let data = await api.Message.noticeRead({
       msg_no: msgno
     }) || false
     if (data) {
       console.log('data', data)
       let extras = data['extras']
-      console.log('extras', extras)
-      if (extras !== {} && extras !== []) { // 跳转
-        console.log('params', extras['params'])
+      if (JSON.stringify(extras) !== '{}' && JSON.stringify(extras) !== '[]') { // 跳转
         if (extras['in_out'] === '1') { // 内部跳转
-          if (extras['params'] !== {} && extras['params'] !== []) {
+          if (JSON.stringify(extras['params']) !== '{}' && JSON.stringify(extras['params']) !== '[]') {
             this.props.match.history.push(`${urls[urlCode[extras['page_code']].name]}?${parseJsonUrl(extras['params'])}${urlCode[extras['page_code']].params ? parseJsonUrl(urlCode[extras['page_code']].params) : ''}`)
           } else {
             this.props.match.history.push(`${urls[urlCode[extras['page_code']].name]}${urlCode[extras['page_code']].params ? '?' + parseJsonUrl(urlCode[extras['page_code']].params) : ''}`)
           }
         }
-      } else if (extras === {} || extras === []) { // 无跳转刷新数据
+      } else if (JSON.stringify(extras) === '{}' || JSON.stringify(extras) === '[]') { // 无跳转刷新数据
+        if (status === 1) {
+          PubSub.publish('PubSubClickMessage', data['unread'])
+        }
         let { dataSource } = this.state
         let currentIndex
         dataSource.map((item, index) => {
@@ -179,9 +181,9 @@ class Message extends Component {
         return ''
       }
     }
-    const row = (rowData, sectionID, rowID) => {
+    let row = (rowData, sectionID, rowID) => {
       return (
-        <div data-id={rowData['id']} key={rowData['id']} type={rowData['msg_type']} onClick={() => this.handlebtnType(rowData['msg_no'])} className={`${style['notice-box']}`}>
+        <div data-id={rowData['id']} key={rowData['id']} type={rowData['msg_type']} onClick={() => this.handlebtnType(rowData['status'], rowData['msg_no'])} className={`${style['notice-box']}`}>
           <dl>
             <dt>
               <div className={style['icon-box']}>
@@ -206,7 +208,7 @@ class Message extends Component {
         <Content>
           <Tabs tabs={msgStatus}
             page={parseInt(tabIndex, 10)}
-            tabBarTextStyle={{ fontSize: '15px', color: '#999999' }}
+            tabBarTextStyle={{ fontSize: '.14rem', color: '#999999' }}
             tabBarActiveTextColor='#1298FC'
             tabBarUnderlineStyle={{ borderColor: '#1298FC', width: '6%', marginLeft: '7%' }}
             onChange={this.handleTabsChange}
