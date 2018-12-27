@@ -146,7 +146,7 @@ class ProjectMange extends Component {
       if (isLoading) {
         return null
       } else if (nodata) {
-        return <DefaultPage click={() => { this.props.match.history.push(urls['CREATEPROJECT']) }} type='noitems' />
+        return <DefaultPage click={() => { typeof OCBridge !== 'undefined' ? OCBridge.addOrEditProject() : this.props.match.history.push(urls['CREATEPROJECT']) }} type='noitems' />
       } else {
         return ''
       }
