@@ -511,7 +511,7 @@ export default {
         return Fetch(prefix + '/worksheetOrder/attend/orderList', params, 'get')
       },
       uploadImg(params) { // 上传照片
-        return Fetch('/common/attach/image', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false })
+        return Fetch('/common/attach/imageData', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false })
       },
       attendOrderlist(params) { // 代考勤订单列表(考勤提醒)
         return Fetch(prefix + '/worksheetOrder/attend/orderList', params, 'get')

@@ -441,23 +441,29 @@ class Check extends Component {
     let reader = new FileReader()
     let _this = this
     reader.onload = async function () {
-      let formData = new FormData()
-      formData.append('image', file)
-      formData.append('type', 8)
-      Toast.loading('提交中...', 0)
-      const data = await api.Mine.Check.uploadImg(formData) || false
-      if (data) {
-        _this.setState({
-          imgSrc: data.url,
-          imgPath: data.path
-        })
-        _this.handlePushTime()
+      let reader = new FileReader()
+      reader.onload = async function () {
+        let url = this.result
+        Toast.loading('上传中...', 0)
+        let formData = {}
+        formData.image = url
+        formData.type = 8
+        const data = await api.Mine.Check.uploadImg(formData) || false
+        if (data) {
+          _this.setState({
+            imgSrc: data.url,
+            imgPath: data.path
+          })
+          _this.handlePushTime()
+        }
+      }
+      reader.onerror = function () {
+        Toast(reader.error)
+      }
+      if (file) {
+        reader.readAsDataURL(file)
       }
     }
-    reader.onerror = function () {
-      Toast(reader.error)
-    }
-    reader.readAsDataURL(file)
   }
   cameraTakePicture = () => {
     if (newAlert) {
@@ -471,12 +477,12 @@ class Check extends Component {
     async function onSuccess(imageURI) {
       Toast.loading('提交中...', 0)
       let data = await api.Mine.Check.uploadImg({
-        image: imageURI,
+        image: 'data:image/png;base64,' + imageURI,
         type: 8
       }) || false
       if (data) {
         _this.setState({
-          imgSrc: imageURI,
+          imgSrc: data.url,
           imgPath: data.path
         })
         _this.handlePushTime()
