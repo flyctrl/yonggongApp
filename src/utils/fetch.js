@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2018-12-28 11:39:22
+* @Last Modified time: 2018-12-28 18:21:42
 */
 import * as Loading from './load.js'
 import storage from '../utils/storage'
@@ -80,13 +80,13 @@ fetcher.interceptors.response.use(function (response) {
       })
     }
   } else if (response.data.code === 16020006) { // 实名认证 未通过
-    history.push('/Mine/realNameAuth')
+    typeof OCBridge !== 'undefined' ? OCBridge.userVerify() : history.push('/Mine/realNameAuth')
   } else if (response.data.code === 16020012) { // 实名认证 审核中
     history.push('/Mine/realNameDetail')
   } else if (response.data.code === 16030001) { // 企业未认证 未提交认证
-    history.push('/Mine/companyAuth')
+    typeof OCBridge !== 'undefined' ? OCBridge.companyVerify() : history.push('/Mine/companyAuth')
   } else if (response.data.code === 16030007 || response.data.code === 16030006) { // 企业未认证 未通过
-    history.push('/Mine/companyAuthDetail')
+    typeof OCBridge !== 'undefined' ? OCBridge.companyVerifyResult() : history.push('/Mine/companyAuthDetail')
   }
   return response.data
 }, function (error) {
