@@ -18,6 +18,12 @@ html :global(.am-list-footer) {
 }
 .message-content {
   & .msg-box {
+    & :global(.am-list-view-scrollview-content) {
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
     & :global(.am-list-body::before) {
       height: 0;
     }
@@ -46,6 +52,7 @@ html :global(.am-list-footer) {
     right: 0;
   }
   & dl {
+    overflow: hidden;
     & dt {
       float: left;
       & .icon-box {
@@ -70,8 +77,8 @@ html :global(.am-list-footer) {
     }
     & dd {
       float: left;
-      width: 280px;
       margin-left: 12px;
+      width:80%;
       & p {
         width: 100%;
         font-size: 16px;
