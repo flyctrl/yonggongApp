@@ -284,44 +284,60 @@ class WorkListDetail extends Component {
     let page = commands['page']
     page.map((item, index) => {
       if (item['key'] === 'orderPageQuick') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
-          <NewIcon type='icon-zhuanfakuaidan'/>
-          <p>转发快单</p>
+        operatDom.push(<li key={item['key'] + index}>
+          <a onClick={() => this.handlebtnType(item['key'], datasource)}>
+            <NewIcon type='icon-zhuanfakuaidan'/>
+            <p>转发快单</p>
+          </a>
         </li>)
       } else if (item['key'] === 'orderPageCommon') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
-          <NewIcon type='icon-zhuanfa-'/>
-          <p>转发工单</p>
+        operatDom.push(<li key={item['key'] + index}>
+          <a onClick={() => this.handlebtnType(item['key'], datasource)}>
+            <NewIcon type='icon-zhuanfa-'/>
+            <p>转发工单</p>
+          </a>
         </li>)
       } else if (item['key'] === 'orderPageSelectWorker') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
-          <NewIcon type='icon-shenfenxuanze'/>
-          <p>选择工人</p>
+        operatDom.push(<li key={item['key'] + index}>
+          <a onClick={() => this.handlebtnType(item['key'], datasource)}>
+            <NewIcon type='icon-shenfenxuanze'/>
+            <p>选择工人</p>
+          </a>
         </li>)
       } else if (item['key'] === 'orderPageAttend') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
-          <NewIcon type='icon-kaoqin-'/>
-          <p>考勤</p>
+        operatDom.push(<li key={item['key'] + index}>
+          <a onClick={() => this.handlebtnType(item['key'], datasource)}>
+            <NewIcon type='icon-kaoqin-'/>
+            <p>考勤</p>
+          </a>
         </li>)
       } else if (item['key'] === 'orderPageAgentAttend') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
-          <NewIcon type='icon-daikaoqin'/>
-          <p>代考勤</p>
+        operatDom.push(<li key={item['key'] + index}>
+          <a onClick={() => this.handlebtnType(item['key'], datasource)}>
+            <NewIcon type='icon-daikaoqin'/>
+            <p>代考勤</p>
+          </a>
         </li>)
       } else if (item['key'] === 'orderPageAgentStartWork') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
-          <NewIcon type='icon-daikaigongkaobei'/>
-          <p>代开工</p>
+        operatDom.push(<li key={item['key'] + index}>
+          <a onClick={() => this.handlebtnType(item['key'], datasource)}>
+            <NewIcon type='icon-daikaigongkaobei'/>
+            <p>代开工</p>
+          </a>
         </li>)
       } else if (item['key'] === 'orderPageAgentFinishWork') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
-          <NewIcon type='icon-daiwangong-'/>
-          <p>代完工</p>
+        operatDom.push(<li key={item['key'] + index}>
+          <a onClick={() => this.handlebtnType(item['key'], datasource)}>
+            <NewIcon type='icon-daiwangong-'/>
+            <p>代完工</p>
+          </a>
         </li>)
       } else if (item['key'] === 'orderPageSubmitSettle') {
-        operatDom.push(<li onClick={() => this.handlebtnType(item['key'], datasource)} key={item['key'] + index}>
-          <NewIcon type='icon-daijiesuan'/>
-          <p>提交结算</p>
+        operatDom.push(<li key={item['key'] + index}>
+          <a onClick={() => this.handlebtnType(item['key'], datasource)}>
+            <NewIcon type='icon-daijiesuan'/>
+            <p>提交结算</p>
+          </a>
         </li>)
       }
     })
@@ -376,21 +392,29 @@ class WorkListDetail extends Component {
             <div className={style['operate-list']}>
               <h4 className={`${style['modal-title']} my-bottom-border`}>订单操作</h4>
               <ul>
-                <li onClick={() => viewAry.includes('orderViewTasker') ? this.handlebtnType('orderViewTasker', datasource) : null} className={`${viewAry.includes('orderViewTasker') ? '' : style['disabled']}`}>
-                  <NewIcon type='icon-gongrenjiluxuanzhong'/>
-                  <p>工人列表</p>
+                <li className={`${viewAry.includes('orderViewTasker') ? '' : style['disabled']}`}>
+                  <a onClick={() => viewAry.includes('orderViewTasker') ? this.handlebtnType('orderViewTasker', datasource) : null}>
+                    <NewIcon type='icon-gongrenjiluxuanzhong'/>
+                    <p>工人列表</p>
+                  </a>
                 </li>
-                <li onClick={() => viewAry.includes('orderViewWorkPlan') ? this.handlebtnType('orderViewWorkPlan', datasource) : null} className={`${viewAry.includes('orderViewWorkPlan') ? '' : style['disabled']}`}>
-                  <NewIcon type='icon-kaigong'/>
-                  <p>开工记录</p>
+                <li className={`${viewAry.includes('orderViewWorkPlan') ? '' : style['disabled']}`}>
+                  <a onClick={() => viewAry.includes('orderViewWorkPlan') ? this.handlebtnType('orderViewWorkPlan', datasource) : null}>
+                    <NewIcon type='icon-kaigong'/>
+                    <p>开工记录</p>
+                  </a>
                 </li>
-                <li onClick={() => viewAry.includes('orderViewAttend') ? this.handlebtnType('orderViewAttend', datasource) : null} className={`${viewAry.includes('orderViewAttend') ? '' : style['disabled']}`}>
-                  <NewIcon type='icon-kaoqinjiluxuanzhong'/>
-                  <p>考勤记录</p>
+                <li className={`${viewAry.includes('orderViewAttend') ? '' : style['disabled']}`}>
+                  <a onClick={() => viewAry.includes('orderViewAttend') ? this.handlebtnType('orderViewAttend', datasource) : null}>
+                    <NewIcon type='icon-kaoqinjiluxuanzhong'/>
+                    <p>考勤记录</p>
+                  </a>
                 </li>
-                <li onClick={() => viewAry.includes('orderViewSettle') ? this.handlebtnType('orderViewSettle', datasource) : null} className={`${viewAry.includes('orderViewSettle') ? '' : style['disabled']}`}>
-                  <NewIcon type='icon-jiesuanjiluxuanzhong'/>
-                  <p>结算记录</p>
+                <li className={`${viewAry.includes('orderViewSettle') ? '' : style['disabled']}`}>
+                  <a onClick={() => viewAry.includes('orderViewSettle') ? this.handlebtnType('orderViewSettle', datasource) : null}>
+                    <NewIcon type='icon-jiesuanjiluxuanzhong'/>
+                    <p>结算记录</p>
+                  </a>
                 </li>
                 {
                   this.showOrderOperation(datasource).map(item => {

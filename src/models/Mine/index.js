@@ -156,9 +156,11 @@ class Mine extends Component {
             {
               menuData.map((item, index) => {
                 return (
-                  <li key={index} onClick={this.handleMenuClick.bind(this, item.type)}>
-                    <NewIcon type={item.icon}/>
-                    <span>{item.title}</span>
+                  <li key={index}>
+                    <a onClick={this.handleMenuClick.bind(this, item.type)}>
+                      <NewIcon type={item.icon}/>
+                      <span>{item.title}</span>
+                    </a>
                   </li>
                 )
               })
