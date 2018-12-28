@@ -95,3 +95,7 @@
     }
   }
 }
+
+html:not([data-scale]) .invoice-page :global(.am-button::before) {
+  display: none;
+}

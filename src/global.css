@@ -456,3 +456,12 @@ html:not([data-scale]) :global(.pageBox .am-button-primary::before) {
     }
   }
 }
+
+/*antd 1px border*/
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  html:not([data-scale]) :global(.pageBox) :global(.am-button-ghost::before) {
+    width: 198%;
+    height: 198%;
+  }
+}
+
