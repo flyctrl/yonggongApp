@@ -118,6 +118,8 @@ class Mine extends Component {
       return <a onClick={() => this.props.match.history.push(urls.COMPANYAUTH)} className={`${style['attest-btn']} ${style['company']}`}><NewIcon className={style['licon']} type='icon-renzheng' /><span>公司认证</span><NewIcon className={style['ricon']} type='icon-youjiantou' /></a>
     } else if (dataSource['company']['company_status'] === 3) { // 审核失败
       return <a onClick={() => this.props.match.history.push(urls.COMPANYAUTH)} className={`${style['attest-btn']} ${style['failer']}`}><NewIcon className={style['licon']} type='icon-shibai' /><span>重新认证</span><NewIcon className={style['ricon']} type='icon-youjiantou' /></a>
+    } else if (dataSource['company']['company_status'] === 2) { // 待审核
+      return <a onClick={() => this.props.match.history.push(urls.COMPANYAUTHDETAIL)} className={`${style['attest-btn']} ${style['people']}`}><NewIcon className={style['licon']} type='icon-shenhe' /><span>待审核</span><NewIcon className={style['ricon']} type='icon-youjiantou' /></a>
     }
   }
   render() {
@@ -140,7 +142,7 @@ class Mine extends Component {
               </dd>
             </dl>
             {
-              typeof dataSource['company'] !== 'undefined' ? dataSource['company']['company_status'] === 0 || dataSource['company']['company_status'] === 3 ? <div className={`${style['company-detail']} ${style['noauth-company']}`}><NewIcon type='icon-gongsijianjie' /><p>未认证暂无公司简介</p></div> : <div className={style['company-detail']}>
+              typeof dataSource['company'] !== 'undefined' ? dataSource['company']['company_status'] === 0 || dataSource['company']['company_status'] === 3 || dataSource['company']['company_status'] === 2 ? <div className={`${style['company-detail']} ${style['noauth-company']}`}><NewIcon type='icon-gongsijianjie' /><p>未认证暂无公司简介</p></div> : <div className={style['company-detail']}>
                 <p>
                   <span>{typeof dataSource['company'] !== 'undefined' ? dataSource['company']['name'] : ''}</span>
                   <a onClick={this.handleSeeClick}>公司详情>></a>
