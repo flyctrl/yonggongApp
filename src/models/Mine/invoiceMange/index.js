@@ -5,7 +5,6 @@ import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
 import api from 'Util/api'
-import ReactDOM from 'react-dom'
 import zuofei from 'Src/assets/zuofei.png'
 import { invoiceStatus } from 'Contants/fieldmodel'
 const NUM_ROWS = 20
@@ -62,7 +61,7 @@ class InvoiceMange extends Component {
   }
   componentDidMount() {
     let { tabIndex } = this.state
-    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 88.5
+    const hei = this.state.height - 88.5
     this.genData(1, tabIndex).then((rdata) => {
       this.rData = rdata
       this.setState({

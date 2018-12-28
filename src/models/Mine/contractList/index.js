@@ -5,7 +5,6 @@ import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from 'Src/models/Mine/contractMange/style.css'
 import api from 'Util/api'
-import ReactDOM from 'react-dom'
 const NUM_ROWS = 20
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
@@ -49,7 +48,7 @@ class Contract extends Component {
     return await data['list'] || []
   }
   componentDidMount() {
-    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 45
+    const hei = this.state.height - 45
     this.genData(1).then((rdata) => {
       this.rData = rdata
       this.setState({
