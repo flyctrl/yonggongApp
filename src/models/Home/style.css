@@ -14,7 +14,7 @@
 
 .flex-container {
   background:white;
-  padding: 10px  0;
+  padding: 10px  10px 15px 10px;
   & :global(.am-flexbox-item:first-child) {
     margin-left: 4px;
   }
@@ -31,11 +31,13 @@
     margin: 0 auto;
   }
   & .pushtype-text {
-    color: #333333;
-    text-align: center;
-    font-size: 12px;
-    height: 22px;
-    line-height: 22px;
+      height:12px;
+      font-size:12px;
+      font-family:SourceHanSansCN-Regular;
+      font-weight:400;
+      color:rgba(51,51,51,1);
+      margin-top: 8px;
+      text-align: center;
   }
 }
 .usr-home-content {
@@ -58,7 +60,7 @@
       color: #666666;
       position: absolute;
       right:10px;
-      top:25px;
+      top:23px;
       display: flex;
       font-size: 12px;
       align-items: center;
@@ -81,7 +83,7 @@
     }
     & .v-item-one {
       height: 60px!important;
-      line-height: 60px;
+      line-height: 50px;
       font-size: 13px;
       color: #333333;
       & p {
@@ -181,6 +183,7 @@
         font-size: 12px;
         align-items: center;
         color: #999999;
+        font-weight: 400;
         & svg {
           width: 14px;
           height: 14px;
@@ -199,7 +202,7 @@
         height: 57px;
         margin: 5px 0;
         & span {
-          font-size:16px;
+          font-size:18px;
           font-family:SourceHanSansCN-Medium;
           font-weight:500;
         }
@@ -211,6 +214,7 @@
           font-family:SourceHanSansCN-Regular;
           font-weight:400;
           color: #999999;
+          margin-bottom: 5px;
         }
       }
     }
