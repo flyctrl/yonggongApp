@@ -56,7 +56,7 @@ class Company extends Component {
   onSuccess = async(imageURI) => {
     let { typeName } = this.state
     Toast.loading('上传中...', 0)
-    const data = api.Mine.companyAuth.uploadImg({
+    const data = await api.Mine.companyAuth.uploadImg({
       image: 'data:image/png;base64,' + imageURI,
       type: typeName === 'license' ? 4 : 5
     }) || false
