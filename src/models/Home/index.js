@@ -233,7 +233,7 @@ class Home extends Component {
                     <dd>
                       <div >
                         <span>{settle['wait_pay'] || 0}</span>
-                        <b>代付款 </b>
+                        <b>待付款 </b>
                       </div>
                       <div>
                         <span className={style['home-mark']}>{settle['paid'] || 0}</span>
