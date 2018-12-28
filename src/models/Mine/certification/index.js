@@ -8,12 +8,17 @@ import style from './style.css'
 
 const Item = List.Item
 const Brief = Item.Brief
+const companyStatus = {
+  0: '未认证',
+  1: '已认证',
+  2: '待审核',
+  3: '审核失败'
+}
 class Certification extends Component {
   constructor(props) {
     super(props)
     this.state = {
       isRealname: null,
-      isApplyCommpany: null,
       isCompanyAptitude: null,
       isLoading: false
     }
@@ -29,14 +34,13 @@ class Certification extends Component {
     if (data) {
       this.setState({
         isRealname: data['is_realname'],
-        isApplyCommpany: data['is_apply_company_aptitude'],
-        isCompanyAptitude: data['is_company_aptitude'],
+        isCompanyAptitude: data['company_aptitude_status'],
         isLoading: true
       })
     }
   }
   handleClick = (type) => {
-    let { isRealname, isApplyCommpany, isCompanyAptitude } = this.state
+    let { isRealname, isCompanyAptitude } = this.state
     if (type === 1) { // 实名认证
       if (isRealname === 1) {
         this.props.match.history.push(urls.REALNAMEAUTHDETAIL)
@@ -44,7 +48,7 @@ class Certification extends Component {
         this.props.match.history.push(urls.REALNAMEAUTH)
       }
     } else if (type === 2) { // 企业认证
-      if (isApplyCommpany === 0 || isCompanyAptitude === 0) {
+      if (isCompanyAptitude === 0) {
         this.props.match.history.push(urls.COMPANYAUTH)
       } else {
         this.props.match.history.push(urls.COMPANYAUTHDETAIL)
@@ -52,7 +56,7 @@ class Certification extends Component {
     }
   }
   render() {
-    let { isRealname, isApplyCommpany, isCompanyAptitude, isLoading } = this.state
+    let { isRealname, isCompanyAptitude, isLoading } = this.state
     return <div className='pageBox'>
       <Header
         leftClick1={() => {
@@ -74,7 +78,7 @@ class Certification extends Component {
           >实名认证<Brief>体验更多优质服务</Brief></Item>
           <Item
             thumb={<NewIcon type='icon-qiyerenzheng2'/>}
-            extra={isLoading ? (isApplyCommpany === 1 ? (isCompanyAptitude === 1 ? <span style={{ color: '#888' }}>已认证</span> : <span style={{ color: '#0098F5' }}>未通过</span>) : <span style={{ color: '#0098F5' }}>未认证</span>) : ''}
+            extra={isLoading ? (isCompanyAptitude === 1 ? <span style={{ color: '#888' }}>{companyStatus[isCompanyAptitude]}</span> : <span style={{ color: '#0098F5' }}>{companyStatus[isCompanyAptitude]}</span>) : ''}
             arrow='horizontal'
             onClick={() => {
               this.handleClick(2)

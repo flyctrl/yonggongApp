@@ -84,7 +84,7 @@ class Home extends Component {
           }
         }])
       } else {
-        if (data['is_company_aptitude'] !== 1) {
+        if (data['company_aptitude_status'] !== 1) {
           alert('企业未认证', '是否前往认证？', [{
             text: '取消'
           }, {
