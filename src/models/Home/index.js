@@ -179,6 +179,7 @@ class Home extends Component {
                     swiping={false}
                     autoplay
                     infinite
+                    slideWidth={0.85}
                   >
                     {
                       sysInforms.map((item, index) => {
