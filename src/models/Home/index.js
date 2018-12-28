@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 // import { Link } from 'react-router-dom'
 import { Content } from 'Components'
-import { Flex, WingBlank, Carousel, Icon } from 'antd-mobile'
+import { Flex, WingBlank, Carousel, Icon, Modal } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import style from './style.css'
 import api from 'Util/api'
@@ -11,6 +11,7 @@ import initeorder from 'Src/assets/home/initeorder.png'
 import normalorder from 'Src/assets/home/normalorder.png'
 import quickorder from 'Src/assets/home/quickorder.png'
 import btmtxt from 'Src/assets/home/btmtxt.png'
+const alert = Modal.alert
 class Home extends Component {
   constructor(props) {
     super(props)
@@ -71,14 +72,40 @@ class Home extends Component {
       })
     }
   }
-  handlePushNormalOrder = () => {
-    this.props.match.history.push(urls.PUSHNORMALORDER)
+  getCommpanyStatus = async (newurl) => {
+    let data = await api.Common.getEmployAllStatus({}) || false
+    if (data) {
+      if (data['is_realname'] !== 1) {
+        alert('未实名认证', '是否前往认证？', [{
+          text: '取消'
+        }, {
+          text: '去认证', onPress: () => {
+            this.props.match.history.push(urls.REALNAMEAUTH)
+          }
+        }])
+      } else {
+        if (data['is_company_aptitude'] !== 1) {
+          alert('企业未认证', '是否前往认证？', [{
+            text: '取消'
+          }, {
+            text: '去认证', onPress: () => {
+              this.props.match.history.push(urls.COMPANYAUTH)
+            }
+          }])
+        } else {
+          this.props.match.history.push(newurl)
+        }
+      }
+    }
+  }
+  handlePushNormalOrder = async () => {
+    this.getCommpanyStatus(urls.PUSHNORMALORDER)
   }
   handlePushQuickOrder = () => {
-    this.props.match.history.push(urls.PUSHQUICKORDER)
+    this.getCommpanyStatus(urls.PUSHQUICKORDER)
   }
   handlePushBidOrder = () => {
-    this.props.match.history.push(urls.PUSHBIDORDER)
+    this.getCommpanyStatus(urls.PUSHBIDORDER)
   }
   handleClickMsg = () => {
     this.props.match.history.push(urls.MESSAGE)

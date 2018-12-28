@@ -5,7 +5,7 @@
 * @Last Modified time: 2018-08-12 14:48:51
 */
 import React, { Component } from 'react'
-import { TabBar } from 'antd-mobile'
+import { TabBar, Modal } from 'antd-mobile'
 import NewIcon from 'Components/NewIcon'
 import history from 'Util/history'
 import * as urls from 'Contants/urls'
@@ -18,6 +18,7 @@ import TouchFeedback from 'Util/touchFeedback.js'
 import PubSub from 'pubsub-js'
 import api from 'Util/api'
 
+const alert = Modal.alert
 const data = [
   {
     path: urls.HOME,
@@ -102,6 +103,32 @@ class AppMenu extends Component {
       })
     }
   }
+  getCommpanyStatus = async (newurl) => {
+    let data = await api.Common.getEmployAllStatus({}) || false
+    if (data) {
+      if (data['is_realname'] !== 1) {
+        alert('未实名认证', '是否前往认证？', [{
+          text: '取消'
+        }, {
+          text: '去认证', onPress: () => {
+            history.push(urls.REALNAMEAUTH)
+          }
+        }])
+      } else {
+        if (data['is_company_aptitude'] !== 1) {
+          alert('企业未认证', '是否前往认证？', [{
+            text: '取消'
+          }, {
+            text: '去认证', onPress: () => {
+              history.push(urls.COMPANYAUTH)
+            }
+          }])
+        } else {
+          history.push(newurl)
+        }
+      }
+    }
+  }
   render() {
     let { visible, selectedTab, unread } = this.state
     return (
@@ -156,15 +183,15 @@ class AppMenu extends Component {
         </div>
         <div style={{ display: visible ? 'block' : 'none' }} className={`${menuStyle['bottom-menu-tip']} animated ${visible ? 'bounceInUp' : 'bounceOutDown'}`}>
           <ul className={menuStyle['pubsh-box']}>
-            <li onClick={() => history.push(urls.PUSHNORMALORDER)}>
+            <li onClick={() => this.getCommpanyStatus(urls.PUSHNORMALORDER)}>
               <img src={normalorder} />
               <span>发布工单</span>
             </li>
-            <li onClick={() => history.push(urls.PUSHQUICKORDER)}>
+            <li onClick={() => this.getCommpanyStatus(urls.PUSHQUICKORDER)}>
               <img src={quickorder} />
               <span>发布快单</span>
             </li>
-            <li onClick={() => history.push(urls.PUSHBIDORDER)}>
+            <li onClick={() => this.getCommpanyStatus(urls.PUSHBIDORDER)}>
               <img src={initeorder} />
               <span>发布招标</span>
             </li>
