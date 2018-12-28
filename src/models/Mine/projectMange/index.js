@@ -7,7 +7,6 @@ import { projectStatus } from 'Contants/fieldmodel'
 import history from 'Util/history'
 import style from './style.css'
 import { getQueryString } from 'Contants/tooler'
-import ReactDOM from 'react-dom'
 import { ListView, PullToRefresh, Tabs, Button } from 'antd-mobile'
 const NUM_ROWS = 20
 const defaultSource = new ListView.DataSource({
@@ -53,7 +52,7 @@ class ProjectMange extends Component {
     return await data['list']
   }
   componentDidMount() {
-    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 90
+    const hei = this.state.height - 90
     this.genData().then((rdata) => {
       this.rData = rdata
       this.setState({

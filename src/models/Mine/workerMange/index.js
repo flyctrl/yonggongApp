@@ -5,7 +5,6 @@ import * as urls from 'Contants/urls'
 import { Header, Content, DefaultPage } from 'Components'
 import api from 'Util/api'
 import style from './style.css'
-import ReactDOM from 'react-dom'
 const NUM_ROWS = 20
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
@@ -48,7 +47,7 @@ class WorkList extends Component {
     return await data['list'] || []
   }
   componentDidMount() {
-    const hei = this.state.height - ReactDOM.findDOMNode(this.lv).offsetTop - 45
+    const hei = this.state.height - 45
     this.genData().then((rdata) => {
       this.rData = rdata
       this.setState({
