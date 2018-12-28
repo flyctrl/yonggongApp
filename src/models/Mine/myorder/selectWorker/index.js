@@ -189,7 +189,7 @@ class ApplySettle extends Component {
       worker: newary
     }) || false
     if (data) {
-      this.props.match.history.go(-1)
+      this.props.match.history.push(urls.MYORDER)
     }
   }
   getNameByKey = (key, data) => {
