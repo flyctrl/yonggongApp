@@ -83,7 +83,7 @@
     }
     & .v-item-one {
       height: 60px!important;
-      line-height: 50px;
+      line-height: 60px;
       font-size: 13px;
       color: #333333;
       & p {
@@ -103,34 +103,18 @@
         }
       }
     }
-    & .v-item-odd {
-      height: 30px;
+    & .v-item {
+      height: 60px!important;
       font-size: 13px;
       color: #333333;
+      padding: 11.5px 0;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       & p {
-        line-height: 30px;
-        float: left;
-        padding-left: 15px;
-        width: 253px;
-        font-family:SourceHanSansCN-Regular;
-        font-weight:400;
-        & span {
-          width: 3px;
-          height: 3px;
-          border-radius: 50%;
-          background: #434343;
-          display: inline-block;
-          margin-right: 5px;
-          vertical-align: middle;
-        }
-      }
-    }
-    & .v-item-even {
-      height: 30px;
-      font-size: 13px;
-      color: #333333;
-      & p {
-        line-height: 30px;
+        /* height: 30px;
+        line-height: 20px; */
         float: left;
         padding-left: 15px;
         width: 253px;

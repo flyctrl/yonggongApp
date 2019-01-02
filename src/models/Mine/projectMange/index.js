@@ -187,7 +187,7 @@ class ProjectMange extends Component {
           <div className={style['project-mange-box']}>
             <Tabs tabs={projectStatus}
               page={parseInt(tabIndex, 10)}
-              tabBarTextStyle={{ fontSize: '12px', color: '#999999' }}
+              tabBarTextStyle={{ fontSize: '.14rem', color: '#999999' }}
               tabBarActiveTextColor='#1298FC'
               tabBarUnderlineStyle={{ borderColor: '#0098F5', width: '12%', marginLeft: '6.5%' }}
               onChange={this.handleTabsChange}
