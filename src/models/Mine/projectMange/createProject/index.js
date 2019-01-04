@@ -167,7 +167,7 @@ class CreateProject extends Component {
     let { fileList, constrNum, workCode, workNum, proText, coordinate, prjNo } = this.state
     let postFile = []
     fileList.map((item, index, ary) => {
-      postFile.push({ path: item['path'], org_name: item['org_name'] })
+      postFile.push(item['path'])
     })
     Toast.loading('提交中...', 0)
     const { getFieldError } = this.props.form
