@@ -49,11 +49,20 @@ class Home extends Component {
     }) || false
     if (data) {
       let newData = [...data['list']]
-      newData = newData.filter((item, index) => {
+      newData = newData.filter((item, index) => { // 取前六条数据
         return index < 6
       })
+      let arr = []
+      for (let i = 0; i < newData.length; i += 2) { // 每2条分成一组
+        arr.push(newData.slice(i, i + 2))
+      }
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].length % 2 !== 0 && i > 0) {
+          arr[i] = [...arr[i], arr[i - 1][1]]
+        }
+      }
       this.setState({
-        sysInforms: newData,
+        sysInforms: arr,
         isInfoLoading: false
       })
     }
@@ -179,11 +188,16 @@ class Home extends Component {
                     swiping={false}
                     autoplay
                     infinite
-                    slideWidth={0.85}
                   >
                     {
-                      sysInforms.map((item, index) => {
-                        return <div key={`${index}${item['msg_no']}`} onClick={this.handleClickMsgOne} data-type={item['msg_type']} className={sysInforms.length === 1 ? `${style['v-item-one']}` : index % 2 === 0 ? `${style['v-item-even']}` : `${style['v-item-odd']}`}><p className='ellipsis'> <span></span>{item.content}</p></div>
+                      sysInforms.map((i, ind) => {
+                        return (<div key={`${ind}`} className={i.length === 1 ? `${style['v-item-one']}` : `${style['v-item']}`}>
+                          {
+                            i.map((item, index) => {
+                              return <p key={index} onClick={this.handleClickMsgOne} data-type={item['msg_type']} className='ellipsis'><span></span>{item.content}</p>
+                            })
+                          }
+                        </div>)
                       })
                     }
                   </Carousel>
