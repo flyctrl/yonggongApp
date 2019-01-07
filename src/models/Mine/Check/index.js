@@ -441,28 +441,25 @@ class Check extends Component {
     let reader = new FileReader()
     let _this = this
     reader.onload = async function () {
-      let reader = new FileReader()
-      reader.onload = async function () {
-        let url = this.result
-        Toast.loading('上传中...', 0)
-        let formData = {}
-        formData.image = url
-        formData.type = 8
-        const data = await api.Mine.Check.uploadImg(formData) || false
-        if (data) {
-          _this.setState({
-            imgSrc: data.url,
-            imgPath: data.path
-          })
-          _this.handlePushTime()
-        }
+      let url = this.result
+      Toast.loading('上传中...', 0)
+      let formData = {}
+      formData.image = url
+      formData.type = 8
+      const data = await api.Mine.Check.uploadImg(formData) || false
+      if (data) {
+        _this.setState({
+          imgSrc: data.url,
+          imgPath: data.path
+        })
+        _this.handlePushTime()
       }
-      reader.onerror = function () {
-        Toast(reader.error)
-      }
-      if (file) {
-        reader.readAsDataURL(file)
-      }
+    }
+    reader.onerror = function () {
+      Toast(reader.error)
+    }
+    if (file) {
+      reader.readAsDataURL(file)
     }
   }
   cameraTakePicture = () => {
