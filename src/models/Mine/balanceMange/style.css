@@ -21,18 +21,38 @@
         padding: 3px 13px 3px 16px;
         & .typericon {
           float: left;
+          padding: 0 3px;
+          background:#f86f31;
+          border-radius:2px;
           margin-top: 10px;
           margin-right: 6px;
+          border: none;
           & sup {
+            font-size:12px;
             font-family:SourceHanSansCN-Regular;
             font-weight:400;
             color:rgba(255,255,255,1);
-          }
-          & :global(.am-badge-text) {
-            background:rgba(248,181,0,1);
-            border-radius:2px;
+            background:#f86f31;
+            border: none;
             padding: 0 3px;
-            font-size:12px;
+          }
+        }
+        & .typericon-1 {
+          background:#5186E6;
+          & sup {
+            background:#5186E6;
+          }
+        }
+        & .typericon-2 {
+          background:rgba(0,190,204,1);
+          & sup {
+            background:rgba(0,190,204,1);
+          }
+        }
+        & .typericon-3 {
+          background:#F8B500;
+          & sup {
+            background: #F8B500;
           }
         }
         & p {

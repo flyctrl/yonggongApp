@@ -156,7 +156,7 @@ class BalanceMange extends Component {
       return (
         <dl key={rowData['id']}>
           <dt className='my-bottom-border'>
-            <Badge className={`${style['typericon']}`} text={worksheetType[rowData['worksheet_type']]} />
+            <Badge className={rowData['worksheet_type'] === 2 ? `${style['typericon-2']} ${style['typericon']}` : rowData['worksheet_type'] === 1 ? `${style['typericon-1']} ${style['typericon']}` : rowData['worksheet_type'] === 3 ? `${style['typericon-3']} ${style['typericon']}` : `${style['typericon']}`} text={worksheetType[rowData['worksheet_type']]} text={worksheetType[rowData['worksheet_type']]} />
             <p className={`${style['prj-title']} ellipsis`} >{rowData['title']}</p>
             <Badge className={`${style['statusicon']} ${rowData['status'] === 0 ? style['yellow'] : rowData['status'] === 1 ? style['pink'] : rowData['status'] === 2 ? style['blue'] : style['default']}`} text={
               balanceType[rowData['status']]
