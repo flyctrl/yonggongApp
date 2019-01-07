@@ -241,7 +241,7 @@ class ApplySettle extends Component {
           }
         }}
         rightTitle={ showConfirm ? null : '添加工人'}
-        rightClick={() => this.props.match.history.push(`${urls.CREATEWORKER}?orderno=${orderno}`)}
+        rightClick={() => typeof OCBridge !== 'undefined' ? OCBridge.addWorker() : this.props.match.history.push(`${urls.CREATEWORKER}?orderno=${orderno}`)}
       />
       {
         showConfirm ? <Content>

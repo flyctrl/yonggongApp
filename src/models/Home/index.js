@@ -172,7 +172,7 @@ class Home extends Component {
                 <Flex.Item>
                   <div onClick={this.handlePushBidOrder} className={style['pushtype-btn']}>
                     <img src={initeorder}/>
-                    <div className={style['pushtype-text']}>劳务招标</div>
+                    <div className={style['pushtype-text']}>发布招标</div>
                   </div>
                 </Flex.Item>
               </Flex>
