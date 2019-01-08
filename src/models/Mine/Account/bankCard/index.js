@@ -86,16 +86,19 @@ class BankCard extends Component {
     const { getFieldError } = this.props.form
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
-        // Toast.loading('提交中...', 0)
+        Toast.loading('提交中...', 0)
         let postData = { ...values, bankType: cardVal }
         console.log(postData)
         const data = await api.Mine.account.bindBinkcard(postData) || false
         if (data) {
-          // this.props.form.resetFields()
+          this.props.form.resetFields()
           Toast.hide()
           Toast.success('绑定成功', 1.5, () => {
-            // this.props.match.history.push(urls.ACCOUNT)
-            this.props.match.history.go(-1)
+            if (typeof OCBridge !== 'undefined') {
+              OCBridge.back()
+            } else {
+              this.props.match.history.go(-1)
+            }
           })
         }
       } else {

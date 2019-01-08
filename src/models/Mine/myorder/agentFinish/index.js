@@ -137,7 +137,11 @@ class ApplySettle extends Component {
       task_list: tasklist
     }) || false
     if (data) {
-      this.props.match.history.go(-1)
+      if (typeof OCBridge !== 'undefined') {
+        OCBridge.back()
+      } else {
+        this.props.match.history.go(-1)
+      }
     }
   }
   handleBlurprice = (id, value) => { // 失去焦点检测

@@ -127,7 +127,11 @@ class ApplySettle extends Component {
       task_uid_list: uids
     }) || false
     if (data) {
-      this.props.match.history.go(-1)
+      if (typeof OCBridge !== 'undefined') {
+        OCBridge.back()
+      } else {
+        this.props.match.history.go(-1)
+      }
     }
   }
   render() {

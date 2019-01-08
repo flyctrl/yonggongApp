@@ -44,7 +44,7 @@ class Teach extends Component {
         <List>
           {
             datasource.map(item => {
-              return <Item key={item['value']} arrow='horizontal' onClick={() => this.onClassifyClick(item)}>{item['label']}</Item>
+              return <Item key={item['value']} arrow={item['child'] === 0 ? '' : 'horizontal'} onClick={() => this.onClassifyClick(item)}>{item['label']}</Item>
             })
           }
         </List>
