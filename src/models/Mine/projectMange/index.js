@@ -7,7 +7,7 @@ import { projectStatus } from 'Contants/fieldmodel'
 import history from 'Util/history'
 import style from './style.css'
 import { getQueryString } from 'Contants/tooler'
-import { ListView, PullToRefresh, Tabs, Button } from 'antd-mobile'
+import { ListView, PullToRefresh, Tabs, Badge } from 'antd-mobile'
 const NUM_ROWS = 20
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
@@ -21,6 +21,7 @@ class ProjectMange extends Component {
       defaultSource,
       refreshing: true,
       height: document.documentElement.clientHeight,
+      width: document.documentElement.clientWidth,
       pageIndex: 1,
       pageNos: 1,
       tabIndex: getQueryString('tabIndex') || 0,
@@ -152,21 +153,30 @@ class ProjectMange extends Component {
     }
     const row = (rowData, sectionID, rowID) => {
       return (
-        <li key={rowData['prj_no']} data-id={rowData['prj_no']} onClick={this.handleDetail} className='my-bottom-border'>
-          <section>
-            <h4>{rowData['prj_name']}</h4>
-            <p className='ellipsis'>施工地址：{rowData['construction_place']}</p>
-            <time>{rowData['created_at']}</time>
-          </section>
-          <div className={style['prj-btn']}>
+        <dl key={rowData['prj_no']} style={{ width: this.state.width }} data-id={rowData['prj_no']} onClick={this.handleDetail}>
+          <dt className='my-bottom-border'>
             {
               rowData['status'] === 1
-                ? <Button data-id={rowData['prj_no']} onClick={this.handleEdit} type='primary'>编辑</Button>
+                ? <p className={`${style['prj-title']} ${style['prj-title-edit']} ellipsis`}>{rowData['prj_name']}</p>
+                : <p className={`${style['prj-title']} ellipsis`} >{rowData['prj_name']}</p>
+            }
+            {
+              rowData['status'] === 1
+                ? <div data-id={rowData['prj_no']} onClick={this.handleEdit} className={style['prj-edit-btn']}><NewIcon type='icon-bianji' />编辑 </div>
                 : null
             }
-            <a>{projectStatus[rowData['status']]['title']}</a>
-          </div>
-        </li>
+            <Badge className={`${style['statusicon']} ${rowData['status'] === 1 ? style['yellow'] : rowData['status'] === 3 ? style['pink'] : rowData['status'] === 2 ? style['blue'] : style['default']}`} text={
+              projectStatus[rowData['status']]['title']}/>
+          </dt>
+          <dd>
+            <p>
+              <span>提交时间</span><em>{rowData['created_at']}</em>
+            </p>
+            <p>
+              <span>施工地址</span><em>{rowData['construction_place']}</em>
+            </p>
+          </dd>
+        </dl>
       )
     }
     return (

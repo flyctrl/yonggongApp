@@ -164,10 +164,10 @@ class BalanceMange extends Component {
           </dt>
           <dd>
             <p>
-              <span>总金额：</span><em>{rowData['amount']}{rowData['unit']}</em>
+              <a>总金额</a><em className={style['em']}>{rowData['amount']}{rowData['unit']}</em>
             </p>
-            <p className={`ellipsis`}>
-              <span>项目名称：</span><em>{rowData['prj_name']}</em>
+            <p>
+              <a>项目名称</a><em className={style['em']}>{rowData['prj_name']}</em>
             </p>
             <div className='my-bottom-border'></div>
             {

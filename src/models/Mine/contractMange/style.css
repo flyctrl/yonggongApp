@@ -12,42 +12,86 @@
     & :global(.am-list-body) {
       background: #F6F5FA;
     }
-    & li {
-      padding: 0 16px 5px;
-      margin-top:8px;
-      background:white;
-      & p {
-        height: 14px;
-        line-height: 16px;
-        margin: 10px 0;
-        color:#333333;
-        font-size: 14px;
-        font-weight: 400;
-        & span {
-          color: #666666;
+    & dl {
+      background: #fff;
+      margin-top: 10px;
+      font-size: 14px;
+      & dt {
+        overflow: hidden;
+        padding: 3px 13px 3px 16px;
+        & .typericon {
+          float: left;
+          padding: 0 3px;
+          background:#f86f31;
+          border-radius:2px;
+          margin-top: 6px;
+          margin-right: 6px;
+          border: none;
+          & sup {
+            font-size:12px;
+            font-family:SourceHanSansCN-Regular;
+            font-weight:400;
+            color:rgba(255,255,255,1);
+            background:#f86f31;
+            border: none;
+            padding: 0 3px;
+          }
+        }
+        & .typericon-1 {
+          background:#5186E6;
+          & sup {
+            background:#5186E6;
+          }
+        }
+        & .typericon-2 {
+          background:rgba(0,190,204,1);
+          & sup {
+            background:rgba(0,190,204,1);
+          }
+        }
+        & .typericon-3 {
+          background:#F8B500;
+          & sup {
+            background: #F8B500;
+          }
+        }
+        & p {
+          float: left;
+          line-height: 30px;
+          height: 30px;
+          width: 250px;
+        }
+        & .prj-title {
           font-size:14px;
-          font-weight: 400;
+          font-family:SourceHanSansCN-Medium;
+          color:rgba(51,51,51,1);
+          width:240px;
+          font-weight: 500
         }
         & a {
           float: right;
-          color: #1298FC;
+          color: #0467e0;
           font-size: 14px;
-          font-weight: 400
+          font-weight: 400;
+          margin-top: 7px;
+        }
+
+      }
+      & dd {
+        & p {
+          height: 28px;
+          color: #282828;
+          font-size: 14px;
+          padding: 0px 13px 0px 16px;
+          & em {
+            color:#999999;;
+            font-weight: 400;
+          }
+        }
+        & .username {
+          margin-top: 14px;
         }
       }
-      & .con-p1 {
-        line-height: 45px;
-        height: 45px;
-        font-size: 14px;
-        color: #666666;
-        margin: 0;
-        font-weight: 100;
-      }
-      & .con-p2 {
-        & span {
-          color: #999999;
-        }
-      }
-    }
+  }
   }
 }

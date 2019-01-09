@@ -103,17 +103,27 @@
       }
       & dd {
         & p {
-          line-height: 28px;
+          line-height: 21px;
           color: #282828;
           font-size: 14px;
           padding: 3px 13px 3px 16px;
-          & span {
+          overflow: hidden;
+          & a {
             color: #999999;
             font-weight: 400;
+            float: left;
         }
-          & em {
+          & .em {
             color: #333333;
             font-weight: 400;
+            float: right;
+            width:75%;
+            text-align: right;
+            overflow:hidden;
+            text-overflow:ellipsis;
+            display:-webkit-box;
+            -webkit-box-orient:vertical;
+            -webkit-line-clamp:2;
           }
         }
         & .wait-price {

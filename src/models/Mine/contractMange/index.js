@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
-import { ListView, PullToRefresh, Tabs } from 'antd-mobile'
+import { ListView, PullToRefresh, Tabs, Badge } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
 import api from 'Util/api'
+import { worksheetType } from 'Contants/fieldmodel'
 const NUM_ROWS = 20
-let contractType = {
-  0: '接包方',
-  1: '发包方'
-}
+// let contractType = {
+//   0: '接包方',
+//   1: '发包方'
+// }
 let tabType = [
-  { title: '发单合同' },
-  { title: '接单合同' }
+  { title: '工单合同' },
+  { title: '订单合同' }
 ]
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
@@ -150,13 +151,21 @@ class ContractMange extends Component {
     }
     const row = (rowData, sectionID, rowID) => {
       return (
-        <li key={`${rowData.contract_no}`}>
-          <p className={`${style['con-p1']} my-bottom-border`}><span>{rowData.created_at}</span>
-            <a data-id={rowData.contract_no} onClick={this.handlePact}>查看合同</a>
-          </p>
-          <p className={style['con-p2']}><span>{`${contractType[tabIndex]}: `}</span>{rowData.username}</p>
-          <p className={style['con-p2']}><span>工单标题: </span>{rowData.worksheet_title}</p>
-        </li>
+        <dl key={`${rowData.contract_no}`} data-id={rowData.contract_no} onClick={this.handlePact}>
+          <dt className='my-bottom-border'>
+            <Badge className={rowData['worksheet_type'] === 2 ? `${style['typericon-2']} ${style['typericon']}` : rowData['worksheet_type'] === 1 ? `${style['typericon-1']} ${style['typericon']}` : rowData['worksheet_type'] === 3 ? `${style['typericon-3']} ${style['typericon']}` : `${style['typericon']}`} text={worksheetType[rowData['worksheet_type']]} />
+            <p className={`${style['prj-title']} ellipsis`} >{rowData.worksheet_title}</p>
+            {/* <a>查看合同</a> */}
+          </dt>
+          <dd>
+            <p className={style['username']}>
+              <em>{rowData.username}</em>
+            </p>
+            <p>
+              <em>{rowData.created_at}</em>
+            </p>
+          </dd>
+        </dl>
       )
     }
     return (

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
-import { ListView, PullToRefresh } from 'antd-mobile'
+import { ListView, PullToRefresh, Badge } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from 'Src/models/Mine/contractMange/style.css'
 import api from 'Util/api'
+import { worksheetType } from 'Contants/fieldmodel'
 const NUM_ROWS = 20
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
@@ -112,13 +113,21 @@ class Contract extends Component {
     }
     const row = (rowData, sectionID, rowID) => {
       return (
-        <li key={`${rowData.contract_no}`}>
-          <p className={`${style['con-p1']} my-bottom-border`}><span>{rowData.created_at}</span>
-            <a data-id={rowData.contract_no} onClick={this.handlePact}>查看合同</a>
-          </p>
-          <p className={style['con-p2']}><span>发包方：</span>{rowData.username}</p>
-          <p className={style['con-p2']}><span>工单标题: </span>{rowData.worksheet_title}</p>
-        </li>
+        <dl key={`${rowData.contract_no}`} data-id={rowData.contract_no} onClick={this.handlePact}>
+          <dt className='my-bottom-border'>
+            <Badge className={rowData['worksheet_type'] === 2 ? `${style['typericon-2']} ${style['typericon']}` : rowData['worksheet_type'] === 1 ? `${style['typericon-1']} ${style['typericon']}` : rowData['worksheet_type'] === 3 ? `${style['typericon-3']} ${style['typericon']}` : `${style['typericon']}`} text={worksheetType[rowData['worksheet_type']]} />
+            <p className={`${style['prj-title']} ellipsis`} >{rowData.worksheet_title}</p>
+            {/* <a>查看合同</a> */}
+          </dt>
+          <dd>
+            <p className={style['username']}>
+              <em>{rowData.username}</em>
+            </p>
+            <p>
+              <em>{rowData.created_at}</em>
+            </p>
+          </dd>
+        </dl>
       )
     }
     return (
