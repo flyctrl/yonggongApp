@@ -8,6 +8,7 @@ import { List, Button } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
 import api from 'Util/api'
+import storage from 'Util/storage'
 import style from './style.css'
 
 const Item = List.Item
@@ -24,6 +25,8 @@ class SetUp extends Component {
   async handleSignOut() {
     const data = await api.auth.loginout({}) || false
     if (data) {
+      storage.remove('Authorization')
+      storage.remove('refreshToken')
       this.props.match.history.push(urls.LOGIN)
     }
   }
