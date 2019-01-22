@@ -7,6 +7,12 @@ class DefaultPage extends Component {
     super(props)
     this.imgsrc = [
       {
+        name: 'nodata',
+        desc: this.props.title || '暂无数据',
+        url: require('Src/assets/defaultpic/nodata.png'),
+        btn: null
+      },
+      {
         name: 'noitems',
         desc: '暂无项目',
         url: require('Src/assets/defaultpic/noitems.png'),
@@ -53,6 +59,18 @@ class DefaultPage extends Component {
         desc: '没有发票',
         url: require('Src/assets/defaultpic/noinvoice.png'),
         btn: null
+      },
+      {
+        name: 'notitle',
+        desc: '您还没有添加抬头~',
+        url: require('Src/assets/defaultpic/notitle.png'),
+        btn: <Button type='primary' onClick={this.props.click}>添加抬头</Button>
+      },
+      {
+        name: 'noaddress',
+        desc: '您还没有添加地址~',
+        url: require('Src/assets/defaultpic/noaddress.png'),
+        btn: <Button type='primary' onClick={this.props.click}>添加地址</Button>
       },
     ]
   }

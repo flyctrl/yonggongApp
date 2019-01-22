@@ -1,0 +1,39 @@
+.operate-box {
+  & :global(.am-list-body) {
+    margin-top: 8px;
+  }
+  & :global(.am-list-body::before) {
+    height: 0;
+  }
+  & :global(.am-list-body::after) {
+    height: 0;
+  }
+  & .input-list {
+    & :global(.am-input-label) {
+      font-size:15px;
+      color:rgba(51,51,51,1);
+      width: 80px;
+      & em {
+        display: inline-block;
+        height: 44px;
+        line-height: 46px;
+        width: 16px;
+        text-align: center;
+        color: #db1818;
+        vertical-align: middle;
+      }
+    }
+  & :global(.am-input-control) {
+     & input {
+       padding-right: 5px;
+       font-size: 15px;
+     }
+  }
+  & :global(.am-list-extra) {
+    flex-basis: 70%;
+    & :global(.am-switch input[type="checkbox"]:checked + .checkbox) {
+      background:#1EC01D
+    }
+  }
+  }
+} 

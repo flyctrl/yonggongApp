@@ -1,79 +1,141 @@
+
 import React, { Component } from 'react'
 import * as urls from 'Contants/urls'
-import { List, Radio, InputItem, Toast, Button } from 'antd-mobile'
+import { List, Radio, Button, Toast, InputItem } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import { createForm } from 'rc-form'
 import history from 'Util/history'
-import * as tooler from 'Contants/tooler'
-import style from './style.css'
+import { getQueryString } from 'Contants/tooler'
+import style from './style2.css'
 import api from 'Util/api'
-const valModeData = [
-  { value: 1, label: '平台开票' },
-  { value: 2, label: '收款方开票' }
-]
+const Item = List.Item
 const totalRadio = [
-  { value: 1, label: '纸质发票' },
-  { value: 2, label: '电子发票' }
+  { value: 2, label: '电子' },
+  { value: 1, label: '纸质' }
 ]
-const settleRadio = [
-  { value: 1, label: '企业抬头' },
-  { value: 2, label: '个人/非企业单位' }
-]
-class ApplyInvoice extends Component {
+class Apply extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      valModeDataValue: 1,
-      totalRadioValue: 1,
-      settleRadioValue: 1,
-      invoiceType: [],
-      isLoading: true
+      totalRadioValue: 2,
+      payId: getQueryString('id'),
+      payType: getQueryString('type'),
+      dataList: getQueryString('list') || '',
+      money: getQueryString('money'),
+      titleLoading: true,
+      addressLoading: true,
+      titleNo: getQueryString('titleNo'),
+      addressNo: getQueryString('addressNo')
     }
-    this.onHandleSubmit = this.onHandleSubmit.bind(this)
   }
 
   onRadioChange(key, value) {
     this.setState({
       [key]: value
     })
+    if (value === 2) {
+      return
+    }
+    this.getAddressList()
   }
-  getInvoiceList = async() => {
-    this.setState({ isLoading: true })
-    let orderNo = tooler.parseURLParam()
-    const data = await api.Mine.invoiceMange.applyInvoicePlatform({ // 可选发票申请平台
-      order_no: orderNo.order_no
+  componentDidMount() {
+    this.getTitleList()
+    if (this.state.addressNo) {
+      this.setState({
+        totalRadioValue: 1
+      })
+      this.getAddressList()
+    }
+  }
+  getTitleList = async() => { // 获取抬头列表
+    this.setState({ titleLoading: true })
+    const data = await api.Mine.invoiceMange.titleList({ //
+      page: 1,
+      limit: 100
     }) || false
     if (data) {
+      let initialTitle = ''
+      let dataSource = [...data['list']]
+      for (let i = 0; i < dataSource.length; i++) {
+        if (dataSource[i]['is_default'] === 1) {
+          initialTitle = dataSource[i]['title']
+          this.props.form.setFieldsValue({
+            title_no: dataSource[i]['title_no']
+          })
+        }
+        if (dataSource[i]['title_no'] === this.state.titleNo) {
+          initialTitle = dataSource[i]['title']
+          this.props.form.setFieldsValue({
+            title_no: dataSource[i]['title_no']
+          })
+        }
+      }
       this.setState({
-        invoiceType: data,
-        isLoading: false
+        titleLoading: false,
+        initialTitle
+      })
+    }
+  }
+  getAddressList = async() => { // 获取地址列表
+    // if (!this.state.addressLoading) {
+    //   return
+    // }
+    const data = await api.Mine.invoiceMange.addressList({ //
+      page: 1,
+      limit: 100
+    }) || false
+    if (data) {
+      let initialAddress = ''
+      let dataSource = [...data['list']]
+      for (let i = 0; i < dataSource.length; i++) {
+        if (dataSource[i]['is_default'] === 1) {
+          initialAddress = dataSource[i]['recv_address']
+          this.props.form.setFieldsValue({
+            express_no: dataSource[i]['express_no']
+          })
+        }
+        if (dataSource[i]['express_no'] === this.state.addressNo) {
+          initialAddress = dataSource[i]['recv_address']
+          this.props.form.setFieldsValue({
+            express_no: dataSource[i]['express_no']
+          })
+        }
+      }
+      this.setState({
+        initialAddress,
+        addressLoading: false
       })
     }
   }
   pushInvoiceList = async(postData) => {
-    let orderNo = tooler.parseURLParam()
     Toast.loading('提交中...', 0)
-    let data = await api.Mine.invoiceMange.applyInvoice({ // 申请开票
-      ...postData,
-      order_no: orderNo.order_no
+    let data = await api.Mine.invoiceMange.applyNewInvoice({ // 申请开票
+      ...postData
     }) || false
     if (data) {
       Toast.hide()
       Toast.success('申请成功', 1.5, () => {
-        this.props.match.history.push(`${urls.INVOICEMANGE}?tabIndex=0`)
+        this.props.match.history.push(`${urls.INVOICENEWMANGE}`)
       })
     }
   }
-  onHandleNext = () => {
-    let { valModeDataValue, totalRadioValue, settleRadioValue } = this.state
-    let validateAry = ['title', 'content', 'amount', 'tax_no', 'recv_name', 'recv_mobile', 'recv_email', 'recv_address']
+  handleSubmit = async() => {
+    Toast.loading('提交中...', 0)
     const { getFieldError } = this.props.form
+    let { totalRadioValue, payId, payType, dataList, money } = this.state
     this.props.form.validateFields({ force: true }, (error, values) => {
+      let validateAry = ['title_no', 'express_no']
       // console.log(this.props.form.getFieldsValue())
       if (!error) {
-        let postData = { ...values, ...{ platform_type: valModeDataValue, type: totalRadioValue, title_type: settleRadioValue }}
+        let postData = {
+          ...values,
+          ...{ title_no: values['title_no'], express_no: values['express_no'] || 0 },
+          ...{ material_type: totalRadioValue, payee_company_id: payId, drawer_type: payType === '1' ? 1 : 2 },
+          ...{ settle_order_no_list: dataList.split(','), apply_amount: money }
+        }
         this.pushInvoiceList(postData)
       } else {
+        console.log(error)
         for (let value of validateAry) {
           if (error[value]) {
             Toast.fail(getFieldError(value), 1)
@@ -83,35 +145,33 @@ class ApplyInvoice extends Component {
       }
     })
   }
-
-  onHandleSubmit() {
-    console.log('提交数据', this.state.postData)
+  onErrorClick = (field) => {
+    Toast.info(this.props.form.getFieldError(field).join('、'))
   }
-
-  handleCloseNatural = (val) => {
-    let strval = ''
-    let naturalSelectData = []
-    val.map((item, index, ary) => {
-      naturalSelectData.push(item['value'])
-      strval += item['label'] + ','
-    })
-    this.setState({
-      isEdit: true,
-      naturalData: false,
-      naturalSelectData
-    })
-    this.props.form.setFieldsValue({
-      natural: strval.slice(0, strval.length - 1)
-    })
+  onProChange = (val) => {
+    if (val && !val[0]) {
+      return false
+    }
   }
-  componentDidMount() {
-    this.getInvoiceList()
+  handleClickTitle = () => {
+    if (this.state.addressNo) {
+      this.props.match.history.push(`${urls['TITLEMANGE']}?type=${this.state.payType}&id=${this.state.payId}&list=${this.state.dataList}&money=${this.state.money}&choose=1&addressNo=${this.state.addressNo}`)
+    } else {
+      this.props.match.history.push(`${urls['TITLEMANGE']}?type=${this.state.payType}&id=${this.state.payId}&list=${this.state.dataList}&money=${this.state.money}&choose=1`)
+    }
+  }
+  handleClickAddress = () => {
+    if (this.state.titleNo) {
+      this.props.match.history.push(`${urls['ADDRESSMANGE']}?type=${this.state.payType}&id=${this.state.payId}&list=${this.state.dataList}&money=${this.state.money}&choose=1&titleNo=${this.state.titleNo}`)
+    } else {
+      this.props.match.history.push(`${urls['ADDRESSMANGE']}?type=${this.state.payType}&id=${this.state.payId}&list=${this.state.dataList}&money=${this.state.money}&choose=1`)
+    }
   }
   render() {
-    const { getFieldProps } = this.props.form
-    const { valModeDataValue, totalRadioValue, settleRadioValue, invoiceType, isLoading } = this.state
+    const { getFieldError, getFieldProps } = this.props.form
+    let { totalRadioValue, initialTitle, initialAddress } = this.state
     return (
-      <div className='pageBox'>
+      <div className={`${style['invoice-box']} pageBox gray`}>
         <div>
           <Header
             title='申请发票'
@@ -122,135 +182,50 @@ class ApplyInvoice extends Component {
             }}
           />
           <Content>
-            <form className={style['pushOrderForm']}>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '选择一个类型'}>
-                {
-                  valModeData.map((item, index) => {
-                    return invoiceType.map((i) => {
-                      return i === item['value'] ? (<Radio key={item.value} checked={valModeDataValue === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange('valModeDataValue', item.value)}>{item.label}</Radio>) : null
+            <div className={style['box']}>
+              <List>
+                <div className={`${style['input-form-list']} ${style['input-form-list-title']}`} onClick={this.handleClickTitle}>
+                  <Item arrow='horizontal' extra={getFieldError('title_no') ? <div className='colorRed'>未选择</div> : initialTitle}>发票抬头</Item>
+                  <div style={{ display: 'none' }}>
+                    <InputItem
+                      {...getFieldProps('title_no', {
+                        initialValue: initialTitle,
+                        rules: [
+                          { required: true, message: '请选择发票抬头' }
+                        ],
+                      })}
+                    />
+                  </div>
+                </div>
+                <div className={`${style['input-form-list']}`}>
+                  <List.Item extra={
+                    totalRadio.map((item) => {
+                      return (
+                        <Radio key={item.value} checked={totalRadioValue === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange('totalRadioValue', item.value)}>{item.label}</Radio>
+                      )
                     })
-                  })
-                }
+                  }>发票性质</List.Item>
+                </div>
               </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '发票类型'}>
-                {
-                  totalRadio.map((item) => {
-                    return (
-                      <Radio key={item.value} checked={totalRadioValue === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange('totalRadioValue', item.value)}>{item.label}</Radio>
-                    )
-                  })
-                }
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '抬头类型'}>
-                {
-                  settleRadio.map((item) => {
-                    return (
-                      <Radio key={item.value} checked={settleRadioValue === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange('settleRadioValue', item.value)}>{item.label}</Radio>
-                    )
-                  })
-                }
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '发票抬头'}>
-                <InputItem
-                  {...getFieldProps('title', {
-                    rules: [
-                      { required: true, message: '请填写发票抬头' },
-                    ]
-                  })}
-                  clear
-                  placeholder='请输入发票抬头'
-                  ref={(el) => { this.autoFocusInst = el }}
-                ></InputItem>
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '纳税号'}>
-                <InputItem
-                  {...getFieldProps('tax_no', {
-                    rules: [
-                      { required: true, message: '请填写税号' },
-                    ]
-                  })}
-                  clear
-                  placeholder='填写纳税人识别号'
-                  ref={(el) => { this.autoFocusInst = el }}
-                ></InputItem>
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '发票内容'}>
-                <InputItem
-                  {...getFieldProps('content', {
-                    rules: [
-                      { required: true, message: '请填写发票内容' },
-                    ]
-                  })}
-                  clear
-                  placeholder='填写发票内容'
-                  ref={(el) => { this.autoFocusInst = el }}
-                ></InputItem>
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '发票金额（单位：元）'}>
-                <InputItem
-                  {...getFieldProps('amount', {
-                    rules: [
-                      { required: true, message: '请填写发票金额' },
-                    ]
-                  })}
-                  clear
-                  placeholder='请输入发票金额'
-                  extra='¥'
-                  ref={(el) => { this.autoFocusInst = el }}
-                ></InputItem>
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '收件人姓名'}>
-                <InputItem
-                  {...getFieldProps('recv_name', {
-                    rules: [
-                      { required: true, message: '请填写收件人姓名' },
-                    ]
-                  })}
-                  clear
-                  placeholder='填写收件人姓名'
-                  ref={(el) => { this.autoFocusInst = el }}
-                ></InputItem>
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '收件人手机号'}>
-                <InputItem
-                  {...getFieldProps('recv_mobile', {
-                    rules: [
-                      { required: true, message: '请填写收件人手机号' },
-                    ]
-                  })}
-                  clear
-                  placeholder='填写收件人手机号'
-                  ref={(el) => { this.autoFocusInst = el }}
-                ></InputItem>
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '电子邮箱'}>
-                <InputItem
-                  {...getFieldProps('recv_email', {
-                    rules: [
-                      { required: true, message: '请填写邮箱' },
-                    ]
-                  })}
-                  clear
-                  placeholder='填写电子邮箱'
-                  ref={(el) => { this.autoFocusInst = el }}
-                ></InputItem>
-              </List>
-              <List className={`${style['input-form-list']}`} renderHeader={() => '收件人地址'}>
-                <InputItem
-                  {...getFieldProps('recv_address', {
-                    rules: [
-                      { required: true, message: '请填写收件人地址' },
-                    ]
-                  })}
-                  clear
-                  placeholder='填写收件人地址'
-                  ref={(el) => { this.autoFocusInst = el }}
-                ></InputItem>
-              </List>
-              <List className={style['btn-form-list']}>
-                <Button disabled={isLoading} onClick={this.onHandleNext} type='primary'>确认开票</Button>
-              </List>
-            </form>
+              {
+                totalRadioValue === 1
+                  ? <div onClick={this.handleClickAddress} className={`${style['input-form-list']} ${style['input-form-list-title']} ${style['input-form-list-address']}`}>
+                    <Item arrow='horizontal' extra={getFieldError('express_no') ? <div className='colorRed'>未选择</div> : initialAddress}>寄送地址</Item>
+                    <div style={{ display: 'none' }}>
+                      <InputItem
+                        {...getFieldProps('express_no', {
+                          initialValue: initialAddress,
+                          rules: [
+                            { required: true, message: '请选择收件地址' }
+                          ],
+                        })}
+                      />
+                    </div>
+                  </div>
+                  : null
+              }
+              <Button onClick={this.handleSubmit}>确定</Button>
+            </div>
           </Content>
         </div>
       </div>
@@ -258,4 +233,5 @@ class ApplyInvoice extends Component {
   }
 }
 
-export default createForm()(ApplyInvoice)
+export default createForm()(Apply)
+

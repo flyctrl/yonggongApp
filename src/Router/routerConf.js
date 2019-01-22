@@ -244,6 +244,39 @@ const ApplyInvoice = Loadable({ // 申请发票
   loader: () => import(/* webpackChunkName: "applyinvoice" */ '../models/Mine/invoiceMange/applyInvoice'),
   loading: MyLoadingComponent
 })
+const InvoiceNewMange = Loadable({ // 新发票管理
+  loader: () => import(/* webpackChunkName: "invoicemange3" */ '../models/Mine/invoiceMange/index3'),
+  loading: MyLoadingComponent
+})
+const InvoiceOrder = Loadable({ // 工单开票
+  loader: () => import(/* webpackChunkName: "invoiceorder" */ '../models/Mine/invoiceMange/order'),
+  loading: MyLoadingComponent
+})
+const TitleMange = Loadable({ // 抬头管理
+  loader: () => import(/* webpackChunkName: "titlemange" */ '../models/Mine/invoiceMange/title'),
+  loading: MyLoadingComponent
+})
+const TitleOperate = Loadable({ // 添加与编辑抬头
+  loader: () => import(/* webpackChunkName: "titleoperate" */ '../models/Mine/invoiceMange/title/operate'),
+  loading: MyLoadingComponent
+})
+const AddressMange = Loadable({ // 地址管理
+  loader: () => import(/* webpackChunkName: "addressmange" */ '../models/Mine/invoiceMange/address'),
+  loading: MyLoadingComponent
+})
+const AddressOperate = Loadable({ // 添加与编辑地址
+  loader: () => import(/* webpackChunkName: "addressoperate" */ '../models/Mine/invoiceMange/address/operate'),
+  loading: MyLoadingComponent
+})
+const InvoiceNewDetail = Loadable({ // 新发票详情
+  loader: () => import(/* webpackChunkName: "invoicenewdetail" */ '../models/Mine/invoiceMange/detail/index'),
+  loading: MyLoadingComponent
+})
+
+const ApplyNewInvoice = Loadable({ // 申请新发票
+  loader: () => import(/* webpackChunkName: "applynewinvoice" */ '../models/Mine/invoiceMange/applyInvoice/index2'),
+  loading: MyLoadingComponent
+})
 const ContractMange = Loadable({ // 合同管理
   loader: () => import(/* webpackChunkName: "contractmange" */ '../models/Mine/contractMange'),
   loading: MyLoadingComponent
@@ -851,6 +884,77 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '申请发票'
+  }, {
+    path: urls.INVOICENEWMANGE,
+    exact: true,
+    component: InvoiceNewMange,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '发票管理'
+  },
+  {
+    path: urls.INVOICEORDER,
+    exact: true,
+    component: InvoiceOrder,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '工单开票'
+  },
+  {
+    path: urls.TITLEMANGE,
+    exact: true,
+    component: TitleMange,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '抬头管理'
+  },
+  {
+    path: urls.TITLEOPERATE,
+    exact: true,
+    component: TitleOperate,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '抬头操作'
+  },
+  {
+    path: urls.ADDRESSMANGE,
+    exact: true,
+    component: AddressMange,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '地址管理'
+  },
+  {
+    path: urls.ADDRESSOPERATE,
+    exact: true,
+    component: AddressOperate,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '地址操作'
+  },
+  {
+    path: urls.INVOICENEWDETAIL,
+    exact: true,
+    component: InvoiceNewDetail,
+    parent: 'InvoiceMange',
+    animated: true,
+    showMenu: false,
+    title: '发票详情'
+  },
+  {
+    path: urls.APPLYINEWINVOICE,
+    exact: true,
+    component: ApplyNewInvoice,
+    parent: 'InvoiceMange',
+    animated: true,
+    showMenu: false,
+    title: '申请新发票'
   }, {
     path: urls.CONTRACTMANGE,
     exact: true,
