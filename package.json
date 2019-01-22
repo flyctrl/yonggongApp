@@ -32,6 +32,8 @@
     "build:dev": "cross-env BUILD_ENV=dev node scripts/build.js",
     "build:test": "cross-env BUILD_ENV=test node scripts/build.js",
     "build:pre": "cross-env BUILD_ENV=pre node scripts/build.js",
+    "build:cordovatest": "cross-env BUILD_ENV=cordovatest node scripts/build.js",
+    "build:cordovapro": "cross-env BUILD_ENV=cordovapro node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "upload": "scp -r build/* root@47.96.236.216:/home/wwwroot/yaqueApp-yonggong"
   },
@@ -51,6 +53,7 @@
     "babel-runtime": "6.26.0",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "china-division": "^2.0.0",
+    "clean-webpack-plugin": "^1.0.0",
     "compression-webpack-plugin": "^1.1.11",
     "cross-env": "^5.2.0",
     "css-loader": "0.28.7",

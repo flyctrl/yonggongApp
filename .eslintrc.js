@@ -23,6 +23,8 @@ module.exports = {
     window: false,
     "TEST": true,
     "PRE": true,
+    "CORDOVATEST": true,
+    "CORDOVAPRO": true,
     "AMap": true,
     "AMapUI": true,
     "OCBridge": true,

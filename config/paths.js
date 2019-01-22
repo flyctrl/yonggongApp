@@ -33,8 +33,12 @@ const getPublicUrl = appPackageJson =>
 // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
 function getServedPath(appPackageJson) {
   const publicUrl = getPublicUrl(appPackageJson);
-  const servedUrl =
-    envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : '/');
+  let servedUrl = ''
+  if (process.env.BUILD_ENV === 'cordovatest' || process.env.BUILD_ENV === 'cordovapro') {
+    servedUrl = envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : './')
+  } else {
+    servedUrl = envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : '/')
+  }
   return ensureSlash(servedUrl, true);
 }
 
@@ -44,6 +48,7 @@ module.exports = {
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
+  appCordovaHtml: resolveApp('public/cordova.html'),
   appIndexJs: resolveApp('src/index.js'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
