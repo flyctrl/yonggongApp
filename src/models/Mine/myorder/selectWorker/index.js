@@ -5,6 +5,7 @@ import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
+import { onBackKeyDown } from 'Contants/tooler'
 const CheckboxItem = Checkbox.CheckboxItem
 const alert = Modal.alert
 // const numReg = /^(([1-9][0-9]*\.[0-9][0-9]*)|([0]\.[0-9][0-9]*)|([1-9][0-9]*)|([0]{1}))$/
@@ -26,6 +27,27 @@ class ApplySettle extends Component {
   }
   componentDidMount() {
     this.getDatalist()
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
+  }
+  backButtons = (e) => {
+    let { showConfirm } = this.state
+    if (showConfirm) {
+      e.preventDefault()
+      this.setState({
+        showConfirm: false
+      })
+    } else {
+      this.props.match.history.push(urls['MYORDER'])
+    }
+  }
+  componentWillUnmount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
   }
   getDatalist = async () => {
     this.setState({

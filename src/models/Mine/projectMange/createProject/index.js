@@ -12,7 +12,7 @@ import Address from 'Components/Address'
 import Work from './work'
 import Construct from './construct'
 import Projetct from './proinfo'
-import { getQueryString } from 'Contants/tooler'
+import { getQueryString, onBackKeyDown } from 'Contants/tooler'
 const Item = List.Item
 class CreateProject extends Component {
   constructor(props) {
@@ -70,6 +70,40 @@ class CreateProject extends Component {
       this.setState({
         isLoading: false
       })
+    }
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
+  }
+  backButtons = (e) => {
+    let { mapShow, constructShow, workShow } = this.state
+    if (mapShow) {
+      e.preventDefault()
+      this.setState({
+        mapShow: false
+      })
+      return false
+    } else if (constructShow) {
+      e.preventDefault()
+      this.setState({
+        constructShow: false
+      })
+      return false
+    } else if (workShow) {
+      e.preventDefault()
+      this.setState({
+        workShow: false
+      })
+      return false
+    } else {
+      this.props.match.history.goBack()
+    }
+  }
+  componentWillUnmount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
     }
   }
   handleSelectMap = () => { // 打开地图

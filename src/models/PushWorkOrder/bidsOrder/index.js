@@ -11,7 +11,7 @@ import TeachList from './teachList'
 import ProjectList from './projectList'
 import api from 'Util/api'
 import storage from 'Util/storage'
-
+import { onBackKeyDown } from 'Contants/tooler'
 const Item = List.Item
 const RadioItem = Radio.RadioItem
 class SelectClass extends Component {
@@ -46,6 +46,31 @@ class SelectClass extends Component {
       this.setState({
         showtech: parseInt(receiveType) === 2
       })
+    }
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
+  }
+  backButtons = (e) => {
+    let { showIndex, url } = this.state
+    if (showIndex !== 0) {
+      e.preventDefault()
+      this.setState({
+        showIndex: 0
+      })
+    } else {
+      if (url) {
+        this.props.match.history.push(urls[url])
+      } else {
+        this.props.match.history.push(urls['HOME'])
+      }
+    }
+  }
+  componentWillUnmount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
     }
   }
   getEditData = async () => { // 获取编辑数据

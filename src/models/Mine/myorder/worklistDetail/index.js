@@ -6,7 +6,7 @@ import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import style from './index.css'
-
+import { onBackKeyDown } from 'Contants/tooler'
 const typeicon = {
   1: 'bidicon',
   2: 'sheeticon',
@@ -29,6 +29,25 @@ class WorkListDetail extends Component {
   }
   componentDidMount() {
     this.getOrderDetail()
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
+  }
+  backButtons = (e) => {
+    let { url } = this.state
+    if (url !== '') {
+      e.preventDefault()
+      this.props.match.history.push(urls.HOME)
+    } else {
+      this.props.match.history.goBack()
+    }
+  }
+  componentWillUnmount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
   }
   getOrderDetail = async () => {
     this.setState({

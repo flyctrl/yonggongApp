@@ -5,7 +5,7 @@ import { Header, Content } from 'Components'
 // import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import style from './style.css'
-
+import { onBackKeyDown } from 'Contants/tooler'
 let cardType = {
   1: '储蓄卡',
   2: '信用卡'
@@ -35,6 +35,27 @@ class BankCard extends Component {
   }
   componentDidMount () {
     this.getUserName()
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
+  }
+  backButtons = (e) => {
+    let { isShowNext } = this.state
+    if (isShowNext) {
+      e.preventDefault()
+      this.setState({
+        isShowNext: false
+      })
+    } else {
+      this.props.match.history.goBack()
+    }
+  }
+  componentWillUnmount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
   }
   getUserName = async() => {
     this.setState({

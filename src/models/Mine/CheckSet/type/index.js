@@ -32,7 +32,7 @@ class SetUpType extends Component {
     super(props)
     let newProps = [...props['time']]
     for (let i = 0; i < props['time'].length; i++) {
-      newProps[i] = [new Date(`2018/11/23 ${newProps[i][0]}`), new Date(`2018/11/23 ${newProps[i][1]}`)]
+      newProps[i] = [new Date(`2018/08/08 ${newProps[i][0]}`), new Date(`2018/08/08 ${newProps[i][1]}`)]
     }
     this.state = {
       radioVal: props['radioVal'],
@@ -50,7 +50,7 @@ class SetUpType extends Component {
   componentWillReceiveProps(props) {
     let newProps = [...props['time']]
     for (let i = 0; i < newProps.length; i++) {
-      newProps[i] = [new Date(`2018/11/23 ${newProps[i][0]}`), new Date(`2018/11/23 ${newProps[i][1]}`)]
+      newProps[i] = [new Date(`2018/08/08 ${newProps[i][0]}`), new Date(`2018/08/08 ${newProps[i][1]}`)]
     }
     this.setState({
       time: newProps
