@@ -71,6 +71,9 @@ const prefix = '/employ'
 
 export default {
   Common: {
+    getVersion(params) {
+      return Fetch('/common/yq/version', params, 'get', { showloading: false })
+    },
     getProList(params) { // 获取项目列表
       return Fetch(prefix + '/project/list/select', params, 'get')
     },
