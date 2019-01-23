@@ -112,7 +112,7 @@ class WorkList extends Component {
     let row = (rowData, sectionID, rowID) => {
       return <dl className={style['worker-list']}>
         <dt>
-          <img src={rowData['tasker_avatar']}/>
+          <div className={style['header']} style={{ 'backgroundImage': 'url(' + rowData['tasker_avatar'] + ')' }}></div>
         </dt>
         <dd className='my-bottom-border'>
           <h4>{rowData['tasker_name']}</h4>

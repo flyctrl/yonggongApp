@@ -11,10 +11,14 @@ html:not([data-scale]) .record-list :global(.am-list-body::after) {
     margin-top: 4px;
     color: #313f48;
     &.inivte {
-      &>img{
+      & .header{
         margin-top: 22px;
       }
       & .record-btn {
+        & .confirm-status {
+          height: 86px;
+          line-height: 86px;
+        }
         & :global(.am-button) {
           margin-top: 13px;
           &:nth-child(2) {
@@ -23,13 +27,16 @@ html:not([data-scale]) .record-list :global(.am-list-body::after) {
         }
       }
     }
-    &>img {
+    & .header {
       width: 40px;
       height: 40px;
       float: left;
       margin-right: 10px;
       margin-top: 10px;
       border-radius: 50%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center top;
     }
     & .record-hd {
       float: left;

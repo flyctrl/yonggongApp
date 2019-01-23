@@ -134,7 +134,7 @@ class Mine extends Component {
             </div>
             <dl className={style['company-title']}>
               <dt>{
-                typeof dataSource['user'] !== 'undefined' ? <img src={dataSource['user']['avatar']} /> : ''
+                typeof dataSource['user'] !== 'undefined' ? <div className={style['header']} style={{ 'backgroundImage': 'url(' + dataSource['user']['avatar'] + ')' }}></div> : ''
               }</dt>
               <dd>
                 <h1>{typeof dataSource['company'] !== 'undefined' ? dataSource['company']['name'] : ''}</h1>

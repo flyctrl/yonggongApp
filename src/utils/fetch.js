@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2019-01-23 15:20:51
+* @Last Modified time: 2019-01-23 16:42:05
 */
 import * as Loading from './load.js'
 import storage from '../utils/storage'
@@ -69,6 +69,8 @@ fetcher.interceptors.response.use(function (response) {
       axios.post(baseUrl + '/employ/refresh', { refresh_token: refreshToken }).then(function(res) {
         console.log(res)
         if (res.data.code === 10012) {
+          storage.remove('Authorization')
+          storage.remove('refreshToken')
           history.push('/Login/login')
         } else if (res.data.code === 0) {
           storage.set('Authorization', 'Bearer ' + res.data.data.access_token)

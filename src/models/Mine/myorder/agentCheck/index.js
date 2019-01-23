@@ -72,7 +72,7 @@ class AgentCheck extends Component {
               dataSource.map(item => {
                 return <Item
                   key={item['uid']}
-                  thumb={item['avatar']}
+                  thumb={<div className={style['avatar-thumb']} style={{ 'backgroundImage': 'url(' + item['avatar'] + ')' }}></div>}
                   multipleLine
                   onClick={() => this.goCheck(item['uid'])}
                 >{item['label']}<Brief>手机号：{item['mobile']}</Brief></Item>

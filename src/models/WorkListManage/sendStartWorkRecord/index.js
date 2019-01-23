@@ -183,7 +183,7 @@ class AccessRecord extends Component {
     const row = (rowData, sectionID, rowID) => {
       return <li key={rowData['task_no']}>
         <div className={style['record-img']}>
-          <img src={rowData['tasker_avatar']}/>
+          <div className={style['header']} style={{ 'backgroundImage': 'url(' + rowData['tasker_avatar'] + ')' }}></div>
         </div>
         <div className={style['record-hd']}>
           <p className='ellipsis'>{rowData['tasker_name']}<span>（{rowData['workload']}{rowData['workload_unit']}）</span></p>

@@ -101,7 +101,7 @@ class ApplySettle extends Component {
             <List className={`${style['settle-list']} ${status === 3 ? style['settle-all'] : ''}`}>
               {dataSource.map((i, index) => (
                 <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>
-                  <img className={style['header']} src={i['avatar']} />
+                  <div className={style['header']} style={{ 'backgroundImage': 'url(' + i['avatar'] + ')' }}></div>
                   <div className={style['settle-info']}>
                     <h2>{i.username}</h2>
                     <p>单价：{i.price}{i.unit}</p>

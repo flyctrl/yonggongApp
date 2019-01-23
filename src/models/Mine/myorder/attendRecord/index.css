@@ -31,11 +31,13 @@
 
 .attend-list {
   font-size: 12px;
-  & :global(.am-list-item img) {
-    display: block;
+  & .avatar-thumb {
     width: 36px;
     height: 36px;
     border-radius: 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
   }
   & :global(.am-list-content time) {
     color: #b6b7b9;

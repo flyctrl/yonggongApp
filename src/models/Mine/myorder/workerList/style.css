@@ -7,11 +7,13 @@
   & dt {
     float: left;
     margin-right: 10px;
-    & img {
-      display: block;
+    & .header {
       width: 60px;
       height: 60px;
       border-radius: 50%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center top;
     }
   }
   & dd {

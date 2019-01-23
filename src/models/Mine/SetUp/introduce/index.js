@@ -15,12 +15,22 @@ const Brief = Item.Brief
 class Introduce extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      version: ''
+    }
+  }
+  componentDidMount() {
+    if ('cordova' in window) {
+      cordova.getAppVersion.getVersionNumber().then(version => this.setState({
+        version
+      }))
+    }
   }
   handleClick = () => {
     this.props.match.history.push(urls.SETUPINTRODUCEINFO)
   }
   render() {
+    let { version } = this.state
     return <div className='pageBox'>
       <Header
         title='功能介绍'
@@ -33,7 +43,9 @@ class Introduce extends Component {
       <Content>
         <div className={style['introduce']}>
           <List>
-            <Item multipleLine onClick={this.handleClick} arrow='horizontal'>亚雀v1.0.2更新<Brief>12月20日</Brief></Item>
+            <Item multipleLine onClick={this.handleClick} arrow='horizontal'>亚雀用工{
+              'cordova' in window ? ' V' + version : ''
+            }功能介绍<Brief>12月20日</Brief></Item>
           </List>
         </div>
       </Content>
