@@ -37,6 +37,7 @@
       text-align: center;
       padding-bottom: 20px;
       position: relative;
+      word-wrap:break-word;
       & img {
         display: inline-block;
         width: 345px;
@@ -71,6 +72,7 @@
           line-height: 20px;
           width: 200px;
           text-align: right;
+          word-wrap:break-word;
         }
         & .order {
           width: 120px
@@ -195,4 +197,13 @@ html:not([data-scale]) .detail-box .cancel {
 html:not([data-scale]) .detail-box .btn::before {
   height: 0;
   border: none;
+}
+html :global(.am-modal-wrap) {
+  color: red;
+  & :global(.am-modal-body) {
+      & :global(.am-modal-propmt-content) {
+        text-align: left;
+        font-size: 13px;
+      }
+  }
 }
