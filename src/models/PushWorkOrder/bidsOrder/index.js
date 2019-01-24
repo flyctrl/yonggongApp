@@ -33,7 +33,7 @@ class SelectClass extends Component {
       settleValue: parseInt(tooler.getQueryString('settleValue')) || 2,
       showform: false,
       showtech: false,
-      url: tooler.getQueryString('url'),
+      url: tooler.getQueryString('url') || '',
       edittype: tooler.getQueryString('edittype') || 0,
       editSheetno: tooler.getQueryString('editSheetno') || 0
     }
@@ -53,24 +53,32 @@ class SelectClass extends Component {
     }
   }
   backButtons = (e) => {
-    let { showIndex, url } = this.state
+    let { showIndex } = this.state
     if (showIndex !== 0) {
       e.preventDefault()
       this.setState({
         showIndex: 0
       })
     } else {
-      if (url) {
-        this.props.match.history.push(urls[url])
-      } else {
-        this.props.match.history.go(-1)
-      }
+      this.goSkip()
     }
   }
   componentWillUnmount () {
     if ('cordova' in window) {
       document.removeEventListener('backbutton', this.backButtons)
       document.addEventListener('backbutton', onBackKeyDown, false)
+    }
+  }
+  goSkip = () => {
+    let { url, editSheetno, edittype } = this.state
+    if (url) {
+      this.props.match.history.push(urls[url])
+    } else {
+      if (editSheetno !== '' && edittype === '1') { // 编辑
+        this.props.match.history.push(`${urls.WORKLISTMANAGE}?listType=1`)
+      } else {
+        this.props.match.history.go(-1)
+      }
     }
   }
   getEditData = async () => { // 获取编辑数据
@@ -186,7 +194,7 @@ class SelectClass extends Component {
     console.log(value)
   }
   handleNextStep = () => { // 下一步
-    let { teachVal, teachId, showtech, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal, settleValue, receiveType, edittype, editSheetno } = this.state
+    let { url, teachVal, teachId, showtech, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal, settleValue, receiveType, edittype, editSheetno } = this.state
     if (proId === '' || paymethodId === '' || bidwayId === '' || paymodeId === '') {
       this.setState({
         proVal: proId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : proVal,
@@ -198,7 +206,7 @@ class SelectClass extends Component {
       if (showtech === false) {
         teachId = 'null'
       }
-      let urlJson = { url: 'HOME', teachVal, teachId, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal, settleValue, receiveType, edittype, editSheetno }
+      let urlJson = { url: url, teachVal, teachId, proId, proVal, paymethodId, paymethodVal, bidwayId, bidwayVal, paymodeId, paymodeVal, settleValue, receiveType, edittype, editSheetno }
       console.log('urlJson:', urlJson)
       let skipurl = tooler.parseJsonUrl(urlJson)
       console.log('skipurl:', skipurl)
@@ -206,7 +214,7 @@ class SelectClass extends Component {
     }
   }
   render() {
-    let { url, showIndex, teachVal, showtech, proId, proVal, paymethodVal, bidwayVal, paymodeVal, settleValue, receiveType, parentTeachId } = this.state
+    let { showIndex, teachVal, showtech, proId, proVal, paymethodVal, bidwayVal, paymodeVal, settleValue, receiveType, parentTeachId } = this.state
     console.log(proVal)
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
@@ -214,13 +222,7 @@ class SelectClass extends Component {
           title='发布招标'
           leftIcon='icon-back'
           leftTitle1='返回'
-          leftClick1={() => {
-            if (url) {
-              this.props.match.history.push(urls[url])
-            } else {
-              this.props.match.history.go(-1)
-            }
-          }}
+          leftClick1={this.goSkip}
         />
         <Content>
           <List renderHeader={() => '选择工单关联的项目信息'} className={style['select-class-list']}>

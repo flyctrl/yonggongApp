@@ -52,6 +52,12 @@ const data = [
     title: '我的'
   }
 ]
+const routename = {
+  '/Home': 'HOME',
+  '/WorkListManage': 'WORKLISTMANAGE',
+  '/Message': 'MESSAGE',
+  '/Mine': 'MINE'
+}
 let menuAry = []
 class AppMenu extends Component {
   constructor(props) {
@@ -59,7 +65,8 @@ class AppMenu extends Component {
     this.state = {
       selectedTab: (history.location.pathname).slice(1) || 'Home',
       visible: false,
-      unread: 0
+      unread: 0,
+      urlname: '/Home'
     }
   }
 
@@ -130,7 +137,7 @@ class AppMenu extends Component {
     }
   }
   render() {
-    let { visible, selectedTab, unread } = this.state
+    let { visible, selectedTab, unread, urlname } = this.state
     return (
       <div className={ menuStyle['tabBody'] }>
         {
@@ -163,12 +170,15 @@ class AppMenu extends Component {
                       })
                       this.props.onTouch(item['title'])
                       if (item['key'] === 'PushOrder') {
+                        console.log(history)
                         this.setState({
-                          visible: !visible
+                          visible: !visible,
+                          urlname: history.location.pathname
                         })
                       } else {
                         this.setState({
-                          visible: false
+                          visible: false,
+                          urlname: '/Home'
                         })
                         history.push(item['path'], { title: item['title'] })
                       }
@@ -183,15 +193,15 @@ class AppMenu extends Component {
         </div>
         <div style={{ display: visible ? 'block' : 'none' }} className={`${menuStyle['bottom-menu-tip']} animated ${visible ? 'bounceInUp' : 'bounceOutDown'}`}>
           <ul className={menuStyle['pubsh-box']}>
-            <li onClick={() => this.getCommpanyStatus(urls.PUSHNORMALORDER)}>
+            <li onClick={() => this.getCommpanyStatus(`${urls.PUSHNORMALORDER}?url=${routename[urlname]}`)}>
               <img src={normalorder} />
               <span>发布工单</span>
             </li>
-            <li onClick={() => this.getCommpanyStatus(urls.PUSHQUICKORDER)}>
+            <li onClick={() => this.getCommpanyStatus(`${urls.PUSHQUICKORDER}?url=${routename[urlname]}`)}>
               <img src={quickorder} />
               <span>发布快单</span>
             </li>
-            <li onClick={() => this.getCommpanyStatus(urls.PUSHBIDORDER)}>
+            <li onClick={() => this.getCommpanyStatus(`${urls.PUSHBIDORDER}?url=${routename[urlname]}`)}>
               <img src={initeorder} />
               <span>发布招标</span>
             </li>
