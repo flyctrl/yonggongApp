@@ -35,8 +35,9 @@ class SelectClass extends Component {
       constructType: tooler.getQueryString('constructType') || '',
       showform: false,
       showtech: false,
-      url: tooler.getQueryString('url'),
+      url: tooler.getQueryString('url') || '',
       orderno: tooler.getQueryString('orderno') || '',
+      detailsheetno: tooler.getQueryString('detailsheetno') || '',
       starttime: tooler.getQueryString('starttime') || '',
       edittype: tooler.getQueryString('edittype') || 0,
       editSheetno: tooler.getQueryString('editSheetno') || 0
@@ -61,7 +62,7 @@ class SelectClass extends Component {
     }
   }
   backButtons = (e) => {
-    let { showIndex, url } = this.state
+    let { showIndex } = this.state
     if (showIndex !== 0) {
       e.preventDefault()
       if (showIndex === 2) {
@@ -74,8 +75,22 @@ class SelectClass extends Component {
         })
       }
     } else {
-      if (url) {
-        this.props.match.history.push(urls[url])
+      this.goSkip()
+    }
+  }
+  goSkip = () => {
+    let { url, orderno, detailsheetno, editSheetno, edittype } = this.state
+    if (url) {
+      this.props.match.history.push(urls[url])
+    } else {
+      if (orderno !== '') {
+        if (detailsheetno !== '') { // 详情
+          this.props.match.history.push(`${urls.ORDERLISTDETAIL}?worksheetno=${detailsheetno}`)
+        } else { // 列表
+          this.props.match.history.push(urls.MYORDER)
+        }
+      } else if (editSheetno !== '' && edittype === '2') { // 编辑
+        this.props.match.history.push(`${urls.WORKLISTMANAGE}?listType=2`)
       } else {
         this.props.match.history.go(-1)
       }
@@ -215,11 +230,11 @@ class SelectClass extends Component {
         paymethodVal: paymethodId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : paymethodVal,
       })
     } else {
-      let { settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, starttime, proId, proVal, edittype, editSheetno, orderno } = this.state
+      let { url, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, starttime, proId, proVal, edittype, editSheetno, orderno, detailsheetno } = this.state
       if (parentClassId !== 'skill' || showtech === false) {
         teachId = 'null'
       }
-      let urlJson = { url: 'HOME', settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, starttime, proId, proVal, paymethodId, paymethodVal, edittype, editSheetno, orderno }
+      let urlJson = { url: url, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, starttime, proId, proVal, paymethodId, paymethodVal, edittype, editSheetno, orderno, detailsheetno }
       console.log('urlJson:', urlJson)
       let skipurl = tooler.parseJsonUrl(urlJson)
       console.log('skipurl:', skipurl)
@@ -228,20 +243,14 @@ class SelectClass extends Component {
     }
   }
   render() {
-    let { orderno, url, settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, paymethodVal, paymethodAry, teachId, settleId } = this.state
+    let { orderno, settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, paymethodVal, paymethodAry, teachId, settleId } = this.state
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
         <Header
           title='选择类别'
           leftIcon='icon-back'
           leftTitle1='返回'
-          leftClick1={() => {
-            if (url) {
-              this.props.match.history.push(urls[url])
-            } else {
-              this.props.match.history.go(-1)
-            }
-          }}
+          leftClick1={this.goSkip}
         />
         <Content>
           <List renderHeader={() => '选择工单关联的项目信息'} className={style['select-class-list']}>

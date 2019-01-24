@@ -108,13 +108,13 @@ class Home extends Component {
     }
   }
   handlePushNormalOrder = async () => {
-    this.getCommpanyStatus(urls.PUSHNORMALORDER)
+    this.getCommpanyStatus(`${urls.PUSHNORMALORDER}?url=HOME`)
   }
   handlePushQuickOrder = () => {
-    this.getCommpanyStatus(urls.PUSHQUICKORDER)
+    this.getCommpanyStatus(`${urls.PUSHQUICKORDER}?url=HOME`)
   }
   handlePushBidOrder = () => {
-    this.getCommpanyStatus(urls.PUSHBIDORDER)
+    this.getCommpanyStatus(`${urls.PUSHBIDORDER}?url=HOME`)
   }
   handleClickMsg = () => {
     this.props.match.history.push(urls.MESSAGE)
