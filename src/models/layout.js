@@ -49,7 +49,7 @@ class MainLayout extends Component {
         cordova.getAppVersion.getVersionNumber().then(async (version) => { // 获取当前app的版本号
           console.log('当前version:' + version)
           let data = await api.Common.getVersion({
-            yq_app: 1,
+            yq_app: 2,
             os: 2,
             version: version
           }) || false
