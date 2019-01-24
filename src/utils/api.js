@@ -382,24 +382,6 @@ export default {
       }
     },
     invoiceMange: { // 发票管理
-      invoiceListOne(params) { // 代收 发票管理
-        return Fetch(prefix + '/invoice/list/to_apply', params, 'get')
-      },
-      applyInvoice(params) { // 发包方用户申请开票
-        return FetchSave(prefix + '/invoice/apply', params, 'post', { showloading: false })
-      },
-      invoiceListTwo(params) { // 代开 发票管理
-        return Fetch(prefix + '/invoice/list/grant', params, 'get')
-      },
-      invoiceDetail(params) { // 代开发票详情
-        return Fetch(prefix + '/invoice/show', params, 'get')
-      },
-      applyInvoices(params) { // 收款企业的开票审核
-        return FetchSave(prefix + '/invoice/grant', params, 'post', { showloading: false })
-      },
-      applyInvoicePlatform(params) { // 申请发票可选平台
-        return Fetch(prefix + '/invoice/apply/platform', params, 'get')
-      },
       invoiceNewList(params) { // 发票管理2
         return Fetch(prefix + '/invoice/apply/list', params, 'get')
       },
@@ -407,7 +389,7 @@ export default {
         return Fetch(prefix + '/invoice/drawer/list', params, 'get')
       },
       invoiceOrderList(params) { // 待开票的结算列表
-        return Fetch(prefix + '/invoice/settleOrder/list', params, 'get')
+        return Fetch(prefix + '/invoice/worksheetOrder/list', params, 'get')
       },
       applyNewInvoice(params) { // 新申请开票
         return FetchSave(prefix + '/invoice/doApply', params, 'post', { showloading: false })

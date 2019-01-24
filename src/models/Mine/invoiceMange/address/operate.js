@@ -154,7 +154,7 @@ class Operate extends Component {
                       <Picker
                         extra='请选择所在地区'
                         data={addressOptions}
-                      ><List.Item arrow='down'>省·市·区／县</List.Item></Picker>
+                      ><List.Item arrow='down'>所在地区</List.Item></Picker>
                     )}
                   </div>
                   <div className={style['input-list']}>

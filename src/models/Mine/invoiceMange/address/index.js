@@ -187,7 +187,7 @@ class AddressMange extends Component {
     }
   }
   render() {
-    let { isLoading, nodata, dataSource } = this.state
+    let { isLoading, nodata, dataSource, isChoose } = this.state
     const footerShow = () => {
       if (isLoading) {
         return null
@@ -208,15 +208,19 @@ class AddressMange extends Component {
                 : null
             }{ rowData['recv_region'] + rowData['recv_address']}</div>
           </dt>
-          <dd>
-            <div onClick={(e) => e.stopPropagation()} className={style['left']}>
-              <Radio checked={rowData['is_default'] === 1} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange(rowData['is_default'], rowData['express_no'])}>设为默认</Radio>
-            </div>
-            <div onClick={(e) => e.stopPropagation()} className={style['icon']}>
-              <span data-id={rowData['express_no']} onClick={this.deleteAddress}> <NewIcon type='icon-shanchu1'></NewIcon>删除</span>
-              <span data-id={`${rowData['express_no']}&${rowData['is_default']}`} onClick={this.editAddress}><NewIcon type='icon-shanchu-'></NewIcon>编辑</span>
-            </div>
-          </dd>
+          {
+            !isChoose
+              ? <dd>
+                <div onClick={(e) => e.stopPropagation()} className={style['left']}>
+                  <Radio checked={rowData['is_default'] === 1} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange(rowData['is_default'], rowData['express_no'])}>设为默认</Radio>
+                </div>
+                <div onClick={(e) => e.stopPropagation()} className={style['icon']}>
+                  <span data-id={rowData['express_no']} onClick={this.deleteAddress}> <NewIcon type='icon-shanchu1'></NewIcon>删除</span>
+                  <span data-id={`${rowData['express_no']}&${rowData['is_default']}`} onClick={this.editAddress}><NewIcon type='icon-shanchu-'></NewIcon>编辑</span>
+                </div>
+              </dd>
+              : null
+          }
         </dl>
       )
     }
@@ -224,7 +228,7 @@ class AddressMange extends Component {
       <div className={`pageBox gray`}>
         <div>
           <Header
-            title='地址管理'
+            title={isChoose ? '地址列表' : '地址管理'}
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {

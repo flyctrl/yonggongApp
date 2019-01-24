@@ -111,7 +111,7 @@ class OrderRange extends Component {
         isConfirm: false
       })
     } else {
-      this.props.match.history.goBack()
+      this.props.match.history.push(`${urls['INVOICENEWMANGE']}?listType=1`)
     }
   }
   componentWillUnmount () {
@@ -214,7 +214,7 @@ class OrderRange extends Component {
     for (let i = 0; i < dataSource.length; i++) {
       if (dataSource[i].ischeck) {
         ishas = true
-        newData.push(dataSource[i]['settle_order_no'])
+        newData.push(dataSource[i]['worksheet_order_no'])
       }
     }
     if (!ishas) {
@@ -244,27 +244,27 @@ class OrderRange extends Component {
     let row = (rowData, sectionID, rowID) => {
       if (!isConfirm) {
         return (
-          <div key={rowData.settle_order_no} className={isConfirm ? `${style['box']} ${style['confirm-box']}` : style['box']}>
+          <div key={rowData.worksheet_order_no} className={isConfirm ? `${style['box']} ${style['confirm-box']}` : style['box']}>
             <div className={`${style['checkbox']} my-bottom-border`}>
               <CheckboxItem checked={rowData.ischeck} activeStyle={{ backgroundColor: '#fff' }} onChange={() => this.onChange(rowData)}>
                 {rowData.worksheet_title}
               </CheckboxItem>
             </div>
             <p>发票金额 <span>￥{rowData['amount']}</span></p>
-            <p>结算编号<span>{rowData['settle_order_no']}</span></p>
+            <p>结算编号<span>{rowData['worksheet_order_no']}</span></p>
           </div>
         )
       } else {
         if (rowData.ischeck) {
           return (
-            <div key={rowData.settle_order_no} className={isConfirm ? `${style['box']} ${style['confirm-box']}` : style['box']}>
+            <div key={rowData.worksheet_order_no} className={isConfirm ? `${style['box']} ${style['confirm-box']}` : style['box']}>
               <div className={`${style['checkbox']} my-bottom-border`}>
                 <CheckboxItem checked={rowData.ischeck} activeStyle={{ backgroundColor: '#fff' }} onChange={() => this.onChange(rowData)}>
                   {rowData.worksheet_title}
                 </CheckboxItem>
               </div>
               <p>发票金额 <span>￥{rowData['amount']}</span></p>
-              <p>结算编号<span>{rowData['settle_order_no']}</span></p>
+              <p>结算编号<span>{rowData['worksheet_order_no']}</span></p>
             </div>
           )
         } else {
@@ -283,7 +283,7 @@ class OrderRange extends Component {
               isConfirm: false
             })
           } else {
-            this.props.match.history.go(-1)
+            this.props.match.history.push(`${urls['INVOICENEWMANGE']}?listType=1`)
           }
         } }
       />

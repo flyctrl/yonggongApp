@@ -183,7 +183,7 @@ class TitleMange extends Component {
     }
   }
   render() {
-    let { isLoading, nodata, dataSource } = this.state
+    let { isLoading, nodata, dataSource, isChoose } = this.state
     const footerShow = () => {
       if (isLoading) {
         return null
@@ -207,15 +207,19 @@ class TitleMange extends Component {
               {titleType[rowData['type']]}
             </span>
           </dt>
-          <dd>
-            <div onClick={(e) => e.stopPropagation()} className={style['left']}>
-              <Radio checked={rowData['is_default'] === 1} name='proRadio' className={style['pro-radio']} onChange={(e) => this.onRadioChange(e, rowData['is_default'], rowData['title_no'])}>设为默认</Radio>
-            </div>
-            <div onClick={(e) => e.stopPropagation()} className={style['icon']}>
-              <span data-id={rowData['title_no']} onClick={this.deleteTitle}> <NewIcon type='icon-shanchu1'></NewIcon>删除</span>
-              <span data-id={`${rowData['title_no']}&${rowData['is_default']}&${rowData['type']}`} onClick={this.editTitle}><NewIcon type='icon-shanchu-'></NewIcon>编辑</span>
-            </div>
-          </dd>
+          {
+            !isChoose
+              ? <dd>
+                <div onClick={(e) => e.stopPropagation()} className={style['left']}>
+                  <Radio checked={rowData['is_default'] === 1} name='proRadio' className={style['pro-radio']} onChange={(e) => this.onRadioChange(e, rowData['is_default'], rowData['title_no'])}>设为默认</Radio>
+                </div>
+                <div onClick={(e) => e.stopPropagation()} className={style['icon']}>
+                  <span data-id={rowData['title_no']} onClick={this.deleteTitle}> <NewIcon type='icon-shanchu1'></NewIcon>删除</span>
+                  <span data-id={`${rowData['title_no']}&${rowData['is_default']}&${rowData['type']}`} onClick={this.editTitle}><NewIcon type='icon-shanchu-'></NewIcon>编辑</span>
+                </div>
+              </dd>
+              : null
+          }
         </dl>
       )
     }
@@ -223,7 +227,7 @@ class TitleMange extends Component {
       <div className={`pageBox gray`}>
         <div>
           <Header
-            title='抬头管理'
+            title={isChoose ? '抬头列表' : '抬头管理'}
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {

@@ -58,7 +58,7 @@ class InvoiceDetail extends Component {
       this.setState({
         dataSource: data,
         isLoading: false,
-        settleOrder: data['settle_order'],
+        settleOrder: data['worksheet_order'],
         upload: data['status'] === 2 ? data['image_url'] : upload,
         isClick: data['status'] === 2,
         orginUpload: data['image_preview_url']
@@ -130,6 +130,7 @@ class InvoiceDetail extends Component {
               return false
             }
             reject()
+            Toast.loading('提交中...', 0)
             const data = await api.Mine.invoiceMange.sendEmail({
               apply_no: this.state.invoiceNo,
               mail_to: bidAmount
@@ -170,7 +171,7 @@ class InvoiceDetail extends Component {
         if (dataSource['material_type'] === 1) {
           newVal = { tracking_no: value['tracking_no'] }
         } else {
-          newVal = { image_url: value['image_url'] }
+          newVal = { download_url: value['image_url'] }
         }
         const data = await api.Mine.invoiceMange.confirmNewApply({
           ...newVal,

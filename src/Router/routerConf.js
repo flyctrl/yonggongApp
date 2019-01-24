@@ -232,20 +232,9 @@ const CompanyAuthDetail = Loadable({ // 企业认证详情
   loader: () => import(/* webpackChunkName: "companyauthdetail" */ '../models/Mine/companyAuthDetail'),
   loading: MyLoadingComponent
 })
-const InvoiceMange = Loadable({ // 发票管理
-  loader: () => import(/* webpackChunkName: "invoicemange" */ '../models/Mine/invoiceMange'),
-  loading: MyLoadingComponent
-})
-const InvoiceDetail = Loadable({ // 代开发票详情
-  loader: () => import(/* webpackChunkName: "invoicedetail" */ '../models/Mine/invoiceMange/detail'),
-  loading: MyLoadingComponent
-})
-const ApplyInvoice = Loadable({ // 申请发票
-  loader: () => import(/* webpackChunkName: "applyinvoice" */ '../models/Mine/invoiceMange/applyInvoice'),
-  loading: MyLoadingComponent
-})
+
 const InvoiceNewMange = Loadable({ // 新发票管理
-  loader: () => import(/* webpackChunkName: "invoicemange3" */ '../models/Mine/invoiceMange/index3'),
+  loader: () => import(/* webpackChunkName: "invoicemange3" */ '../models/Mine/invoiceMange'),
   loading: MyLoadingComponent
 })
 const InvoiceOrder = Loadable({ // 工单开票
@@ -269,12 +258,12 @@ const AddressOperate = Loadable({ // 添加与编辑地址
   loading: MyLoadingComponent
 })
 const InvoiceNewDetail = Loadable({ // 新发票详情
-  loader: () => import(/* webpackChunkName: "invoicenewdetail" */ '../models/Mine/invoiceMange/detail/index'),
+  loader: () => import(/* webpackChunkName: "invoicenewdetail" */ '../models/Mine/invoiceMange/detail'),
   loading: MyLoadingComponent
 })
 
 const ApplyNewInvoice = Loadable({ // 申请新发票
-  loader: () => import(/* webpackChunkName: "applynewinvoice" */ '../models/Mine/invoiceMange/applyInvoice/index2'),
+  loader: () => import(/* webpackChunkName: "applynewinvoice" */ '../models/Mine/invoiceMange/applyInvoice'),
   loading: MyLoadingComponent
 })
 const ContractMange = Loadable({ // 合同管理
@@ -858,32 +847,6 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '企业认证详情'
-  }, {
-    path: urls.INVOICEMANGE,
-    exact: true,
-    component: InvoiceMange,
-    parent: 'Mine',
-    animated: true,
-    showMenu: false,
-    title: '发票管理'
-  },
-  {
-    path: urls.INVOICELISTTWODETAIL,
-    exact: true,
-    component: InvoiceDetail,
-    parent: 'InvoiceMange',
-    animated: true,
-    showMenu: false,
-    title: '代开发票详情'
-  },
-  {
-    path: urls.APPLYINVOICE,
-    exact: true,
-    component: ApplyInvoice,
-    parent: 'InvoiceMange',
-    animated: true,
-    showMenu: false,
-    title: '申请发票'
   }, {
     path: urls.INVOICENEWMANGE,
     exact: true,

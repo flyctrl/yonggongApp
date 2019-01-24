@@ -146,7 +146,7 @@ class Operate extends Component {
                             initialValue: dataSource['company_tax_no'],
                             rules: [
                               { required: true, message: '请填写纳税人识别号或社会统一征信代码' },
-                              { pattern: /^[A-Z0-9]{15}$|^[A-Z0-9]{17}$|^[A-Z0-9]{18}$|^[A-Z0-9]{20}$/, message: '由15或者17或者18或者20位字母、数字组成' }
+                              { pattern: /^[A-Z0-9]{15}$|^[A-Z0-9]{17}$|^[A-Z0-9]{18}$|^[A-Z0-9]{20}$/, message: '税号由15或者17或者18或者20位字母、数字组成' }
                             ]
                           })(
                             <InputItem
