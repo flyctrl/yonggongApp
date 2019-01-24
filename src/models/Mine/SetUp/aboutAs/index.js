@@ -15,13 +15,21 @@ const Item = List.Item
 class AboutUs extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      version: ''
+    }
   }
 
   componentDidMount() {
+    if ('cordova' in window) {
+      cordova.getAppVersion.getVersionNumber().then(version => this.setState({
+        version
+      }))
+    }
   }
 
   render() {
+    let { version } = this.state
     return <div className='pageBox'>
       <Header
         title='关于我们'
@@ -37,7 +45,9 @@ class AboutUs extends Component {
             <img src={logo} />
           </div>
         </div>
-        <p className={style['about-v']}>亚雀 V1.0.2</p>
+        <p className={style['about-v']}>亚雀用工{
+          'cordova' in window ? ' V' + version : ''
+        }</p>
         <div className={style['about-content']}>
           <List>
             {/* <Item onClick={() => {}} arrow='horizontal'>去评分</Item> */}

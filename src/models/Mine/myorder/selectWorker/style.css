@@ -104,6 +104,9 @@ html:not([data-scale]) :global(.am-list-body div:not(:last-child)) .price :globa
     height: 50px;
     margin-right: 10px;
     border-radius: 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
   }
   & .settle-info {
     float: left;

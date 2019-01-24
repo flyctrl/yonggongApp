@@ -61,12 +61,15 @@ html:not([data-scale]) .settle-list :global(.am-list-body .am-list-item:last-chi
       & .user-info {
         padding: 10px;
         overflow: hidden;
-        & img {
+        & .header {
           float: left;
           width: 60px;
           height: 60px;
           margin-right: 10px;
           border-radius: 50%;
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: center top;
         }
         & .info-right {
           float: left;

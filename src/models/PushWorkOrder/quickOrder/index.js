@@ -49,19 +49,24 @@ class SelectClass extends Component {
     }
   }
   backButtons = (e) => {
-    let { remarkShow, mapShow } = this.state
-    if (remarkShow) {
+    let { showIndex, url } = this.state
+    if (showIndex !== 0) {
       e.preventDefault()
-      this.setState({
-        remarkShow: false
-      })
-    } else if (mapShow) {
-      e.preventDefault()
-      this.setState({
-        mapShow: false
-      })
+      if (showIndex === 2) {
+        this.setState({
+          showIndex: 1
+        })
+      } else {
+        this.setState({
+          showIndex: 0
+        })
+      }
     } else {
-      this.props.match.history.push(urls.PUSHQUICKORDER + '?' + tooler.parseJsonUrl(this.state.urlJson))
+      if (url) {
+        this.props.match.history.push(urls[url])
+      } else {
+        this.props.match.history.go(-1)
+      }
     }
   }
   componentWillUnmount () {

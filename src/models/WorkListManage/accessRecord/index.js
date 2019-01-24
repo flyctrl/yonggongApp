@@ -155,7 +155,7 @@ class AccessRecord extends Component {
     )
     const row = (rowData, sectionID, rowID) => {
       return <li key={rowData['apply_no']} className={`${Number(rowData['bid_amount']) > 0 ? style['inivte'] : ''}`}>
-        <img src={rowData['avatar']}/>
+        <div className={style['header']} style={{ 'backgroundImage': 'url(' + rowData['avatar'] + ')' }}></div>
         <div className={style['record-hd']}>
           <p className='ellipsis'><Badge text={rowData['worker_role'] === 1 ? '个人' : '企业'} className={style['access-type']}/>{rowData['worker_name']}</p>
           {Number(rowData['bid_amount']) > 0 ? <em>{rowData['bid_amount']}{rowData['bid_amount_unit']}</em> : ''}

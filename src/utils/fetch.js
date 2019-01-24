@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2018-12-28 18:21:42
+* @Last Modified time: 2019-01-23 16:42:05
 */
 import * as Loading from './load.js'
 import storage from '../utils/storage'
@@ -18,6 +18,7 @@ let fetcher = axios.create({
     }
     return JSON.stringify(data)
   }],
+  timeout: 60000,
   showloading: true,
   loadtitle: '加载中...',
   headers: {
@@ -68,6 +69,8 @@ fetcher.interceptors.response.use(function (response) {
       axios.post(baseUrl + '/employ/refresh', { refresh_token: refreshToken }).then(function(res) {
         console.log(res)
         if (res.data.code === 10012) {
+          storage.remove('Authorization')
+          storage.remove('refreshToken')
           history.push('/Login/login')
         } else if (res.data.code === 0) {
           storage.set('Authorization', 'Bearer ' + res.data.data.access_token)
@@ -92,6 +95,9 @@ fetcher.interceptors.response.use(function (response) {
 }, function (error) {
   if (error.response.config.showloading) {
     Loading.hideLoading()
+  }
+  if (error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
+    error.msg = '网络异常，请重试'
   }
   if (error && error.response) { // 这里是返回状态码不为200时候的错误处理
     switch (error.response.status) {

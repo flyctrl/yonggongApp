@@ -147,7 +147,7 @@ class SettleRecord extends Component {
         </dt>
         <dd>
           <div className={style['user-info']}>
-            <img src={rowData['avatar']} />
+            <div className={style['header']} style={{ 'backgroundImage': 'url(' + rowData['avatar'] + ')' }}></div>
             <div className={style['info-right']}>
               <h4>{rowData['username']}</h4>
               <p>{rowData['amount']}</p>

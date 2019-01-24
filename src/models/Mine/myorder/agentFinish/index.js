@@ -192,7 +192,7 @@ class ApplySettle extends Component {
             <List className={style['settle-list']}>
               {dataSource.map(i => (
                 <CheckboxItem key={i.task_no} checked={i.ischeck} activeStyle={{ backgroundColor: '#fff' }} onChange={() => this.onChange(i)}>
-                  <img className={style['header']} src={i['tasker_avatar']} />
+                  <div className={style['header']} style={{ 'backgroundImage': 'url(' + i['tasker_avatar'] + ')' }}></div>
                   <div className={style['settle-info']}>
                     <h2>{i.tasker_name}</h2>
                     <p>手机号：{i['tasker_mobile']}</p>
