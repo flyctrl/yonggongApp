@@ -95,7 +95,14 @@ class InvoiceMange extends Component {
     }
   }
   backButtons = (e) => {
-    this.props.match.history.push(`${urls['INVOICENEWMANGE']}?listType=1`)
+    if (this.state.visible) {
+      e.preventDefault()
+      this.setState({
+        visible: false
+      })
+    } else {
+      this.props.match.history.push(urls.MINE)
+    }
   }
   componentWillUnmount () {
     if ('cordova' in window) {

@@ -251,7 +251,7 @@ class OrderRange extends Component {
               </CheckboxItem>
             </div>
             <p>发票金额 <span>￥{rowData['amount']}</span></p>
-            <p>结算编号<span>{rowData['worksheet_order_no']}</span></p>
+            <p>订单编号<span>{rowData['worksheet_order_no']}</span></p>
           </div>
         )
       } else {
@@ -264,7 +264,7 @@ class OrderRange extends Component {
                 </CheckboxItem>
               </div>
               <p>发票金额 <span>￥{rowData['amount']}</span></p>
-              <p>结算编号<span>{rowData['worksheet_order_no']}</span></p>
+              <p>订单编号<span>{rowData['worksheet_order_no']}</span></p>
             </div>
           )
         } else {
