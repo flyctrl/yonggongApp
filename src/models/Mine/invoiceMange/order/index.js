@@ -315,15 +315,12 @@ class OrderRange extends Component {
             <a onClick={this.handleConfirm}>确认</a>
             <span>合计：<em>￥{this.countTotal(dataSource)}</em></span>
           </div>
-          : <div className={style['btn-box-one']}>
-            {
-              !nodata
-                ? <AgreeItem checked={checkall} onChange={this.handleCheckAll}>全选</AgreeItem>
-                : null
-            }
+          : !nodata ? <div className={style['btn-box-one']}>
+            <AgreeItem checked={checkall} onChange={this.handleCheckAll}>全选</AgreeItem>
             <a onClick={this.handleApply}>下一步</a>
             <span>合计：<em>￥{this.countTotal(dataSource)}</em></span>
           </div>
+            : null
         }
       </Content>
     </div>

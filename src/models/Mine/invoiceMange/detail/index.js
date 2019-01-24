@@ -28,6 +28,7 @@ const materialType = {
 const reg = new RegExp(/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/)
 const prompt = Modal.prompt
 const alert = Modal.alert
+let promptSnatch
 class InvoiceDetail extends Component {
   constructor(props) {
     super(props)
@@ -115,7 +116,7 @@ class InvoiceDetail extends Component {
     })
   }
   handleSendEmail = async () => {
-    let promptSnatch = prompt(
+    promptSnatch = prompt(
       '发送附件至邮箱',
       '提交成功后系统会在3天之内发送邮件,请勿重复提交; 您也可到电脑发票详情直接下载PDF',
       [
@@ -129,6 +130,7 @@ class InvoiceDetail extends Component {
               Toast.fail('请输入正确的邮箱', 1)
               return false
             }
+            promptSnatch.close()
             reject()
             Toast.loading('提交中...', 0)
             const data = await api.Mine.invoiceMange.sendEmail({
@@ -138,7 +140,6 @@ class InvoiceDetail extends Component {
             if (data) {
               Toast.hide()
               Toast.success('发送成功', 1.5, () => {
-                promptSnatch.close()
                 this.setState({
                   isLoading: true
                 }, () => {
@@ -210,6 +211,11 @@ class InvoiceDetail extends Component {
           this.getProjectDetail()
         })
       })
+    }
+  }
+  componentWillUnmount () {
+    if (promptSnatch) {
+      promptSnatch.close()
     }
   }
   render() {
@@ -285,18 +291,16 @@ class InvoiceDetail extends Component {
                 <div className={style['content-footer']} style={{ display: dataSource['status'] === 3 || dataSource['status'] === 11 ? 'none' : 'block' }}>
                   <img src={upup} className={style['up']}>
                   </img>
-                  <p style={{ display: dataSource['material_type'] === 2 ? 'block' : 'none' }}>{dataSource['status'] === 12 ? `开票完成，请上传电子发票附件` : dataSource['status'] === 2 && dataSource['user_type'] === 1 ? '开票完成，请下载电子发票附件' : dataSource['status'] === 2 && dataSource['user_type'] === 2 ? '开票已完成' : ''}</p>
+                  <p style={{ display: dataSource['material_type'] === 2 ? 'block' : 'none' }}>{dataSource['status'] === 12 ? `开票完成，请上传电子发票` : dataSource['status'] === 2 && dataSource['user_type'] === 1 ? '开票完成，请下载电子发票' : dataSource['status'] === 2 && dataSource['user_type'] === 2 ? '开票已完成' : ''}</p>
                   <p style={{ display: dataSource['material_type'] === 1 ? 'block' : 'none' }}>{dataSource['status'] === 12 ? '开票完成，请填写快递单号' : dataSource['status'] === 2 ? '开票完成，可根据单号查询物流状态' : ''}</p>
                   <div style={{ display: dataSource['material_type'] === 2 ? 'block' : 'none' }} className={style['upload-item']}>
                     <span className={style['img-span']} onClick={this.handleDelete} style={{ display: dataSource['status'] === 12 ? 'block' : 'none', zIndex: isClick ? 2 : -1 }}><NewIcon className={style.icon} type='icon-tupianshanchu' /></span>
-                    <span className={style['img-span']} style={{ display: dataSource['status'] === 2 && dataSource['user_type'] === 1 ? 'block' : 'none', zIndex: isClick ? 2 : -1 }} onClick={this.handleSendEmail}><NewIcon className={style.icon} type='icon-xiazai' /></span>
                     {
                       getFieldDecorator('image_url', {
                         rules: [{
-                          required: dataSource['material_type'] === 2, message: '请上传电子发票附件',
+                          required: dataSource['material_type'] === 2, message: '请上传电子发票',
                         }]
-                      })(
-                        <img src={upload} onClick={this.handleshowImg} className={style['upload']} />
+                      })(<img src={upload} onClick={this.handleshowImg} className={style['upload']} />
                       )
                     }
                     <input className={style['input-pic']} style={{ zIndex: isClick ? -1 : 1 }} disabled={isClick} type='file' capture='camera' onChange={this.handleTake} />
@@ -318,6 +322,7 @@ class InvoiceDetail extends Component {
                   </ul>
                 </div>
                 <Button style={{ display: dataSource['status'] === 3 || dataSource['status'] === 2 || dataSource['status'] === 11 ? 'none' : 'block' }} className={`${style['confirm']} ${style['btn']}`} onClick={this.handleConfirm}>确认</Button>
+                <Button style={{ display: dataSource['status'] === 2 && dataSource['user_type'] === 1 ? 'block' : 'none' }} onClick={this.handleSendEmail} className={`${style['confirm']} ${style['btn']}`}>下载发票</Button>
                 <Button style={{ display: dataSource['status'] === 3 || dataSource['status'] === 2 ? 'none' : 'block' }} className={`${style['cancel']} ${style['btn']}`} onClick={() =>
                   alert('提示', '驳回发票将作废,确定要作废吗？', [
                     { text: '取消', onPress: () => console.log('cancel') },

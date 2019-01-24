@@ -110,30 +110,30 @@
     }
     & .upload-item {
       position: relative;
-      width: 78px;
-      height: 78px;
+      width: 95px;
+      height: 95px;
       margin-left:14px;
       & .img-span {
         position: absolute;
-        left: 53px;
-        top: 5px;
-        width: 19px;
-        height: 19px;
+        right:0;
+        width: 22px;
+        height: 22px;
       }
       & .icon {
-        width: 19px;
-        height: 19px;
+        width: 22px;
+        height: 22px;
       }
       & .upload {
-        width: 78px;
-        height: 78px;
-        position: absolute;
-        left:0;
+        width: 95px;
+        height: 95px;
+        /* position: absolute;
+        left:0; */
+        margin-right: 10px;
       }
       & .input-pic {
         position: absolute;
-        width: 78px;
-        height: 78px;
+        width: 95px;
+        height: 95px;
         left: 0;
         opacity: 0;
 
