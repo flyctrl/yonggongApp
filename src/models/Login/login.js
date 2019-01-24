@@ -15,7 +15,7 @@ import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import storage from 'Util/storage'
 import history from 'Util/history'
-
+import { onBackKeyDown } from 'Contants/tooler'
 class Login extends Component {
   constructor(props) {
     super(props)
@@ -28,8 +28,26 @@ class Login extends Component {
     const { getFieldError } = this.props.form
     let validateAry = ['username', 'password']
     this.props.form.validateFields(async (error) => {
+      let devJson = {}
+      if ('cordova' in window) {
+        cordova.getAppVersion.getVersionNumber().then(version => {
+          devJson = {
+            platform: 1,
+            device: {
+              os: 2,
+              osver: device.version,
+              version: version,
+              device_id: storage.get('deviceId'),
+              outer_id: storage.get('outerId')
+            }
+          }
+        })
+      }
       if (!error) {
-        const data = await api.auth.login(this.props.form.getFieldsValue()) || false
+        const data = await api.auth.login({
+          ...this.props.form.getFieldsValue(),
+          ...devJson
+        }) || false
         if (data) {
           storage.set('Authorization', 'Bearer ' + data['access_token'])
           storage.set('refreshToken', data['refresh_token'])
@@ -47,7 +65,21 @@ class Login extends Component {
       }
     })
   }
-
+  componentDidMount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
+  }
+  backButtons = () => {
+    navigator.app.exitApp()
+  }
+  componentWillUnmount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
+  }
   render() {
     const { getFieldProps, getFieldError } = this.props.form
     return (

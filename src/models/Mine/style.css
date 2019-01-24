@@ -41,11 +41,13 @@ html .mine-header :global(.am-button-ghost::before) {
     & dt {
       float: left;
       margin-right: 10px;
-      & img {
-        display: block;
+      & .header {
         width: 66px;
         height: 66px;
         border-radius: 50%;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center top;
       }
     }
     & dd {

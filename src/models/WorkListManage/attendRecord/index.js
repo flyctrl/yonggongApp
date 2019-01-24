@@ -185,7 +185,7 @@ class AttendRecord extends Component {
     const row = (rowData, sectionID, rowID) => {
       return <Item
         key={rowID}
-        thumb={rowData['avatar']}
+        thumb={<div className={style['avatar-thumb']} style={{ 'backgroundImage': 'url(' + rowData['avatar'] + ')' }}></div>}
         className={parseInt(rowData['status'][0]) > 1 ? style['unusual'] : style['normal']} // unusual
         onClick={() => this.handleAttendClick(rowData['order_no'], rowData['date'].split(' ')[0])}
         extra={this.changeStatus(rowData)}

@@ -71,6 +71,9 @@ const prefix = '/employ'
 
 export default {
   Common: {
+    getVersion(params) {
+      return Fetch('/common/yq/version', params, 'get', { showloading: false })
+    },
     getProList(params) { // 获取项目列表
       return Fetch(prefix + '/project/list/select', params, 'get')
     },
@@ -382,24 +385,69 @@ export default {
       }
     },
     invoiceMange: { // 发票管理
-      invoiceListOne(params) { // 代收 发票管理
-        return Fetch(prefix + '/invoice/list/to_apply', params, 'get')
+      invoiceNewList(params) { // 发票管理2
+        return Fetch(prefix + '/invoice/apply/list', params, 'get')
       },
-      applyInvoice(params) { // 发包方用户申请开票
-        return FetchSave(prefix + '/invoice/apply', params, 'post', { showloading: false })
+      invoicedrawerList(params) { // 开票主体列表
+        return Fetch(prefix + '/invoice/drawer/list', params, 'get')
       },
-      invoiceListTwo(params) { // 代开 发票管理
-        return Fetch(prefix + '/invoice/list/grant', params, 'get')
+      invoiceOrderList(params) { // 待开票的结算列表
+        return Fetch(prefix + '/invoice/worksheetOrder/list', params, 'get')
       },
-      invoiceDetail(params) { // 代开发票详情
-        return Fetch(prefix + '/invoice/show', params, 'get')
+      applyNewInvoice(params) { // 新申请开票
+        return FetchSave(prefix + '/invoice/doApply', params, 'post', { showloading: false })
       },
-      applyInvoices(params) { // 收款企业的开票审核
-        return FetchSave(prefix + '/invoice/grant', params, 'post', { showloading: false })
+      invoiceNewDetail(params) { // 发票详情
+        return Fetch(prefix + '/invoice/apply/detail', params, 'get')
       },
-      applyInvoicePlatform(params) { // 申请发票可选平台
-        return Fetch(prefix + '/invoice/apply/platform', params, 'get')
+      cancelNewApply(params) { // 取消申请
+        return Fetch(prefix + '/invoice/apply/cancel', params, 'post', { showloading: false })
       },
+      confirmNewApply(params) { // 确认申请
+        return Fetch(prefix + '/invoice/apply/confirm', params, 'post', { showloading: false })
+      },
+      uploadImg(params) { // 图片上传
+        return FetchSave('/common/attach/imageData', params, 'post', { 'Content-Type': 'multipart/form-data', loadtitle: '上传中...' })
+      },
+      sendEmail(params) { // 下载附件
+        return Fetch(prefix + '/invoice/mail', params, 'post', { showloading: false })
+      },
+      titleList(params) { // 抬头列表
+        return Fetch(prefix + '/invoice/title/list', params, 'get')
+      },
+      addTitle(params) { // 添加抬头
+        return Fetch(prefix + '/invoice/title/add', params, 'post', { showloading: false })
+      },
+      editTitle(params) { // 编辑抬头
+        return Fetch(prefix + '/invoice/title/edit', params, 'post', { showloading: false })
+      },
+      deleteTitle(params) { // 删除抬头
+        return Fetch(prefix + '/invoice/title/delete', params, 'post', { showloading: false })
+      },
+      defaultTitle(params) { // 设置默认抬头
+        return Fetch(prefix + '/invoice/title/default', params, 'post', { showloading: false })
+      },
+      editTitleDetail(params) { // 编辑时的抬头详情
+        return Fetch(prefix + '/invoice/title/edit', params, 'get')
+      },
+      addressList(params) { // 地址列表
+        return Fetch(prefix + '/invoice/express/list', params, 'get')
+      },
+      addAddress(params) { // 添加地址
+        return Fetch(prefix + '/invoice/express/add', params, 'post', { showloading: false })
+      },
+      editAddress(params) { // 编辑地址
+        return Fetch(prefix + '/invoice/express/edit', params, 'post', { showloading: false })
+      },
+      deleteAddress(params) { // 删除地址
+        return Fetch(prefix + '/invoice/express/delete', params, 'post', { showloading: false })
+      },
+      defaultAddress(params) { // 设置默认地址
+        return Fetch(prefix + '/invoice/express/default', params, 'post', { showloading: false })
+      },
+      editAddressDetail(params) { // 编辑时的地址详情
+        return Fetch(prefix + '/invoice/express/edit', params, 'get')
+      }
     },
     Personaldara: { // 编辑个人资料
       avatar(params) { // 上传用户头像

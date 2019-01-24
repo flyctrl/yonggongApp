@@ -9,7 +9,7 @@ import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import { Header, Content } from 'Components'
 import style from './style.css'
-
+import { onBackKeyDown } from 'Contants/tooler'
 const Item = List.Item
 const Brief = Item.Brief
 const RadioItem = Radio.RadioItem
@@ -44,7 +44,21 @@ class Rechange extends Component {
       cardId: bankval['card_id']
     }) || false
     if (data) {
-      window.location.href = data.url
+      if ('cordova' in window) {
+        document.addEventListener('deviceready', () => {
+          let ref = cordova.InAppBrowser.open(data.url, '_blank', 'location=yes,hardwareback=no,closebuttoncaption=关闭,closebuttoncolor=#000000,hidenavigationbuttons=yes,hideurlbar=yes')
+          ref.addEventListener('exit', () => {
+            this.props.match.history.push(urls.ACCOUNTRECHARGE)
+          })
+          ref.addEventListener('loadstop', (e) => {
+            ref.insertCSS({
+              code: '.iconfont.pme-go-back{display:none;}#mod-footer{display:none;}.order-details{display:block;}.receiveSide{margin-top:40px;}.J-payBtn{background:#0467e0;}#SuccessMessageBackBtn{display:none;}'
+            })
+          })
+        }, false)
+      } else {
+        window.location.href = data.url
+      }
     }
   }
   handleChangeBank = async () => { // 选择银行按钮
@@ -67,6 +81,27 @@ class Rechange extends Component {
   componentDidMount() {
     // this.getBindCardlist()
     this.getDefaultCard()
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
+  }
+  backButtons = (e) => {
+    let { showlist } = this.state
+    if (showlist) {
+      e.preventDefault()
+      this.setState({
+        showlist: false
+      })
+    } else {
+      this.props.match.history.goBack()
+    }
+  }
+  componentWillUnmount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
   }
   onChangeBankval = (value) => { // 选择银行列表
     console.log(value)

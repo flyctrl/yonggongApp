@@ -17,6 +17,9 @@ html:not([data-scale]) .settle-list :global(.am-list-body::after) {
     height: 60px;
     margin-right: 10px;
     border-radius: 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
   }
   & .settle-info {
     float: left;

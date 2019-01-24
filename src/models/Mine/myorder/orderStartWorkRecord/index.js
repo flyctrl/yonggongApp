@@ -225,7 +225,7 @@ class AccessRecord extends Component {
     const row = (rowData, sectionID, rowID) => {
       return <li key={rowData['task_no']}>
         <div className={`${style['record-img']} ${rowData['is_self'] === 1 ? style['record-self'] : ''}`}>
-          <img src={rowData['tasker_avatar']}/>
+          <div className={style['header']} style={{ 'backgroundImage': 'url(' + rowData['tasker_avatar'] + ')' }}></div>
           {
             rowData['is_self'] === 1 ? <p>(自己)</p> : ''
           }

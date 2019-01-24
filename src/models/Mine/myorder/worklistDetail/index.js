@@ -6,7 +6,7 @@ import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import style from './index.css'
-
+import { onBackKeyDown } from 'Contants/tooler'
 const typeicon = {
   1: 'bidicon',
   2: 'sheeticon',
@@ -29,6 +29,25 @@ class WorkListDetail extends Component {
   }
   componentDidMount() {
     this.getOrderDetail()
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
+  }
+  backButtons = (e) => {
+    let { url } = this.state
+    if (url !== '') {
+      e.preventDefault()
+      this.props.match.history.push(urls.HOME)
+    } else {
+      this.props.match.history.push(urls.MYORDER)
+    }
+  }
+  componentWillUnmount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
   }
   getOrderDetail = async () => {
     this.setState({
@@ -142,6 +161,7 @@ class WorkListDetail extends Component {
         return item['value'] === data['settle_fix_time']
       })[0]['label']
       let urlJson = {
+        detailsheetno: rowData['worksheet_no'],
         orderno: rowData['order_no'],
         proId: data['prj_no'],
         proVal: data['prj_name'],
@@ -168,12 +188,13 @@ class WorkListDetail extends Component {
         }
       }
       let urlJson = {
+        detailsheetno: rowData['worksheet_no'],
         orderno: rowData['order_no'],
         proId: data['prj_no'],
         proVal: data['prj_name'],
-        classifyId: data['construct'][0]['code'],
-        classifyVal: data['construct'][0]['name'],
-        constructType: data['construct'][0]['construct_type'],
+        classifyId: data['construct'].length > 0 ? data['construct'][0]['code'] : '',
+        classifyVal: data['construct'].length > 0 ? data['construct'][0]['name'] : '',
+        constructType: data['construct'].length > 0 ? data['construct'][0]['construct_type'] : '',
         ...levelJson,
         settleValue: data['valuation_way'],
         starttime: data['start_time']
@@ -354,7 +375,7 @@ class WorkListDetail extends Component {
           if (url !== '') {
             this.props.match.history.push(urls.HOME)
           } else {
-            this.props.match.history.go(-1)
+            this.props.match.history.push(urls.MYORDER)
           }
         }}
         rightTitle={ datasource['contract_no'] ? '合同' : null}

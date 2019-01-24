@@ -13,6 +13,7 @@ import style from './style.css'
 import SetType from './type'
 import SetRange from './range'
 import SetAddress from 'Components/Address'
+import { onBackKeyDown } from 'Contants/tooler'
 let title = {
   0: '未设置',
   1: '已设置'
@@ -156,14 +157,47 @@ class SetUp extends Component {
     if (config) {
       Toast.hide()
       Toast.success('设置成功', 1.5, () => {
-        this.props.match.history.go(-1)
-        // this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=1`)
+        // this.props.match.history.go(-1)
+        this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=1`)
       })
     }
     console.log(...newData)
   }
-  componentDidMount() {
+  componentWillMount() {
     this.getCheckConfig()
+  }
+  componentDidMount() {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
+  }
+  backButtons = (e) => {
+    let { isShowType, isShowAddress, isShowRange } = this.state
+    if (isShowType) {
+      e.preventDefault()
+      this.setState({
+        isShowType: false
+      })
+    } else if (isShowAddress) {
+      e.preventDefault()
+      this.setState({
+        isShowAddress: false
+      })
+    } else if (isShowRange) {
+      e.preventDefault()
+      this.setState({
+        isShowRange: false
+      })
+    } else {
+      this.props.match.history.goBack()
+    }
+  }
+  componentWillUnmount() {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
   }
   handleChange = (val, val2) => {
     let { data, defaultTime } = this.state

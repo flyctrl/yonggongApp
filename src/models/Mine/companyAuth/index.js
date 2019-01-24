@@ -249,7 +249,8 @@ class Company extends Component {
             {getFieldDecorator('credit_code', {
               rules: [{
                 required: true, message: '请输入统一社会信用代码',
-              }]
+              },
+              { pattern: /^[A-Za-z0-9]{15}$|^[A-Za-z0-9]{17}$|^[A-Za-z0-9]{18}$|^[A-Za-z0-9]{20}$/, message: '信用代码由15或者17或者18或者20位字母、数字组成' }]
             })(
               <InputItem placeholder='请输入统一社会信用代码'/>
             )}

@@ -87,7 +87,9 @@ function getClientEnvironment(publicUrl) {
     }, {}),
     DEV: process.env.BUILD_ENV === 'dev',
     TEST: process.env.BUILD_ENV === 'test',
-    PRE: process.env.BUILD_ENV === 'pre'
+    PRE: process.env.BUILD_ENV === 'pre',
+    CORDOVATEST: process.env.BUILD_ENV === 'cordovatest',
+    CORDOVAPRO: process.env.BUILD_ENV === 'cordovapro'
   };
 
   return { raw, stringified };

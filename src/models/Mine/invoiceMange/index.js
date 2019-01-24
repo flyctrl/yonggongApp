@@ -1,20 +1,27 @@
 import React, { Component } from 'react'
-import { Header, Content, DefaultPage } from 'Components'
-import { ListView, PullToRefresh, Tabs, Button, Icon } from 'antd-mobile'
+import { Header, Content, DefaultPage, NewIcon } from 'Components'
+import { ListView, PullToRefresh, SegmentedControl, Badge, Radio } from 'antd-mobile'
 import * as urls from 'Contants/urls'
-import * as tooler from 'Contants/tooler'
+import ReactDOM from 'react-dom'
 import style from './style.css'
 import api from 'Util/api'
 import zuofei from 'Src/assets/zuofei.png'
-import { invoiceStatus } from 'Contants/fieldmodel'
+import { getQueryString, onBackKeyDown } from 'Contants/tooler'
+const RadioItem = Radio.RadioItem
 const NUM_ROWS = 20
-let tabType = [
-  { title: '代收发票' },
-  { title: '代开发票' }
-]
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
 })
+const Status = {
+  11: '开票中',
+  12: '待开票',
+  2: '已开票',
+  3: '已作废'
+}
+const materialType = {
+  1: '纸质发票',
+  2: '电子发票'
+}
 class InvoiceMange extends Component {
   constructor(props) {
     super(props)
@@ -28,21 +35,33 @@ class InvoiceMange extends Component {
       pageIndex: 1,
       pageNos: 1,
       nodata: false,
-      tabIndex: tooler.getQueryString('tabIndex') || 0,
+      visible: false,
+      selected: '',
+      parentIndex: getQueryString('listType') || 0,
+      radioVal: ''
     }
   }
-  genData = async (pIndex = 1, tabIndex = 0) => {
+  genData = async (pIndex = 1, pTab = 0) => {
     let data
-    if (tabIndex === 0 || tabIndex === '0') {
-      data = await api.Mine.invoiceMange.invoiceListOne({
+    if (parseInt(pTab, 10) === 0) {
+      data = await api.Mine.invoiceMange.invoiceNewList({ // 发票列表
         page: pIndex,
         limit: NUM_ROWS
       }) || false
-    } else if (tabIndex === 1 || tabIndex === '1') {
-      data = await api.Mine.invoiceMange.invoiceListTwo({
+    } else if (parseInt(pTab, 10) === 1) {
+      data = await api.Mine.invoiceMange.invoicedrawerList({ // 发票主体
         page: pIndex,
         limit: NUM_ROWS
       }) || false
+      if (data) {
+        if (data['list'].length >= 0 && data['currPageNo'] === 1) {
+          data['list'].unshift({
+            company_id: 0,
+            company_name: '浙江亚雀科技有限公司',
+            type: 1
+          })
+        }
+      }
     }
     if (data['currPageNo'] === 1 && data['list'].length === 0) {
       document.body.style.overflow = 'hidden'
@@ -60,9 +79,8 @@ class InvoiceMange extends Component {
     return await data['list'] || []
   }
   componentDidMount() {
-    let { tabIndex } = this.state
-    const hei = this.state.height - 88.5
-    this.genData(1, tabIndex).then((rdata) => {
+    const hei = this.state.height - 45 - ReactDOM.findDOMNode(this.lv).offsetTop
+    this.genData(1, this.state.parentIndex).then((rdata) => {
       this.rData = rdata
       this.setState({
         dataSource: this.rData,
@@ -71,13 +89,33 @@ class InvoiceMange extends Component {
         isLoading: false,
       })
     })
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
+  }
+  backButtons = (e) => {
+    if (this.state.visible) {
+      e.preventDefault()
+      this.setState({
+        visible: false
+      })
+    } else {
+      this.props.match.history.push(urls.MINE)
+    }
+  }
+  componentWillUnmount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
   }
   onEndReached = (event) => {
     console.log('onEndReached')
     if (this.state.isLoading) {
       return
     }
-    let { pageIndex, pageNos, tabIndex } = this.state
+    let { pageIndex, pageNos, parentIndex } = this.state
     // console.log('reach end', event)
     this.setState({ isLoading: true })
     let newIndex = pageIndex + 1
@@ -85,7 +123,7 @@ class InvoiceMange extends Component {
       return false
     }
     console.log('pageIndex', newIndex)
-    this.genData(newIndex, tabIndex).then((rdata) => {
+    this.genData(newIndex, parentIndex).then((rdata) => {
       this.rData = [...this.rData, ...rdata]
       this.setState({
         dataSource: this.rData,
@@ -96,11 +134,10 @@ class InvoiceMange extends Component {
   }
 
   onRefresh = () => {
-    let { tabIndex } = this.state
     console.log('onRefresh')
     this.setState({ refreshing: true, isLoading: true, pageIndex: 1 })
     // simulate initial Ajax
-    this.genData(1, tabIndex).then((rdata) => {
+    this.genData(1, this.state.parentIndex).then((rdata) => {
       this.rData = rdata
       this.setState({
         dataSource: this.rData,
@@ -109,17 +146,18 @@ class InvoiceMange extends Component {
       })
     })
   }
-  handleTabsChange = (tabs, index) => {
-    this.props.match.history.replace(`?tabIndex=${index}`)
+  handleSegmentedChange = (e) => {
+    let parentIndex = e.nativeEvent.selectedSegmentIndex
+    this.props.match.history.replace(`?listType=${parentIndex}`)
     this.setState({
-      tabIndex: index,
+      parentIndex,
       refreshing: true,
       isLoading: true,
       pageIndex: 1,
       pageNos: 1,
-      dataSource: []
+      dataSource: [],
     })
-    this.genData(1, index).then((rdata) => {
+    this.genData(1, parentIndex).then((rdata) => {
       this.rData = rdata
       this.setState({
         dataSource: this.rData,
@@ -128,58 +166,92 @@ class InvoiceMange extends Component {
       })
     })
   }
-  handleClick = (e) => { // 查看详情
-    let invoiceNo = e.currentTarget.getAttribute('data-id')
-    this.props.match.history.push(`${urls.INVOICELISTTWODETAIL}?id=${invoiceNo}`)
+  onSelect = (opt) => { // 选择气泡
+    if (opt === 'address') {
+      this.props.match.history.push(urls.ADDRESSMANGE)
+    } else if (opt === 'title') {
+      this.props.match.history.push(urls.TITLEMANGE)
+    }
+    this.setState({
+      visible: false
+    })
+  };
+  handleVisibleChange = (visible) => { // 气泡列表
+    this.setState({
+      visible: !this.state.visible
+    })
   }
-  handleApplyInvoice = (e) => { // 申请开票
-    let applyId = e.currentTarget.getAttribute('data-id')
-    this.props.match.history.push(`${urls.APPLYINVOICE}?order_no=${applyId}`)
+  handleChange = (value, type) => { // 开票申请列表
+    this.setState({
+      radioVal: value
+    })
+    setTimeout(() => {
+      this.props.match.history.push(`${urls['INVOICEORDER']}?id=${value}&type=${type ? 1 : 2}`)
+    }, 500)
+  }
+  handleClickInvoice = (e) => { // 发票详情
+    let no = e.currentTarget.getAttribute('data-id')
+    this.props.match.history.push(`${urls['INVOICENEWDETAIL']}?no=${no}`)
   }
   render() {
-    let { isLoading, nodata, tabIndex, dataSource } = this.state
+    let { isLoading, nodata, dataSource, parentIndex, radioVal } = this.state
     const footerShow = () => {
       if (isLoading) {
         return null
       } else if (nodata) {
-        return <DefaultPage type='noinvoice' />
+        return parseInt(parentIndex, 10) === 0 ? <DefaultPage type='noinvoice' /> : <DefaultPage type='nodata' />
       } else {
         return ''
       }
     }
-    let row
-    if (parseInt(tabIndex, 10) === 0) {
-      row = (rowData, sectionID, rowID) => {
+    let row = (rowData, sectionID, rowID) => {
+      if (parseInt(parentIndex, 10) === 0) {
         return (
-          <li key={`${rowData.invoice_no}`}>
-            <p className={style['in-acp']}><span>接包方: </span> {rowData.worker_name}</p>
-            <p className={style['in-acp']}><span>工单编号: </span> {rowData.order_no}</p>
-            <p className={style['in-acp']}><span>工单名称: </span> {rowData.worksheet_title}</p>
-            <div className={style['invoice-btn']}>
-              <Button data-id={rowData['order_no']} onClick={this.handleApplyInvoice}>开票</Button>
-            </div>
-          </li>
+          <dl key={rowID} onClick={this.handleClickInvoice} data-id={rowData['apply_no']}>
+            <dt className='my-bottom-border'>
+              <NewIcon className={style['typericon']} type={rowData['title_type'] === 1 ? 'icon-qiye' : 'icon-geren'} />
+              <p className={rowData['status'] === 1 ? `${style['prj-title']} ${style['prj-title-zuofei']} ellipsis` : `${style['prj-title']} ellipsis`} >{rowData['title']}</p>
+              <Badge className={rowData['status'] === 11 ? `${style['yellow']} ${style['statusicon']}` : rowData['status'] === 3 ? `${style['gray-dis']} ${style['statusicon']}` : rowData['status'] === 12 ? `${style['blue']} ${style['statusicon']}` : rowData['status'] === 2 ? `${style['green']} ${style['statusicon']}` : `${style['default']} ${style['statusicon']}`} text={
+                Status[rowData['status']]
+              } />
+            </dt>
+            <dd>
+              <p>
+                <a>发票性质</a><em className={style['em']}>{materialType[rowData['material_type']]}</em>
+              </p>
+              <p>
+                <a>发票金额</a><em className={style['em']}>￥{rowData['amount']}</em>
+              </p>
+              <p>
+                <a>申请日期</a><em className={style['em']}>{rowData['apply_date']}</em>
+              </p>
+            </dd>
+            {
+              rowData['status'] === 3
+                ? <div className={style['zuofei']}>
+                  <img src={zuofei} />
+                </div>
+                : null
+            }
+          </dl>
         )
-      }
-    } else {
-      row = (rowData, sectionID, rowID) => {
+      } else {
         return (
-          <li key={`${rowData.invoice_no}`} onClick={this.handleClick} data-id={rowData['invoice_no']}>
-            <p className={rowData['status'] === 3 ? style['in-send-title'] : style['in-send']}><span>抬头: </span> {rowData.title}</p>
-            <p className={style['in-send']}><span>发票金额: </span> ￥{rowData.amount}</p>
-            <div className={style['invoice-right']}>
-              {
-                rowData['status'] === 3
-                  ? <img src={zuofei}/>
-                  : null
-              }
-              <div
-                className={style['invoice-status']}
-                style={{ color: rowData['status'] === 1 ? '#FCA424' : rowData['status'] === 2 ? '#00BECC' : '#999999' }}>
-                {invoiceStatus[rowData['status']]}<Icon type='right' size='lg' />
-              </div>
+          <div>
+            {
+              rowID === '0' || rowID === 0
+                ? <div className={style['title']}>请选择开票主体</div>
+                : null
+            }
+            <div className='border-bottom'>
+              <RadioItem
+                key={rowData.company_id}
+                onClick={() => this.handleChange(rowData.company_id, rowData.type)}
+                checked={parseInt(radioVal, 10) === parseInt(rowData.company_id, 10)}>
+                <div className={style['brief']}>{rowData.company_name}</div>
+              </RadioItem>
             </div>
-          </li>
+          </div>
         )
       }
     }
@@ -192,39 +264,51 @@ class InvoiceMange extends Component {
           leftClick1={() => {
             this.props.match.history.push(urls.MINE)
           }}
+          rightIcon='icon-caidan'
+          rightClick={ this.handleVisibleChange }
         />
+        <div style={{ display: this.state.visible ? 'block' : 'none' }} onClick={this.handleVisibleChange} className={`showimg-box animated ${this.state.visible ? 'fadeIn' : 'fadeOut'}`}>
+          <div className={style['mask-content']}>
+            <div className={style['mask-arrow']}></div>
+            <div className={style['mask-inner']}>
+              <div className={style['mask-item']}>
+                <div className={style['mask-item-container']}>
+                  <NewIcon type='icon-dizhiguanli' />
+                  <div onClick={() => this.onSelect('address')} className={`${style['mask-text']} border-bottom`}>地址管理</div>
+                </div>
+              </div>
+              <div className={style['mask-item']}>
+                <div className={style['mask-item-container']}>
+                  <NewIcon type='icon-taitouguanli' />
+                  <div onClick={() => this.onSelect('title')} className={style['mask-text']}>抬头管理</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <Content>
-          <div className={style['invoice-page']}>
-            <Tabs tabs={tabType}
-              page={parseInt(tabIndex, 10)}
-              tabBarTextStyle={{ fontSize: '.14rem', color: '#999999' }}
-              tabBarActiveTextColor='#1298FC'
-              tabBarUnderlineStyle={{ borderColor: '#0098F5', width: '12%', marginLeft: '18.5%' }}
-              onChange={this.handleTabsChange}
-            >
-              <ul className={style['invoice-list']} style={{ height: '100%' }}>
-                <ListView
-                  ref={(el) => { this.lv = el }}
-                  dataSource={this.state.defaultSource.cloneWithRows(dataSource)}
-                  renderFooter={() => footerShow()}
-                  renderRow={row}
-                  style={{
-                    height: this.state.height,
-                  }}
-                  className={style['job-list']}
-                  pageSize={NUM_ROWS}
-                  // onScroll={(e) => { console.log('onscroll') }}
-                  pullToRefresh={<PullToRefresh
-                    refreshing={this.state.refreshing}
-                    onRefresh={this.onRefresh}
-                  />}
-                  onEndReachedThreshold={10}
-                  initialListSize={NUM_ROWS}
-                  scrollRenderAheadDistance={120}
-                  onEndReached={this.onEndReached}
-                />
-              </ul>
-            </Tabs>
+          <SegmentedControl prefixCls='toplist-tabs' selectedIndex={parseInt(parentIndex, 10)} onChange={this.handleSegmentedChange} values={['发票列表', '申请发票']} />
+          <div className={style['invoice-list']}>
+            <ListView
+              ref={(el) => { this.lv = el }}
+              dataSource={this.state.defaultSource.cloneWithRows(dataSource)}
+              renderFooter={() => footerShow()}
+              renderRow={row}
+              style={{
+                height: this.state.height,
+              }}
+              className={style['job-list']}
+              pageSize={NUM_ROWS}
+              // onScroll={(e) => { console.log('onscroll') }}
+              pullToRefresh={<PullToRefresh
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh}
+              />}
+              onEndReachedThreshold={10}
+              initialListSize={NUM_ROWS}
+              scrollRenderAheadDistance={120}
+              onEndReached={this.onEndReached}
+            />
           </div>
         </Content>
       </div>

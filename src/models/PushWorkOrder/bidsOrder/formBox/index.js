@@ -10,7 +10,7 @@ import api from 'Util/api'
 import style from './index.css'
 import Address from 'Components/Address'
 import storage from 'Util/storage'
-
+import { onBackKeyDown } from 'Contants/tooler'
 const Item = List.Item
 let Upload = Loadable({
   loader: () => import('rc-upload'),
@@ -56,6 +56,32 @@ class FormBox extends Component {
         address: bidsData['construction_place'],
         remark: bidsData['remark']
       })
+    }
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
+  }
+  componentWillUnmount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
+  }
+  backButtons = (e) => {
+    let { remarkShow, mapShow } = this.state
+    if (remarkShow) {
+      e.preventDefault()
+      this.setState({
+        remarkShow: false
+      })
+    } else if (mapShow) {
+      e.preventDefault()
+      this.setState({
+        mapShow: false
+      })
+    } else {
+      this.props.match.history.push(urls.PUSHBIDORDER + '?' + tooler.parseJsonUrl(this.state.urlJson))
     }
   }
   handleRemarkClick = () => {

@@ -76,7 +76,7 @@ const menuRouter = {
   1: urls.MYORDER,
   2: urls.ACCOUNT,
   3: urls.CERTIFICATION,
-  4: urls.INVOICEMANGE,
+  4: urls.INVOICENEWMANGE,
   5: urls.CONTRACTMANGE,
   6: urls.PROJECTMANGE,
   7: urls.BALANCEMANGE,
@@ -134,7 +134,7 @@ class Mine extends Component {
             </div>
             <dl className={style['company-title']}>
               <dt>{
-                typeof dataSource['user'] !== 'undefined' ? <img src={dataSource['user']['avatar']} /> : ''
+                typeof dataSource['user'] !== 'undefined' ? <div className={style['header']} style={{ 'backgroundImage': 'url(' + dataSource['user']['avatar'] + ')' }}></div> : ''
               }</dt>
               <dd>
                 <h1>{typeof dataSource['company'] !== 'undefined' ? dataSource['company']['name'] : ''}</h1>

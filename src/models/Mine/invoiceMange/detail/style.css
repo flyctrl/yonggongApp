@@ -1,0 +1,209 @@
+.detail-box {
+  height: 100%;
+  background:#ecedef;
+  padding: 18px 15px;
+  box-sizing: border-box;
+  & .content-top {
+    /* box-shadow:0px 0px 34px 0px rgba(0, 0, 0, 0.09); */
+    padding: 24px 20px 10px;
+    margin-bottom: 17px;
+    background: #ffffff;
+    position: relative;
+    & .title-icon {
+      position: absolute;
+      right: 0;
+      top: 0;
+      & svg {
+        width: 49px;
+        height: 49px;
+      }
+    }
+    & .img-status {
+      position: absolute;
+      top: 45px;
+      left: 150px;
+      & img {
+        display: block;
+        width:93px;
+        height:93px;
+      }
+  
+    }
+    & .title {
+      width: 288px;
+      font-size:16px;
+      color:rgba(51,51,51,1);
+      line-height:24px;
+      text-align: center;
+      padding-bottom: 20px;
+      position: relative;
+      word-wrap:break-word;
+      & img {
+        display: inline-block;
+        width: 345px;
+        height: 12.5px;
+        position: absolute;
+        bottom: -5px;
+        left: -20px;
+      }
+      & svg {
+        width: 17px;
+        height: 17px;
+        margin: 0px 6px 0 23px;
+      }
+    }
+    & .list {
+      width: 305px;
+      border-top:1px dashed rgba(215,212,212,1);
+      font-size:14px;
+      color:rgba(153,153,153,1);
+      overflow: hidden;
+      & .list-title {
+        font-size:15px;
+        color:rgba(51,51,51,1);
+        margin: 10px 0;
+      }
+      & p {
+        overflow: hidden;
+        margin: 10px 0;
+        & span {
+          color:rgba(51,51,51,1);
+          float: right;
+          line-height: 20px;
+          width: 200px;
+          text-align: right;
+          word-wrap:break-word;
+        }
+        & .order {
+          width: 120px
+        }
+        & a { 
+          float: left;
+        }
+        & .order-a {
+          width: 183px;
+        }
+      }
+    }
+    & .down {
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      display: inline-block;
+      width: 100%;
+      height: 5px;
+    }
+  }
+  & .content-footer {
+    background: #ffffff;
+    mragin-top: 8px;
+    margin-bottom: 15px;
+    position: relative;
+    box-shadow:0px 0px 34px 0px rgba(0, 0, 0, 0.09);
+    & .up {
+      height: 5px;
+      position: absolute;
+      top: -5px;
+      left: 0;
+      display: inline-block;
+      width: 100%;
+    }
+    & .upload-item {
+      position: relative;
+      width: 95px;
+      height: 95px;
+      margin-left:14px;
+      & .img-span {
+        position: absolute;
+        right:0;
+        width: 22px;
+        height: 22px;
+      }
+      & .icon {
+        width: 22px;
+        height: 22px;
+      }
+      & .upload {
+        width: 95px;
+        height: 95px;
+        /* position: absolute;
+        left:0; */
+        margin-right: 10px;
+      }
+      & .input-pic {
+        position: absolute;
+        width: 95px;
+        height: 95px;
+        left: 0;
+        opacity: 0;
+
+      }
+    }
+    & .kuaidi {
+      margin-left: 17px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #999999;
+      & .input-kd {
+        margin-left: 10px;
+        width: 177px;
+        border:1px solid rgba(153,153,153,1);
+        border-radius:2px;
+      }
+    }
+    & p {
+      font-size:15px;
+      color:rgba(51,51,51,1);
+      padding: 14px 17px;
+    }
+    & .circle {
+      display: flex;
+      padding: 5px;
+      justify-content: space-between;
+      align-items: center;
+      & li {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background:#e7e8ea;
+      }
+    }
+  }
+  & .btn {
+    margin-bottom: 10px;
+    height:40px;
+    border-radius:3px;
+    line-height: 40px;
+
+    & span {
+      font-size:15px;
+    }
+  }
+  & .confirm {
+    background:rgba(18,152,252,1);
+    & span {
+      color:rgba(254,254,254,1);
+    }
+  }
+  & .cancel {
+    & span {
+      color:rgba(18,152,252,1);
+    }
+  }
+}
+html:not([data-scale]) .detail-box .cancel {
+  border:1px solid rgba(18,152,252,1);
+}
+html:not([data-scale]) .detail-box .btn::before {
+  height: 0;
+  border: none;
+}
+html :global(.am-modal-wrap) {
+  color: red;
+  & :global(.am-modal-body) {
+      & :global(.am-modal-propmt-content) {
+        text-align: left;
+        font-size: 13px;
+      }
+  }
+}

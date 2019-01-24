@@ -1,35 +1,31 @@
 
 import React, { Component } from 'react'
 import * as urls from 'Contants/urls'
-import { List, Radio, InputItem, Toast, Button } from 'antd-mobile'
+import { List, Radio, Button, Toast, InputItem } from 'antd-mobile'
 import { Header, Content } from 'Components'
 import { createForm } from 'rc-form'
 import history from 'Util/history'
-import { getQueryString } from 'Contants/tooler'
+import { getQueryString, onBackKeyDown } from 'Contants/tooler'
 import style from './style.css'
 import api from 'Util/api'
-const valModeData = [
-  { value: 1, label: '亚雀平台' },
-  { value: 2, label: '收款企业' }
-]
+const Item = List.Item
 const totalRadio = [
-  { value: 1, label: '纸质发票' },
-  { value: 2, label: '电子发票' }
+  { value: 2, label: '电子' },
+  { value: 1, label: '纸质' }
 ]
-const settleRadio = [
-  { value: 1, label: '企业抬头' },
-  { value: 2, label: '个人/非企业单位' }
-]
-class Detail extends Component {
+class Apply extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      valModeDataValue: 1,
-      totalRadioValue: 1,
-      settleRadioValue: 1,
-      invoiceType: [],
-      isLoading: true,
-      orderNo: getQueryString('order_no')
+      totalRadioValue: 2,
+      payId: getQueryString('id'),
+      payType: getQueryString('type'),
+      dataList: getQueryString('list') || '',
+      money: getQueryString('money'),
+      titleLoading: true,
+      addressLoading: true,
+      titleNo: getQueryString('titleNo'),
+      addressNo: getQueryString('addressNo')
     }
   }
 
@@ -37,94 +33,126 @@ class Detail extends Component {
     this.setState({
       [key]: value
     })
-    if (key === 'settleRadioValue') {
-      if (this.taxNo) {
-      }
+    if (value === 2) {
+      this.setState({
+        addressNo: ''
+      })
+      return
+    }
+    this.getAddressList()
+  }
+  componentDidMount() {
+    this.getTitleList()
+    if (this.state.addressNo) {
+      this.setState({
+        totalRadioValue: 1
+      })
+      this.getAddressList()
+    }
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
     }
   }
-  getInvoiceList = async() => {
-    this.setState({ isLoading: true })
-    const data = await api.Mine.invoiceMange.applyInvoicePlatform({ // 可选发票申请平台
-      order_no: this.state.orderNo
+  backButtons = (e) => {
+    history.push(`${urls['INVOICEORDER']}?id=${this.state.payId}&type=${this.state.payType}`)
+  }
+  componentWillUnmount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
+  }
+  getTitleList = async() => { // 获取抬头列表
+    this.setState({ titleLoading: true })
+    const data = await api.Mine.invoiceMange.titleList({ //
+      page: 1,
+      limit: 100
     }) || false
     if (data) {
+      let initialTitle = ''
+      let dataSource = [...data['list']]
+      for (let i = 0; i < dataSource.length; i++) {
+        if (dataSource[i]['is_default'] === 1) {
+          initialTitle = dataSource[i]['title']
+          this.props.form.setFieldsValue({
+            title_no: dataSource[i]['title_no']
+          })
+        }
+        if (dataSource[i]['title_no'] === this.state.titleNo) {
+          initialTitle = dataSource[i]['title']
+          this.props.form.setFieldsValue({
+            title_no: dataSource[i]['title_no']
+          })
+        }
+      }
       this.setState({
-        invoiceType: data,
-        isLoading: false
+        titleLoading: false,
+        initialTitle
+      })
+    }
+  }
+  getAddressList = async() => { // 获取地址列表
+    // if (!this.state.addressLoading) {
+    //   return
+    // }
+    const data = await api.Mine.invoiceMange.addressList({ //
+      page: 1,
+      limit: 100
+    }) || false
+    if (data) {
+      let initialAddress = ''
+      let dataSource = [...data['list']]
+      for (let i = 0; i < dataSource.length; i++) {
+        if (dataSource[i]['is_default'] === 1) {
+          initialAddress = dataSource[i]['recv_address']
+          this.props.form.setFieldsValue({
+            express_no: dataSource[i]['express_no']
+          })
+        }
+        if (dataSource[i]['express_no'] === this.state.addressNo) {
+          initialAddress = dataSource[i]['recv_address']
+          this.props.form.setFieldsValue({
+            express_no: dataSource[i]['express_no']
+          })
+        }
+      }
+      this.setState({
+        initialAddress,
+        addressLoading: false
       })
     }
   }
   pushInvoiceList = async(postData) => {
     Toast.loading('提交中...', 0)
-    let data = await api.Mine.invoiceMange.applyInvoice({ // 申请开票
-      ...postData,
-      order_no: this.state.orderNo
+    let data = await api.Mine.invoiceMange.applyNewInvoice({ // 申请开票
+      ...postData
     }) || false
     if (data) {
       Toast.hide()
       Toast.success('申请成功', 1.5, () => {
-        this.props.match.history.push(`${urls.INVOICEMANGE}?tabIndex=0`)
+        if (typeof OCBridge !== 'undefined') {
+          OCBridge.back()
+        } else {
+          this.props.match.history.push(`${urls.INVOICENEWMANGE}`)
+        }
       })
     }
   }
-  onHandleNext = () => {
-    let { valModeDataValue, totalRadioValue, settleRadioValue } = this.state
-    let validateAry
-    if (totalRadioValue === 1 && settleRadioValue === 1) {
-      validateAry = ['title', 'content', 'tax_no', 'recv_name', 'recv_mobile', 'recv_address']
-      this.props.form.setFields({
-        recv_email: {
-          value: undefined
-        },
-      })
-    }
-    if (totalRadioValue === 1 && settleRadioValue === 2) {
-      validateAry = ['title', 'content', 'recv_name', 'recv_mobile', 'recv_email', 'recv_address']
-      this.props.form.setFields({
-        tax_no: {
-          value: undefined
-        },
-      })
-    }
-    if (totalRadioValue === 2 && settleRadioValue === 1) {
-      validateAry = ['title', 'content', 'tax_no', 'recv_email']
-      this.props.form.setFields({
-        recv_name: {
-          value: undefined
-        },
-        recv_mobile: {
-          value: undefined
-        },
-        recv_address: {
-          value: undefined
-        }
-      })
-    }
-    if (totalRadioValue === 2 && settleRadioValue === 2) {
-      validateAry = ['title', 'content', 'recv_email']
-      this.props.form.setFields({
-        recv_name: {
-          value: undefined
-        },
-        recv_mobile: {
-          value: undefined
-        },
-        recv_address: {
-          value: undefined
-        },
-        tax_no: {
-          value: undefined
-        }
-
-      })
-    }
-    console.log(validateAry, 'ary')
+  handleSubmit = async() => {
+    Toast.loading('提交中...', 0)
     const { getFieldError } = this.props.form
+    let { totalRadioValue, payId, payType, dataList, money } = this.state
     this.props.form.validateFields({ force: true }, (error, values) => {
-      console.log(values)
+      let validateAry = ['title_no', 'express_no']
       // console.log(this.props.form.getFieldsValue())
       if (!error) {
-        let postData = { ...values, ...{ platform_type: valModeDataValue, type: totalRadioValue, title_type: settleRadioValue }}
+        let postData = {
+          ...values,
+          ...{ title_no: values['title_no'], express_no: values['express_no'] || 0 },
+          ...{ material_type: totalRadioValue, payee_company_id: payId, drawer_type: payType === '1' ? 1 : 2 },
+          ...{ worksheet_order_no_list: dataList.split(','), apply_amount: money }
+        }
         this.pushInvoiceList(postData)
       } else {
         console.log(error)
@@ -137,174 +165,87 @@ class Detail extends Component {
       }
     })
   }
-  componentDidMount() {
-    this.getInvoiceList()
-  }
   onErrorClick = (field) => {
     Toast.info(this.props.form.getFieldError(field).join('、'))
   }
+  onProChange = (val) => {
+    if (val && !val[0]) {
+      return false
+    }
+  }
+  handleClickTitle = () => {
+    if (this.state.addressNo) {
+      this.props.match.history.push(`${urls['TITLEMANGE']}?type=${this.state.payType}&id=${this.state.payId}&list=${this.state.dataList}&money=${this.state.money}&choose=1&addressNo=${this.state.addressNo}`)
+    } else {
+      this.props.match.history.push(`${urls['TITLEMANGE']}?type=${this.state.payType}&id=${this.state.payId}&list=${this.state.dataList}&money=${this.state.money}&choose=1`)
+    }
+  }
+  handleClickAddress = () => {
+    if (this.state.titleNo) {
+      this.props.match.history.push(`${urls['ADDRESSMANGE']}?type=${this.state.payType}&id=${this.state.payId}&list=${this.state.dataList}&money=${this.state.money}&choose=1&titleNo=${this.state.titleNo}`)
+    } else {
+      this.props.match.history.push(`${urls['ADDRESSMANGE']}?type=${this.state.payType}&id=${this.state.payId}&list=${this.state.dataList}&money=${this.state.money}&choose=1`)
+    }
+  }
   render() {
-    const { getFieldProps, getFieldDecorator, getFieldError } = this.props.form
-    const { valModeDataValue, totalRadioValue, settleRadioValue, invoiceType, isLoading } = this.state
+    const { getFieldError, getFieldProps } = this.props.form
+    let { totalRadioValue, initialTitle, initialAddress, payId, payType } = this.state
     return (
-      <div className={`${style['invoice-box']} pageBox`}>
+      <div className={`${style['invoice-box']} pageBox gray`}>
         <div>
           <Header
             title='申请发票'
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {
-              history.go(-1)
+              history.push(`${urls['INVOICEORDER']}?id=${payId}&type=${payType}`)
             }}
           />
           <Content>
-            {
-              !isLoading
-                ? <form className={style['pushOrderForm']}>
-                  <List className={`${style['input-form-list']}`} renderHeader={() => '选择一个类型'}>
-                    {
-                      valModeData.map((item, index) => {
-                        return invoiceType.map((i) => {
-                          return i === item['value'] ? (<Radio key={item.value} checked={valModeDataValue === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange('valModeDataValue', item.value)}>{item.label}</Radio>) : null
-                        })
-                      })
-                    }
-                  </List>
-                  <List className={`${style['input-form-list']}`} renderHeader={() => '发票类型'}>
-                    {
-                      totalRadio.map((item) => {
-                        return (
-                          <Radio key={item.value} checked={totalRadioValue === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange('totalRadioValue', item.value)}>{item.label}</Radio>
-                        )
-                      })
-                    }
-                  </List>
-                  <List className={`${style['input-form-list']}`} renderHeader={() => '抬头类型'}>
-                    {
-                      settleRadio.map((item) => {
-                        return (
-                          <Radio key={item.value} checked={settleRadioValue === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange('settleRadioValue', item.value)}>{item.label}</Radio>
-                        )
-                      })
-                    }
-                  </List>
-                  <List className={`${style['input-form-list']}`} renderHeader={() => '发票抬头'}>
+            <div className={style['box']}>
+              <List>
+                <div className={`${style['input-form-list']} ${style['input-form-list-title']}`} onClick={this.handleClickTitle}>
+                  <Item arrow='horizontal' extra={getFieldError('title_no') ? <div className='colorRed'>未选择</div> : initialTitle}>发票抬头</Item>
+                  <div style={{ display: 'none' }}>
                     <InputItem
-                      {...getFieldProps('title', {
+                      {...getFieldProps('title_no', {
+                        initialValue: initialTitle,
                         rules: [
-                          { required: true, message: '请填写发票抬头' },
-                        ]
+                          { required: true, message: '请选择发票抬头' }
+                        ],
                       })}
-                      clear
-                      placeholder='请输入发票抬头'
-                      ref={(el) => { this.autoFocusInst = el }}
-                    ></InputItem>
-                  </List>
-                  <List className={`${style['input-form-list']}`} renderHeader={() => '发票内容'}>
-                    <InputItem
-                      {...getFieldProps('content', {
-                        rules: [
-                          { required: true, message: '请填写发票内容' },
-                        ]
-                      })}
-                      clear
-                      placeholder='填写发票内容'
-                      ref={(el) => { this.autoFocusInst = el }}
-                    ></InputItem>
-                  </List>
-                  {
-                    settleRadioValue === 1
-                      ? <List className={`${style['input-form-list']}`} renderHeader={() => '纳税号'}>
-                        {
-                          getFieldDecorator('tax_no', {
-                            rules: [
-                              { required: !!(settleRadioValue === 1), message: '请填写税号' },
-                              { pattern: /^[A-Z0-9]{15}$|^[A-Z0-9]{17}$|^[A-Z0-9]{18}$|^[A-Z0-9]{20}$/, message: '15或者17或者18或者20位字母、数字组成' }
-                            ]
-                          })(<InputItem
-                            placeholder='填写纳税人识别号'
-                            ref={(el) => { this.taxNo = el }}
-                            error={!!getFieldError('tax_no')}
-                            onErrorClick={() => this.onErrorClick('tax_no')}
-                          />)
-                        }
-                      </List>
-                      : ''
-                  }
-                  {
-                    totalRadioValue === 1
-                      ? <List className={`${style['input-form-list']}`} renderHeader={() => '收件人姓名'}>
-                        {
-                          getFieldDecorator('recv_name', {
-                            rules: [
-                              { required: !!(totalRadioValue === 1), message: '请填写收件人姓名' },
-                            ]
-                          })(<InputItem
-                            clear
-                            placeholder='填写收件人姓名' />)
-                        }
-                      </List>
-                      : ''
-                  }
-                  { totalRadioValue === 1
-                    ? <List className={`${style['input-form-list']}`} renderHeader={() => '收件人手机号'}>
-                      {
-                        getFieldDecorator('recv_mobile', {
+                    />
+                  </div>
+                </div>
+                <div className={`${style['input-form-list']}`}>
+                  <List.Item extra={
+                    totalRadio.map((item) => {
+                      return (
+                        <Radio key={item.value} checked={totalRadioValue === item.value} name='proRadio' className={style['pro-radio']} onChange={() => this.onRadioChange('totalRadioValue', item.value)}>{item.label}</Radio>
+                      )
+                    })
+                  }>发票性质</List.Item>
+                </div>
+              </List>
+              {
+                totalRadioValue === 1
+                  ? <div onClick={this.handleClickAddress} className={`${style['input-form-list']} ${style['input-form-list-title']} ${style['input-form-list-address']}`}>
+                    <Item arrow='horizontal' extra={getFieldError('express_no') ? <div className='colorRed'>未选择</div> : initialAddress}>寄送地址</Item>
+                    <div style={{ display: 'none' }}>
+                      <InputItem
+                        {...getFieldProps('express_no', {
+                          initialValue: initialAddress,
                           rules: [
-                            { required: !!(totalRadioValue === 1), message: '请填写收件人手机号' },
-                            { pattern: /^1[345789]\d{9}$/, message: '格式错误' }
-                          ]
-                        })(<InputItem
-                          clear
-                          placeholder='填写收件人手机号'
-                          error={!!getFieldError('recv_mobile')}
-                          onErrorClick={() => this.onErrorClick('recv_mobile')}
-                        />)
-                      }
-                    </List>
-                    : ''
-                  }
-                  {totalRadioValue === 2
-                    ? <List className={`${style['input-form-list']}`} renderHeader={() => '电子邮箱'}>
-                      {
-                        getFieldDecorator('recv_email', {
-                          rules: [
-                            { required: !!(totalRadioValue === 2), message: '请填写邮箱' },
-                            { pattern: /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/, message: '填写正确的邮箱' }
-                          ]
-                        })(<InputItem
-                          clear
-                          placeholder='填写电子邮箱'
-                          error={!!getFieldError('recv_email')}
-                          onErrorClick={() => this.onErrorClick('recv_email')}
-                        ></InputItem>)
-                      }
-                    </List>
-                    : ''
-                  }
-                  {totalRadioValue === 1
-                    ? <List className={`${style['input-form-list']}`} renderHeader={() => '收件人地址'}>
-                      {
-                        getFieldDecorator('recv_address', {
-                          rules: [
-                            { required: !!(totalRadioValue === 1),
-                              message: '请填写收件人地址'
-                            },
-                          ]
-                        })(<InputItem
-                          clear
-                          placeholder='填写收件人地址'
-                        ></InputItem>)
-                      }
-                    </List>
-                    : ''}
-                  <List className={style['btn-form-list']}>
-                    <Button onClick={this.onHandleNext} type='primary'>提交</Button>
-                  </List>
-                </form>
-                : null
-
-            }
+                            { required: true, message: '请选择收件地址' }
+                          ],
+                        })}
+                      />
+                    </div>
+                  </div>
+                  : null
+              }
+              <Button onClick={this.handleSubmit}>确定</Button>
+            </div>
           </Content>
         </div>
       </div>
@@ -312,5 +253,4 @@ class Detail extends Component {
   }
 }
 
-export default createForm()(Detail)
-
+export default createForm()(Apply)

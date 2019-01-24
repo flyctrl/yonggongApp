@@ -9,7 +9,7 @@ let baseUrl = '/api'
 if (process.env.NODE_ENV === 'production') {
   console.log('in PRO')
   baseUrl = 'https://yg.yaque365.com/api/'
-  if (TEST) {
+  if (TEST || CORDOVATEST) {
     console.log('in TEST')
     baseUrl = 'https://yg-test.yaque365.com/api/'
   }

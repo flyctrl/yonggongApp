@@ -36,11 +36,19 @@ export const returnFloat = (number) => { // 金额加小数点，保留2位
 
 export const getQueryString = (name) => { // url转json
   let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
-  let r = history.location.search.substr(1).match(reg)
-  if (r !== null) {
-    return r[2]
+  if ('cordova' in window) {
+    let r = history.location.search.substr(1).match(reg)
+    if (r !== null) {
+      return r[2]
+    }
+    return null
+  } else {
+    let r = window.location.search.substr(1).match(reg)
+    if (r !== null) {
+      return r[2]
+    }
+    return null
   }
-  return null
 }
 
 export const parseJsonUrl = (ojson) => { // json对象转URL
@@ -58,7 +66,13 @@ export const parseJsonUrl = (ojson) => { // json对象转URL
 
 export const parseURLParam = (url) => { // 把url的参数部分转化成json对象
   try {
-    let targeturl = url || window.location.href
+    let hr
+    if ('cordova' in window) {
+      hr = history.location.pathname + history.location.search
+    } else {
+      hr = window.location.href
+    }
+    let targeturl = url || hr
     const regUrl = /^[^\?]+\?([\w\W]+)$/
     const regPara = /([^&=]+)=([\w\W]*?)(&|$|#)/g
     let arrUrl = regUrl.exec(targeturl)

@@ -15,6 +15,7 @@ const getClientEnvironment = require('./env');
 const Merge = require('webpack-merge');
 const CommonConfig = require('./webpack.config.common.js');
 const pxtorem = require('postcss-pxtorem');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -275,7 +276,8 @@ module.exports = Merge(CommonConfig,{
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
-      template: paths.appHtml,
+      filename: 'index.html',
+      template: process.env.BUILD_ENV === 'cordovatest' || process.env.BUILD_ENV === 'cordovapro' ? paths.appCordovaHtml : paths.appHtml,
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -297,14 +299,14 @@ module.exports = Merge(CommonConfig,{
     // Minify the code.
     new webpack.optimize.UglifyJsPlugin({
       compress: {
-        warnings: false,
+        warnings: process.env.BUILD_ENV === 'cordovatest' || process.env.BUILD_ENV === 'cordovapro' || process.env.BUILD_ENV === 'test',
         // Disabled because of an issue with Uglify breaking seemingly valid code:
         // https://github.com/facebookincubator/create-react-app/issues/2376
         // Pending further investigation:
         // https://github.com/mishoo/UglifyJS2/issues/2011
+        drop_debugger: !(process.env.BUILD_ENV === 'cordovatest' || process.env.BUILD_ENV === 'cordovapro' || process.env.BUILD_ENV === 'test'),
+        drop_console: !(process.env.BUILD_ENV === 'cordovatest' || process.env.BUILD_ENV === 'cordovapro' || process.env.BUILD_ENV === 'test'),
         comparisons: false,
-        drop_debugger: true,
-        drop_console: true
       },
       mangle: {
         safari10: true,
@@ -362,7 +364,15 @@ module.exports = Merge(CommonConfig,{
     // solution that requires the user to opt into importing specific locales.
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new CleanWebpackPlugin(
+      ['cordova.html'],
+      {
+        root: path.resolve(__dirname, '../build/'),
+        verbose: true,
+        dry: false
+      }
+    )
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.

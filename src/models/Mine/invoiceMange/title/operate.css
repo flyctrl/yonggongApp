@@ -1,0 +1,84 @@
+.operate-box {
+  & :global(.am-list-body) {
+    margin-top: 8px;
+  }
+  & :global(.am-list-body::before) {
+    height: 0;
+  }
+  & :global(.am-list-body::after) {
+    height: 0;
+  }
+  & .input-list {
+    & :global(.am-input-label) {
+      font-size:15px;
+      color:rgba(51,51,51,1);
+      width: 80px;
+      & em {
+        display: inline-block;
+        height: 44px;
+        line-height: 46px;
+        width: 16px;
+        text-align: center;
+        color: #db1818;
+        vertical-align: middle;
+      }
+    }
+  & :global(.am-input-control) {
+     & input {
+       padding-right: 5px;
+       font-size: 15px;
+     }
+  }
+  & :global(.am-list-extra) {
+    & :global(.am-switch input[type="checkbox"]:checked + .checkbox) {
+      background:#1EC01D
+    }
+  }
+  }
+  & .input-list-radio {
+    & :global(.am-list-line) {
+      & :global(.am-list-content) {
+        font-size:15px;
+        color:rgba(51,51,51,1);
+      }
+    }
+      & :global(.am-list-extra){
+        flex-basis: 76%;
+        text-align: left;
+        & :global(.am-radio-wrapper) {
+          font-size:16px;
+          color:rgba(51,51,51,1);
+          margin-right: 20px;
+          & :global(.am-radio) {
+            width:20px;
+            height:20px;
+            border:1px solid rgba(153,153,153,1);
+            border-radius:50%;
+            margin-right: 5px;
+            & :global(.am-radio-inner) {
+              width:10px;
+              height:10px;
+              background:white;
+              border-radius:50%;
+              top: 5px;
+              right: 5.2px;
+            }
+            & :global(.am-radio-inner:after) {
+             display: none;
+            }
+          }
+          & :global(.am-radio-checked) {
+            border:1px solid rgba(18,152,252,1);
+            & :global(.am-radio-inner) {
+              width:10px;
+              height:10px;
+              background:rgba(18,152,252,1);
+              border-radius:50%;
+              top: 5px;
+              right: 5.2px;
+            }
+          }
+        }
+       }
+  }
+} 

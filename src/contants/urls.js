@@ -68,9 +68,16 @@ export const REALNAMEAUTH = `${MINE}/realNameAuth` // 个人认证
 export const REALNAMEAUTHSUCCESS = `${REALNAMEAUTH}/success` // 个人认证成功
 export const COMPANYAUTHDETAIL = `${MINE}/companyAuthDetail` // 企业认证详情
 export const REALNAMEAUTHDETAIL = `${MINE}/realNameDetail` // 个人认证详情
-export const INVOICEMANGE = `${MINE}/invoiceMange` // 发票管理
-export const INVOICELISTTWODETAIL = `${INVOICEMANGE}/detail` // 代开发票详情
-export const APPLYINVOICE = `${MINE}/invoiceMange/applyInvoice` // 申请发票
+
+export const INVOICENEWMANGE = `${MINE}/invoiceMange` // 新发票管理
+export const INVOICEORDER = `${INVOICENEWMANGE}/order` // 工单开票
+export const TITLEMANGE = `${INVOICENEWMANGE}/title` // 抬头管理
+export const TITLEOPERATE = `${TITLEMANGE}/operate` // 抬头添加和编辑
+export const ADDRESSMANGE = `${INVOICENEWMANGE}/address` // 地址管理
+export const ADDRESSOPERATE = `${ADDRESSMANGE}/operate` // 地址添加和编辑
+export const INVOICENEWDETAIL = `${INVOICENEWMANGE}/detail` // 新发票详情
+export const APPLYINEWINVOICE = `${INVOICENEWMANGE}/applyInvoice` // 申请新发票
+
 export const CONTRACTMANGE = `${MINE}/contractMange` // 合同管理
 export const CONTRACTLIST = `${MINE}/contractList` // 我发的合同管理列表
 export const ELETAGREEMENT = `${CONTRACTMANGE}/eletAgreement` // 电子合同
