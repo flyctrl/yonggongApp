@@ -117,11 +117,11 @@ class InvoiceDetail extends Component {
   handleSendEmail = async () => {
     let promptSnatch = prompt(
       '发送附件至邮箱',
-      '',
+      '提交成功后系统会在3天之内发送邮件,请勿重复提交; 您也可到电脑发票详情直接下载PDF',
       [
         { text: '取消' },
         {
-          text: '确定', onPress: (bidAmount) => new Promise(async (resolve, reject) => {
+          text: '发送', onPress: (bidAmount) => new Promise(async (resolve, reject) => {
             if (bidAmount === '') {
               Toast.fail('输入不能为空', 1)
               return false
