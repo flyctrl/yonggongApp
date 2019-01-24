@@ -376,9 +376,7 @@ class MainLayout extends Component {
     let { versionData, versionShow } = this.state
     return (
       <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
-        {
-          storage.get('firstload') !== 1 && typeof OCBridge === 'undefined' ? this.showGuidePage() : this.showMenu()
-        }
+        {this.showMenu()}
         {versionData['is_update'] === 1 && versionShow ? this.showVersion() : null}
       </div>
     )
