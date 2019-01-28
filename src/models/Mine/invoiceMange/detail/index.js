@@ -322,7 +322,7 @@ class InvoiceDetail extends Component {
                   </ul>
                 </div>
                 <Button style={{ display: dataSource['status'] === 3 || dataSource['status'] === 2 || dataSource['status'] === 11 ? 'none' : 'block' }} className={`${style['confirm']} ${style['btn']}`} onClick={this.handleConfirm}>确认</Button>
-                <Button style={{ display: dataSource['status'] === 2 && dataSource['user_type'] === 1 ? 'block' : 'none' }} onClick={this.handleSendEmail} className={`${style['confirm']} ${style['btn']}`}>下载发票</Button>
+                <Button style={{ display: dataSource['status'] === 2 && dataSource['user_type'] === 1 && dataSource['material_type'] === 2 ? 'block' : 'none' }} onClick={this.handleSendEmail} className={`${style['confirm']} ${style['btn']}`}>下载发票</Button>
                 <Button style={{ display: dataSource['status'] === 3 || dataSource['status'] === 2 ? 'none' : 'block' }} className={`${style['cancel']} ${style['btn']}`} onClick={() =>
                   alert('提示', '驳回发票将作废,确定要作废吗？', [
                     { text: '取消', onPress: () => console.log('cancel') },
