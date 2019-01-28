@@ -24,36 +24,39 @@ class Login extends Component {
       value: '',
     }
   }
+  userLogin = async (postJson) => {
+    const data = await api.auth.login(postJson) || false
+    if (data) {
+      storage.set('Authorization', 'Bearer ' + data['access_token'])
+      storage.set('refreshToken', data['refresh_token'])
+      history.push(urls.HOME)
+    }
+  }
   onSubmit = () => { // 表单提交
     const { getFieldError } = this.props.form
     let validateAry = ['username', 'password']
     this.props.form.validateFields(async (error) => {
-      let devJson = {}
-      if ('cordova' in window) {
-        cordova.getAppVersion.getVersionNumber().then(version => {
-          devJson = {
-            platform: 1,
-            device: {
-              os: 2,
-              osver: device.version,
-              version: version,
-              device_id: storage.get('deviceId'),
-              outer_id: storage.get('outerId')
-            }
-          }
-        })
-      }
       if (!error) {
-        const data = await api.auth.login({
-          ...this.props.form.getFieldsValue(),
-          ...devJson
-        }) || false
-        if (data) {
-          storage.set('Authorization', 'Bearer ' + data['access_token'])
-          storage.set('refreshToken', data['refresh_token'])
-          history.push(urls.HOME)
+        if ('cordova' in window) {
+          console.log('corodva login')
+          cordova.getAppVersion.getVersionNumber().then(version => {
+            this.userLogin({
+              ...this.props.form.getFieldsValue(),
+              ...{
+                platform: 1,
+                device: {
+                  os: 2,
+                  osver: device.version,
+                  version: version,
+                  device_id: storage.get('deviceId'),
+                  outer_id: storage.get('outerId')
+                }
+              }
+            })
+          })
+        } else {
+          this.userLogin(this.props.form.getFieldsValue())
         }
-        console.log(data)
         console.log(this.props.form.getFieldsValue())
       } else {
         for (let value of validateAry) {
