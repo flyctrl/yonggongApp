@@ -51,7 +51,7 @@ class RealNameAuth extends Component {
         isShowFace: false
       })
     } else {
-      this.props.match.history.goBack()
+      this.props.match.history.push(urls.MINE)
     }
   }
   componentWillUnmount () {
@@ -303,7 +303,8 @@ class RealNameAuth extends Component {
               isShowFace: false
             })
           } else {
-            this.props.match.history.go(-1)
+            // this.props.match.history.go(-1)
+            this.props.match.history.push(urls.MINE)
           }
         }}
       />

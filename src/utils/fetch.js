@@ -66,7 +66,14 @@ fetcher.interceptors.response.use(function (response) {
       })
     } else {
       let refreshToken = storage.get('refreshToken')
-      axios.post(baseUrl + '/employ/refresh', { refresh_token: refreshToken }).then(function(res) {
+      axios.post(baseUrl + '/employ/refresh', { refresh_token: refreshToken }, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cach',
+          'Accept': 'application/x.yaque.v2+json'
+        }
+      }).then(function(res) {
         console.log(res)
         if (res.data.code === 10012) {
           storage.remove('Authorization')
