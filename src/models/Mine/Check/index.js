@@ -8,9 +8,9 @@ import { getQueryString, onBackKeyDown } from 'Contants/tooler'
 import style from './style.css'
 import api from 'Util/api'
 import ChildStatus from './status'
-import { Button, Icon, Modal, List, Picker } from 'antd-mobile'
+import { Button, Icon, List, Picker } from 'antd-mobile'
 import tips from 'Src/assets/ad.png'
-const alert = Modal.alert
+// const alert = Modal.alert
 let positionPicker = null
 let distanceStatus = {
   0: '在正常范围内',
@@ -25,7 +25,7 @@ let checkType = [{
   label: '下班'
 }]
 let map = null
-let newAlert = null
+// let newAlert = null
 let setTime
 let successTime
 class Check extends Component {
@@ -65,9 +65,9 @@ class Check extends Component {
     }
   }
   backButtons = (e) => {
-    if (newAlert) {
-      newAlert.close()
-    }
+    // if (newAlert) {
+    //   newAlert.close()
+    // }
     let { visible, workerUid } = this.state
     if (visible) {
       if (workerUid) {
@@ -413,7 +413,7 @@ class Check extends Component {
         dataCheck['type'] = checkVal
       }
       // let isCheck = true
-      let isCheck = new Date(dataCheck['start_date']).getTime() <= new Date().getTime() && new Date().getTime() <= new Date(new Date(dataCheck['end_date']).getTime() + 24 * 3600000).getTime()
+      let isCheck = new Date(dataCheck['start_date']).getTime() <= new Date().getTime() && new Date().getTime() <= new Date(new Date(dataCheck['end_date']).getTime() + 24 * 3600000).getTime() && dataCheck['distance_status'] === 0
       this.setState({
         dataCheck,
         checkInTime: null,
@@ -463,9 +463,9 @@ class Check extends Component {
     }
   }
   cameraTakePicture = () => {
-    if (newAlert) {
-      newAlert.close()
-    }
+    // if (newAlert) {
+    //   newAlert.close()
+    // }
     let _this = this
     navigator.camera.getPicture(onSuccess, onFail, {
       destinationType: Camera.DestinationType.DATA_URL
@@ -495,32 +495,25 @@ class Check extends Component {
 
   handleTake = (e) => {
     if ('cordova' in window) {
-      let { isCheck, dataCheck } = this.state
+      let { isCheck } = this.state
       if (!isCheck) {
         return
       }
-      if (dataCheck.distance_status && dataCheck.distance_status === 1) {
-        newAlert = alert(<div style={{ color: '#c40808' }}>{distanceStatus[dataCheck.distance_status]}</div>, '你确定要打卡吗??', [
-          { text: '取消', onPress: () => console.log('cancel') },
-          { text: '确定', onPress: () => { this.cameraTakePicture(); alert().close() } },
-        ])
-      } else {
-        this.cameraTakePicture()
-      }
+      // if (dataCheck.distance_status && dataCheck.distance_status === 1) {
+      //   newAlert = alert(<div style={{ color: '#c40808' }}>{distanceStatus[dataCheck.distance_status]}</div>, '你确定要打卡吗??', [
+      //     { text: '取消', onPress: () => console.log('cancel') },
+      //     { text: '确定', onPress: () => { this.cameraTakePicture(); alert().close() } },
+      //   ])
+      // } else {
+      // }
+      this.cameraTakePicture()
     } else {
       let file = e.target.files[0]
-      let { isCheck, dataCheck } = this.state
+      let { isCheck } = this.state
       if (!isCheck) {
         return
       }
-      if (dataCheck.distance_status && dataCheck.distance_status === 1) {
-        newAlert = alert(<div style={{ color: '#c40808' }}>{distanceStatus[dataCheck.distance_status]}</div>, '你确定要打卡吗??', [
-          { text: '取消', onPress: () => console.log('cancel') },
-          { text: '确定', onPress: () => { this.handleTakePic(file); alert().close() } },
-        ])
-      } else {
-        this.handleTakePic(file)
-      }
+      this.handleTakePic(file)
     }
   }
   componentWillUnmount() {
@@ -530,9 +523,9 @@ class Check extends Component {
       document.removeEventListener('backbutton', this.backButtons)
       document.addEventListener('backbutton', onBackKeyDown, false)
     }
-    if (newAlert) {
-      newAlert.close()
-    }
+    // if (newAlert) {
+    //   newAlert.close()
+    // }
   }
   render() {
     const { time, dataCheck = {}, checkVal, visible, imgSrc, checkInTime, workorderno, isCheck, workerUid, succTime } = this.state
@@ -557,9 +550,9 @@ class Check extends Component {
                 visible: !this.state.visible
               })
             }
-            if (newAlert) {
-              newAlert.close()
-            }
+            // if (newAlert) {
+            //   newAlert.close()
+            // }
           }
         }}
         rightClick={() => {
