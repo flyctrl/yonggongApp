@@ -8,21 +8,21 @@ import api from 'Util/api'
 // import { projectStatus } from 'Contants/fieldmodel'
 import style from './style.css'
 const Item = List.Item
-const prjStatus = {
-  1: '待开工',
-  2: '施工中',
-  3: '已作废',
-  4: '已完成'
-}
+// const prjStatus = {
+//   1: '待开工',
+//   2: '施工中',
+//   3: '已作废',
+//   4: '已完成'
+// }
 const projectStatus = {
   1: '审核中',
   2: '已审核',
   3: '审核未通过'
 }
-const isShowPrj = {
-  0: '不显示',
-  1: '显示'
-}
+// const isShowPrj = {
+//   0: '不显示',
+//   1: '显示'
+// }
 class ProjectDetail extends Component {
   constructor(props) {
     super(props)
@@ -79,12 +79,12 @@ class ProjectDetail extends Component {
                     <div className={style['input-ellipsis']}>
                       <Item extra={projectStatus[dataSource['status']]}>项目审核状态</Item>
                     </div>
-                    <div className={style['input-ellipsis']}>
+                    {/* <div className={style['input-ellipsis']}>
                       <Item extra={prjStatus[dataSource['bid_status']]}>项目状态</Item>
                     </div>
                     <div className={style['input-ellipsis']}>
                       <Item extra={isShowPrj[dataSource['is_show']]}>项目是否显示</Item>
-                    </div>
+                    </div> */}
                     <div className={style['input-ellipsis']}>
                       <Item extra={dataSource['prj_win_bid_unit']}>项目中标单位</Item>
                     </div>

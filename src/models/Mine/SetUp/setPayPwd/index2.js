@@ -76,7 +76,7 @@ class RestPwd extends Component {
         />
         <Content>
           <form className={style['registerForm']}>
-            <List renderHeader={() => '* 请输入原支付密码'}>
+            <List renderHeader={() => '* 支付密码只能是6位数字'}>
               <InputItem
                 {...getFieldProps('password', {
                   rules: [
@@ -92,6 +92,25 @@ class RestPwd extends Component {
                 error={!!getFieldError('password')}
                 onErrorClick={() => {
                   Toast.fail(getFieldError('password'), 1)
+                }}
+              ></InputItem>
+            </List>
+            <List>
+              <InputItem
+                {...getFieldProps('confirm_password', {
+                  rules: [
+                    { required: true, message: '请输入您的确认密码' },
+                    { pattern: /\d{6}/, message: '支付密码只能是6位数字' },
+                    { validator: this.compareToFirstPassword }
+                  ],
+                })}
+                clear
+                placeholder='确认密码'
+                prefixListCls='register'
+                type='password'
+                error={!!getFieldError('confirm_password')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('confirm_password'), 1)
                 }}
               ></InputItem>
             </List>
