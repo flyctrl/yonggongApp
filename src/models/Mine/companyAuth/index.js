@@ -13,6 +13,7 @@ import style from './style.css'
 import frontImg from 'Src/assets/fc.png'
 import backImg from 'Src/assets/bc.png'
 import charterImg from 'Src/assets/cc.png'
+import { onBackKeyDown } from 'Contants/tooler'
 class Company extends Component {
   constructor(props) {
     super(props)
@@ -26,9 +27,21 @@ class Company extends Component {
       isClickBack: false
     }
   }
-  componentDidMount() {
+  componentDidMount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', onBackKeyDown, false)
+      document.addEventListener('backbutton', this.backButtons, false)
+    }
   }
-
+  backButtons = (e) => {
+    this.props.match.history.push(urls.MINE)
+  }
+  componentWillUnmount () {
+    if ('cordova' in window) {
+      document.removeEventListener('backbutton', this.backButtons)
+      document.addEventListener('backbutton', onBackKeyDown, false)
+    }
+  }
   handleSubmit = () => {
     const validateAry = ['name', 'legal', 'card_no', 'address', 'credit_code', 'mobile', 'license', 'card_front', 'card_back']
     const { validateFields, getFieldError } = this.props.form
@@ -199,7 +212,8 @@ class Company extends Component {
         leftIcon='icon-back'
         leftTitle1='返回'
         leftClick1={() => {
-          this.props.match.history.go(-1)
+          // this.props.match.history.go(-1)
+          this.props.match.history.push(urls.MINE)
         }}
       />
       <Content>
