@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { Button, ListView, PullToRefresh, Toast, Modal } from 'antd-mobile'
-import { Header, Content } from 'Components'
+import { Header, Content, DefaultPage } from 'Components'
 import { workplanStatus } from 'Contants/fieldmodel'
 // import * as urls from 'Contants/urls'
 import api from 'Util/api'
@@ -9,6 +9,7 @@ import * as tooler from 'Contants/tooler'
 import style from './index.css'
 
 const alert = Modal.alert
+const prompt = Modal.prompt
 const NUM_ROWS = 20
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
@@ -102,29 +103,38 @@ class AccessRecord extends Component {
     return await data['list']
   }
   showlistStatus = (item) => { // 状态按钮
+    if (item['handle_type'] === 1) { // 通过/驳回
+      return <div>
+        <Button type='primary' onClick={() => { this.getSolicit(item['task_no'], 1, item) }} size='small'>确认完工</Button>
+        <Button type='primary' onClick={() => { this.getSolicit(item['task_no'], 2, item) }} size='small'>驳回</Button>
+      </div>
+    } else if (item['handle_type'] === 2) { // 完工
+      return <div>
+        <Button type='primary' className={style['one-btn']} onClick={() => { this.getSolicit(item['order_no'], 3, item) }} size='small'>完工</Button>
+      </div>
+    } else if (item['handle_type'] === 3) { // 代完工
+      return <div>
+        <Button type='primary' className={style['one-btn']} onClick={() => { this.getSolicit(item['order_no'], 4, item) }} size='small'>代完工</Button>
+      </div>
+    }
     if (item['status'] === 3) { // 已完工
       return <div className={style['confirm-status']}>{
         workplanStatus.find(i => {
           return i['status'] === item['status']
         })['title']
       }</div>
-    } else if (item['status'] === 2) { // 开工中
+    } else if (item['status'] === 2) { // 完工待确认
       return <div className={style['reject-status']}>{
         workplanStatus.find(i => {
           return i['status'] === item['status']
         })['title']
       }</div>
-    } else if (item['status'] === 1) { // 完工待确认
-      if (item['handle_type'] === 1) {
-        return <div>
-          <Button type='primary' onClick={() => { this.getSolicit(item['task_no'], 1, item) }} size='small'>确认完工</Button>
-          <Button type='primary' onClick={() => { this.getSolicit(item['task_no'], 2, item) }} size='small'>驳回</Button>
-        </div>
-      } else if (item['handle_type'] === 2) {
-        return <div>
-          <Button type='primary' className={style['one-btn']} onClick={() => { this.getSolicit(item['order_no'], 3, item) }} size='small'>完工</Button>
-        </div>
-      }
+    } else if (item['status'] === 1) { // 开工中
+      return <div className={style['run-status']}>{
+        workplanStatus.find(i => {
+          return i['status'] === item['status']
+        })['title']
+      }</div>
     }
   }
   solicitfun = async (planno, type) => {
@@ -149,7 +159,7 @@ class AccessRecord extends Component {
       Toast.success('操作成功', 1.5)
     }
   }
-  finshWork = async (orderno, type, rowData) => {
+  finshWork = async (orderno, workloadJson, rowData) => { // 完工
     let { dataSource } = this.state
     let currentIndex
     dataSource.map((item, index) => {
@@ -158,12 +168,6 @@ class AccessRecord extends Component {
       }
     })
     Toast.loading('提交中...', 0)
-    let workloadJson = {}
-    if (rowData['valuation_way'] === 1) {
-      workloadJson = {
-        workload: rowData['workload']
-      }
-    }
     let data = await api.Mine.myorder.orderWorkplanFinish({
       task_no: rowData['task_no'],
       order_no: rowData['order_no'],
@@ -176,6 +180,19 @@ class AccessRecord extends Component {
         dataSource
       })
       Toast.success('操作成功', 1.5)
+    }
+  }
+  agentFishWork = async (workload, rowData) => { // 代完工
+    Toast.loading('提交中...', 0)
+    let data = await api.Mine.myorder.agentFinishWork({
+      order_no: rowData['order_no'],
+      task_list: [{ task_no: rowData['task_no'], workload: workload }]
+    }) || false
+    Toast.hide()
+    if (data) {
+      Toast.success('操作成功', 1.5, () => {
+        this.getdataTemp()
+      })
     }
   }
   getSolicit = (planno, type, rowData) => {
@@ -193,13 +210,74 @@ class AccessRecord extends Component {
           this.solicitfun(planno, type)
         } },
       ])
-    } else if (type === 3) {
-      alert('确认已经完成，等待用工确认结算？', '', [
-        { text: '取消' },
-        { text: '确认', onPress: async () => {
-          this.finshWork(planno, type, rowData)
-        } },
-      ])
+    } else if (type === 3) { // 完工
+      if (rowData['tip_type'] === 1) { // 输入工作量
+        prompt('请输入工作量', '工作量单位：' + rowData['workload_unit'],
+          [
+            {
+              text: '取消'
+            },
+            {
+              text: '确认',
+              onPress: value => new Promise((resolve, reject) => {
+                if (value === '') {
+                  Toast.info('请输入工作量', 0.8)
+                  reject()
+                } else if (!/^[0-9]+.?[0-9]*$/.test(value)) {
+                  Toast.info('请输入数字格式', 0.8)
+                  reject()
+                } else if (Number(value) < 0 || Number(value) === 0) {
+                  Toast.info('工作量必须大于0', 0.8)
+                  reject()
+                } else {
+                  this.finshWork(planno, { workload: value }, rowData)
+                  resolve()
+                }
+              }),
+            },
+          ], 'default', null, ['请输入工作量'])
+      } else { // 不要输入工作量
+        alert('确认已经完成，等待用工确认结算？', '', [
+          { text: '取消' },
+          { text: '确认', onPress: async () => {
+            this.finshWork(planno, {}, rowData)
+          } },
+        ])
+      }
+    } else if (type === 4) { // 代完工
+      if (rowData['tip_type'] === 1) { // 输入工作量
+        prompt('请输入工作量', '工作量单位：' + rowData['workload_unit'],
+          [
+            {
+              text: '取消'
+            },
+            {
+              text: '确认',
+              onPress: value => new Promise((resolve, reject) => {
+                if (value === '') {
+                  Toast.info('请输入工作量', 0.8)
+                  reject()
+                } else if (!/^[0-9]+.?[0-9]*$/.test(value)) {
+                  Toast.info('请输入数字格式', 0.8)
+                  reject()
+                } else if (Number(value) < 0 || Number(value) === 0) {
+                  Toast.info('工作量必须大于0', 0.8)
+                  reject()
+                } else {
+                  this.agentFishWork(value, rowData)
+                  resolve()
+                }
+              }),
+            },
+          ], 'default', null, ['请输入工作量'])
+      } else { // 不要输入工作量
+        alert('确认已经完成，等待用工确认结算？', '', [
+          { text: '取消' },
+          { text: '确认', onPress: async () => {
+            this.agentFishWork(0, rowData)
+          } },
+        ])
+      }
     }
   }
   render() {
@@ -208,7 +286,7 @@ class AccessRecord extends Component {
       if (isLoading) {
         return null
       } else if (nodata) {
-        return '暂无数据'
+        return <DefaultPage type='nodata' title='暂无开工记录' />
       } else {
         return ''
       }

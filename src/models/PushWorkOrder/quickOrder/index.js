@@ -34,6 +34,7 @@ class SelectClass extends Component {
       showtech: false,
       url: tooler.getQueryString('url') || '',
       orderno: tooler.getQueryString('orderno') || '',
+      porderno: tooler.getQueryString('porderno') || '0',
       detailsheetno: tooler.getQueryString('detailsheetno') || '',
       starttime: tooler.getQueryString('starttime') || '',
       edittype: tooler.getQueryString('edittype') || 0,
@@ -190,11 +191,11 @@ class SelectClass extends Component {
         proVal: proId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : proVal
       })
     } else {
-      let { url, orderno, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, proId, proVal, starttime, edittype, editSheetno, detailsheetno } = this.state
+      let { url, orderno, porderno, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, proId, proVal, starttime, edittype, editSheetno, detailsheetno } = this.state
       if (parentClassId !== 'skill' || showtech === false) {
         teachId = 'null'
       }
-      let urlJson = { url: url, orderno, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, proId, proVal, starttime, edittype, editSheetno, detailsheetno }
+      let urlJson = { url: url, orderno, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, proId, proVal, starttime, edittype, editSheetno, detailsheetno, porderno }
       console.log('urlJson:', urlJson)
       let skipurl = tooler.parseJsonUrl(urlJson)
       console.log('skipurl:', skipurl)
@@ -204,7 +205,7 @@ class SelectClass extends Component {
   }
   render() {
     console.log(this.state)
-    let { orderno, settleValue, classifyVal, showIndex, parentClassId, teachId, teachVal, showtech, classifyId, proId, proVal, settleId, constructType } = this.state
+    let { orderno, porderno, settleValue, classifyVal, showIndex, parentClassId, teachId, teachVal, showtech, classifyId, proId, proVal, settleId, constructType } = this.state
     console.log(constructType)
     console.log(classifyVal)
     console.log(classifyId)
@@ -218,21 +219,21 @@ class SelectClass extends Component {
         />
         <Content>
           <List renderHeader={() => '选择工单关联的项目信息'} className={style['select-class-list']}>
-            <Item extra={proVal} arrow={orderno !== '' ? '' : 'horizontal'} onClick={() => {
-              orderno !== '' ? null : this.handleProject()
+            <Item extra={proVal} arrow={orderno !== '' || porderno !== '0' ? '' : 'horizontal'} onClick={() => {
+              orderno !== '' || porderno !== '0' ? null : this.handleProject()
             }} thumb={<NewIcon type='icon-xiangmuxiaoxi' className={style['icon-class-haiwai']} />}>项目<em className={style['asterisk']}>*</em></Item>
           </List>
           <List renderHeader={() => '发布所需要的工种或机械'} className={style['select-class-list']}>
-            <Item extra={classifyVal} arrow={orderno !== '' ? (classifyId === '' && constructType === '' ? 'horizontal' : '') : 'horizontal'} onClick={() => {
-              orderno !== '' ? (classifyId === '' && constructType === '' ? this.handleSelectClassify() : null) : this.handleSelectClassify()
+            <Item extra={classifyVal} arrow={orderno !== '' || porderno !== '0' ? (classifyId === '' && constructType === '' ? 'horizontal' : '') : 'horizontal'} onClick={() => {
+              orderno !== '' || porderno !== '0' ? (classifyId === '' && constructType === '' ? this.handleSelectClassify() : null) : this.handleSelectClassify()
             }} thumb={<NewIcon type='icon-haiwai' className={style['icon-class-haiwai']} />}>工种/机械<em className={style['asterisk']}>*</em></Item>
           </List>
-          <List style={{ display: (parentClassId === 'skill' && showtech === true) || (orderno !== '' && teachId !== '0') ? 'block' : 'none' }} renderHeader={() => '技能要求只能允许满足相关技能要求的个人接单'} className={style['select-class-list']}>
-            <Item extra={teachVal} arrow={orderno !== '' && teachId !== '0' ? '' : 'horizontal'} onClick={this.handleSelectTech} thumb={<NewIcon type='icon-jobHunting' className={style['icon-class-haiwai']} />}>技能要求</Item>
+          <List style={{ display: (parentClassId === 'skill' && showtech === true) || (orderno !== '' && teachId !== '0') || (porderno !== '0' && teachId !== '0') ? 'block' : 'none' }} renderHeader={() => '技能要求只能允许满足相关技能要求的个人接单'} className={style['select-class-list']}>
+            <Item extra={teachVal} arrow={(orderno !== '' && teachId !== '0') || (porderno !== '0' && teachId !== '0') ? '' : 'horizontal'} onClick={ () => { (orderno !== '' && teachId !== '0') || (porderno !== '0' && teachId !== '0') ? null : this.handleSelectTech() }} thumb={<NewIcon type='icon-jobHunting' className={style['icon-class-haiwai']} />}>技能要求</Item>
           </List>
           <List renderHeader={() => '选择计价方式'} className={`${style['select-class-list']} ${style['settle-type-list']}`}>
             {valuationWay.map(i => (
-              <RadioItem key={i.value} disabled={ orderno !== '' && settleId === 2 } checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
+              <RadioItem key={i.value} disabled={ (orderno !== '' && settleId === 2) || (porderno !== '0' && settleValue === 2) } checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
                 {i.label}
               </RadioItem>
             ))}
