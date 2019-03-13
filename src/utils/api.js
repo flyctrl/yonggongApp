@@ -71,6 +71,9 @@ const prefix = '/employ'
 
 export default {
   Common: {
+    bindDevice(params) { // 设备绑定
+      return Fetch(prefix + '/device/bind', params, 'post', { showloading: false })
+    },
     getVersion(params) {
       return Fetch('/common/yq/version', params, 'get', { showloading: false })
     },
