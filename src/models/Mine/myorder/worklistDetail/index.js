@@ -229,9 +229,8 @@ class WorkListDetail extends Component {
   }
   handleFished = async (rowData) => { // 我接的 - 完工
     let data
-    let valuationWay = rowData['valuation_way']
-    if (valuationWay === 1) {
-      prompt('工作量', `（单位：${rowData['valuation_unit']})`, [
+    if (rowData['tip_type'] === 1) {
+      prompt('工作量', `工作量单位：${rowData['valuation_unit']}`, [
         { text: '取消' },
         {
           text: '确认',
@@ -270,7 +269,7 @@ class WorkListDetail extends Component {
     }
   }
   handleAgentFished = (rowData) => { // 我接的 - 代完工
-    this.props.match.history.push(`${urls.AGENTFINISHLIST}?orderno=${rowData['order_no']}&valuationWay=${rowData['valuation_way']}`)
+    this.props.match.history.push(`${urls.AGENTFINISHLIST}?orderno=${rowData['order_no']}`)
   }
   handleRefSettle = (rowData) => { // 我接的 - 提交结算
     this.props.match.history.push(`${urls.PENDINGSETTLERECORD}?workSheetOrderNo=${rowData['order_no']}`)

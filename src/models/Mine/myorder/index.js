@@ -9,7 +9,7 @@ import api from 'Util/api'
 import style from './index.css'
 import { onBackKeyDown } from 'Contants/tooler'
 const prompt = Modal.prompt
-const NUM_ROWS = 20
+const NUM_ROWS = 10
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
 })
@@ -361,9 +361,8 @@ class WorkListManage extends Component {
         currentIndex = index
       }
     })
-    let valuationWay = rowData['valuation_way']
-    if (valuationWay === 1) {
-      prompt('工作量', `（单位：${rowData['valuation_unit']})`, [
+    if (rowData['tip_type'] === 1) {
+      prompt('工作量', `工作量单位：${rowData['valuation_unit']}`, [
         { text: '取消' },
         {
           text: '确认',
@@ -407,7 +406,7 @@ class WorkListManage extends Component {
     }
   }
   handleAgentFished = (rowData) => { // 我接的 - 代完工
-    this.props.match.history.push(`${urls.AGENTFINISHLIST}?orderno=${rowData['order_no']}&valuationWay=${rowData['valuation_way']}`)
+    this.props.match.history.push(`${urls.AGENTFINISHLIST}?orderno=${rowData['order_no']}`)
   }
   handleRefSettle = (rowData) => { // 我接的 - 提交结算
     this.props.match.history.push(`${urls.PENDINGSETTLERECORD}?workSheetOrderNo=${rowData['order_no']}`)

@@ -186,7 +186,7 @@ class AccessRecord extends Component {
           <div className={style['header']} style={{ 'backgroundImage': 'url(' + rowData['tasker_avatar'] + ')' }}></div>
         </div>
         <div className={style['record-hd']}>
-          <p className='ellipsis'>{rowData['tasker_name']}<span>（{rowData['workload']}{rowData['workload_unit']}）</span></p>
+          <p className='ellipsis'>{rowData['tasker_name']}{ Number(rowData['workload']) > 0 ? <span>（{rowData['workload']}{rowData['workload_unit']}）</span> : null }</p>
           <time>开工时间：{rowData['started_at']}</time>
           <time>完工时间：{rowData['ended_at'] ? rowData['ended_at'] : '暂无'}</time>
         </div>

@@ -8,7 +8,7 @@ import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import style from './index.css'
 
-const NUM_ROWS = 20
+const NUM_ROWS = 10
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
 })
@@ -239,16 +239,17 @@ class WorkListManage extends Component {
     }
   }
   handleSetAttend = (rowData) => { // 我发的 - 考勤设置 worksheetno
-    this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'] + '&listType=' + this.state.parentIndex)
+    let { parentIndex } = this.state
+    this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'] + '&listType=' + parentIndex)
   }
   pageUpdateWorksheet = (rowData) => { // 我发的 - 编辑
     let type = rowData['worksheet_type']
     if (type === 1) { // 招标
       this.props.match.history.push(`${urls.PUSHBIDORDER}?edittype=1&editSheetno=${rowData['worksheet_no']}`)
     } else if (type === 2) { // 工单
-      this.props.match.history.push(`${urls.PUSHNORMALORDER}?edittype=2&editSheetno=${rowData['worksheet_no']}`)
+      this.props.match.history.push(`${urls.PUSHNORMALORDER}?edittype=2&editSheetno=${rowData['worksheet_no']}&porderno=${rowData['p_order_no']}`)
     } else if (type === 3) { // 快单
-      this.props.match.history.push(`${urls.PUSHQUICKORDER}?edittype=3&editSheetno=${rowData['worksheet_no']}`)
+      this.props.match.history.push(`${urls.PUSHQUICKORDER}?edittype=3&editSheetno=${rowData['worksheet_no']}&porderno=${rowData['p_order_no']}`)
     }
   }
   handleViewAttend = (rowData) => { // 我发的 - 考勤记录

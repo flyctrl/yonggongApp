@@ -89,11 +89,19 @@ class FormBox extends Component {
     }
   }
   getValuationUnit = async () => {
-    let { settleValue, paymethodId } = this.state.urlJson
+    let { settleValue, paymethodId, orderno, porderno } = this.state.urlJson
+    let newJson = {}
+    if (orderno !== '' && typeof orderno !== 'undefined') {
+      newJson['p_order_no'] = orderno + ''
+    }
+    if (porderno !== '0') {
+      newJson['p_order_no'] = porderno + ''
+    }
     let data = await api.Common.getUnitlist({
       settle_fix_time: paymethodId,
       type: settleValue,
-      worksheet_type: 2
+      worksheet_type: 2,
+      ...newJson
     }) || []
     let newData = []
     data.map(item => {
@@ -213,10 +221,11 @@ class FormBox extends Component {
     })
   }
   render() {
+    console.log('formBox urlJson:', this.state.urlJson)
     const { getFieldProps, getFieldError, getFieldValue } = this.props.form
     let { fileList, remarkShow, startDate, endDate, mapShow, address, valuationUnit, chargeSizeData, remark, normalData } = this.state
     console.log('fileList:', fileList)
-    let { settleValue, starttime, orderno, edittype } = this.state.urlJson
+    let { settleValue, starttime, orderno, edittype, porderno } = this.state.urlJson
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
@@ -350,7 +359,7 @@ class FormBox extends Component {
             <div>
               <DatePicker
                 mode='date'
-                minDate={starttime !== '' && typeof orderno !== 'undefined' ? new Date(Date.parse(starttime.replace(/-/g, '/'))) : new Date()}
+                minDate={(starttime !== '' && typeof orderno !== 'undefined') || (starttime !== '' && porderno !== '0') ? new Date(Date.parse(starttime.replace(/-/g, '/'))) : new Date()}
                 maxDate={endDate}
                 title='开工时间'
                 extra={getFieldError('start_time') ? <div className='colorRed'>未选择</div> : '请选择开工时间'}
