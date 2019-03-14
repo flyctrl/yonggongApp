@@ -41,7 +41,7 @@ html :global(.am-list-footer) {
 }
 .notice-box {
   padding: 15px 15px 15px 10px;
-  height: 80px;
+  /* height: 80px; */
   background: #fff;
   font-family:SourceHanSansCN-Regular;
   position: relative;
@@ -84,6 +84,7 @@ html :global(.am-list-footer) {
         font-size: 16px;
         color: #333333;
         margin-top: 1px;
+        margin-bottom: 8px;
         & em {
           float: right;
           font-style: normal;
@@ -96,8 +97,7 @@ html :global(.am-list-footer) {
         font-size: 14px;
         color: #999999;
         display: block;
-        height: 40px;
-        line-height: 30px;
+        line-height: 18px;
         width:90%;
       }
     }

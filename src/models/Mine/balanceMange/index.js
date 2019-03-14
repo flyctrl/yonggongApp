@@ -12,9 +12,10 @@ let tabType = [
   { title: '订单结算' }
 ]
 let balanceType = {
-  0: '待结算',
-  1: '部分结算',
-  2: '已结算'
+  1: '待确认',
+  2: '待结算',
+  3: '已结算',
+  4: '已驳回'
 }
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
@@ -158,7 +159,7 @@ class BalanceMange extends Component {
           <dt className='my-bottom-border'>
             <Badge className={rowData['worksheet_type'] === 2 ? `${style['typericon-2']} ${style['typericon']}` : rowData['worksheet_type'] === 1 ? `${style['typericon-1']} ${style['typericon']}` : rowData['worksheet_type'] === 3 ? `${style['typericon-3']} ${style['typericon']}` : `${style['typericon']}`} text={worksheetType[rowData['worksheet_type']]} text={worksheetType[rowData['worksheet_type']]} />
             <p className={`${style['prj-title']} ellipsis`} >{rowData['title']}</p>
-            <Badge className={`${style['statusicon']} ${rowData['status'] === 0 ? style['yellow'] : rowData['status'] === 1 ? style['pink'] : rowData['status'] === 2 ? style['blue'] : style['default']}`} text={
+            <Badge className={`${style['statusicon']} ${rowData['status'] === 1 ? style['yellow'] : rowData['status'] === 2 ? style['pink'] : rowData['status'] === 3 ? style['blue'] : style['default']}`} text={
               balanceType[rowData['status']]
             } />
           </dt>

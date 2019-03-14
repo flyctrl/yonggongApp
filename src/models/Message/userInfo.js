@@ -32,7 +32,8 @@ class UserInfo extends Component {
     if (data) {
       this.setState({
         companyDetail: data,
-        isLoading: false
+        isLoading: false,
+        region: Array.isArray(data['region']) ? {} : data['region']
       })
     }
   }
@@ -48,7 +49,8 @@ class UserInfo extends Component {
     }
   }
   render() {
-    const { companyDetail, isLoading } = this.state
+    const { companyDetail, isLoading, region = {}} = this.state
+    let { province = {}, city = {}} = region
     return (
       <div className='pageBox gray'>
         <Header
@@ -98,7 +100,7 @@ class UserInfo extends Component {
                     companyDetail.credit_code ? <dd><span>统一社会信用代码</span><p>{companyDetail.credit_code}</p></dd> : null
                   }
                   {
-                    companyDetail.operating_period ? <dd><span>营业期限</span><p>{companyDetail.period}</p></dd> : null
+                    companyDetail.period ? <dd><span>营业期限</span><p>{companyDetail.period}</p></dd> : null
                   }
                   {
                     companyDetail.company_type ? <dd><span>公司类型</span><p>{companyDetail.company_type}</p></dd> : null
@@ -107,7 +109,7 @@ class UserInfo extends Component {
                     companyDetail.telephone ? <dd><span>电话</span><p>{companyDetail.telephone}</p></dd> : null
                   }
                   {
-                    companyDetail.region ? <dd><span>地区编码</span><p>{companyDetail.region}</p></dd> : null
+                    region ? <dd><span>地区</span><p>{province.name}{city.name}</p></dd> : null
                   }
                   {
                     companyDetail.address ? <dd><span>注册地址</span><p>{companyDetail.address}</p></dd> : null

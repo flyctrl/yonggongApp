@@ -4,7 +4,7 @@ import api from 'Util/api'
 import * as urls from 'Contants/urls'
 import NewIcon from 'Components/NewIcon'
 import style from './style.css'
-
+import { getCommpanyStatus } from 'Contants/tooler'
 class PesrsonStructure extends Component {
   constructor(props) {
     super(props)
@@ -65,7 +65,9 @@ class PesrsonStructure extends Component {
           }}
           rightTitle='添加人员'
           rightClick={() => {
-            this.props.match.history.push(urls.ADDPERSON)
+            getCommpanyStatus(() => {
+              this.props.match.history.push(urls.ADDPERSON)
+            })
           }}
         />
         <Content>

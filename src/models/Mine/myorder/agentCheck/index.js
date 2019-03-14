@@ -17,7 +17,8 @@ class AgentCheck extends Component {
       lng: tooler.getQueryString('lng'),
       radius: tooler.getQueryString('radius'),
       dataSource: [],
-      isloading: false
+      isloading: false,
+      detail: tooler.getQueryString('detail') // 入口是否是订单详情
     }
   }
   componentDidMount() {
@@ -62,7 +63,13 @@ class AgentCheck extends Component {
         leftIcon='icon-back'
         leftTitle1='返回'
         leftClick1={() => {
-          this.props.match.history.push(urls.MYORDER)
+          // this.props.match.history.push(urls.MYORDER)
+          // if (detail) {
+          //   this.props.match.history.push(urls.ORDERLISTDETAIL + '?worksheetno=' + orderno)
+          // } else {
+          //   this.props.match.history.push(urls.MYORDER)
+          // }
+          this.props.match.history.go(-1)
         }}
       />
       <Content>

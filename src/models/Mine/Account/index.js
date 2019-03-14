@@ -10,7 +10,7 @@ import { Header, Content } from 'Components'
 import { addCommas } from 'Contants/tooler'
 import api from 'Util/api'
 import style from './style.css'
-
+import { getCommpanyStatus } from 'Contants/tooler'
 class Account extends Component {
   constructor(props) {
     super(props)
@@ -32,7 +32,9 @@ class Account extends Component {
     })
   }
   handleBindCard = () => {
-    this.props.match.history.push(urls.BANKCARD)
+    getCommpanyStatus(() => {
+      this.props.match.history.push(urls.BANKCARD)
+    })
   }
   componentDidMount() {
     this.getAmount()
@@ -61,11 +63,15 @@ class Account extends Component {
     }
   }
   handleDrawcash = async () => {
-    this.getStatus(1)
+    getCommpanyStatus(() => {
+      this.getStatus(1)
+    })
   }
 
   handleRecharge = async () => {
-    this.getStatus(2)
+    getCommpanyStatus(() => {
+      this.getStatus(2)
+    })
   }
 
   render() {

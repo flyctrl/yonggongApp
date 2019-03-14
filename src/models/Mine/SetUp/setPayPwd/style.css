@@ -1,0 +1,30 @@
+html:not([data-scale]) .register-ps :global(.am-list-body::before) {
+  height: 0;
+}
+html:not([data-scale]) .register-ps :global(.am-list-body::after) {
+  height: 0;
+}
+.register-ps {
+  & :global(.am-button) {
+    background: #108ee9;
+    margin-top: 35px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+  }
+  & .forget-ps {
+     margin-top: 15px;
+     text-align: right;
+     color: #108ee9;
+     font-size: 12px;
+  }
+  & :global(.am-list-body::after) {
+      height: 0;
+  }
+  & :global(.am-list-body::before) {
+    height: 0;
+  }
+  & :global(.am-input-extra) {
+    color: red;
+  }
+}

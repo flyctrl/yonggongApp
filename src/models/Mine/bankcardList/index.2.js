@@ -24,7 +24,9 @@ class BankcardList extends Component {
     })
   }
   addBankCard = () => {
-    this.props.match.history.push(urls.BANKCARD)
+    getCommpanyStatus(() => {
+      this.props.match.history.push(urls.BANKCARD)
+    })
   }
   componentDidMount() {
     this.showBankList()

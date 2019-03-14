@@ -239,7 +239,7 @@ class WorkListManage extends Component {
     }
   }
   handleSetAttend = (rowData) => { // 我发的 - 考勤设置 worksheetno
-    this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'])
+    this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'] + '&listType=' + this.state.parentIndex)
   }
   pageUpdateWorksheet = (rowData) => { // 我发的 - 编辑
     let type = rowData['worksheet_type']

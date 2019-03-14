@@ -10,7 +10,7 @@ import { Header, Content } from 'Components'
 import api from 'Util/api'
 import storage from 'Util/storage'
 import style from './style.css'
-
+import { getCommpanyStatus } from 'Contants/tooler'
 const Item = List.Item
 class SetUp extends Component {
   constructor(props) {
@@ -51,7 +51,10 @@ class SetUp extends Component {
     }
   }
   handleSetPaypwd = () => {
-    this.props.match.history.push(urls.SETPAYPWD)
+    let { widthdraw } = this.state
+    getCommpanyStatus(() => {
+      this.props.match.history.push(`${urls.SETPAYPWD}?isTrue=${widthdraw ? 1 : 2}`)
+    })
   }
   componentDidMount() {
     this.getUserStatu()

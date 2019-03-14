@@ -48,7 +48,8 @@ class Check extends Component {
       lat: getQueryString('lat'),
       radius: getQueryString('radius'),
       userVal: 0,
-      workerUid: getQueryString('workerUid')
+      workerUid: getQueryString('workerUid'),
+      detail: getQueryString('detail') // 入口是否是订单详情
     }
   }
 
@@ -279,7 +280,7 @@ class Check extends Component {
     })
   }
   handlePushTime = async (e) => {
-    let { dataCheck, position, checkVal, workorderno, imgPath, workerUid } = this.state
+    let { dataCheck, position, checkVal, workorderno, imgPath, workerUid, lat, lng, radius } = this.state
     if (!('O' in position)) {
       Toast.fail('无法获取该手机位置信息')
       return false
@@ -359,7 +360,12 @@ class Check extends Component {
         if (this.state.succTime <= 1) {
           clearInterval(successTime)
           if (workerUid) {
-            this.props.match.history.push(`${urls['AGENTCHECKLIST']}?orderno=${workorderno}`)
+            // if (this.state.detail) {
+            //   this.props.match.history.push(`${urls['AGENTCHECKLIST']}?orderno=${workorderno}&lat=${lat}&lng=${lng}&radius=${radius}&detail=${1}`)
+            // } else {
+            //   this.props.match.history.push(`${urls['AGENTCHECKLIST']}?orderno=${workorderno}&lat=${lat}&lng=${lng}&radius=${radius}`)
+            // }
+            this.props.match.history.push(`${urls['AGENTCHECKLIST']}?orderno=${workorderno}&lat=${lat}&lng=${lng}&radius=${radius}`)
           } else {
             this.setState({
               visible: false,

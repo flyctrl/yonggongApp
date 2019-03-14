@@ -6,6 +6,7 @@ import history from 'Util/history'
 import * as urls from 'Contants/urls'
 import style from './style.css'
 import api from 'Util/api'
+import { getCommpanyStatus } from 'Contants/tooler'
 let partnerType = {
   1: '个人',
   2: '企业'
@@ -46,7 +47,9 @@ class Partner extends Component {
           }}
           rightTitle={<NewIcon type='icon-add-default' />}
           rightClick={() => {
-            history.push(urls.ADDPARTNER)
+            getCommpanyStatus(() => {
+              history.push(urls.ADDPARTNER)
+            })
           }}
         />
         <Content>

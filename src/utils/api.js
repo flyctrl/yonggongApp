@@ -161,6 +161,9 @@ export default {
     setPaypwd(params) { // 设置支付密码
       return FetchSave(prefix + '/withdraw/password', params, 'post', { showloading: false })
     },
+    editPaypwd(params) { // 编辑支付密码
+      return FetchSave(prefix + '/withdraw/password/edit', params, 'post', { showloading: false })
+    },
     vailPaypwd(params) { // 提现验证密码
       return Fetch(prefix + '/withdraw/validate', params)
     },

@@ -5,6 +5,7 @@ import * as urls from 'Contants/urls'
 import { Header, Content, DefaultPage } from 'Components'
 import api from 'Util/api'
 import style from './style.css'
+import { getCommpanyStatus } from 'Contants/tooler'
 const NUM_ROWS = 20
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
@@ -129,7 +130,7 @@ class WorkList extends Component {
           this.props.match.history.push(urls['MINE'])
         }}
         rightIcon='icon-add-default'
-        rightClick={() => { this.props.match.history.push(urls['CREATEWORKER']) }}
+        rightClick={() => { getCommpanyStatus(() => { this.props.match.history.push(urls['CREATEWORKER']) }) }}
       />
       <Content>
         <div className={style['box']} style={{ height: '100%' }}>

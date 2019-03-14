@@ -7,13 +7,12 @@ import React, { Component } from 'react'
 import { List, Button, Toast } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
-import { getQueryString } from 'Contants/tooler'
+import { getQueryString, onBackKeyDown } from 'Contants/tooler'
 import api from 'Util/api'
 import style from './style.css'
 import SetType from './type'
 import SetRange from './range'
 import SetAddress from 'Components/Address'
-import { onBackKeyDown } from 'Contants/tooler'
 let title = {
   0: '未设置',
   1: '已设置'
@@ -30,13 +29,16 @@ class SetUp extends Component {
       isSetType: false,
       isSetRange: false,
       isSetAddress: false,
-      defaultTime: null
+      defaultTime: null,
+      worksheetno: getQueryString('worksheetno'),
+      worktype: getQueryString('worktype'),
+      listType: getQueryString('listType')
     }
   }
   getCheckConfig= async() => {
     this.setState({ isLoading: true })
     const data = await api.Mine.CheckSet.getConfig({
-      worksheet_no: getQueryString('worksheetno')
+      worksheet_no: this.state.worksheetno
     }) || false
     if (data) {
       this.setState({ data, defaultTime: data['default_time_config'], isLoading: false })
@@ -90,8 +92,8 @@ class SetUp extends Component {
     }
     let { position = {}, nowAddress = '' } = map
     if (map) {
-      data['attend_place_coordinate']['lng'] = position['lng']
-      data['attend_place_coordinate']['lat'] = position['lat']
+      data['attend_place_coordinate']['lng'] = `${position['lng']}`
+      data['attend_place_coordinate']['lat'] = `${position['lat']}`
       data['attend_place'] = nowAddress
       data['isset_address'] = true
       this.setState({
@@ -127,7 +129,7 @@ class SetUp extends Component {
     }
   }
   handleSubmit = async() => {
-    let { data, isSetAddress, isSetRange, isSetType, defaultTime } = this.state
+    let { data, isSetAddress, isSetRange, isSetType, defaultTime, worktype, worksheetno } = this.state
     if (data['is_set'] === 0) {
       if (!isSetType) {
         Toast.info('请设置考勤类型')
@@ -142,7 +144,7 @@ class SetUp extends Component {
     }
     Toast.loading('提交中...', 0)
     let newData = {
-      worksheet_no: getQueryString('worksheetno'),
+      worksheet_no: worksheetno,
       attend_type: data['attend_type'],
       attend_place: data['attend_place'],
       attend_place_coordinate: data['attend_place_coordinate'],
@@ -158,7 +160,11 @@ class SetUp extends Component {
       Toast.hide()
       Toast.success('设置成功', 1.5, () => {
         // this.props.match.history.go(-1)
-        this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=1`)
+        if (worktype) {
+          this.props.match.history.push(`${urls['WORKLISTDETAIL']}?worksheetno=${worksheetno}&worktype=${worktype}`)
+        } else {
+          this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=${this.state.listType}`)
+        }
       })
     }
     console.log(...newData)
