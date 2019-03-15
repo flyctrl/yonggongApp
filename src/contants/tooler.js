@@ -201,30 +201,34 @@ export const backButton = function () {
   })
 }
 
-export const getCommpanyStatus = async(callback) => { // 参数是一个回调函数
-  let data = await api.Common.getEmployAllStatus({}) || false
-  if (data) {
-    if (data['is_realname'] !== 1) {
-      alert('未实名认证', '是否前往认证？', [{
-        text: '取消'
-      }, {
-        text: '去认证', onPress: () => {
-          history.push(urls.REALNAMEAUTH)
-        }
-      }])
-    } else {
-      if (data['company_aptitude_status'] !== 1) {
-        alert('企业未认证', '是否前往认证？', [{
+export const getCommpanyStatus = async(callback, actopt) => { // 参数1是一个回调函数 参数2判断是否重复执行请求认证，默认不传参数2
+  if (!actopt) {
+    let data = await api.Common.getEmployAllStatus({}) || false
+    if (data) {
+      if (data['is_realname'] !== 1) {
+        alert('未实名认证', '是否前往认证？', [{
           text: '取消'
         }, {
           text: '去认证', onPress: () => {
-            history.push(urls.COMPANYAUTH)
+            history.push(urls.REALNAMEAUTH)
           }
         }])
       } else {
-        callback()
+        if (data['company_aptitude_status'] !== 1) {
+          alert('企业未认证', '是否前往认证？', [{
+            text: '取消'
+          }, {
+            text: '去认证', onPress: () => {
+              history.push(urls.COMPANYAUTH)
+            }
+          }])
+        } else {
+          callback()
+        }
       }
     }
+  } else {
+    callback()
   }
 }
 

@@ -200,7 +200,7 @@ class OrderRange extends Component {
   countTotal = (data) => { // 计算总数
     let total = 0
     data.map((item) => {
-      item.ischeck ? total += parseInt(item.amount, 10) : null
+      item.ischeck ? total += parseFloat(item.amount, 10) : null
     })
     return total !== 0 ? total : 0
   }

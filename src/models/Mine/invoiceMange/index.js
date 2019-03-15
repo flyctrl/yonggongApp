@@ -184,7 +184,7 @@ class InvoiceMange extends Component {
   handleChange = (value, type) => { // 开票申请列表
     getCommpanyStatus(() => {
       this.setState({
-        radioVal: value
+        radioVal: value,
       })
       setTimeout(() => {
         this.props.match.history.push(`${urls['INVOICEORDER']}?id=${value}&type=${type ? 1 : 2}`)
@@ -267,7 +267,14 @@ class InvoiceMange extends Component {
             this.props.match.history.push(urls.MINE)
           }}
           rightIcon='icon-caidan'
-          rightClick={ this.handleVisibleChange }
+          rightClick={ () => {
+            getCommpanyStatus(() => {
+              this.setState({
+                visible: !this.state.visible,
+                actopt: true
+              })
+            }, this.state.actopt)
+          }}
         />
         <div style={{ display: this.state.visible ? 'block' : 'none' }} onClick={this.handleVisibleChange} className={`showimg-box animated ${this.state.visible ? 'fadeIn' : 'fadeOut'}`}>
           <div className={style['mask-content']}>
