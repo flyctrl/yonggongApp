@@ -16,6 +16,7 @@
       background: #fff;
       margin-top: 10px;
       font-size: 14px;
+      padding-bottom: 15px;
       & dt {
         overflow: hidden;
         padding: 3px 13px 3px 16px;
@@ -74,27 +75,27 @@
           font-family:SourceHanSansCN-Regular;
           font-weight:400;
           & :global(.am-badge-text) {
-            background: #ffffff;
+            background: #fff; 
             border-radius:2px;
             padding: 0 3px;
             font-size: 14px;
           }
-          & .default {
+          &.processing {
             & sup {
-              color:#1298FC;
+              color: #1298FC;
             }
           }
-          &.blue {
+          &.warning {
             & sup {
               color: #00BECC;
             }
           }
-          &.yellow {
+          &.success {
             & sup {
               color: #FCA424;
             }
           }
-          &.pink {
+          &.default {
             & sup {
               color: #FA6B6D;
             }

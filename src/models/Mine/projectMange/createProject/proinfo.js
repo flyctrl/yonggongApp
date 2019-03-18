@@ -5,6 +5,7 @@ import { Header, Content, NewIcon } from 'Components'
 import { createForm } from 'rc-form'
 import style from './style.css'
 import api from 'Util/api'
+import { headersJson } from 'Util'
 import Loadable from 'react-loadable'
 let Upload = Loadable({
   loader: () => import('rc-upload'),
@@ -76,10 +77,13 @@ class Construct extends Component {
   render() {
     const { getFieldProps, getFieldError } = this.props.form
     let { info, fileList } = this.state
+    let newHeader = headersJson
+    delete newHeader['Content-Type']
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
       multiple: false,
+      headers: newHeader,
       onSuccess: (file) => {
         if (file['code'] === 0) {
           Toast.hide()

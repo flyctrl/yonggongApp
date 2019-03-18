@@ -46,7 +46,8 @@ const orderStatus = [
 const workplanStatus = [
   { title: '开工中', status: 1 },
   { title: '完工待确认', status: 2 },
-  { title: '已完工', status: 3 }
+  { title: '已完工', status: 3 },
+  { title: '待整改', status: 3 },
 ]
 
 const payOrderStatus = {
@@ -137,7 +138,7 @@ const urlCode = {
   'YA1002': { name: 'SENDSTARTWORKRECORD', params: false }, // 工单的开工记录
   'YA1003': { name: 'OORDERSTARTWORKRECORD', params: false }, // 订单的开工记录
   'YA1004': { name: 'SETTLERECORD', params: false }, // 工单结算记录
-  'YA1005': { name: 'OSETTLERECORD', params: false }, // 订单结算记录
+  'YA1005': { name: 'PENDINGSETTLERECORD', params: false }, // 订单结算记录
   'YC1001': { name: 'CHECK', params: false }, // 考勤打卡
   'YB1003': { name: 'REALNAMEAUTHDETAIL', params: false }, // 实名认证详情
   'YB1004': { name: 'COMPANYAUTHDETAIL', params: false }, // 企业认证详情

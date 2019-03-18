@@ -7,6 +7,7 @@ import * as tooler from 'Contants/tooler'
 import { createForm } from 'rc-form'
 import NewIcon from 'Components/NewIcon'
 import api from 'Util/api'
+import { headersJson } from 'Util'
 import style from './index.css'
 import Address from 'Components/Address'
 import storage from 'Util/storage'
@@ -185,10 +186,13 @@ class FormBox extends Component {
     console.log('fileList:', fileList)
     console.log('bidsData:', bidsData)
     let { bidwayId, edittype } = this.state.urlJson
+    let newHeader = headersJson
+    delete newHeader['Content-Type']
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
       multiple: false,
+      headers: newHeader,
       onSuccess: (file) => {
         if (file['code'] === 0) {
           Toast.hide()

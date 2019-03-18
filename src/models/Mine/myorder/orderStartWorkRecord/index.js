@@ -25,7 +25,9 @@ class AccessRecord extends Component {
       refreshing: true,
       isLoading: true,
       height: document.documentElement.clientHeight,
-      nodata: false
+      nodata: false,
+      clickIndex: 0,
+      attendTime: []
     }
   }
   componentDidMount() {
@@ -105,16 +107,16 @@ class AccessRecord extends Component {
   showlistStatus = (item) => { // 状态按钮
     if (item['handle_type'] === 1) { // 通过/驳回
       return <div>
-        <Button type='primary' onClick={() => { this.getSolicit(item['task_no'], 1, item) }} size='small'>确认完工</Button>
-        <Button type='primary' onClick={() => { this.getSolicit(item['task_no'], 2, item) }} size='small'>驳回</Button>
+        <Button type='primary' onClick={(e) => { this.getSolicit(e, item['task_no'], 1, item) }} size='small'>确认完工</Button>
+        <Button type='primary' onClick={(e) => { this.getSolicit(e, item['task_no'], 2, item) }} size='small'>驳回</Button>
       </div>
     } else if (item['handle_type'] === 2) { // 完工
       return <div>
-        <Button type='primary' className={style['one-btn']} onClick={() => { this.getSolicit(item['order_no'], 3, item) }} size='small'>完工</Button>
+        <Button type='primary' className={style['one-btn']} onClick={(e) => { this.getSolicit(e, item['order_no'], 3, item) }} size='small'>完工</Button>
       </div>
     } else if (item['handle_type'] === 3) { // 代完工
       return <div>
-        <Button type='primary' className={style['one-btn']} onClick={() => { this.getSolicit(item['order_no'], 4, item) }} size='small'>代完工</Button>
+        <Button type='primary' className={style['one-btn']} onClick={(e) => { this.getSolicit(e, item['order_no'], 4, item) }} size='small'>代完工</Button>
       </div>
     }
     if (item['status'] === 3) { // 已完工
@@ -129,7 +131,7 @@ class AccessRecord extends Component {
           return i['status'] === item['status']
         })['title']
       }</div>
-    } else if (item['status'] === 1) { // 开工中
+    } else if (item['status'] === 1 || item['status'] === 4) { // 开工中
       return <div className={style['run-status']}>{
         workplanStatus.find(i => {
           return i['status'] === item['status']
@@ -195,7 +197,8 @@ class AccessRecord extends Component {
       })
     }
   }
-  getSolicit = (planno, type, rowData) => {
+  getSolicit = (e, planno, type, rowData) => {
+    e.stopPropagation()
     if (type === 1) {
       alert('确定' + rowData['workload'] + rowData['workload_unit'] + '的工作量吗？', '', [
         { text: '取消' },
@@ -280,8 +283,20 @@ class AccessRecord extends Component {
       }
     }
   }
+  handleRecordClick = (e, rowData) => {
+    let attendTime = rowData['attend_time_list']
+    if (attendTime.length <= 0) {
+      alert(`${rowData['tasker_name']}暂无考勤时间`, null, [{ text: '确认' }])
+      return false
+    }
+    let eIndex = e.currentTarget.getAttribute('index')
+    this.setState({
+      clickIndex: eIndex === this.state.clickIndex ? 0 : eIndex,
+      attendTime
+    })
+  }
   render() {
-    const { isLoading, nodata, height, dataSource } = this.state
+    const { isLoading, nodata, height, dataSource, clickIndex, attendTime } = this.state
     const footerShow = () => {
       if (isLoading) {
         return null
@@ -302,20 +317,30 @@ class AccessRecord extends Component {
     )
     const row = (rowData, sectionID, rowID) => {
       return <li key={rowData['task_no']}>
-        <div className={`${style['record-img']} ${rowData['is_self'] === 1 ? style['record-self'] : ''}`}>
-          <div className={style['header']} style={{ 'backgroundImage': 'url(' + rowData['tasker_avatar'] + ')' }}></div>
-          {
-            rowData['is_self'] === 1 ? <p>(自己)</p> : ''
-          }
+        <div index={rowData['task_no']} onClick={(e) => this.handleRecordClick(e, rowData)} className={style['record-box']}>
+          <div className={`${style['record-img']} ${rowData['is_self'] === 1 ? style['record-self'] : ''}`}>
+            <div className={style['header']} style={{ 'backgroundImage': 'url(' + rowData['tasker_avatar'] + ')' }}></div>
+            {
+              rowData['is_self'] === 1 ? <p>(自己)</p> : ''
+            }
+          </div>
+          <div className={style['record-hd']}>
+            <p className={`ellipsis ${Number(rowData['workload']) > 0 ? '' : style['line42']}`}>{rowData['tasker_name']}</p>
+            {
+              Number(rowData['workload']) > 0 ? <span>工作量：{rowData['workload']}{rowData['workload_unit']}</span> : null
+            }
+            <time>开工时间：{rowData['started_at']}</time>
+          </div>
+          <div className={style['record-btn']}>
+            {
+              this.showlistStatus(rowData)
+            }
+          </div>
         </div>
-        <div className={style['record-hd']}>
-          <p className='ellipsis'>{rowData['tasker_name']}<span>（{rowData['workload']}{rowData['workload_unit']}）</span></p>
-          <time>开工时间：{rowData['started_at']}</time>
-          <time>完工时间：{rowData['ended_at'] ? rowData['ended_at'] : '暂无'}</time>
-        </div>
-        <div className={style['record-btn']}>
+        <div className={`${style['down-box']} my-top-border ${clickIndex === rowData['task_no'] ? style['show'] : style['hide']}`}>
+          <h4>考勤时间：</h4>
           {
-            this.showlistStatus(rowData)
+            attendTime.length > 0 ? attendTime.map((item, index) => { return <p key={index}>{item['on']} ~ {item['off']}</p> }) : null
           }
         </div>
       </li>

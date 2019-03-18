@@ -164,7 +164,7 @@ class SettleRecord extends Component {
               paymethod.filter(i => {
                 return i['value'] === rowData['settle_period']
               })[0]['label']
-            }计价</span></p>
+            }结算</span></p>
             <p><NewIcon type='icon-fukuanfangshi' /><span>{
               payModeRadio.filter(i => {
                 return i['value'] === rowData['pay_way']

@@ -6,14 +6,35 @@ html:not([data-scale]) .record-list :global(.am-list-body::after) {
   height: 622px;
   & li {
     background: #fff;
-    padding: 8px 10px;
-    height: 74px;
-    overflow: hidden;
     margin-top: 4px;
     color: #313f48;
+    & .record-box {
+      padding: 8px 10px;
+      height: 74px;
+      overflow: hidden;
+    }
+    & .down-box {
+      padding: 15px;
+      background: #fff;
+      word-break: break-all;
+      &.show {
+        display: block;
+        transition: all 0.5s linear;
+      }
+      &.hide {
+        display: none;
+      }
+      & h4 {
+        line-height: 24px;
+      }
+      & p {
+        line-height: 24px;
+      }
+    }
     & .record-img {
       float: left;
-      margin-right: 10px;
+      margin-left: 5px;
+      margin-right: 15px;
       margin-top: 10px;
       & .header {
         display: block;
@@ -29,7 +50,7 @@ html:not([data-scale]) .record-list :global(.am-list-body::after) {
       & p {
         display: none;
         font-size: 13px;
-        color: #b1aeae;
+        color: #008000;
         text-align: center;
         line-height: 24px;
       }
@@ -44,16 +65,21 @@ html:not([data-scale]) .record-list :global(.am-list-body::after) {
       float: left;
       & p {
         width: 210px;
-        height: 32px;
-        line-height: 32px;
-        & span {
-          color: #1298FC;
+        height: 26px;
+        line-height: 26px;
+        &.line42 {
+          height: 42px;
+          line-height: 42px;
         }
+      }
+      & span {
+        display: block;
+        height: 22px;
+        line-height: 22px;
       }
       & time {
         display: block;
         line-height: 20px;
-        color: #ccc;
       }
     }
     & .record-btn {

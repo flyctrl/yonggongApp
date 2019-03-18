@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
-import { Header, Content } from 'Components'
-import { List } from 'antd-mobile'
+import { Header, Content, DefaultPage } from 'Components'
+import { List, Modal, Toast } from 'antd-mobile'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
+import * as urls from 'Contants/urls'
 import style from './style.css'
+const alert = Modal.alert
+const prompt = Modal.prompt
 class ApplySettle extends Component {
   constructor(props) {
     super(props)
@@ -40,14 +43,47 @@ class ApplySettle extends Component {
       })
     }
   }
-  handleApply = async () => { // 结算
-    let { worksheetno, orderno } = this.state
-    let data = await api.WorkListManage.settleSendSettle({
-      workSheetNo: worksheetno,
-      orderNo: orderno
-    }) || false
+  handleApply = async () => { // 结算 - 检测是否设置支付密码
+    let data = await api.Mine.companyAuth.getCompanyStuts({}) || false
     if (data) {
-      this.props.match.history.go(-1)
+      if (data['is_withdraw_password'] === 1) {
+        prompt(
+          '请输入支付密码',
+          null,
+          [
+            { text: '取消' },
+            { text: '提交', onPress: password => new Promise(async (resolve, reject) => {
+              if (password === '') {
+                Toast.info('请输入密码', 0.8)
+                reject()
+              } else if (!/\d{6}/.test(password)) {
+                Toast.info('密码为6位数字', 0.8)
+                reject()
+              } else {
+                let { worksheetno, orderno } = this.state
+                let data = await api.WorkListManage.settleSendSettle({
+                  workSheetNo: worksheetno,
+                  orderNo: orderno,
+                  password
+                }) || false
+                if (data) {
+                  resolve()
+                  Toast.success('成功结算', 1, () => {
+                    this.props.match.history.go(-1)
+                  })
+                }
+              }
+            })
+            },
+          ],
+          'secure-text',
+        )
+      } else {
+        alert('您未设置支付密码，是否前往设置？', null, [
+          { text: '取消' },
+          { text: '前往设置', onPress: () => this.props.match.history.push(urls.SETPAYPWD) },
+        ])
+      }
     }
   }
   handleSure = async () => { // 确认
@@ -81,7 +117,7 @@ class ApplySettle extends Component {
         <a className={style['reject-btn']} onClick={this.handleReject}>驳回</a><a onClick={this.handleSure}>确认</a>
       </div>,
       2: payWay === 1 ? <div className={style['btn-box']}>
-        <a className={style['settle-btn']} onClick={this.handleApply}>结算</a>
+        <a className={style['settle-btn']} onClick={this.handleApply}>确认结算</a>
       </div> : '',
       3: ''
     }
@@ -114,7 +150,7 @@ class ApplySettle extends Component {
             {
               statusDom[status]
             }
-          </div> : dataSource.length === 0 && isloading ? <div className='nodata'>暂无数据</div> : null
+          </div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
         }
       </Content>
     </div>
