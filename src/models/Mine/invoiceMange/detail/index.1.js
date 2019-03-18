@@ -12,6 +12,7 @@ import style from './style.css'
 import leftright from 'Src/assets/leftright.png'
 import downdown from 'Src/assets/downdown.png'
 import upup from 'Src/assets/upup.png'
+import upload from 'Src/assets/upload.png'
 import zuofei from 'Src/assets/zuofei.png'
 import yikaipiao from 'Src/assets/yikaipiao.png'
 const applyStatus = {
@@ -35,24 +36,18 @@ class InvoiceDetail extends Component {
       dataSource: {},
       isLoading: true,
       invoiceNo: getQueryString('no') || '',
+      isClick: false,
       showimg: false,
-      showIndex: 0,
-      upload: [{
-        'image_url': '',
-        'image_preview_url': ''
-      }]
     }
   }
-  handleshowImg = (index) => {
+  handleshowImg = (e) => {
     this.setState({
-      showimg: true,
-      showIndex: index
+      showimg: true
     })
   }
   handleImgMask = () => {
     this.setState({
-      showimg: false,
-      showIndex: 0
+      showimg: false
     })
   }
   getProjectDetail = async () => {
@@ -65,10 +60,9 @@ class InvoiceDetail extends Component {
         dataSource: data,
         isLoading: false,
         settleOrder: data['worksheet_order'],
-        upload: data['image'] && data['image'].length > 0 ? data['image'] : [{
-          'image_url': '',
-          'image_preview_url': ''
-        }]
+        upload: data['status'] === 2 ? data['image_url'] : upload,
+        isClick: data['status'] === 2,
+        orginUpload: data['image_preview_url']
       })
     }
   }
@@ -81,6 +75,45 @@ class InvoiceDetail extends Component {
       arr.push(<li key={i}></li>)
     }
     return arr
+  }
+  handleTake = (e) => {
+    let file = e.target.files[0]
+    let reader = new FileReader()
+    let _this = this
+    reader.onload = async function () {
+      let url = this.result
+      Toast.loading('上传中...', 0)
+      let formData = {}
+      formData.image = url
+      formData.type = 9
+      const data = await api.Mine.invoiceMange.uploadImg(formData) || false
+      if (data) {
+        Toast.hide()
+        Toast.success('上传成功', 1.5)
+        _this.setState({
+          upload: data['url'],
+          isClick: true
+        })
+        _this.props.form.setFieldsValue({
+          image_url: data['path']
+        })
+      }
+    }
+    reader.onerror = function () {
+      Toast(reader.error)
+    }
+    if (file) {
+      reader.readAsDataURL(file)
+    }
+  }
+  handleDelete = (e) => { // 删除图片
+    this.setState({
+      upload,
+      isClick: false
+    })
+    this.props.form.setFieldsValue({
+      image_url: undefined
+    })
   }
   handleSendEmail = async () => {
     promptSnatch = prompt(
@@ -107,6 +140,11 @@ class InvoiceDetail extends Component {
             if (data) {
               Toast.hide()
               Toast.success('发送成功', 1.5, () => {
+                this.setState({
+                  isLoading: true
+                }, () => {
+                  this.getProjectDetail()
+                })
               })
             }
           }),
@@ -119,42 +157,46 @@ class InvoiceDetail extends Component {
   }
   handleConfirm = () => {
     let { dataSource, invoiceNo } = this.state
-    if (dataSource['status'] === 12 && dataSource['material_type'] === 2) {
-      alert('提示', '请到PC端上传电子发票！', [
-        { text: '取消', onPress: () => console.log('cancel') },
-        { text: '确定', onPress: () => console.log('confirm') },
-      ])
+    let validateAry = []
+    if (dataSource['material_type'] === 1) {
+      validateAry = ['tracking_no']
     } else {
-      let validateAry = ['tracking_no']
-      const { validateFields, getFieldError } = this.props.form
-      Toast.loading('提交中...', 0)
-      validateFields(async (error, value) => {
-        if (!error) {
-          console.log('value:', value)
-          const data = await api.Mine.invoiceMange.confirmNewApply({
-            ...value,
-            apply_no: invoiceNo
-          }) || false
-          if (data) {
-            Toast.hide()
-            Toast.success('开票成功', 1.5, () => {
-              this.setState({
-                isLoading: true
-              }, () => {
-                this.getProjectDetail()
-              })
-            })
-          }
+      validateAry = ['image_url']
+    }
+    const { validateFields, getFieldError } = this.props.form
+    Toast.loading('提交中...', 0)
+    validateFields(async (error, value) => {
+      if (!error) {
+        console.log('value:', value)
+        let newVal = {}
+        if (dataSource['material_type'] === 1) {
+          newVal = { tracking_no: value['tracking_no'] }
         } else {
-          for (let value of validateAry) {
-            if (error[value]) {
-              Toast.fail(getFieldError(value), 1)
-              return
-            }
+          newVal = { download_url: value['image_url'] }
+        }
+        const data = await api.Mine.invoiceMange.confirmNewApply({
+          ...newVal,
+          apply_no: invoiceNo
+        }) || false
+        if (data) {
+          Toast.hide()
+          Toast.success('开票成功', 1.5, () => {
+            this.setState({
+              isLoading: true
+            }, () => {
+              this.getProjectDetail()
+            })
+          })
+        }
+      } else {
+        for (let value of validateAry) {
+          if (error[value]) {
+            Toast.fail(getFieldError(value), 1)
+            return
           }
         }
-      })
-    }
+      }
+    })
   }
   handleCancel = async () => {
     const data = await api.Mine.invoiceMange.cancelNewApply({
@@ -177,7 +219,7 @@ class InvoiceDetail extends Component {
     }
   }
   render() {
-    let { upload, dataSource = {}, settleOrder = [], isLoading, showimg } = this.state
+    let { isClick, upload, dataSource = {}, settleOrder = [], isLoading, showimg } = this.state
     let { express = {}} = dataSource
     const { getFieldDecorator } = this.props.form
     return (
@@ -246,15 +288,22 @@ class InvoiceDetail extends Component {
                   <img src={downdown} className={style['down']}>
                   </img>
                 </div>
-                <div className={style['content-footer']} style={{ display: dataSource['status'] === 3 || dataSource['status'] === 11 || (dataSource['material_type'] === 2 && dataSource['status'] === 12) ? 'none' : 'block' }}>
+                <div className={style['content-footer']} style={{ display: dataSource['status'] === 3 || dataSource['status'] === 11 ? 'none' : 'block' }}>
                   <img src={upup} className={style['up']}>
                   </img>
-                  <p style={{ display: dataSource['material_type'] === 2 ? 'block' : 'none' }}>{dataSource['status'] === 12 ? `请到PC端上传电子发票` : dataSource['status'] === 2 && dataSource['user_type'] === 1 ? '开票完成，请下载电子发票' : dataSource['status'] === 2 && dataSource['user_type'] === 2 ? '开票已完成' : ''}</p>
-                  <p style={{ display: dataSource['material_type'] === 1 ? 'block' : 'none' }}>{dataSource['status'] === 12 ? '请填写快递单号' : dataSource['status'] === 2 ? '开票完成，可根据单号查询物流状态' : ''}</p>
-                  <div className={style['upload-item']} style={{ display: dataSource['material_type'] === 2 && dataSource['status'] === 2 ? 'block' : 'none' }}>
+                  <p style={{ display: dataSource['material_type'] === 2 ? 'block' : 'none' }}>{dataSource['status'] === 12 ? `开票完成，请上传电子发票` : dataSource['status'] === 2 && dataSource['user_type'] === 1 ? '开票完成，请下载电子发票' : dataSource['status'] === 2 && dataSource['user_type'] === 2 ? '开票已完成' : ''}</p>
+                  <p style={{ display: dataSource['material_type'] === 1 ? 'block' : 'none' }}>{dataSource['status'] === 12 ? '开票完成，请填写快递单号' : dataSource['status'] === 2 ? '开票完成，可根据单号查询物流状态' : ''}</p>
+                  <div style={{ display: dataSource['material_type'] === 2 ? 'block' : 'none' }} className={style['upload-item']}>
+                    <span className={style['img-span']} onClick={this.handleDelete} style={{ display: dataSource['status'] === 12 ? 'block' : 'none', zIndex: isClick ? 2 : -1 }}><NewIcon className={style.icon} type='icon-tupianshanchu' /></span>
                     {
-                      upload && upload.map((item, index) => <img key={index} src={item.image_preview_url} onClick={() => this.handleshowImg(index)} className={style['upload']} />)
+                      getFieldDecorator('image_url', {
+                        rules: [{
+                          required: dataSource['material_type'] === 2, message: '请上传电子发票',
+                        }]
+                      })(<img src={upload} onClick={this.handleshowImg} className={style['upload']} />
+                      )
                     }
+                    <input className={style['input-pic']} style={{ zIndex: isClick ? -1 : 1 }} disabled={isClick} type='file' capture='camera' onChange={this.handleTake} />
                   </div>
                   <div style={{ display: dataSource['material_type'] === 1 ? 'block' : 'none' }} className={style['kuaidi']}>
                     快递单号
@@ -285,7 +334,7 @@ class InvoiceDetail extends Component {
           }
         </Content>
         <div style={{ display: showimg && dataSource['status'] === 2 ? 'block' : 'none' }} onClick={this.handleImgMask} className={`showimg-box animated ${showimg ? 'fadeIn' : 'fadeOut'}`}>
-          { upload && upload.length > 0 ? <img src={upload[this.state.showIndex]['image_url']} /> : null }
+          <img src={this.state.orginUpload} />
         </div>
       </div>
     )

@@ -103,7 +103,7 @@ class Construct extends Component {
       <div>
         <div className='pageBox gray'>
           <Header
-            title='中标单位信息'
+            title='项目概况'
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {

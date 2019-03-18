@@ -18,7 +18,8 @@ class AttendDetail extends Component {
       showimg: false,
       orderno: tooler.getQueryString('orderno'),
       datalist: [],
-      isloading: false
+      isloading: false,
+      workUid: tooler.getQueryString('uid')
     }
   }
   componentDidMount() {
@@ -39,8 +40,9 @@ class AttendDetail extends Component {
     })
   }
   getAttendDetail = async (postdate = null) => {
-    let { orderno, defaultDate } = this.state
+    let { orderno, defaultDate, workUid } = this.state
     let data = await api.WorkListManage.attendDetail({
+      worker_uid: workUid,
       order_no: orderno,
       date: postdate !== null ? postdate : defaultDate
     }) || []

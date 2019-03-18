@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import { Header, Content, DefaultPage } from 'Components'
+import { getCommpanyStatus } from 'Contants/tooler'
 import style from './style.css'
 let cardType = {
   1: '储蓄卡',
@@ -29,7 +30,9 @@ class BankcardList extends Component {
     }
   }
   addBankCard = () => {
-    this.props.match.history.push(urls.BANKCARD)
+    getCommpanyStatus(() => {
+      this.props.match.history.push(urls.BANKCARD)
+    })
   }
   componentDidMount() {
     this.showBankList()

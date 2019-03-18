@@ -177,17 +177,21 @@ class BankCard extends Component {
                       { getFieldDecorator('cardNo', {
                         rules: [
                           { required: true, message: '请输入银行卡' },
-                          { pattern: /^(\d{16}|\d{17}|\d{19})$/, message: '格式错误' }
+                          { pattern: /^(\d{16}|\d{17}|\d{19})$/, message: '请输入正确的银行卡号' }
                         ]
                       })(
                         <InputItem
                           error={!!getFieldError('cardNo')}
                           placeholder='请输入银行卡'
                           onChange={this.handleCardChange}
+                          onErrorClick={() => {
+                            Toast.fail(getFieldError('cardNo'), 2)
+                          }}
                         >卡号</InputItem>
                       )}
                     </div>
                   </List>
+                  <div className={style['error-alert']}>{getFieldError('cardNo') ? getFieldError('cardNo')[0] : '' }</div>
                   <div className={style['bindcard-btn']}>
                     <Button className={style['bindcard-btn']} disabled={!isCard} style={{ background: btn1Color }} onClick={this.handleNextSubmit} type='primary'>下一步</Button>
                   </div>
@@ -224,6 +228,7 @@ class BankCard extends Component {
                       )}
                     </div>
                   </List>
+                  <div className={style['error-alert']}>{getFieldError('mobile') ? getFieldError('mobile')[0] : '' }</div>
                   <div className={style['bindcard-btn']}>
                     <Button disabled={!isPhone} style={{ background: btn2Color }} onClick={this.handleBindSubmit} type='primary'>同意并绑定银行卡</Button>
                   </div>

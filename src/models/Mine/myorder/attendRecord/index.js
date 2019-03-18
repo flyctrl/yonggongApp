@@ -158,8 +158,8 @@ class AttendRecord extends Component {
     })
     return strAry.join(',')
   }
-  handleAttendClick = (orderno, date) => {
-    this.props.match.history.push(`${urls.ATTENDDETAIL}?orderno=${orderno}&date=${date}`)
+  handleAttendClick = (orderno, date, uid) => {
+    this.props.match.history.push(`${urls}?orderno=${orderno}&date=${date}&uid=${uid}`)
   }
   handleDateChange = (date) => {
     this.setState({ dateVal: date, dateVisible: false }, () => {
@@ -187,7 +187,7 @@ class AttendRecord extends Component {
         key={rowID}
         thumb={<div className={style['avatar-thumb']} style={{ 'backgroundImage': 'url(' + rowData['avatar'] + ')' }}></div>}
         className={parseInt(rowData['status'][0]) > 1 ? style['unusual'] : style['normal']} // unusual
-        onClick={() => this.handleAttendClick(rowData['order_no'], rowData['date'].split(' ')[0])}
+        onClick={() => this.handleAttendClick(rowData['order_no'], rowData['date'].split(' ')[0], rowData['uid'])}
         extra={this.changeStatus(rowData)}
       >{rowData['uid_name']}<time>{rowData['date']}</time></Item>
     }

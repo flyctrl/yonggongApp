@@ -6,7 +6,10 @@
 */
 import arrayTreeFilter from 'array-tree-filter'
 import history from 'Util/history'
-
+import api from 'Util/api'
+import * as urls from 'Contants/urls'
+import { Modal } from 'antd-mobile'
+const alert = Modal.alert
 const DATE_REGEXP = new RegExp('(\\d{4})-(\\d{2})-(\\d{2})([T\\s](\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{3}))?)?.*')
 export const getSel = (value, optionsObj) => { // 根据键值筛选数结果数据中的对象，value:需要筛选树的value数据，optionsObj: 所在的树的数据
   if (!value) {
@@ -196,5 +199,36 @@ export const backButton = function () {
   document.addEventListener('deviceready', () => {
     document.addEventListener('backbutton', onBackKeyDown)
   })
+}
+
+export const getCommpanyStatus = async(callback, actopt) => { // 参数1是一个回调函数 参数2判断是否重复执行请求认证，默认不传参数2
+  if (!actopt) {
+    let data = await api.Common.getEmployAllStatus({}) || false
+    if (data) {
+      if (data['is_realname'] !== 1) {
+        alert('未实名认证', '是否前往认证？', [{
+          text: '取消'
+        }, {
+          text: '去认证', onPress: () => {
+            history.push(urls.REALNAMEAUTH)
+          }
+        }])
+      } else {
+        if (data['company_aptitude_status'] !== 1) {
+          alert('企业未认证', '是否前往认证？', [{
+            text: '取消'
+          }, {
+            text: '去认证', onPress: () => {
+              history.push(urls.COMPANYAUTH)
+            }
+          }])
+        } else {
+          callback()
+        }
+      }
+    }
+  } else {
+    callback()
+  }
 }
 

@@ -82,7 +82,7 @@
           }
           &.processing {
             & sup {
-              color: #1298FC;
+              color: #b5bdc3;
             }
           }
           &.warning {

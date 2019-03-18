@@ -6,7 +6,7 @@ import * as urls from 'Contants/urls'
 import { projectStatus } from 'Contants/fieldmodel'
 import history from 'Util/history'
 import style from './style.css'
-import { getQueryString } from 'Contants/tooler'
+import { getQueryString, getCommpanyStatus } from 'Contants/tooler'
 import { ListView, PullToRefresh, Tabs, Badge } from 'antd-mobile'
 const NUM_ROWS = 20
 const defaultSource = new ListView.DataSource({
@@ -190,7 +190,7 @@ class ProjectMange extends Component {
           }}
           rightTitle={<NewIcon type='icon-add-default' />}
           rightClick={() => {
-            this.handleCreateProject()
+            getCommpanyStatus(this.handleCreateProject)
           }}
         />
         <Content>

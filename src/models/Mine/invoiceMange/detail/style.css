@@ -109,35 +109,15 @@
       width: 100%;
     }
     & .upload-item {
-      position: relative;
+      padding: 0 15px;
+    }
+    & .upload {
       width: 95px;
       height: 95px;
-      margin-left:14px;
-      & .img-span {
-        position: absolute;
-        right:0;
-        width: 22px;
-        height: 22px;
-      }
-      & .icon {
-        width: 22px;
-        height: 22px;
-      }
-      & .upload {
-        width: 95px;
-        height: 95px;
-        /* position: absolute;
-        left:0; */
-        margin-right: 10px;
-      }
-      & .input-pic {
-        position: absolute;
-        width: 95px;
-        height: 95px;
-        left: 0;
-        opacity: 0;
-        top:0;
-      }
+      display: inline-block;
+      margin-right: 6px;
+      margin-bottom: 4px;
+      border: 1px solid #999999;
     }
     & .kuaidi {
       margin-left: 17px;
