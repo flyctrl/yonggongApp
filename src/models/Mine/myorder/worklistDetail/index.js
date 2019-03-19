@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Badge, WhiteSpace, Button, Toast } from 'antd-mobile'
+import { Badge, WhiteSpace, Button, Toast, Modal } from 'antd-mobile'
 import { Header, Content, NewIcon } from 'Components'
 import { worksheetType, paymethod } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
@@ -12,6 +12,7 @@ const typeicon = {
   2: 'sheeticon',
   3: 'quickicon'
 }
+const prompt = Modal.prompt
 class WorkListDetail extends Component {
   constructor(props) {
     super(props)
@@ -230,7 +231,7 @@ class WorkListDetail extends Component {
   handleFished = async (rowData) => { // 我接的 - 完工
     let data
     if (rowData['tip_type'] === 1) {
-      prompt('工作量', `工作量单位：${rowData['valuation_unit']}`, [
+      prompt('工作量', `工作量单位：${rowData['workload_unit']}`, [
         { text: '取消' },
         {
           text: '确认',

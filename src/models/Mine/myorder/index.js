@@ -362,7 +362,7 @@ class WorkListManage extends Component {
       }
     })
     if (rowData['tip_type'] === 1) {
-      prompt('工作量', `工作量单位：${rowData['valuation_unit']}`, [
+      prompt('工作量', `工作量单位：${rowData['workload_unit']}`, [
         { text: '取消' },
         {
           text: '确认',
