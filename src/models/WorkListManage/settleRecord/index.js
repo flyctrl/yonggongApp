@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { List, ListView, PullToRefresh } from 'antd-mobile'
-import { Header, Content, NewIcon } from 'Components'
+import { Header, Content, NewIcon, DefaultPage } from 'Components'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
@@ -134,7 +134,7 @@ class SettleRecord extends Component {
       if (isLoading) {
         return null
       } else if (nodata) {
-        return '暂无数据'
+        return <DefaultPage type='nodata' title='暂无结算记录' />
       } else {
         return ''
       }
@@ -146,32 +146,32 @@ class SettleRecord extends Component {
           <span>{status[rowData['status']]}</span>
         </dt>
         <dd>
-          <div className={style['user-info']}>
-            <div className={style['header']} style={{ 'backgroundImage': 'url(' + rowData['avatar'] + ')' }}></div>
-            <div className={style['info-right']}>
-              <h4>{rowData['username']}</h4>
-              <p>{rowData['amount']}</p>
-              <time>{
-                rowData['period'].length > 1 ? rowData['period'].map((item, index) => {
-                  return index === 0 ? <i key={index}>{item} ~ </i> : <i key={index}>{item}</i>
-                }) : rowData['period'][0]
-              }</time>
-            </div>
-          </div>
-          <footer className='my-top-border'>
-            <p><NewIcon type='icon-jiesuanleixing' /><span>{settletype[rowData['settle_type']]}</span></p>
-            <p><NewIcon type='icon-jiesuanzhouqi' /><span>按{
-              paymethod.filter(i => {
-                return i['value'] === rowData['settle_period']
-              })[0]['label']
-            }结算</span></p>
-            <p><NewIcon type='icon-fukuanfangshi' /><span>{
-              payModeRadio.filter(i => {
-                return i['value'] === rowData['pay_way']
-              })[0]['label']
-            }</span></p>
-            <p><NewIcon type='icon-jijiafangshi' /><span>{valuation[rowData['valuation_way']]}</span></p>
-          </footer>
+          <span><NewIcon type='icon-fukuanfangshi' />{
+            payModeRadio.filter(i => {
+              return i['value'] === rowData['pay_way']
+            })[0]['label']
+          }</span>
+          <span><NewIcon type='icon-jijiafangshi' />{
+            valuation[rowData['valuation_way']]
+          }</span>
+          <span><NewIcon type='icon-jine' /><i>{rowData['amount']}</i></span>
+        </dd>
+        <dd>
+          <span><NewIcon type='icon-jiesuanleixing' />{
+            settletype[rowData['settle_type']]
+          }</span>
+          <span><NewIcon type='icon-jiesuanzhouqi' />按{
+            paymethod.filter(i => {
+              return i['value'] === rowData['settle_period']
+            })[0]['label']
+          }计价</span>
+        </dd>
+        <dd>
+          <p><NewIcon type='icon-zhouqi' />{
+            rowData['period'].length > 1 ? rowData['period'].map((item, index) => {
+              return index === 0 ? <i key={index}>{item} ~ </i> : <i key={index}>{item}</i>
+            }) : rowData['period'][0]
+          }</p>
         </dd>
       </dl>
     }

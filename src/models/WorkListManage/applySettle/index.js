@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
-import { List, Modal, Toast } from 'antd-mobile'
+import { List, Modal, Toast, Button } from 'antd-mobile'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
 import * as urls from 'Contants/urls'
@@ -12,6 +12,7 @@ class ApplySettle extends Component {
     super(props)
     this.state = {
       amount: 0,
+      acceptAmount: 0,
       worksheetno: tooler.getQueryString('worksheetno'),
       orderno: tooler.getQueryString('orderno'),
       status: 0,
@@ -37,6 +38,7 @@ class ApplySettle extends Component {
       this.setState({
         status: data['status'],
         amount: data['amount'],
+        acceptAmount: data['accept_amount'],
         payWay: data['pay_way'],
         dataSource: data['list'],
         isloading: true
@@ -111,13 +113,13 @@ class ApplySettle extends Component {
     }
   }
   render() {
-    let { dataSource, amount, isloading, status, payWay } = this.state
+    let { dataSource, amount, isloading, status, payWay, acceptAmount } = this.state
     let statusDom = {
-      1: <div className={style['btn-box']}>
-        <a className={style['reject-btn']} onClick={this.handleReject}>驳回</a><a onClick={this.handleSure}>确认</a>
+      1: <div className={`${style['btn-box']} ${style['two-btn']}`}>
+        <Button type='warning' onClick={this.handleReject}>驳回</Button><Button type='primary' onClick={this.handleSure}>确认</Button>
       </div>,
       2: payWay === 1 ? <div className={style['btn-box']}>
-        <a className={style['settle-btn']} onClick={this.handleApply}>确认结算</a>
+        <Button type='primary' onClick={this.handleApply}>确认结算</Button>
       </div> : '',
       3: ''
     }
@@ -130,11 +132,22 @@ class ApplySettle extends Component {
           this.props.match.history.go(-1)
         }}
       />
-      <Content>
+      <Content style={{ overflow: 'hidden', top: '0.43rem' }}>
         {
-          isloading && dataSource.length !== 0 ? <div style={{ height: '100%', 'overflow': 'hidden' }}>
-            <p className={`${style['settle-total']} my-bottom-border`}>合计：<em>{amount}</em></p>
-            <List className={`${style['settle-list']} ${status === 3 ? style['settle-all'] : ''}`}>
+          isloading && dataSource.length !== 0 ? <div><div className={style['money-box']}>
+            <ul className={style['money-con']}>
+              <li>
+                <strong>{acceptAmount}</strong>
+                <p>预计收入(元)</p>
+              </li>
+              <li>
+                <strong>{amount}</strong>
+                <p>合计(元)</p>
+              </li>
+            </ul>
+          </div>
+          <div className={style['settle-box']}>
+            <List className={`${style['settle-list']}`}>
               {dataSource.map((i, index) => (
                 <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>
                   <div className={style['header']} style={{ 'backgroundImage': 'url(' + i['avatar'] + ')' }}></div>
@@ -150,7 +163,7 @@ class ApplySettle extends Component {
             {
               statusDom[status]
             }
-          </div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
+          </div></div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
         }
       </Content>
     </div>

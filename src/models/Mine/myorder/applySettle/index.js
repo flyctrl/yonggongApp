@@ -152,11 +152,9 @@ class ApplySettle extends Component {
                 </List.Item>
               ))}
             </List>
-            <div className={style['btn-box']}>
-              {
-                (status === '1' || status === '2' || status === '3' || recordStatus !== null) ? '' : (canApply ? <Button onClick={this.handleApply} type='primary'>申请结算</Button> : null)
-              }
-            </div>
+            {
+              (status === '1' || status === '2' || status === '3' || recordStatus !== null) ? '' : (canApply ? <div className={style['btn-box']}><Button onClick={this.handleApply} type='primary'>申请结算</Button></div> : null)
+            }
           </div></div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
         }
       </Content>

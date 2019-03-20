@@ -54,6 +54,12 @@ export const getQueryString = (name) => { // url转json
   }
 }
 
+export const addParameterToURL = (param) => {
+  let url = location.href
+  url += (url.split('?')[1] ? '&' : '?') + param
+  return url
+}
+
 export const parseJsonUrl = (ojson) => { // json对象转URL
   let s = ''
   let name = null
