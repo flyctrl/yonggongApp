@@ -86,6 +86,9 @@ class FormBox extends Component {
     }
   }
   handleRemarkClick = () => {
+    if (!('cordova' in window) && tooler.getQueryString('chrome') === 'null') {
+      this.props.match.history.replace(`&chrome=1`)
+    }
     this.setState({
       remarkShow: true
     })

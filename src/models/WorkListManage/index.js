@@ -240,7 +240,11 @@ class WorkListManage extends Component {
   }
   handleSetAttend = (rowData) => { // 我发的 - 考勤设置 worksheetno
     let { parentIndex } = this.state
-    this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'] + '&listType=' + parentIndex)
+    if (!('cordova' in window) && tooler.getQueryString('chrome') === 'null') {
+      this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'] + '&listType=' + parentIndex + '&chrome=1')
+    } else {
+      this.props.match.history.push(urls.CHECKSET + '?worksheetno=' + rowData['worksheet_no'] + '&listType=' + parentIndex)
+    }
   }
   pageUpdateWorksheet = (rowData) => { // 我发的 - 编辑
     let type = rowData['worksheet_type']

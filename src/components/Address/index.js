@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { List, Radio } from 'antd-mobile'
 import { Header, Content } from 'Components'
+import { getQueryString } from 'Contants/tooler'
+import NewIcon from 'Components/NewIcon'
+// import { getPosition } from 'Contants/tooler'
 import style from './index.css'
 
 const RadioItem = Radio.RadioItem
@@ -21,24 +24,35 @@ class Address extends Component {
       scrollWheel: false
     })
     map.on('complete', function() {
-      // 定位
-      AMap.plugin('AMap.Geolocation', function() {
-        let geolocation = new AMap.Geolocation({
-          enableHighAccuracy: true, // 是否使用高精度定位，默认:true
-          timeout: 300,
-          buttonPosition: 'RB', // 定位按钮的停靠位置
-          buttonOffset: new AMap.Pixel(10, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-          zoomToAccuracy: true, // 定位成功后是否自动调整地图视野到定位点
+      console.log('chrome', getQueryString('chrome'))
+      if (getQueryString('chrome') === '1') { // H5浏览器
+        // 定位
+        AMap.plugin('AMap.Geolocation', function() {
+          let geolocation = new AMap.Geolocation({
+            enableHighAccuracy: true, // 是否使用高精度定位，默认:true
+            timeout: 300,
+            buttonPosition: 'RB', // 定位按钮的停靠位置
+            buttonOffset: new AMap.Pixel(10, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+            zoomToAccuracy: true, // 定位成功后是否自动调整地图视野到定位点
+          })
+          map.addControl(geolocation)
+          geolocation.getCurrentPosition(function(status, result) {
+            if (status === 'complete') {
+              console.log('result:', result)
+              map.setCenter([result.position.P, result.position.O])
+              map.setZoom(15)
+            }
+          })
         })
-        map.addControl(geolocation)
-        geolocation.getCurrentPosition(function(status, result) {
-          if (status === 'complete') {
-            console.log('result:', result)
-            map.setCenter([result.position.P, result.position.O])
-            map.setZoom(15)
-          }
+      } else { // cordova
+        GaoDe.getCurrentPosition((natviepos) => {
+          console.log('natviepos:', natviepos)
+          map.setCenter([natviepos.longitude, natviepos.latitude])
+          map.setZoom(15)
+        }, (error) => {
+          alert(error.message)
         })
-      })
+      }
       AMapUI.loadUI(['misc/PoiPicker', 'misc/PositionPicker', 'misc/MarkerList'], function(PoiPicker, PositionPicker, MarkerList) {
         let poiPicker = new PoiPicker({
           input: 'searchInput'
@@ -89,6 +103,13 @@ class Address extends Component {
     })
     map.setCenter([location.P, location.O])
   }
+  handleLocation = () => {
+    GaoDe.getCurrentPosition((natviepos) => {
+      map.setCenter([natviepos.longitude, natviepos.latitude])
+    }, (error) => {
+      alert(error.message)
+    })
+  }
   componentWillUnmount() {
     this.setState({
       addressResult: []
@@ -119,6 +140,7 @@ class Address extends Component {
         <div className={style['map-box']}>
           <div id='mapContainer'>
           </div>
+          { getQueryString('chrome') === '1' ? '' : <div onClick={this.handleLocation} className={style['location']}><NewIcon type='icon-dingwei' /></div>}
         </div>
         <div className={style['address-info']}>
           {

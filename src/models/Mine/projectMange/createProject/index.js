@@ -107,6 +107,9 @@ class CreateProject extends Component {
     }
   }
   handleSelectMap = () => { // 打开地图
+    if (!('cordova' in window) && getQueryString('chrome') === 'null') {
+      this.props.match.history.replace(`&chrome=1`)
+    }
     this.setState({
       mapShow: true
     })

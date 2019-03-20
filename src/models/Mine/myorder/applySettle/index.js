@@ -13,7 +13,7 @@ class ApplySettle extends Component {
     super(props)
     this.state = {
       amount: 0,
-      valuationEqual: 1,
+      valuationEqual: false,
       workerAmount: 0,
       inputAmount: '',
       recordStatus: tooler.getQueryString('recordStatus'),
@@ -43,7 +43,7 @@ class ApplySettle extends Component {
     if (data) {
       this.setState({
         amount: data['amount'],
-        valuationEqual: data['valuation_equal'],
+        valuationEqual: data['need_input_amount'],
         workerAmount: Number(data['worker_amount']),
         canApply: data['can_apply'],
         acceptAmount: data['accept_amount'],
@@ -54,7 +54,7 @@ class ApplySettle extends Component {
   }
   handleApply = async () => { // 申请结算
     let { workSheetOrderNo, orderno, inputAmount, valuationEqual, workerAmount, canApply } = this.state
-    if (valuationEqual === 2 && canApply) {
+    if (valuationEqual && canApply) {
       if (inputAmount === '') {
         alert('请输入总价')
         return
@@ -116,7 +116,7 @@ class ApplySettle extends Component {
                 (status === '1' || status === '2' || status === '3' || recordStatus !== null) ? <li>
                   <strong>{amount}</strong>
                   <p>合计(元)</p>
-                </li> : (valuationEqual === 1) ? <li>
+                </li> : (!valuationEqual) ? <li>
                   <strong>{amount}</strong>
                   <p>合计(元)</p>
                 </li> : canApply ? <li>

@@ -135,6 +135,9 @@ class FormBox extends Component {
     })
   }
   handleSelectMap = () => {
+    if (!('cordova' in window) && tooler.getQueryString('chrome') === 'null') {
+      this.props.match.history.replace(`&chrome=1`)
+    }
     this.setState({
       mapShow: true
     })
