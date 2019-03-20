@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Button, ListView, PullToRefresh, Toast, Modal } from 'antd-mobile'
+import { Button, ListView, PullToRefresh, Toast, Modal, Icon } from 'antd-mobile'
 import { Header, Content, DefaultPage } from 'Components'
 import { workplanStatus } from 'Contants/fieldmodel'
 // import * as urls from 'Contants/urls'
@@ -106,17 +106,17 @@ class AccessRecord extends Component {
   }
   showlistStatus = (item) => { // 状态按钮
     if (item['handle_type'] === 1) { // 通过/驳回
-      return <div>
+      return <div style={{ overflow: 'hidden' }}>
         <Button type='primary' onClick={(e) => { this.getSolicit(e, item['task_no'], 1, item) }} size='small'>确认完工</Button>
         <Button type='primary' onClick={(e) => { this.getSolicit(e, item['task_no'], 2, item) }} size='small'>驳回</Button>
       </div>
     } else if (item['handle_type'] === 2) { // 完工
-      return <div>
-        <Button type='primary' className={style['one-btn']} onClick={(e) => { this.getSolicit(e, item['order_no'], 3, item) }} size='small'>完工</Button>
+      return <div style={{ overflow: 'hidden' }}>
+        <Button type='primary' onClick={(e) => { this.getSolicit(e, item['order_no'], 3, item) }} size='small'>完工</Button>
       </div>
     } else if (item['handle_type'] === 3) { // 代完工
-      return <div>
-        <Button type='primary' className={style['one-btn']} onClick={(e) => { this.getSolicit(e, item['order_no'], 4, item) }} size='small'>代完工</Button>
+      return <div style={{ overflow: 'hidden' }}>
+        <Button type='primary' onClick={(e) => { this.getSolicit(e, item['order_no'], 4, item) }} size='small'>代完工</Button>
       </div>
     }
     if (item['status'] === 3) { // 已完工
@@ -285,10 +285,6 @@ class AccessRecord extends Component {
   }
   handleRecordClick = (e, rowData) => {
     let attendTime = rowData['attend_time_list']
-    if (attendTime.length <= 0) {
-      alert(`${rowData['tasker_name']}暂无考勤时间`, null, [{ text: '确认' }])
-      return false
-    }
     let eIndex = e.currentTarget.getAttribute('index')
     this.setState({
       clickIndex: eIndex === this.state.clickIndex ? 0 : eIndex,
@@ -317,23 +313,23 @@ class AccessRecord extends Component {
     )
     const row = (rowData, sectionID, rowID) => {
       return <li key={rowData['task_no']}>
-        <div index={rowData['task_no']} onClick={(e) => this.handleRecordClick(e, rowData)} className={style['record-box']}>
-          <div className={`${style['record-img']} ${rowData['is_self'] === 1 ? style['record-self'] : ''}`}>
+        <div index={rowData['task_no']} className={style['record-box']}>
+          <div className={`${style['record-header']} my-bottom-border`}>
             <div className={style['header']} style={{ 'backgroundImage': 'url(' + rowData['tasker_avatar'] + ')' }}></div>
-            {
-              rowData['is_self'] === 1 ? <p>(自己)</p> : ''
-            }
+            <p className={style['name']}>{rowData['tasker_name']}{rowData['is_self'] === 1 ? <sapn>(自己)</sapn> : ''}</p>
+            <div className={style['record-btn']}>
+              {
+                this.showlistStatus(rowData)
+              }
+            </div>
           </div>
-          <div className={style['record-hd']}>
-            <p className={`ellipsis ${Number(rowData['workload']) > 0 ? '' : style['line42']}`}>{rowData['tasker_name']}</p>
+          <div className={style['record-body']}>
+            <time>开工时间：{rowData['started_at']}</time>
+            {
+              rowData['attend_time_list'].length > 0 ? <a index={rowData['task_no']} onClick={(e) => this.handleRecordClick(e, rowData)}><i>查看考勤</i><Icon type={clickIndex === rowData['task_no'] ? 'up' : 'down'} size='xs' /></a> : null
+            }
             {
               Number(rowData['workload']) > 0 ? <span>工作量：{rowData['workload']}{rowData['workload_unit']}</span> : null
-            }
-            <time>开工时间：{rowData['started_at']}</time>
-          </div>
-          <div className={style['record-btn']}>
-            {
-              this.showlistStatus(rowData)
             }
           </div>
         </div>
