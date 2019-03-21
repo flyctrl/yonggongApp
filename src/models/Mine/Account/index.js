@@ -49,7 +49,7 @@ class Account extends Component {
           text: '取消'
         }, {
           text: '去认证', onPress: () => {
-            history.push(urls.REALNAMEAUTH)
+            this.props.match.history.push(urls.REALNAMEAUTH)
           }
         }])
       } else if (data['company_aptitude_status'] !== 1) {
@@ -57,7 +57,7 @@ class Account extends Component {
           text: '取消'
         }, {
           text: '去认证', onPress: () => {
-            history.push(urls.COMPANYAUTH)
+            this.props.match.history.push(urls.COMPANYAUTH)
           }
         }])
       } else if (data['is_bind_card'] === 1) {

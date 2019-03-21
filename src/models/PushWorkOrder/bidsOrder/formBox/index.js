@@ -231,8 +231,8 @@ class FormBox extends Component {
           }}
           rightTitle={remarkShow ? '确认' : null}
           rightClick={() => {
-            let bool = !!getFieldError('count')
-            bool ? Toast.info(getFieldError('count').join('、')) : this.setState({ remarkShow: false, remark: getFieldValue('remark') })
+            let bool = !!getFieldError('remark')
+            bool ? Toast.info(getFieldError('remark').join('、')) : this.setState({ remarkShow: false, remark: getFieldValue('remark') })
           }}
         />
         <Content className={style['quickorder-form']} style={{ display: remarkShow ? 'none' : 'block' }}>
