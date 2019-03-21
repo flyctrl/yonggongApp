@@ -325,7 +325,7 @@ class WorkListManage extends Component {
     }
   }
   handleGenAttend = (rowData) => { // 我接的 - 代考勤
-    this.props.match.history.push(urls.AGENTCHECKLIST + '?orderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
+    this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
   }
   handleStart = async (rowData) => { // 我接的 - 开工
     console.log('开工')
