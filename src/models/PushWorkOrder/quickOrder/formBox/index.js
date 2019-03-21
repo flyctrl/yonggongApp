@@ -7,6 +7,7 @@ import * as tooler from 'Contants/tooler'
 import { createForm } from 'rc-form'
 import NewIcon from 'Components/NewIcon'
 import api from 'Util/api'
+import { headersJson } from 'Util'
 import style from './index.css'
 import Address from 'Components/Address'
 import storage from 'Util/storage'
@@ -134,6 +135,9 @@ class FormBox extends Component {
     })
   }
   handleSelectMap = () => {
+    if (!('cordova' in window) && tooler.getQueryString('chrome') === null) {
+      history.pushState(null, null, tooler.addParameterToURL('chrome=1'))
+    }
     this.setState({
       mapShow: true
     })
@@ -224,10 +228,13 @@ class FormBox extends Component {
     let { fileList, remarkShow, startDate, endDate, mapShow, address, valuationUnit, chargeSizeData, remark, quickData } = this.state
     console.log('fileList:', fileList)
     let { settleValue, starttime, orderno, edittype, porderno } = this.state.urlJson
+    let newHeader = headersJson
+    delete newHeader['Content-Type']
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
       multiple: false,
+      headers: newHeader,
       onSuccess: (file) => {
         if (file['code'] === 0) {
           Toast.hide()

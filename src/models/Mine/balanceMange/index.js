@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
-import { ListView, PullToRefresh, Tabs, Badge, Button } from 'antd-mobile'
+import { ListView, PullToRefresh, Tabs, Badge } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
@@ -11,11 +11,25 @@ let tabType = [
   { title: '工单结算' },
   { title: '订单结算' }
 ]
-let balanceType = {
+const settleSheetStatus = {
   1: '待确认',
   2: '待结算',
   3: '已结算',
   4: '已驳回'
+}
+const settleOrderStatus = {
+  0: '待申请',
+  1: '待确认',
+  2: '待结算',
+  3: '已结算',
+  4: '已驳回'
+}
+const badgeStatus = {
+  0: 'processing',
+  1: 'warning',
+  2: 'warning',
+  3: 'success',
+  4: 'default'
 }
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
@@ -133,13 +147,12 @@ class BalanceMange extends Component {
       })
     })
   }
-  handleClick = (e) => {
+  handleClick = (rowData) => {
     let { tabIndex } = this.state
-    let balanceNo = e.currentTarget.getAttribute('data-id')
-    if (parseInt(tabIndex, 10) === 0) {
-      this.props.match.history.push(`${urls.SETTLERECORD}?worksheetno=${balanceNo}`)
-    } else if (parseInt(tabIndex, 10) === 1) {
-      this.props.match.history.push(`${urls.OSETTLERECORD}?orderno=${balanceNo}`)
+    if (parseInt(tabIndex, 10) === 0) { // 工单结算
+      this.props.match.history.push(`${urls.SETTLERECORDDETAIL}?orderno=${rowData['order_no']}&worksheetno=${rowData['worksheet_no']}`)
+    } else if (parseInt(tabIndex, 10) === 1) { // 订单结算
+      this.props.match.history.push(`${urls.APPLYSETTLE}?orderno=${rowData['order_no']}&workSheetOrderNo=${rowData['worksheet_order_no']}&status=${rowData['status']}`)
     }
   }
   render() {
@@ -155,43 +168,24 @@ class BalanceMange extends Component {
     }
     const row = (rowData, sectionID, rowID) => {
       return (
-        <dl key={rowData['id']}>
+        <dl key={rowData['id']} onClick={() => this.handleClick(rowData)}>
           <dt className='my-bottom-border'>
             <Badge className={rowData['worksheet_type'] === 2 ? `${style['typericon-2']} ${style['typericon']}` : rowData['worksheet_type'] === 1 ? `${style['typericon-1']} ${style['typericon']}` : rowData['worksheet_type'] === 3 ? `${style['typericon-3']} ${style['typericon']}` : `${style['typericon']}`} text={worksheetType[rowData['worksheet_type']]} text={worksheetType[rowData['worksheet_type']]} />
             <p className={`${style['prj-title']} ellipsis`} >{rowData['title']}</p>
-            <Badge className={`${style['statusicon']} ${rowData['status'] === 1 ? style['yellow'] : rowData['status'] === 2 ? style['pink'] : rowData['status'] === 3 ? style['blue'] : style['default']}`} text={
-              balanceType[rowData['status']]
+            <Badge className={`${style['statusicon']} ${style[badgeStatus[rowData['status']]]}`} text={
+              parseInt(tabIndex, 10) === 0 ? settleSheetStatus[rowData['status']] : settleOrderStatus[rowData['status']]
             } />
           </dt>
           <dd>
             <p>
               <a>总金额</a><em className={style['em']}>{rowData['amount']}{rowData['unit']}</em>
             </p>
-            <p>
+            <p className={`ellipsis`}>
               <a>项目名称</a><em className={style['em']}>{rowData['prj_name']}</em>
             </p>
-            <div className='my-bottom-border'></div>
-            {
-              parseInt(tabIndex, 10) === 0
-                ? rowData['status'] === 0 || rowData['status'] === 1
-                  ? <p className={style['wait-price']}>
-                    <span>应付金额：</span><em>{rowData['wait_amount']}{rowData['wait_unit']}</em>
-                    <Button data-id={rowData['worksheet_no']} onClick={this.handleClick}>去结算</Button>
-                  </p>
-                  : <p className={style['wait-price']}>
-                    <Button data-id={rowData['worksheet_no']} onClick={this.handleClick}>查看详情</Button>
-                  </p>
-                : parseInt(tabIndex, 10) === 1
-                  ? rowData['status'] === 0 || rowData['status'] === 1
-                    ? <p className={style['wait-price']}>
-                      <span>应付金额：</span><em>{rowData['wait_amount']}{rowData['wait_unit']}</em>
-                      <Button data-id={rowData['worksheet_order_no']} onClick={this.handleClick}>去结算</Button>
-                    </p>
-                    : <p className={style['wait-price']}>
-                      <Button data-id={rowData['worksheet_order_no']} onClick={this.handleClick}>查看详情</Button>
-                    </p>
-                  : null
-            }
+            <p>
+              <a>创建时间</a><em className={style['em']}>{rowData['created_at']}</em>
+            </p>
           </dd>
         </dl>
       )

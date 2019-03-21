@@ -19,6 +19,7 @@ html:not([data-scale]) .settle-list :global(.am-list-body .am-list-item:last-chi
   }
   & .pending-model {
     background: #fff;
+    padding-bottom: 8px;
     margin-top: 10px;
     &.tobe {
       & dt {
@@ -45,6 +46,7 @@ html:not([data-scale]) .settle-list :global(.am-list-body .am-list-item:last-chi
       padding: 0 10px;
       height: 44px;
       overflow: hidden;
+      margin-bottom: 5px;
       & time {
         float: left;
         line-height: 44px;
@@ -58,64 +60,40 @@ html:not([data-scale]) .settle-list :global(.am-list-body .am-list-item:last-chi
       }
     }
     & dd {
-      & .user-info {
-        padding: 10px;
-        overflow: hidden;
-        & .header {
-          float: left;
-          width: 60px;
-          height: 60px;
-          margin-right: 10px;
-          border-radius: 50%;
-          background-size: cover;
-          background-repeat: no-repeat;
-          background-position: center top;
+      padding: 0 10px;
+      overflow: hidden;
+      & span {
+        float: left;
+        height: 30px;
+        line-height: 30px;
+        width: 32%;
+        margin-right: 1%;
+        color: #333;
+        font-size: 14px;
+        & svg {
+          color: #999999;
+          width: 14px;
+          height: 14px;
+          margin-right: 5px;
         }
-        & .info-right {
-          float: left;
-          & h4 {
-            font-size: 15px;
-            color: #333;
-            font-weight: 400;
-            line-height: 20px;
-          }
-          & time {
-            font-size: 14px;
-            color: #666;
-            line-height: 16px;
-          }
-          & p {
-            font-size: 14px;
+        &:nth-child(3) {
+          text-indent: 10px;
+          & i {
             color: #FA6B6D;
-            line-height: 24px;
           }
         }
       }
-      & footer {
-        height: 20px;
-        padding: 10px;
-        overflow: hidden;
-        & p {
-          display: inline-block;
-          margin-right: 16px;
-          font-size: 14px;
-          color: #999;
-          overflow: hidden;
-          &:last-child {
-            margin-right: 0;
-          }
-          & svg {
-            float: left;
-            width: 16px;
-            height: 16px;
-            margin-top: 2px;
-            color: #999;
-            margin-right: 5px;
-          }
-          & span {
-            float: left;
-            margin-top: 2px;
-          }
+      & p {
+        height: 30px;
+        line-height: 30px;
+        width: 100%;
+        color: #333;
+        font-size: 14px;
+        & svg {
+          color: #999999;
+          width: 14px;
+          height: 14px;
+          margin-right: 5px;
         }
       }
     }

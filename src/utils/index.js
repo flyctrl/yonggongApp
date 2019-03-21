@@ -6,6 +6,13 @@
 */
 let baseUrl = '/api'
 
+const headersJson = {
+  'Access-Control-Allow-Origin': '*',
+  'Content-Type': 'application/json',
+  'Cache-Control': 'no-cach',
+  'Accept': 'application/x.yaque.v2+json',
+  'source': 3
+}
 if (process.env.NODE_ENV === 'production') {
   console.log('in PRO')
   baseUrl = 'https://yg.yaque365.com/api/'
@@ -19,4 +26,4 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-export { baseUrl }
+export { baseUrl, headersJson }

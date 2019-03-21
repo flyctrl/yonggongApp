@@ -1,12 +1,12 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2019-02-21 17:47:29
+* @Last Modified time: 2019-03-13 22:04:12
 */
 import * as Loading from './load.js'
 import storage from '../utils/storage'
 import axios from 'axios'
-import { baseUrl } from './index'
+import { baseUrl, headersJson } from './index'
 import history from 'Util/history'
 
 let fetcher = axios.create({
@@ -21,12 +21,7 @@ let fetcher = axios.create({
   timeout: 60000,
   showloading: true,
   loadtitle: '加载中...',
-  headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Content-Type': 'application/json',
-    'Cache-Control': 'no-cach',
-    'Accept': 'application/x.yaque.v2+json'
-  }
+  headers: headersJson
 })
 
 fetcher.interceptors.request.use(function (config) {

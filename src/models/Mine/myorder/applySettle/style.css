@@ -1,14 +1,81 @@
-.settle-list {
-  height: 560px;
-  margin-top: 10px;
-  overflow-y: auto;
+.money-box {
+  width: 100%;
+  height: 114px;
+  &::before{
+    content: '';
+    width: 100%;
+    height: 60px;
+    background: #1298fc;
+    display: block;
+  }
+  & .money-con {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    margin-left: -165px;
+    width: 330px;
+    height: 90px;
+    background:rgba(255,255,255,1);
+    box-shadow:-2px 1px 31px 0px rgba(10,94,163,0.2);
+    border-radius:5px;
+    overflow: hidden;
+    & li {
+      float: left;
+      width: 50%;
+      & .hand-input {
+        display: block;
+        width:86px;
+        height:26px;
+        background: rgba(18,152,252,.1);
+        border-radius:13px;
+        color: #1298FC;
+        line-height: 26px;
+        text-align: center;
+        font-size: 13px;
+        margin: 0 auto;
+        margin-top: 20px;
+        & svg {
+          margin-right: 3px;
+        }
+      }
+      & strong {
+        color: #333;
+        font-size: 22px;
+        display: block;
+        text-align: center;
+        line-height: 34px;
+        margin-top: 18px;
+        font-weight: normal;
+      }
+      & p {
+        line-height: 24px;
+        color: #999;
+        font-size: 12px;
+        text-align: center;
+      }
+      & :global(.am-list-item .am-input-control input) {
+        height: 34px;
+        line-height: 34px;
+        font-size: 20px;
+        text-align: center;
+      }
+      & :global(.am-list-item.am-input-item) {
+        padding-left: 0;
+        min-height: 34px;
+        height: 34px;
+        line-height: 34px;
+        margin-top: 16px;
+      }
+      & :global(.am-list-item .am-input-label.am-input-label-5) {
+        width: auto;
+      }
+    }
+  }
+}
+.settle-box {
+  height: 460px;
   -webkit-overflow-scrolling:touch;
-}
-.settle-all {
-  height: 100%;    
-}
-html:not([data-scale]) .settle-list :global(.am-list-body::after) {
-  display: none;
+  overflow-y: auto;
 }
 .settle-list {
   & .header {
@@ -27,11 +94,11 @@ html:not([data-scale]) .settle-list :global(.am-list-body::after) {
     & h2 {
       line-height: 20px;
       color: #333;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: normal;
     }
     & p {
-      font-size: 14px;
+      font-size: 13px;
       color: #666;
     }
     & time {
@@ -47,13 +114,6 @@ html:not([data-scale]) .settle-list :global(.am-list-body::after) {
   }
 }
 
-html:not([data-scale]) .btn-box :global(.am-list-body::after) {
-  left: 42px;
-  width: 90px;
-}
-html:not([data-scale]) .btn-box :global(.am-list-body::before) {
-  display: none;
-}
 .btn-box {
   position: fixed;
   left: 0;
@@ -61,33 +121,12 @@ html:not([data-scale]) .btn-box :global(.am-list-body::before) {
   bottom: 0;
   height: 50px;
   background: #fff;
-  overflow: hidden;
-  & span {
-    float: right;
-    line-height: 50px;
-    font-size:15px;
-    color:rgba(51,51,51,1);
-    margin-right: 10px;
-    & em {
-      color: #FA6B6D;
-    }
-    & :global(.am-list) {
-      width: 170px;
-      & :global(.am-list-item.am-input-item) {
-        padding-left: 0;
-      }
-      & :global(.am-list-item .am-input-label.am-input-label-5) {
-        width: auto;
-      }
-    }
-  }
   & a {
-    float: right;
-    width: 105px;
-    line-height: 50px;
-    background:rgba(0,152,245,1);
-    text-align: center;
-    font-size: 15px;
-    color: #fff;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 5px;
   }
 }

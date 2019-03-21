@@ -123,7 +123,11 @@ class ProjectMange extends Component {
     if (typeof OCBridge !== 'undefined') {
       OCBridge.addOrEditProject()
     } else {
-      history.push(urls.CREATEPROJECT)
+      if (!('cordova' in window) && getQueryString('chrome') === null) {
+        history.push(urls.CREATEPROJECT + '?chrome=1')
+      } else {
+        history.push(urls.CREATEPROJECT)
+      }
     }
   }
   handleDetail = (e) => { // 项目详情
