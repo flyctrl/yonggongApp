@@ -109,6 +109,9 @@ export const addCommas = (number) => {
   let newStr = ''
   let count = 0
   let str = ''
+  if (number === 0 || number === '0') {
+    return '0'
+  }
   if (number) {
     str = number + ''
   } else {

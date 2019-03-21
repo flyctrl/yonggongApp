@@ -128,5 +128,13 @@
     width: 95%;
     margin: 0 auto;
     margin-top: 5px;
+    &:global(.am-button-primary.am-button-disabled) {
+      color: rgba(0,0,0,0.9);
+      background: #bfc0c1;
+    }
   }
+}
+
+html:not([data-scale]) .btn-box :global(a.am-button-primary::before) {
+  border: none;
 }

@@ -71,8 +71,10 @@ class FormBox extends Component {
     let { remarkShow, mapShow } = this.state
     if (remarkShow) {
       e.preventDefault()
+      this.props.form.setFieldsValue({ remark: '' })
       this.setState({
-        remarkShow: false
+        remarkShow: false,
+        remark: ''
       })
     } else if (mapShow) {
       e.preventDefault()
@@ -224,10 +226,10 @@ class FormBox extends Component {
   }
   render() {
     console.log(this.state)
-    const { getFieldProps, getFieldError, getFieldValue } = this.props.form
+    const { getFieldProps, getFieldError, getFieldValue, setFieldsValue } = this.props.form
     let { fileList, remarkShow, startDate, endDate, mapShow, address, valuationUnit, chargeSizeData, remark, quickData } = this.state
     console.log('fileList:', fileList)
-    let { settleValue, starttime, orderno, edittype, porderno } = this.state.urlJson
+    let { settleValue, starttime, orderno, edittype, porderno, parentClassId } = this.state.urlJson
     let newHeader = headersJson
     delete newHeader['Content-Type']
     const uploaderProps = {
@@ -264,7 +266,8 @@ class FormBox extends Component {
           leftTitle1='返回'
           leftClick1={() => {
             if (remarkShow) {
-              this.setState({ remarkShow: false })
+              setFieldsValue({ remark: '' })
+              this.setState({ remarkShow: false, remark: '' })
             } else {
               let { urlJson } = this.state
               console.log('parseurl:', tooler.parseJsonUrl(urlJson))
@@ -273,8 +276,8 @@ class FormBox extends Component {
           }}
           rightTitle={remarkShow ? '确认' : null}
           rightClick={() => {
-            let bool = !!getFieldError('count')
-            bool ? Toast.info(getFieldError('count').join('、')) : this.setState({ remarkShow: false, remark: getFieldValue('remark') })
+            let bool = !!getFieldError('remark')
+            bool ? Toast.info(getFieldError('remark').join('、')) : this.setState({ remarkShow: false, remark: getFieldValue('remark') })
           }}
         />
         <Content className={style['quickorder-form']} style={{ display: remarkShow ? 'none' : 'block' }}>
@@ -298,8 +301,8 @@ class FormBox extends Component {
               <InputItem
                 {...getFieldProps('people_number', {
                   rules: [
-                    { required: true, message: '请输入人数' },
-                    { pattern: /^[0-9]*[1-9][0-9]*$/, message: '人数格式错误' }
+                    { required: true, message: `请输入${parentClassId === 'skill' ? '人数' : '台数'}` },
+                    { pattern: /^[0-9]*[1-9][0-9]*$/, message: `${parentClassId === 'skill' ? '人数' : '台数'}格式错误` }
                   ],
                   initialValue: edittype === '3' ? quickData['people_number'] : ''
                 })}
@@ -307,8 +310,8 @@ class FormBox extends Component {
                 clear
                 error={!!getFieldError('people_number')}
                 onErrorClick={() => this.onErrorClick('people_number')}
-                placeholder='请输入人数'
-              >人 数<em className={style['asterisk']}>*</em></InputItem>
+                placeholder={`请输入${parentClassId === 'skill' ? '人数' : '台数'}`}
+              >{ parentClassId === 'skill' ? '人 数' : '台 数' }<em className={style['asterisk']}>*</em></InputItem>
               <Flex justify='between'>
                 <InputItem
                   {...getFieldProps('valuation_unit_price', {

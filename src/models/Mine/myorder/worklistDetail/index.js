@@ -196,6 +196,7 @@ class WorkListDetail extends Component {
         classifyId: data['construct'].length > 0 ? data['construct'][0]['code'] : '',
         classifyVal: data['construct'].length > 0 ? data['construct'][0]['name'] : '',
         constructType: data['construct'].length > 0 ? data['construct'][0]['construct_type'] : '',
+        parentClassId: data['construct'].length > 0 ? (data['construct'][0]['construct_type'] === 1 ? 'skill' : 0) : 0,
         ...levelJson,
         settleValue: data['valuation_way'],
         starttime: data['start_time']

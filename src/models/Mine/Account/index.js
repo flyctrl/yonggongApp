@@ -4,13 +4,14 @@
  * @Title: 我的账户
  */
 import React, { Component } from 'react'
-import { Button, Toast } from 'antd-mobile'
+import { Button, Toast, Modal } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
 import { addCommas } from 'Contants/tooler'
 import api from 'Util/api'
 import style from './style.css'
 import { getCommpanyStatus } from 'Contants/tooler'
+const alert = Modal.alert
 class Account extends Component {
   constructor(props) {
     super(props)
@@ -43,7 +44,23 @@ class Account extends Component {
   getStatus = async (type) => { // 1提现 2充值
     const data = await api.Mine.companyAuth.getCompanyStuts({}) || false
     if (data) {
-      if (data['is_bind_card'] === 1) {
+      if (data['is_realname'] !== 1) {
+        alert('未实名认证', '是否前往认证？', [{
+          text: '取消'
+        }, {
+          text: '去认证', onPress: () => {
+            this.props.match.history.push(urls.REALNAMEAUTH)
+          }
+        }])
+      } else if (data['company_aptitude_status'] !== 1) {
+        alert('企业未认证', '是否前往认证？', [{
+          text: '取消'
+        }, {
+          text: '去认证', onPress: () => {
+            this.props.match.history.push(urls.COMPANYAUTH)
+          }
+        }])
+      } else if (data['is_bind_card'] === 1) {
         if (type === 1) {
           if (data['is_withdraw_password'] === 0) {
             Toast.fail('请先设置支付密码', 2, () => {
@@ -63,15 +80,11 @@ class Account extends Component {
     }
   }
   handleDrawcash = async () => {
-    getCommpanyStatus(() => {
-      this.getStatus(1)
-    })
+    this.getStatus(1)
   }
 
   handleRecharge = async () => {
-    getCommpanyStatus(() => {
-      this.getStatus(2)
-    })
+    this.getStatus(2)
   }
 
   render() {

@@ -333,7 +333,7 @@ class WorkListManage extends Component {
                   return <em key={index}>{item}</em>
                 })
               }
-              <span>人数：{rowData['people_total']}</span>
+              <span>{rowData['construct_type'] === 1 ? '人数' : '台数'}：{rowData['people_total']}</span>
             </div>
             <p className={style['price']}>
               <span>单价：<em>{rowData['unit_price']}</em> {rowData['unit']}</span>

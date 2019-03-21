@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2019-03-13 22:04:12
+* @Last Modified time: 2019-03-21 14:37:19
 */
 import * as Loading from './load.js'
 import storage from '../utils/storage'
@@ -61,14 +61,7 @@ fetcher.interceptors.response.use(function (response) {
       })
     } else {
       let refreshToken = storage.get('refreshToken')
-      axios.post(baseUrl + '/employ/refresh', { refresh_token: refreshToken }, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cach',
-          'Accept': 'application/x.yaque.v2+json'
-        }
-      }).then(function(res) {
+      axios.post(baseUrl + '/employ/refresh', { refresh_token: refreshToken }, { headers: headersJson }).then(function(res) {
         console.log(res)
         if (res.data.code === 10012) {
           storage.remove('Authorization')

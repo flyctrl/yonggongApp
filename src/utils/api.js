@@ -474,7 +474,7 @@ export default {
         return Fetch(prefix + '/group/info', params, 'get')
       },
       addGroup(params) { // 添加部门
-        return FetchSave(prefix + '/group', params, 'post', { showloading: false })
+        return FetchSave(prefix + '/group/add', params, 'post', { showloading: false })
       },
       deleteGroup(params) { // 删除部门
         return FetchSave(prefix + '/group/del', params, 'post', { showloading: false })
