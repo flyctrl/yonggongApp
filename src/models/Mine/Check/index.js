@@ -607,9 +607,6 @@ class Check extends Component {
   }
   renderDom = (dataCheck, checkVal, isCheck, time, his, workorderno, workerUid) => {
     let { isClick, openDrawer, isAgent } = this.state
-    console.log((!isCheck) || (isAgent === 1 ? !isClick : false), 'lciki')
-    console.log(!isCheck, 'check')
-    console.log(!isClick, 'click')
     return <div style={{ textAlign: 'center' }} className={`${style['time-box']} ${this.state.openDrawer ? style['time-box-dw'] : ''}`}>
       {
         dataCheck['attend_type'] === 1
