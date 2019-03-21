@@ -112,88 +112,46 @@ class Check extends Component {
   }
   _getPosition () {
     let { lng, lat, radius } = this.state
+    let _t = this
+    map = new AMap.Map('mapContainer', {
+      resizeEnable: true,
+      zoomEnable: false,
+      zoom: 15,
+      doubleClickZoom: false,
+      touchZoom: false,
+      dragEnable: false,
+    })
     if ('cordova' in window) {
-      let _t = this
-      GaoDe.getCurrentPosition((natviepos) => {
-        console.log('natviepos:', natviepos)
-        // console.log('state：', lng + 'lat:' + lat + 'radius' + radius)
-        map = new AMap.Map('mapContainer', {
-          resizeEnable: true,
-          zoomEnable: false,
-          zoom: 13,
-          doubleClickZoom: false,
-          touchZoom: false,
-          dragEnable: false,
-        })
-        map.on('complete', function() {
-          // 定位
-          AMap.plugin('AMap.Geolocation', function() {
-            let geolocation = new AMap.Geolocation({
-              enableHighAccuracy: true, // 是否使用高精度定位，默认:true
-              timeout: 300,
-              buttonPosition: 'RB', // 定位按钮的停靠位置
-              buttonOffset: new AMap.Pixel(10, 20), // 定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-              zoomToAccuracy: true, // 定位成功后是否自动调整地图视野到定位点
-              showMarker: false,
-              showButton: false,
-              showCircle: false
-            })
-            map.addControl(geolocation)
-            geolocation.getCurrentPosition(function(status, result) {
-              if (status === 'complete') {
-                onComplete(result)
-              } else if (status === 'error') {
-                onError(result)
-              } else {
-                _t.showToast('未知错误')
-              }
-            })
+      map.on('complete', function() {
+        GaoDe.getCurrentPosition((natviepos) => {
+          console.log('natviepos:', natviepos)
+          map.setCenter([natviepos.longitude, natviepos.latitude])
+          map.setZoom(15)
+          _t.moveMap()
+          let marker = new AMap.Marker({
+            position: new AMap.LngLat(lng, lat)
+          // icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
+          // offset: new AMap.Pixel(-10, -40)
           })
-          function onComplete(result) {
-            console.log('result:', result)
-            let nativeResult = { position: { P: natviepos.longitude, O: natviepos.latitude }}
-            console.log('nativeResult', nativeResult)
-            _t.moveMap(nativeResult)
-            let marker = new AMap.Marker({
-              position: new AMap.LngLat(lng, lat)
-            // icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
-            // offset: new AMap.Pixel(-10, -40)
-            })
-            marker.setMap(map)
-            marker.setLabel({
-              offset: new AMap.Pixel(-39, -42),
-              content: `<img className=${style['img-box']} src=${tips} />`
-            })
-            let circle = new AMap.Circle({
-              map: map,
-              center: new AMap.LngLat(lng, lat), // 设置线覆盖物路径
-              radius: radius || 500,
-              strokeColor: '#3366FF', // 边框线颜色
-              strokeOpacity: 0.3, // 边框线透明度
-              strokeWeight: 3, // 边框线宽
-              fillColor: '#1791fc', // 填充色
-              fillOpacity: 0.35// 填充透明度
-            })
-            circle.setMap(map)
-          }
-          function onError(result) {
-            console.log('result:', result)
-            _t.showToast('定位失败')
-          }
+          marker.setMap(map)
+          marker.setLabel({
+            offset: new AMap.Pixel(-39, -42),
+            content: `<img className=${style['img-box']} src=${tips} />`
+          })
+          let circle = new AMap.Circle({
+            map: map,
+            center: new AMap.LngLat(lng, lat), // 设置线覆盖物路径
+            radius: radius || 500,
+            strokeColor: '#3366FF', // 边框线颜色
+            strokeOpacity: 0.3, // 边框线透明度
+            strokeWeight: 3, // 边框线宽
+            fillColor: '#1791fc', // 填充色
+            fillOpacity: 0.35// 填充透明度
+          })
+          circle.setMap(map)
         })
-      }, (error) => {
-        _t.showToast(error.message)
       })
     } else {
-      let _this = this
-      map = new AMap.Map('mapContainer', {
-        resizeEnable: true,
-        zoomEnable: false,
-        zoom: 15,
-        doubleClickZoom: false,
-        touchZoom: false,
-        dragEnable: false,
-      })
       let opt = {
         enableHighAccuracy: true, // 是否使用高精度定位，默认:true
         timeout: 300,
@@ -215,7 +173,7 @@ class Check extends Component {
         function onComplete(result) {
           console.log(result, 'result')
           let nativeResult = { position: { P: result.position.P, O: result.position.O }}
-          _this.moveMap(nativeResult)
+          _t.moveMap(nativeResult)
           let marker = new AMap.Marker({
             position: new AMap.LngLat(lng, lat)
             // icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
@@ -240,11 +198,11 @@ class Check extends Component {
         }
         function onError(result) {
           if (result.info === 'FAILED') {
-            _this.showToast('定位失败')
+            _t.showToast('定位失败')
           } else if (result.info === 'NOT_SUPPORTED') {
-            _this.showToast('当前浏览器不支持定位功能')
+            _t.showToast('当前浏览器不支持定位功能')
           } else {
-            _this.showToast('定位失败')
+            _t.showToast('定位失败')
           }
         }
       })
@@ -290,7 +248,7 @@ class Check extends Component {
   handlePushTime = async (e) => {
     let { dataCheck, position, checkVal, workorderno, imgPath, isAgent, workerUid } = this.state
     if (!('O' in position)) {
-      Toast.fail('无法获取该手机位置信息')
+      Toast.fail('无法获取该手机位置信息', 1)
       return false
     }
     if (e) {
@@ -324,7 +282,7 @@ class Check extends Component {
             is_agent: 0
           }
         }
-      } if (isAgent === 2) { // 本人
+      } if (isAgent === 0) { // 本人
         postData = {
           place_info: {
             lng: position.P,
@@ -384,10 +342,15 @@ class Check extends Component {
         data,
         visible: true,
         checkInTime: new Date().Format('hh:mm'),
-        openDrawer: false
+        openDrawer: false,
+        isClick: false
       })
       Toast.hide()
-      Toast.success('打卡成功', 1)
+      Toast.success('打卡成功', 1, () => {
+        if (isAgent === 1) {
+          this.getAgentCheckList()
+        }
+      })
       successTime = setInterval(() => {
         if (this.state.succTime <= 1) {
           clearInterval(successTime)
@@ -395,9 +358,7 @@ class Check extends Component {
             visible: false,
             succTime: 5
           })
-          if (isAgent === 1) {
-            this.getAgentCheckList()
-          }
+          this.handleCheckTime(workorderno, this.state.workerOldUid)
         } else {
           this.setState({ succTime: this.state.succTime - 1 })
         }
@@ -411,7 +372,7 @@ class Check extends Component {
     let { position, checkVal, isAgent, isClick, openDrawer } = this.state
     console.log(position, '1')
     if (!('O' in position)) {
-      Toast.fail('无法获取该手机位置信息')
+      Toast.fail('无法获取该手机位置信息', 1)
       return false
     }
     let postData = {}
@@ -437,7 +398,7 @@ class Check extends Component {
         }
       }
     }
-    if (isAgent === 2) {
+    if (isAgent === 0) {
       postData = {
         place_info: {
           lng: position.P,
@@ -464,7 +425,7 @@ class Check extends Component {
           isCheck = false
         }
       }
-      if (isAgent === 2) {
+      if (isAgent === 0) {
         isCheck = new Date(dataCheck['start_date']).getTime() <= new Date().getTime() && new Date().getTime() <= new Date(new Date(dataCheck['end_date']).getTime() + 24 * 3600000).getTime() && dataCheck['distance_status'] === 0
       }
       this.setState({
@@ -479,7 +440,8 @@ class Check extends Component {
       })
     } else {
       this.setState({
-        dataCheck: {}
+        dataCheck: {},
+        isCheck: false
       })
     }
   }
@@ -633,8 +595,21 @@ class Check extends Component {
       workerUid: uid
     })
   }
+  handleClickRight = () => {
+    let { workorderno, isAgent, workerOldUid } = this.state
+    if (isAgent === 1) { // 代考勤所有员工明细
+      this.props.match.history.push(`${urls.ATTENDDETAIL}?orderno=${workorderno}`)
+    } else if (isAgent === 0) { // 普通员工明细
+      this.props.match.history.push(`${urls.ATTENDDETAIL}?orderno=${workorderno}&uid=${workerOldUid}`)
+    } else {
+      this.props.match.history.push(`${urls.ATTENDDETAIL}?orderno=${workorderno}`)
+    }
+  }
   renderDom = (dataCheck, checkVal, isCheck, time, his, workorderno, workerUid) => {
-    let { isClick, openDrawer } = this.state
+    let { isClick, openDrawer, isAgent } = this.state
+    console.log((!isCheck) || (isAgent === 1 ? !isClick : false), 'lciki')
+    console.log(!isCheck, 'check')
+    console.log(!isClick, 'click')
     return <div style={{ textAlign: 'center' }} className={`${style['time-box']} ${this.state.openDrawer ? style['time-box-dw'] : ''}`}>
       {
         dataCheck['attend_type'] === 1
@@ -646,10 +621,10 @@ class Check extends Component {
           : null
       }
       { 'cordova' in window
-        ? <input id='btn_camera'className={style['check-input']} type='button' disabled={!isCheck || !isClick} onClick={this.handleTake} />
-        : <input id='btn_camera'className={style['check-input']} type='file' disabled={!isCheck || !isClick} accept='image/*' capture='camera' onChange={this.handleTake} />
+        ? <input id='btn_camera'className={style['check-input']} type='button' disabled={(!isCheck) || (isAgent === 1 ? !isClick : false)} onClick={this.handleTake} />
+        : <input id='btn_camera'className={style['check-input']} type='file' disabled={(!isCheck) || (isAgent === 1 ? !isClick : false)} accept='image/*' capture='camera' onChange={this.handleTake} />
       }
-      <Button className={`${style.btnCheck} ${dataCheck['time_status'] === 1 ? style.btnCheck2 : ''}`} disabled={!isCheck || !isClick} type='primary'>
+      <Button className={`${style.btnCheck} ${dataCheck['time_status'] === 1 ? style.btnCheck2 : ''}`} disabled={(!isCheck) || (isAgent === 1 ? !isClick : false)} type='primary'>
         <span className={style['btn-title']}>{dataCheck['time_status'] === 1 ? '迟到打卡' : '拍照打卡'}</span>
         <span className={style.time}>{time} </span>
       </Button>
@@ -692,7 +667,7 @@ class Check extends Component {
             })
           }
         }}
-        rightClick={ () => his.push(`${urls.ATTENDDETAIL}?orderno=${workorderno}&uid=${workerUid}`)}
+        rightClick={ this.handleClickRight}
       />
       <Drawer
         className={style['drawer-list']}
