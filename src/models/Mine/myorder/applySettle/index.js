@@ -22,6 +22,7 @@ class ApplySettle extends Component {
       status: tooler.getQueryString('status'),
       dataSource: [],
       canApply: false,
+      canapplyDate: '',
       acceptAmount: 0,
       isloading: false,
       handVisible: true
@@ -48,6 +49,7 @@ class ApplySettle extends Component {
         canApply: data['can_apply'],
         acceptAmount: data['accept_amount'],
         dataSource: data['list'],
+        canapplyDate: data['can_apply_date'],
         isloading: true
       })
     }
@@ -94,7 +96,7 @@ class ApplySettle extends Component {
     })
   }
   render() {
-    let { dataSource, amount, valuationEqual, isloading, status, recordStatus, canApply, acceptAmount, handVisible } = this.state
+    let { dataSource, amount, valuationEqual, isloading, status, recordStatus, canApply, acceptAmount, handVisible, canapplyDate } = this.state
     return <div className='pageBox'>
       <Header
         title='结算详情'
@@ -153,7 +155,7 @@ class ApplySettle extends Component {
               ))}
             </List>
             {
-              (status === '1' || status === '2' || status === '3' || recordStatus !== null) ? '' : (canApply ? <div className={style['btn-box']}><Button onClick={this.handleApply} type='primary'>申请结算</Button></div> : null)
+              (status === '1' || status === '2' || status === '3' || recordStatus !== null) ? '' : <div className={style['btn-box']}><Button disabled={!canApply} onClick={this.handleApply} type='primary'>申请结算{!canApply ? `（${canapplyDate}可申请）` : ''}</Button></div>
             }
           </div></div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
         }

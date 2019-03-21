@@ -71,8 +71,10 @@ class FormBox extends Component {
     let { remarkShow, mapShow } = this.state
     if (remarkShow) {
       e.preventDefault()
+      this.props.form.setFieldsValue({ remark: '' })
       this.setState({
-        remarkShow: false
+        remarkShow: false,
+        remark: ''
       })
     } else if (mapShow) {
       e.preventDefault()
@@ -224,7 +226,7 @@ class FormBox extends Component {
   }
   render() {
     console.log(this.state)
-    const { getFieldProps, getFieldError, getFieldValue } = this.props.form
+    const { getFieldProps, getFieldError, getFieldValue, setFieldsValue } = this.props.form
     let { fileList, remarkShow, startDate, endDate, mapShow, address, valuationUnit, chargeSizeData, remark, quickData } = this.state
     console.log('fileList:', fileList)
     let { settleValue, starttime, orderno, edittype, porderno } = this.state.urlJson
@@ -264,7 +266,8 @@ class FormBox extends Component {
           leftTitle1='返回'
           leftClick1={() => {
             if (remarkShow) {
-              this.setState({ remarkShow: false })
+              setFieldsValue({ remark: '' })
+              this.setState({ remarkShow: false, remark: '' })
             } else {
               let { urlJson } = this.state
               console.log('parseurl:', tooler.parseJsonUrl(urlJson))

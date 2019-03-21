@@ -73,8 +73,10 @@ class FormBox extends Component {
     let { remarkShow, mapShow } = this.state
     if (remarkShow) {
       e.preventDefault()
+      this.props.form.setFieldsValue({ remark: '' })
       this.setState({
-        remarkShow: false
+        remarkShow: false,
+        remark: ''
       })
     } else if (mapShow) {
       e.preventDefault()
@@ -86,9 +88,6 @@ class FormBox extends Component {
     }
   }
   handleRemarkClick = () => {
-    if (!('cordova' in window) && tooler.getQueryString('chrome') === null) {
-      history.pushState(null, null, tooler.addParameterToURL('chrome=1'))
-    }
     this.setState({
       remarkShow: true
     })
@@ -109,6 +108,9 @@ class FormBox extends Component {
     })
   }
   handleSelectMap = () => {
+    if (!('cordova' in window) && tooler.getQueryString('chrome') === null) {
+      history.pushState(null, null, tooler.addParameterToURL('chrome=1'))
+    }
     this.setState({
       mapShow: true
     })
@@ -184,7 +186,7 @@ class FormBox extends Component {
     })
   }
   render() {
-    const { getFieldProps, getFieldError, getFieldValue } = this.props.form
+    const { getFieldProps, getFieldError, getFieldValue, setFieldsValue } = this.props.form
     let { fileList, remarkShow, startDate, endDate, mapShow, address, remark, bidsData } = this.state
     console.log('fileList:', fileList)
     console.log('bidsData:', bidsData)
@@ -219,7 +221,8 @@ class FormBox extends Component {
           leftTitle1='返回'
           leftClick1={() => {
             if (remarkShow) {
-              this.setState({ remarkShow: false })
+              setFieldsValue({ remark: '' })
+              this.setState({ remarkShow: false, remark: '' })
             } else {
               let { urlJson } = this.state
               console.log('parseurl:', tooler.parseJsonUrl(urlJson))
