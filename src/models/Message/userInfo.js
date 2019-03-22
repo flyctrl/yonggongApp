@@ -33,7 +33,6 @@ class UserInfo extends Component {
       this.setState({
         companyDetail: data,
         isLoading: false,
-        region: Array.isArray(data['region']) ? {} : data['region']
       })
     }
   }
@@ -49,8 +48,7 @@ class UserInfo extends Component {
     }
   }
   render() {
-    const { companyDetail, isLoading, region = {}} = this.state
-    let { province = {}, city = {}} = region
+    const { companyDetail, isLoading } = this.state
     return (
       <div className='pageBox gray'>
         <Header
@@ -109,7 +107,7 @@ class UserInfo extends Component {
                     companyDetail.telephone ? <dd><span>电话</span><p>{companyDetail.telephone}</p></dd> : null
                   }
                   {
-                    region ? <dd><span>地区</span><p>{province.name}{city.name}</p></dd> : null
+                    companyDetail.region ? <dd><span>地区</span><p>{companyDetail.region}</p></dd> : null
                   }
                   {
                     companyDetail.address ? <dd><span>注册地址</span><p>{companyDetail.address}</p></dd> : null
