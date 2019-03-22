@@ -29,6 +29,11 @@
         & :global(.amap-marker-label) {
           border:none;
           background:none;
+          & img {
+            display: block;
+            width: 80px;
+            height: 35px;
+          }
         }
         & :global(.amap-marker .amap-marker-content) {
             & img {
@@ -62,11 +67,6 @@
       padding-top: 12px;
       padding-bottom: 4px;
     }
-  }
-  & .img-box {
-    display: block;
-    width: 80px;
-    height: 35px;
   }
 }
 html:not([data-scale]) .check .btnCheck2:before {
@@ -242,5 +242,10 @@ html:not([data-scale]) .time-box :global(.am-list-body::before) {
   }
   & :global(.am-drawer-overlay) {
     background: #1298FC;
+  }
+}
+ html :global(.am-modal-wrap) {
+  & :global(.am-modal-title) {
+    line-height: 20px
   }
 }

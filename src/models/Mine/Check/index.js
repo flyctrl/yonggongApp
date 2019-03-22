@@ -136,7 +136,7 @@ class Check extends Component {
           marker.setMap(map)
           marker.setLabel({
             offset: new AMap.Pixel(-39, -42),
-            content: `<img className=${style['img-box']} src=${tips} />`
+            content: `<img src=${tips} />`
           })
           let circle = new AMap.Circle({
             map: map,
@@ -182,7 +182,7 @@ class Check extends Component {
           marker.setMap(map)
           marker.setLabel({
             offset: new AMap.Pixel(-39, -42),
-            content: `<img className=${style['img-box']} src=${tips} />`
+            content: `<img src=${tips} />`
           })
           let circle = new AMap.Circle({
             map: map,
@@ -436,6 +436,7 @@ class Check extends Component {
       }, () => {
         if (dataCheck.msg) {
           Toast.info(dataCheck.msg, 1)
+          console.log(dataCheck.msg, '111')
         }
       })
     } else {
