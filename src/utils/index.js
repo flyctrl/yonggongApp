@@ -5,7 +5,6 @@
 * @Last Modified time: 2018-06-25 21:58:34
 */
 let baseUrl = '/api'
-
 const headersJson = {
   'Access-Control-Allow-Origin': '*',
   'Content-Type': 'application/json',
