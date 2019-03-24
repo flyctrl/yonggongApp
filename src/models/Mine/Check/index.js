@@ -436,7 +436,6 @@ class Check extends Component {
       }, () => {
         if (dataCheck.msg) {
           Toast.info(dataCheck.msg, 1)
-          console.log(dataCheck.msg, '111')
         }
       })
     } else {

@@ -31,7 +31,10 @@ class ProjectDetail extends Component {
       dataSource: {},
       isLoading: true,
       tabIndex: tooler.getQueryString('tabIndex'),
-      coordinate: '{}'
+      coordinate: '{}',
+      showimg: false,
+      imgurlP: '',
+      imgurl: ''
     }
   }
   getProjectDetail = async () => {
@@ -52,8 +55,22 @@ class ProjectDetail extends Component {
   componentDidMount() {
     this.getProjectDetail()
   }
+  showImg = (img, imgP) => {
+    this.setState({
+      showimg: true,
+      imgurl: img,
+      imgurlP: imgP
+    })
+  }
+  handleImgMask = () => {
+    this.setState({
+      showimg: false,
+      imgurl: '',
+      imgurlP: ''
+    })
+  }
   render() {
-    let { dataSource = {}, fileList = [], coordinate = '{}' } = this.state
+    let { dataSource = {}, fileList = [], coordinate = '{}', showimg, imgurlP } = this.state
     return (
       <div className='pageBox gray'>
         <Header
@@ -138,7 +155,7 @@ class ProjectDetail extends Component {
                         {
                           fileList.map((item, index) => {
                             return (
-                              <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a></li>
+                              <li key={index} onClick={ () => this.showImg(item['url'], item['preview_url'])} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a></li>
                             )
                           })
                         }
@@ -150,6 +167,11 @@ class ProjectDetail extends Component {
               : null
           }
         </Content>
+        <div style={{ display: showimg ? 'block' : 'none' }} onClick={this.handleImgMask} className={`showimg-box animated ${showimg ? 'fadeIn' : 'fadeOut'}`}>
+          <img onClick={(e) => {
+            e.stopPropagation()
+          }} src={imgurlP} />
+        </div>
       </div>
     )
   }
