@@ -109,7 +109,7 @@ class AccessRecord extends Component {
           return i['status'] === item['status']
         })['title']
       }</div>
-    } else if (item['status'] === 1) { // 开工中
+    } else if (item['status'] === 1 || item['status'] === 4) { // 开工中
       return <div className={style['reject-status']}>{
         workplanStatus.find(i => {
           return i['status'] === item['status']
