@@ -72,6 +72,9 @@
 html:not([data-scale]) .check .btnCheck2:before {
   border: none
 }
+html:not([data-scale]) .check .btnCheck:before {
+  border: none
+}
 html:not([data-scale]) .btnCheck {
   top:55px; 
   position: absolute;
@@ -83,6 +86,7 @@ html:not([data-scale]) .btnCheck {
   box-shadow:-1px 4px 12px 0px rgba(6,108,221,0.47);
   border-radius:50%;
   white-space: normal;
+  border: none;
   & .btn-title {
     display: inline-block;
     width: 100%;
@@ -110,6 +114,7 @@ html:not([data-scale]) .btnCheck {
 html:not([data-scale]) .btnCheck2 {
   background:linear-gradient(0deg,rgba(251,171,57,1) 0%,rgba(255,220,129,1) 100%);
   box-shadow:-1px 4px 12px 0px rgba(224,131,1,0.48);
+  border:none;
 }
 .time-box {
   background: white;
@@ -129,6 +134,7 @@ html:not([data-scale]) .btnCheck2 {
     background-color: rgba(4, 103, 224, 1);
     box-shadow: 0px 2px 4px 0px rgba(4, 103, 224, 0.5);
     white-space: normal;
+    border:none;
   }
   & .position-info {
     position: absolute;

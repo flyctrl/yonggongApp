@@ -4,7 +4,7 @@
  * @Title: 企业资格认证
  */
 import React, { Component } from 'react'
-import { InputItem, Button, Toast, ActionSheet } from 'antd-mobile'
+import { InputItem, Button, Toast, ActionSheet, Picker, List } from 'antd-mobile'
 import { createForm } from 'rc-form'
 import api from 'Util/api'
 import * as urls from 'Contants/urls'
@@ -14,6 +14,7 @@ import frontImg from 'Src/assets/fc.png'
 import backImg from 'Src/assets/bc.png'
 import charterImg from 'Src/assets/cc.png'
 import { onBackKeyDown } from 'Contants/tooler'
+import addressOptions from './address-options.js'
 class Company extends Component {
   constructor(props) {
     super(props)
@@ -43,14 +44,15 @@ class Company extends Component {
     }
   }
   handleSubmit = () => {
-    const validateAry = ['name', 'legal', 'card_no', 'address', 'credit_code', 'mobile', 'license', 'card_front', 'card_back']
+    const validateAry = ['name', 'credit_code', 'region', 'address', 'legal', 'card_no', 'mobile', 'license', 'card_front', 'card_back']
     const { validateFields, getFieldError } = this.props.form
     Toast.loading('提交中...', 0)
     validateFields(async (err, value) => {
       if (!err) {
         console.log('value:', value)
         const data = await api.Mine.companyAuth.aptitude({
-          ...value
+          ...value,
+          region: value['region'][1]
         }) || false
         if (data) {
           Toast.hide()
@@ -229,27 +231,33 @@ class Company extends Component {
             )}
           </div>
           <div className={`${style.input} my-bottom-border`}>
-            <div className={style['title']}>法人</div>
-            {getFieldDecorator('legal', {
+            <div className={style['title']}>统一社会信用代码</div>
+            {getFieldDecorator('credit_code', {
               rules: [{
-                required: true, message: '请输入法人',
-              }]
+                required: true, message: '请输入统一社会信用代码',
+              },
+              { pattern: /^[A-Za-z0-9]{15}$|^[A-Za-z0-9]{17}$|^[A-Za-z0-9]{18}$|^[A-Za-z0-9]{20}$/, message: '信用代码由15或者17或者18或者20位字母、数字组成' }]
             })(
-              <InputItem placeholder='请输入法人'/>
+              <InputItem placeholder='请输入统一社会信用代码'/>
             )}
           </div>
           <div className={`${style.input} my-bottom-border`}>
-            <div className={style['title']}>身份证号</div>
-            {getFieldDecorator('card_no', {
+            <div className={style['title']}>所在区域</div>
+            {getFieldDecorator('region', {
               rules: [{
-                required: true, message: '请输入身份证号',
+                required: true, message: '请选择省·市'
               }]
             })(
-              <InputItem placeholder='请输入身份证号'/>
+              <Picker
+                extra='请选择省·市'
+                data={addressOptions}
+              >
+                <List.Item arrow='horizontal'>省·市</List.Item>
+              </Picker>
             )}
           </div>
           <div className={`${style.input} my-bottom-border`}>
-            <div className={style['title']}>地址</div>
+            <div className={style['title']}>详细地址</div>
             {getFieldDecorator('address', {
               rules: [{
                 required: true, message: '请输入地址',
@@ -259,14 +267,23 @@ class Company extends Component {
             )}
           </div>
           <div className={`${style.input} my-bottom-border`}>
-            <div className={style['title']}>统一社会信用代码</div>
-            {getFieldDecorator('credit_code', {
+            <div className={style['title']}>法人姓名</div>
+            {getFieldDecorator('legal', {
               rules: [{
-                required: true, message: '请输入统一社会信用代码',
-              },
-              { pattern: /^[A-Za-z0-9]{15}$|^[A-Za-z0-9]{17}$|^[A-Za-z0-9]{18}$|^[A-Za-z0-9]{20}$/, message: '信用代码由15或者17或者18或者20位字母、数字组成' }]
+                required: true, message: '请输入法人姓名',
+              }]
             })(
-              <InputItem placeholder='请输入统一社会信用代码'/>
+              <InputItem placeholder='请输入法人姓名'/>
+            )}
+          </div>
+          <div className={`${style.input} my-bottom-border`}>
+            <div className={style['title']}>法人身份证号</div>
+            {getFieldDecorator('card_no', {
+              rules: [{
+                required: true, message: '请输入法人身份证号',
+              }]
+            })(
+              <InputItem placeholder='请输入法人身份证号'/>
             )}
           </div>
           <div className={`${style.input} my-bottom-border`}>
