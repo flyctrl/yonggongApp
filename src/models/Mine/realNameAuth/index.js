@@ -116,7 +116,7 @@ class RealNameAuth extends Component {
     if ('cordova' in window) {
       navigator.camera.getPicture(this.onSuccessFront, this.onFail, {
         destinationType: Camera.DestinationType.DATA_URL,
-        quality: 80
+        quality: 10
       })
     } else {
       let file = e.target.files[0]
@@ -175,7 +175,7 @@ class RealNameAuth extends Component {
     if ('cordova' in window) {
       navigator.camera.getPicture(this.onSuccessBack, this.onFail, {
         destinationType: Camera.DestinationType.DATA_URL,
-        quality: 80
+        quality: 10
       })
     } else {
       let { token, fileList } = this.state
@@ -237,7 +237,7 @@ class RealNameAuth extends Component {
     if ('cordova' in window) {
       navigator.camera.getPicture(this.onSuccessFace, this.onFail, {
         destinationType: Camera.DestinationType.DATA_URL,
-        quality: 80
+        quality: 10
       })
     } else {
       let { token } = this.state
