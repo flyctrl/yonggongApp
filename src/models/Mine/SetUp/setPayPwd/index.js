@@ -7,6 +7,7 @@
 import React, { Component } from 'react'
 import { InputItem, Button, Toast, List } from 'antd-mobile'
 import { createForm } from 'rc-form'
+import md5 from 'md5'
 // import * as urls from 'Contants/urls'
 import { Content, Header } from 'Components'
 import style from 'Src/models/Login/style.css'
@@ -35,11 +36,20 @@ class RestPwd extends Component {
         Toast.loading('提交中...', 0)
         if (parseInt(isTrue, 10) === 1) {
           data = await api.auth.editPaypwd({
-            ...values
+            ...values,
+            ...{
+              'org_password': md5(values['org_password']),
+              'password': md5(values['org_password']),
+              'confirm_password': md5(values['confirm_password'])
+            }
           }) || false
         } else {
           data = await api.auth.setPaypwd({
-            ...values
+            ...values,
+            ...{
+              'password': md5(values['password']),
+              'confirm_password': md5(values['confirm_password'])
+            }
           }) || false
         }
         if (data) {

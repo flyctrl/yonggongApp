@@ -15,6 +15,7 @@ import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import storage from 'Util/storage'
 import history from 'Util/history'
+import md5 from 'md5'
 import { onBackKeyDown } from 'Contants/tooler'
 class Login extends Component {
   constructor(props) {
@@ -44,6 +45,7 @@ class Login extends Component {
               ...this.props.form.getFieldsValue(),
               ...{
                 platform: 1,
+                password: md5(this.props.form.getFieldValue('password')),
                 device: {
                   os: 2,
                   osver: device.version,
@@ -55,7 +57,10 @@ class Login extends Component {
             })
           })
         } else {
-          this.userLogin(this.props.form.getFieldsValue())
+          this.userLogin({
+            ...this.props.form.getFieldsValue(),
+            password: md5(this.props.form.getFieldValue('password'))
+          })
         }
         console.log(this.props.form.getFieldsValue())
       } else {

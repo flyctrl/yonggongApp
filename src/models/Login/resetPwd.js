@@ -10,6 +10,7 @@ import { createForm } from 'rc-form'
 import { Content, Header } from 'Components'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
+import md5 from 'md5'
 import style from './style.css'
 import logo from 'Src/assets/logo.png'
 import api from 'Util/api'
@@ -45,6 +46,8 @@ class RestPwd extends Component {
           let newValue = {
             ...values,
             verify_code: codeVerify,
+            password: md5(values['password']),
+            confirm_password: md5(values['confirm_password']),
             mobile
           }
           let data = await api.auth.forgetPsw(newValue) || false

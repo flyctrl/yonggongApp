@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2019-03-22 20:38:34
+* @Last Modified time: 2019-03-24 15:36:24
 */
 import * as Loading from './load.js'
 import storage from '../utils/storage'
@@ -36,7 +36,7 @@ fetcher.interceptors.request.use(function (config) {
   if (Authorization) {
     config.headers.Authorization = Authorization
   }
-  if ('cordova' in window) {
+  if ('cordova' in window) { // android
     if (storage.get('cordovaObj')) {
       let androidJson = storage.get('cordovaObj')
       config.headers.source = 1
@@ -44,11 +44,6 @@ fetcher.interceptors.request.use(function (config) {
       config.headers.os = androidJson['os']
       config.headers.osVersion = androidJson['osVersion']
       config.headers.appVersion = androidJson['appVersion']
-    } else if (typeof OCBridge !== 'undefined') {
-      let iosJson = OCBridge.getIPhoneInfo()
-      console.log('iosJson:')
-      console.log(iosJson)
-      console.log(JSON.stringify(iosJson))
     } else {
       config.headers.source = 1
       config.headers.deviceNo = ''
@@ -56,6 +51,16 @@ fetcher.interceptors.request.use(function (config) {
       config.headers.osVersion = ''
       config.headers.appVersion = ''
     }
+  } else if (typeof OCBridge !== 'undefined') { // ios
+    let iosJson = OCBridge.getIPhoneInfo()
+    console.log('iosJson:')
+    console.log(iosJson)
+    console.log(JSON.stringify(iosJson))
+    config.headers.source = 2
+    config.headers.deviceNo = iosJson['deviceNo']
+    config.headers.os = iosJson['os']
+    config.headers.osVersion = iosJson['osVersion']
+    config.headers.appVersion = iosJson['appVersion']
   }
   return config
 }, function (error) {

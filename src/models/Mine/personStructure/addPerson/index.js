@@ -8,6 +8,7 @@ import api from 'Util/api'
 import SelectDepart from '../selectDepart'
 import { rightWrongRadio } from 'Contants/fieldmodel'
 import { createForm } from 'rc-form'
+import md5 from 'md5'
 import 'antd-mobile/lib/date-picker/style/css'
 import style from 'Src/models/form.css'
 
@@ -107,7 +108,7 @@ class AddPerson extends Component {
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
         Toast.loading('提交中...', 0)
-        let newData = { type: typeRadioVal, groupId: selectGroupId }
+        let newData = { type: typeRadioVal, groupId: selectGroupId, password: md5(values['password']) }
         let postData = { ...values, ...newData }
         const data = await api.Mine.department.addPerson(postData) || false
         if (data) {
