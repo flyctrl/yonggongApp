@@ -220,7 +220,9 @@ class Check extends Component {
         _t.setState({
           position: positionResult.position,
         })
-        _t.handleCheckTime(_t.state.workorderno, _t.state.workerOldUid)
+        if (_t.state.isAgent === 0) {
+          _t.handleCheckTime(_t.state.workorderno)
+        }
         console.log('positionResult:', positionResult)
       })
       positionPicker.on('fail', function(positionResult) {
@@ -246,7 +248,7 @@ class Check extends Component {
     })
   }
   handlePushTime = async (e) => {
-    let { dataCheck, position, checkVal, workorderno, imgPath, isAgent, workerUid } = this.state
+    let { dataCheck, position, checkVal, workorderno, imgPath, isAgent, workerUid, workerOldUid } = this.state
     if (!('O' in position)) {
       Toast.fail('无法获取该手机位置信息', 1)
       return false
@@ -279,7 +281,8 @@ class Check extends Component {
             order_no: workorderno,
             type: checkVal,
             img_url: imgPath,
-            is_agent: 0
+            is_agent: 1,
+            worker_uid: workerOldUid
           }
         }
       } if (isAgent === 0) { // 本人
@@ -319,7 +322,8 @@ class Check extends Component {
             },
             img_url: imgPath,
             order_no: workorderno,
-            is_agent: 0
+            is_agent: 1,
+            worker_uid: workerOldUid
           }
         }
       } else {
@@ -343,7 +347,8 @@ class Check extends Component {
         visible: true,
         checkInTime: new Date().Format('hh:mm'),
         openDrawer: false,
-        isClick: false
+        isClick: false,
+        dataCheck: {}
       })
       Toast.hide()
       Toast.success('打卡成功', 1, () => {
@@ -358,7 +363,9 @@ class Check extends Component {
             visible: false,
             succTime: 5
           })
-          this.handleCheckTime(workorderno, this.state.workerOldUid)
+          if (isAgent === 0) {
+            this.handleCheckTime(workorderno)
+          }
         } else {
           this.setState({ succTime: this.state.succTime - 1 })
         }
@@ -394,7 +401,8 @@ class Check extends Component {
             lat: position.O
           },
           order_no: v,
-          is_agent: 0,
+          is_agent: 1,
+          worker_uid: workerUid
         }
       }
     }
@@ -543,9 +551,8 @@ class Check extends Component {
         workerUid: workerOldUid,
         isClick: false,
         datalist,
-        openDrawer: !this.state.openDrawer
-      }, () => {
-        this.handleCheckTime(this.state.workorderno, workerOldUid)
+        openDrawer: !this.state.openDrawer,
+        dataCheck: {}
       })
     } else {
       this.setState({ openDrawer: !this.state.openDrawer })
