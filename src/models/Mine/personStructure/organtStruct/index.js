@@ -135,7 +135,9 @@ class OrgantStruct extends Component {
           leftClick1={this.handleGoback}
           rightTitle='添加部门'
           rightClick={() => {
-            this.props.match.history.push(urls.ADDDEPARTMENT)
+            tooler.getCommpanyStatus(() => {
+              this.props.match.history.push(urls.ADDDEPARTMENT)
+            })
           }}
         />
         <Content>
