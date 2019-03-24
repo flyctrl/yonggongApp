@@ -211,7 +211,11 @@ class ApplySettle extends Component {
       worker: newary
     }) || false
     if (data) {
-      this.props.match.history.push(urls.MYORDER)
+      if (typeof OCBridge !== 'undefined') {
+        OCBridge.back()
+      } else {
+        this.props.match.history.push(urls.MYORDER)
+      }
     }
   }
   getNameByKey = (key, data) => {

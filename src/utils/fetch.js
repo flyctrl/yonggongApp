@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2019-03-21 14:37:19
+* @Last Modified time: 2019-03-22 20:38:34
 */
 import * as Loading from './load.js'
 import storage from '../utils/storage'
@@ -23,7 +23,6 @@ let fetcher = axios.create({
   loadtitle: '加载中...',
   headers: headersJson
 })
-
 fetcher.interceptors.request.use(function (config) {
   if (config.showloading) {
     Loading.showLoading(config.loadtitle)
@@ -36,6 +35,27 @@ fetcher.interceptors.request.use(function (config) {
   }
   if (Authorization) {
     config.headers.Authorization = Authorization
+  }
+  if ('cordova' in window) {
+    if (storage.get('cordovaObj')) {
+      let androidJson = storage.get('cordovaObj')
+      config.headers.source = 1
+      config.headers.deviceNo = androidJson['deviceNo']
+      config.headers.os = androidJson['os']
+      config.headers.osVersion = androidJson['osVersion']
+      config.headers.appVersion = androidJson['appVersion']
+    } else if (typeof OCBridge !== 'undefined') {
+      let iosJson = OCBridge.getIPhoneInfo()
+      console.log('iosJson:')
+      console.log(iosJson)
+      console.log(JSON.stringify(iosJson))
+    } else {
+      config.headers.source = 1
+      config.headers.deviceNo = ''
+      config.headers.os = ''
+      config.headers.osVersion = ''
+      config.headers.appVersion = ''
+    }
   }
   return config
 }, function (error) {
@@ -62,7 +82,7 @@ fetcher.interceptors.response.use(function (response) {
     } else {
       let refreshToken = storage.get('refreshToken')
       axios.post(baseUrl + '/employ/refresh', { refresh_token: refreshToken }, { headers: headersJson }).then(function(res) {
-        console.log(res)
+        console.log('res:', res)
         if (res.data.code === 10012) {
           storage.remove('Authorization')
           storage.remove('refreshToken')
@@ -74,7 +94,7 @@ fetcher.interceptors.response.use(function (response) {
           history.go(0)
         }
       }).catch(function(err) {
-        console.log(err)
+        console.log('err:', err)
       })
     }
   } else if (response.data.code === 16020006) { // 实名认证 未通过
