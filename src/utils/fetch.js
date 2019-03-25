@@ -1,14 +1,28 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2019-03-24 17:12:28
+* @Last Modified time: 2019-03-25 10:23:49
 */
 import * as Loading from './load.js'
+import { Toast } from 'antd-mobile'
 import storage from '../utils/storage'
 import axios from 'axios'
 import { baseUrl, headersJson } from './index'
 import history from 'Util/history'
 
+const netStatus = {
+  400: '请求错误',
+  401: '未授权，请登录',
+  403: '拒绝访问',
+  404: '请求地址错误',
+  408: '请求超时',
+  500: '服务器内部错误',
+  501: '服务未实现',
+  502: '网关错误',
+  503: '服务不可用',
+  504: '网关超时',
+  505: 'HTTP版本不受支持'
+}
 let fetcher = axios.create({
   baseURL: baseUrl,
   withCredentials: 'include',
@@ -98,8 +112,6 @@ fetcher.interceptors.response.use(function (response) {
           // window.location.reload()
           history.go(0)
         }
-      }).catch(function(err) {
-        console.log('err:', err)
       })
     }
   } else if (response.data.code === 16020006) { // 实名认证 未通过
@@ -113,61 +125,17 @@ fetcher.interceptors.response.use(function (response) {
   }
   return response.data
 }, function (error) {
-  if (error.response.config.showloading) {
-    Loading.hideLoading()
+  if (typeof error.response !== 'undefined') {
+    if (error.response.config.showloading) {
+      Loading.hideLoading()
+    }
   }
-  if (error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
-    error.msg = '网络异常，请重试'
+  if (error.message.indexOf('timeout') !== -1) {
+    Toast.offline('请求超时', 2)
   }
   if (error && error.response) { // 这里是返回状态码不为200时候的错误处理
-    switch (error.response.status) {
-      case 400:
-        error.msg = '请求错误'
-        break
-
-      case 401:
-        error.msg = '未授权，请登录'
-        break
-
-      case 403:
-        error.msg = '拒绝访问'
-        break
-
-      case 404:
-        error.msg = `请求地址出错: ${error.response.config.url}`
-        break
-
-      case 408:
-        error.msg = '请求超时'
-        break
-
-      case 500:
-        error.msg = '服务器内部错误'
-        break
-
-      case 501:
-        error.msg = '服务未实现'
-        break
-
-      case 502:
-        error.msg = '网关错误'
-        break
-
-      case 503:
-        error.msg = '服务不可用'
-        break
-
-      case 504:
-        error.msg = '网关超时'
-        break
-
-      case 505:
-        error.msg = 'HTTP版本不受支持'
-        break
-
-      default:
-        error.msg = error.response.status + '错误'
-    }
+    let stu = netStatus.hasOwnProperty(error.response.status) ? netStatus[error.response.status] : '网络异常'
+    Toast.offline(stu, 2)
   }
   return Promise.reject(error)
 })

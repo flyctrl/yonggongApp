@@ -34,7 +34,11 @@ export const Fetch = (url, params, method = 'post', config) => {
       }
     }
   }, (err) => {
-    Toast.fail(err.msg, 2)
+    if ((err + '').indexOf('timeout') !== -1) { // 超时error捕获
+      Toast.offline('请求超时', 2)
+    } else {
+      Toast.offline(err.msg, 2)
+    }
   })
 }
 
@@ -52,7 +56,7 @@ export const FetchSave = (url, params, method = 'post', config) => {
       if (res.alert === 0) {
         return false
       } else if (res.alert === 1 || res.alert === 3) {
-        Toast.fail(res.msg, 2)
+        Toast.offline(res.msg, 2)
       } else if (res.alert === 2) {
         Toast.hide()
         alert(res.msg, '', [
@@ -63,7 +67,11 @@ export const FetchSave = (url, params, method = 'post', config) => {
       }
     }
   }, (err) => {
-    Toast.fail(err.msg, 2)
+    if ((err + '').indexOf('timeout') !== -1) { // 超时error捕获
+      Toast.offline('请求超时', 2)
+    } else {
+      Toast.offline(err.msg, 2)
+    }
   })
 }
 
@@ -129,7 +137,7 @@ export default {
   },
   auth: {
     login(params) { // 登录
-      return Fetch(prefix + '/login', params, 'post', { loadtitle: '登录中...' })
+      return FetchSave(prefix + '/login', params, 'post', { loadtitle: '登录中...' })
     },
     register(params) { // 注册
       return Fetch(prefix + '/register', params, 'post', { showloading: false })
