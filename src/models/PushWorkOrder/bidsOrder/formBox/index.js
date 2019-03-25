@@ -185,6 +185,13 @@ class FormBox extends Component {
       }
     })
   }
+  handleCordovaImg = () => {
+    tooler.corovaUploadImg(3, (data) => {
+      this.setState(({ fileList }) => ({
+        fileList: [...fileList, data]
+      }))
+    })
+  }
   render() {
     const { getFieldProps, getFieldError, getFieldValue, setFieldsValue } = this.props.form
     let { fileList, remarkShow, startDate, endDate, mapShow, address, remark, bidsData } = this.state
@@ -375,7 +382,9 @@ class FormBox extends Component {
           </div>
           <div className={`${style['push-form-upload']}`}>
             <p className={style['push-title']}>附件</p>
-            <Upload {...uploaderProps} ><NewIcon type='icon-upload' className={style['push-upload-icon']} /></Upload>
+            {
+              'cordova' in window ? <div onClick={this.handleCordovaImg}><NewIcon type='icon-upload' className={style['push-upload-icon']} /></div> : <Upload {...uploaderProps} ><NewIcon type='icon-upload' className={style['push-upload-icon']} /></Upload>
+            }
             <ul className={style['file-list']}>
               {
                 fileList.map((item, index, ary) => {

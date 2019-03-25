@@ -5,10 +5,12 @@
 * @Last Modified time: 2018-06-02 17:04:01
 */
 import arrayTreeFilter from 'array-tree-filter'
+import { Modal, Toast } from 'antd-mobile'
 import history from 'Util/history'
 import api from 'Util/api'
 import * as urls from 'Contants/urls'
-import { Modal } from 'antd-mobile'
+import { headersJson } from 'Util'
+import storage from 'Util/storage'
 const alert = Modal.alert
 const DATE_REGEXP = new RegExp('(\\d{4})-(\\d{2})-(\\d{2})([T\\s](\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{3}))?)?.*')
 export const getSel = (value, optionsObj) => { // 根据键值筛选数结果数据中的对象，value:需要筛选树的value数据，optionsObj: 所在的树的数据
@@ -239,5 +241,57 @@ export const getCommpanyStatus = async(callback, actopt) => { // 参数1是一�
   } else {
     callback()
   }
+}
+
+export const corovaUploadImg = (type, callback) => {
+  navigator.camera.getPicture((imageURI) => {
+    let options = new FileUploadOptions()
+    options.fileKey = 'file'
+    options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1)
+    let newHeader = headersJson
+    newHeader.source = 1
+    if (storage.get('cordovaObj')) {
+      let androidJson = storage.get('cordovaObj')
+      newHeader.deviceNo = androidJson['deviceNo']
+      newHeader.os = androidJson['os']
+      newHeader.osVersion = androidJson['osVersion']
+      newHeader.appVersion = androidJson['appVersion']
+    } else {
+      newHeader.deviceNo = ''
+      newHeader.os = ''
+      newHeader.osVersion = ''
+      newHeader.appVersion = ''
+    }
+    delete newHeader['Content-Type']
+    options.headers = newHeader
+    let params = {}
+    params.type = type
+    options.params = params
+    let ft = new FileTransfer()
+    Toast.loading('上传中...', 0)
+    ft.upload(imageURI, api.Common.uploadFile, (file) => {
+      console.log(file)
+      Toast.hide()
+      let newdata = JSON.parse(file.response)
+      if (newdata['code'] === 0) {
+        Toast.success('上传成功', 1)
+        callback(newdata['data'])
+      } else {
+        Toast.fail(newdata['msg'], 1)
+      }
+    }, (error) => {
+      console.log(error)
+      Toast.hide()
+      Toast.fail('没选择图片')
+    }, options)
+  }, (msg) => {
+    Toast.offline(msg, 2)
+  }, {
+    sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+    destinationType: Camera.DestinationType.FILE_URI,
+    targetWidth: 1400,
+    targetHeight: 1400,
+    quality: 80
+  })
 }
 

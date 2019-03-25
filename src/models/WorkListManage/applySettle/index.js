@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
 import { List, Modal, Toast, Button } from 'antd-mobile'
+import md5 from 'md5'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
 import * as urls from 'Contants/urls'
@@ -66,7 +67,7 @@ class ApplySettle extends Component {
                 let data = await api.WorkListManage.settleSendSettle({
                   workSheetNo: worksheetno,
                   orderNo: orderno,
-                  password
+                  password: md5(password)
                 }) || false
                 if (data) {
                   resolve()

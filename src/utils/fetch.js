@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2019-03-25 10:23:49
+* @Last Modified time: 2019-03-25 18:40:41
 */
 import * as Loading from './load.js'
 import { Toast } from 'antd-mobile'
@@ -49,6 +49,9 @@ fetcher.interceptors.request.use(function (config) {
   }
   if (Authorization) {
     config.headers.Authorization = Authorization
+  }
+  if (config.hasOwnProperty('Content-Type')) {
+    config.headers['Content-Type'] = config['Content-Type']
   }
   if ('cordova' in window) { // android
     if (storage.get('cordovaObj')) {

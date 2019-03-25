@@ -4,6 +4,7 @@ import { Toast, TextareaItem } from 'antd-mobile'
 import { Header, Content, NewIcon } from 'Components'
 import { createForm } from 'rc-form'
 import style from './style.css'
+import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import { headersJson } from 'Util'
 import Loadable from 'react-loadable'
@@ -73,7 +74,13 @@ class Construct extends Component {
       }
     })
   }
-
+  handleCordovaImg = () => {
+    tooler.corovaUploadImg(3, (data) => {
+      this.setState(({ fileList }) => ({
+        fileList: [...fileList, data]
+      }))
+    })
+  }
   render() {
     const { getFieldProps, getFieldError } = this.props.form
     let { info, fileList } = this.state
@@ -128,7 +135,9 @@ class Construct extends Component {
             </div>
             <div className={`${style['push-form-upload']}`}>
               <p className={style['push-title']}>附件</p>
-              <Upload {...uploaderProps} ><NewIcon type='icon-upload' className={style['push-upload-icon']} /></Upload>
+              {
+                'cordova' in window ? <div onClick={this.handleCordovaImg}><NewIcon type='icon-upload' className={style['push-upload-icon']} /></div> : <Upload {...uploaderProps} ><NewIcon type='icon-upload' className={style['push-upload-icon']} /></Upload>
+              }
               <ul className={style['file-list']}>
                 {
                   fileList.map((item, index, ary) => {

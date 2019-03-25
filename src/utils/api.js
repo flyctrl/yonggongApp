@@ -117,7 +117,7 @@ export default {
       return Fetch('/common/bank/list', params, 'get')
     },
     uploadImg(params) { // 图片上传
-      return FetchSave('/common/attach/image', params, 'post', { 'Content-Type': 'multipart/form-data', loadtitle: '上传中...' })
+      return FetchSave('/common/attach/image', params, 'post', { loadtitle: '上传中...' })
     },
     getUnitlist(params) { // 获取计价列表
       return Fetch(prefix + '/worksheet/list/valuation_unit', params, 'get')
@@ -176,16 +176,16 @@ export default {
       return Fetch(prefix + '/withdraw/validate', params)
     },
     realNameFront(params) {
-      return FetchSave(prefix + '/certificate/front', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 正面
+      return FetchSave(prefix + '/certificate/front', params, 'post', { showloading: false }) // 正面
     },
     realNameBack(params) {
-      return Fetch(prefix + '/certificate/back', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 反面
+      return Fetch(prefix + '/certificate/back', params, 'post', { showloading: false }) // 反面
     },
     realNameFace(params) {
-      return Fetch(prefix + '/certificate/face', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 脸部
+      return Fetch(prefix + '/certificate/face', params, 'post', { showloading: false }) // 脸部
     },
     realNameConfirm(params) {
-      return Fetch(prefix + '/certificate/confirm', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 确认
+      return Fetch(prefix + '/certificate/confirm', params, 'post', { showloading: false }) // 确认
     }
   },
   PushOrder: {
@@ -395,7 +395,7 @@ export default {
         return Fetch(prefix + '/company/status', params, 'get')
       },
       uploadImg(params) { // 上传照片
-        return Fetch('/common/attach/imageData', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false })
+        return Fetch('/common/attach/imageData', params, 'post', { showloading: false })
       }
     },
     invoiceMange: { // 发票管理
@@ -421,7 +421,7 @@ export default {
         return Fetch(prefix + '/invoice/apply/confirm', params, 'post', { showloading: false })
       },
       uploadImg(params) { // 图片上传
-        return FetchSave('/common/attach/imageData', params, 'post', { 'Content-Type': 'multipart/form-data', loadtitle: '上传中...' })
+        return FetchSave('/common/attach/imageData', params, 'post', { loadtitle: '上传中...' })
       },
       sendEmail(params) { // 下载附件
         return Fetch(prefix + '/invoice/mail', params, 'post', { showloading: false })
@@ -464,9 +464,6 @@ export default {
       }
     },
     Personaldara: { // 编辑个人资料
-      avatar(params) { // 上传用户头像
-        return Fetch(prefix + '/users/avatar', params, 'post', { 'Content-Type': 'multipart/form-data' })
-      },
       edit(params) { // 修改用户资料
         return Fetch(prefix + '/users/edit', params)
       },
@@ -573,7 +570,7 @@ export default {
         return Fetch(prefix + '/worksheetOrder/attend/orderList', params, 'get')
       },
       uploadImg(params) { // 上传照片
-        return Fetch('/common/attach/imageData', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false })
+        return Fetch('/common/attach/imageData', params, 'post', { showloading: false })
       },
       attendOrderlist(params) { // 代考勤订单列表(考勤提醒)
         return Fetch(prefix + '/worksheetOrder/attend/orderList', params, 'get')
@@ -581,13 +578,13 @@ export default {
     },
     workManage: {// 工人管理
       realNameFront(params) {
-        return Fetch(prefix + '/worker/front', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 正面
+        return Fetch(prefix + '/worker/front', params, 'post', { showloading: false }) // 正面
       },
       realNameBack(params) {
-        return Fetch(prefix + '/worker/back', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 反面
+        return Fetch(prefix + '/worker/back', params, 'post', { showloading: false }) // 反面
       },
       realNameFace(params) {
-        return Fetch(prefix + '/worker/face', params, 'post', { 'Content-Type': 'multipart/form-data', showloading: false }) // 脸部
+        return Fetch(prefix + '/worker/face', params, 'post', { showloading: false }) // 脸部
       },
       realNameConfirm(params) {
         return Fetch(prefix + '/worker/confirm', params, 'post', { showloading: false }) // 确认

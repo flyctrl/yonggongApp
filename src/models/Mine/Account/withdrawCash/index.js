@@ -5,6 +5,7 @@
  */
 import React, { Component } from 'react'
 import { List, InputItem, Toast, Button, Radio, Modal } from 'antd-mobile'
+import md5 from 'md5'
 import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import { Header, Content } from 'Components'
@@ -49,7 +50,7 @@ class WithdrawCash extends Component {
   vaildatePwd = async (password) => {
     Toast.loading('提交中...', 0)
     const data = await api.auth.vailPaypwd({
-      password
+      password: md5(password)
     }) || false
     if (data) {
       promptInstance.close()
@@ -57,7 +58,7 @@ class WithdrawCash extends Component {
       const subdata = await api.Mine.account.withdraw({
         cardId: bankval['card_id'],
         amount: cashValue,
-        password
+        password: md5(password)
       }) || false
       if (subdata) {
         setTimeout(() => {
