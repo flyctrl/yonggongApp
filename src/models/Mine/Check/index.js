@@ -1,18 +1,18 @@
 
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Toast } from 'antd-mobile'
+import { Toast, Modal } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import { Header, Content, NewIcon, DefaultPage } from 'Components'
 import { getQueryString, onBackKeyDown } from 'Contants/tooler'
 import style from './style.css'
 import api from 'Util/api'
-import ChildStatus from './status'
+// import ChildStatus from './status'
 import { Button, Icon, List, Picker, Drawer } from 'antd-mobile'
 import tips from 'Src/assets/ad.png'
 import checkImg from 'Src/assets/checked2.png'
 import daikaoqinImg from 'Src/assets/daikaoqin.png'
-// const alert = Modal.alert
+const alert = Modal.alert
 let positionPicker = null
 let distanceStatus = {
   0: '在正常范围内',
@@ -27,15 +27,14 @@ let checkType = [{
   label: '下班'
 }]
 let map = null
-// let newAlert = null
 let setTime
-let successTime
 class Check extends Component {
   constructor(props) {
     super(props)
     this.state = {
       isLoading: true,
       isUserLoading: false, // 代考勤列表
+      isMapLoading: false, // 加载地图
       isCheck: false,
       visible: false,
       checkInTime: null, // 打卡时间
@@ -219,6 +218,7 @@ class Check extends Component {
       positionPicker.on('success', function(positionResult) {
         _t.setState({
           position: positionResult.position,
+          isMapLoading: true
         })
         if (_t.state.isAgent === 0) {
           _t.handleCheckTime(_t.state.workorderno)
@@ -351,25 +351,13 @@ class Check extends Component {
         dataCheck: {}
       })
       Toast.hide()
-      Toast.success('打卡成功', 1, () => {
-        if (isAgent === 1) {
-          this.getAgentCheckList()
-        }
-      })
-      successTime = setInterval(() => {
-        if (this.state.succTime <= 1) {
-          clearInterval(successTime)
-          this.setState({
-            visible: false,
-            succTime: 5
-          })
-          if (isAgent === 0) {
-            this.handleCheckTime(workorderno)
-          }
-        } else {
-          this.setState({ succTime: this.state.succTime - 1 })
-        }
-      }, 1000)
+      alert('打卡成功!', [{ text: '确定', onPress: () => 1 }])
+      if (isAgent === 1) {
+        this.getAgentCheckList()
+      }
+      if (isAgent === 0) {
+        this.handleCheckTime(workorderno)
+      }
     }
   }
   handleCheckTime = async (v, workerUid, click) => {
@@ -536,7 +524,6 @@ class Check extends Component {
   }
   componentWillUnmount() {
     clearInterval(setTime)
-    clearInterval(successTime)
     if ('cordova' in window) {
       document.removeEventListener('backbutton', this.backButtons)
       document.addEventListener('backbutton', onBackKeyDown, false)
@@ -581,25 +568,21 @@ class Check extends Component {
   }
   handleClickChoose = (uid) => { // 选择代考勤员工考勤
     let { datalist } = this.state
-    let isClick
+    let isClick = 1
     for (let i of datalist) {
       if (i.uid === uid) {
+        i.isClick = !i.isClick
         if (i.isClick) {
-          i.isClick = false
-          isClick = false
-        } else {
-          i.isClick = true
-          isClick = true
-          this.handleCheckTime(this.state.workorderno, uid, isClick)
+          this.handleCheckTime(this.state.workorderno, uid, true)
+          isClick = 2
         }
       } else {
         i.isClick = false
-        isClick = false
       }
     }
     this.setState({
       datalist,
-      isClick,
+      isClick: isClick === 2,
       workerUid: uid
     })
   }
@@ -613,8 +596,9 @@ class Check extends Component {
       this.props.match.history.push(`${urls.ATTENDDETAIL}?orderno=${workorderno}`)
     }
   }
-  renderDom = (dataCheck, checkVal, isCheck, time, his, workorderno, workerUid) => {
-    let { isClick, openDrawer, isAgent } = this.state
+  renderDom = (dataCheck, checkVal, isCheck, time, his, workorderno, workerUid, isClick) => {
+    let { openDrawer, isAgent, isLoading } = this.state
+    console.log(isLoading, 'isloading')
     return <div style={{ textAlign: 'center' }} className={`${style['time-box']} ${this.state.openDrawer ? style['time-box-dw'] : ''}`}>
       {
         dataCheck['attend_type'] === 1
@@ -626,10 +610,10 @@ class Check extends Component {
           : null
       }
       { 'cordova' in window
-        ? <input id='btn_camera'className={style['check-input']} type='button' disabled={(!isCheck) || (isAgent === 1 ? !isClick : false)} onClick={this.handleTake} />
-        : <input id='btn_camera'className={style['check-input']} type='file' disabled={(!isCheck) || (isAgent === 1 ? !isClick : false)} accept='image/*' capture='camera' onChange={this.handleTake} />
+        ? <input id='btn_camera'className={style['check-input']} type='button' disabled={(!isCheck) || (isAgent === 1 ? !isClick : false) || isLoading} onClick={this.handleTake} />
+        : <input id='btn_camera'className={style['check-input']} type='file' disabled={(!isCheck) || (isAgent === 1 ? !isClick : false) || isLoading} accept='image/*' capture='camera' onChange={this.handleTake} />
       }
-      <Button className={`${style.btnCheck} ${dataCheck['time_status'] === 1 ? style.btnCheck2 : ''}`} disabled={(!isCheck) || (isAgent === 1 ? !isClick : false)} type='primary'>
+      <Button className={`${style.btnCheck} ${dataCheck['time_status'] === 1 ? style.btnCheck2 : ''}`} disabled={(!isCheck) || (isAgent === 1 ? !isClick : false) || isLoading} type='primary'>
         <span className={style['btn-title']}>{dataCheck['time_status'] === 1 ? '迟到打卡' : '拍照打卡'}</span>
         <span className={style.time}>{time} </span>
       </Button>
@@ -644,7 +628,7 @@ class Check extends Component {
     </div>
   }
   render() {
-    const { time, dataCheck = {}, checkVal, visible, imgSrc, checkInTime, isCheck, workerUid, succTime, workorderno, datalist, isUserLoading, isAgent } = this.state
+    const { time, dataCheck = {}, checkVal, visible, isCheck, workerUid, workorderno, datalist, isUserLoading, isAgent, isMapLoading, isClick } = this.state
     dataCheck.attend_time_config = dataCheck.attend_time_config || []
     dataCheck['attend_type'] = dataCheck['attend_type'] || ''
     let his = this.props.match.history
@@ -684,27 +668,27 @@ class Check extends Component {
       >
       </Drawer>
       <Content>
-        <div style={{ display: visible ? 'none' : 'block' }}>
-          <div ref={(el) => { this.lc = el }} className={style.check}>
-            <div className={style['check-info']}>
-              <div className={style['map-box']} style={{ height: document.documentElement.clientHeight - 240 - 18 - 45 }}>
-                <div id='mapContainer' style={{ height: document.documentElement.clientHeight - 240 - 18 - 45 }}></div>
-              </div>
-              {
-                isAgent === 1
-                  ? <div className={style['daikaoqin']} onClick={this.onOpenChange}>
-                    <img src={daikaoqinImg}></img>
-                    <span>代考勤</span>
-                  </div>
-                  : null
-              }
-              {this.renderDom(dataCheck, checkVal, isCheck, time, his, workorderno, workerUid)}
+        {/* <div style={{ display: visible ? 'none' : 'block' }}> */}
+        <div ref={(el) => { this.lc = el }} className={style.check}>
+          <div className={style['check-info']}>
+            <div className={style['map-box']} style={{ height: document.documentElement.clientHeight - 240 - 18 - 45 }}>
+              <div id='mapContainer' style={{ height: document.documentElement.clientHeight - 240 - 18 - 45 }}></div>
             </div>
+            {
+              isAgent === 1 && isMapLoading
+                ? <div className={style['daikaoqin']} onClick={this.onOpenChange}>
+                  <img src={daikaoqinImg}></img>
+                  <span>代考勤</span>
+                </div>
+                : null
+            }
+            {this.renderDom(dataCheck, checkVal, isCheck, time, his, workorderno, workerUid, isClick)}
           </div>
         </div>
-        <div style={{ display: !visible ? 'none' : 'block' }}>
+        {/* </div> */}
+        {/* <div style={{ display: !visible ? 'none' : 'block' }}>
           <ChildStatus dataCheck={dataCheck} time={checkInTime} succTime={succTime} imgSrc={ imgSrc }/>
-        </div>
+        </div> */}
       </Content>
     </div>
   }
