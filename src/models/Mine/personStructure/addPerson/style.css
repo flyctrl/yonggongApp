@@ -1,0 +1,5 @@
+.input-form-lists {
+  & :global(.am-input-extra) {
+    color: #333;
+  }
+}

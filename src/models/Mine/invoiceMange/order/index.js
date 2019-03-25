@@ -160,7 +160,6 @@ class OrderRange extends Component {
     })
   }
   onChange = (val) => {
-    console.log(val, 'val')
     let { dataSource } = this.state
     let index = dataSource.indexOf(val)
     dataSource[index]['ischeck'] = !dataSource[index]['ischeck']

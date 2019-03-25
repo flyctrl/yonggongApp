@@ -521,6 +521,9 @@ export default {
       info(params) { // 查看企业资料详情
         return Fetch(prefix + '/company', params, 'get')
       },
+      getCompanyInfo(params) { // 公司详情
+        return Fetch(prefix + '/company/info', params, 'get')
+      },
       home(params) { // 获取企业资料
         return Fetch(prefix + '/company/home', params, 'get')
       }
