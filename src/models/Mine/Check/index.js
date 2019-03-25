@@ -140,7 +140,7 @@ class Check extends Component {
           let circle = new AMap.Circle({
             map: map,
             center: new AMap.LngLat(lng, lat), // 设置线覆盖物路径
-            radius: radius || 500,
+            radius: radius === 'undefined' ? 500 : (radius || 500),
             strokeColor: '#3366FF', // 边框线颜色
             strokeOpacity: 0.3, // 边框线透明度
             strokeWeight: 3, // 边框线宽
@@ -186,7 +186,7 @@ class Check extends Component {
           let circle = new AMap.Circle({
             map: map,
             center: new AMap.LngLat(lng, lat), // 设置线覆盖物路径
-            radius: radius || 500,
+            radius: radius === 'undefined' ? 500 : (radius || 500),
             strokeColor: '#3366FF', // 边框线颜色
             strokeOpacity: 0.3, // 边框线透明度
             strokeWeight: 3, // 边框线宽
@@ -351,13 +351,14 @@ class Check extends Component {
         dataCheck: {}
       })
       Toast.hide()
-      alert('打卡成功!', [{ text: '确定', onPress: () => 1 }])
-      if (isAgent === 1) {
-        this.getAgentCheckList()
-      }
-      if (isAgent === 0) {
-        this.handleCheckTime(workorderno)
-      }
+      alert('打卡成功!', '', [{ text: '确定', onPress: () => {
+        if (isAgent === 1) {
+          this.getAgentCheckList()
+        }
+        if (isAgent === 0) {
+          this.handleCheckTime(workorderno)
+        }
+      } }])
     }
   }
   handleCheckTime = async (v, workerUid, click) => {
@@ -458,10 +459,10 @@ class Check extends Component {
     reader.onload = async function () {
       let url = this.result
       Toast.loading('上传中...', 0)
-      let formData = {}
-      formData.image = url
-      formData.type = 8
-      const data = await api.Mine.Check.uploadImg(formData) || false
+      let Data = {}
+      Data.image = url
+      Data.type = 8
+      const data = await api.Mine.Check.uploadImg(Data) || false
       if (data) {
         _this.setState({
           imgSrc: data.url,
