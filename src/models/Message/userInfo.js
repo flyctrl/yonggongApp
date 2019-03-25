@@ -12,43 +12,60 @@ import style from './style.css'
 import api from 'Util/api'
 import { Header, Content } from 'Components'
 import company from 'Src/assets/company.png'
+const Period = { // 营业期限
+  0: '未知',
+  1: '3年以内',
+  2: '5年以内',
+  3: '10年以内',
+  4: '10年以上',
+  5: '长期'
+}
+const Scale = { // 企业规模
+  0: '未知',
+  1: '20人以下',
+  2: '20-50人',
+  3: '50-100人',
+  4: '100-300人',
+  5: '300-500人',
+  6: '500人以上'
+}
 class UserInfo extends Component {
   constructor(props) {
     super(props)
     this.state = {
       companyDetail: {},
-      isLoading: true
+      isLoading: true,
     }
   }
 
   async componentDidMount() {
-    // if (window.location.search) {
-    //   this.state.urls = window.location.search
-    // }
     this.setState({ isLoading: true })
-    const data = await api.Mine.checkDetails.info({
+    const data = await api.Mine.checkDetails.getCompanyInfo({
+    }) || false
+    const dataInfo = await api.Mine.checkDetails.info({
       hasInfo: 1
     }) || false
-    if (data) {
+    if (data && dataInfo) {
       this.setState({
         companyDetail: data,
         isLoading: false,
+        region: data['region'] || {},
+        personDetail: dataInfo
       })
     }
   }
 
   handleUserBack = () => {
-  // let { urls } = this.state
     let url = tooler.getQueryString('url')
     if (url) {
       this.props.match.history.push(urls[url])
     } else {
-      // history.push(urls.HOME)
       this.props.match.history.goBack()
     }
   }
   render() {
-    const { companyDetail, isLoading } = this.state
+    let { companyDetail, isLoading, region = {}, personDetail } = this.state
+    let { province = {}, city = {}} = region
     return (
       <div className='pageBox gray'>
         <Header
@@ -63,18 +80,18 @@ class UserInfo extends Component {
               ? <div className={style['detail-box']}>
                 <div className={`${style['detail-header']} my-bottom-border`}>
                   <img src={company}/>
-                  <h4>{companyDetail.name}</h4>
+                  <h4>{companyDetail.company_name}</h4>
                 </div>
                 <dl>
                   <dt>法人信息</dt>
                   {
-                    companyDetail.owner_name ? <dd><span>法人代表</span><p>{companyDetail.owner_name}</p></dd> : null
+                    personDetail.owner_name ? <dd><span>法人代表</span><p>{personDetail.owner_name}</p></dd> : null
                   }
                   {
-                    companyDetail.owner_card_no ? <dd><span>法人身份证号</span><p>{companyDetail.owner_card_no}</p></dd> : null
+                    personDetail.owner_card_no ? <dd><span>法人身份证号</span><p>{personDetail.owner_card_no}</p></dd> : null
                   }
                   {
-                    companyDetail.mobile ? <dd><span>手机号</span><p>{companyDetail.mobile}</p></dd> : null
+                    personDetail.mobile ? <dd><span>手机号</span><p>{personDetail.mobile}</p></dd> : null
                   }
                 </dl>
                 <dl className='my-top-border'>
@@ -98,7 +115,10 @@ class UserInfo extends Component {
                     companyDetail.credit_code ? <dd><span>统一社会信用代码</span><p>{companyDetail.credit_code}</p></dd> : null
                   }
                   {
-                    companyDetail.period ? <dd><span>营业期限</span><p>{companyDetail.period}</p></dd> : null
+                    companyDetail.period ? <dd><span>营业期限</span><p>{Period[companyDetail.period]}</p></dd> : null
+                  }
+                  {
+                    companyDetail.scale ? <dd><span>企业规模</span><p>{Scale[companyDetail.scale]}</p></dd> : null
                   }
                   {
                     companyDetail.company_type ? <dd><span>公司类型</span><p>{companyDetail.company_type}</p></dd> : null
@@ -107,7 +127,7 @@ class UserInfo extends Component {
                     companyDetail.telephone ? <dd><span>电话</span><p>{companyDetail.telephone}</p></dd> : null
                   }
                   {
-                    companyDetail.region ? <dd><span>地区</span><p>{companyDetail.region}</p></dd> : null
+                    JSON.stringify(region) !== '{}' ? <dd><span>地区</span><p>{`${province['name']}${city['name']}`}</p></dd> : null
                   }
                   {
                     companyDetail.address ? <dd><span>注册地址</span><p>{companyDetail.address}</p></dd> : null

@@ -39,7 +39,6 @@ export const OORDERSTARTWORKRECORD = `${MYORDER}/orderStartWorkRecord` // 开工
 export const ORDERWORKERLIST = `${MYORDER}/workerList` // 工人列表
 export const AGENTSTARTLIST = `${MYORDER}/agentStart` // 代开工列表
 export const AGENTFINISHLIST = `${MYORDER}/agentFinish` // 代完工列表
-export const AGENTCHECKLIST = `${MYORDER}/agentCheck` // 代考勤列表
 export const OATTENDDETAIL = `${MYORDER}/attendRecord/detail` // 考勤详情
 export const APPLYSETTLE = `${MYORDER}/applySettle` // 订单结算记录详情
 export const SELECTWORKER = `${MYORDER}/selectWorker` // 选择工人
@@ -60,7 +59,6 @@ export const BANKCARD = `${ACCOUNT}/bankCard` // 银行卡
 export const CHECKSET = `${MINE}/CheckSet` // 考勤设置
 export const CHECK = `${MINE}/Check` // 考勤管理
 export const CHECKLIST = `${MINE}/Check/checkList` // 考勤列表
-export const CHECKSTATUS = `${CHECK}/status` // 考勤状态
 
 export const CERTIFICATION = `${MINE}/certification` // 认证管理
 export const COMPANYAUTH = `${MINE}/companyAuth` // 企业认证

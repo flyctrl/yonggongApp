@@ -35,7 +35,8 @@ class Apply extends Component {
     })
     if (value === 2) {
       this.setState({
-        addressNo: ''
+        addressNo: '',
+        initialAddress: ''
       })
       return
     }
@@ -71,7 +72,10 @@ class Apply extends Component {
     }) || false
     if (data) {
       let initialTitle = ''
+      let initialTitle2 = ''
+      let isInit = false
       let dataSource = [...data['list']]
+      let dataSource2 = [...data['list']]
       for (let i = 0; i < dataSource.length; i++) {
         if (dataSource[i]['is_default'] === 1) {
           initialTitle = dataSource[i]['title']
@@ -79,16 +83,17 @@ class Apply extends Component {
             title_no: dataSource[i]['title_no']
           })
         }
-        if (dataSource[i]['title_no'] === this.state.titleNo) {
-          initialTitle = dataSource[i]['title']
+        if (dataSource2[i]['title_no'] === this.state.titleNo) {
+          initialTitle2 = dataSource2[i]['title']
           this.props.form.setFieldsValue({
-            title_no: dataSource[i]['title_no']
+            title_no: dataSource2[i]['title_no']
           })
+          isInit = true
         }
       }
       this.setState({
         titleLoading: false,
-        initialTitle
+        initialTitle: isInit ? initialTitle2 : initialTitle
       })
     }
   }
@@ -102,7 +107,10 @@ class Apply extends Component {
     }) || false
     if (data) {
       let initialAddress = ''
+      let initialAddress2 = ''
+      let isInit = false
       let dataSource = [...data['list']]
+      let dataSource2 = [...data['list']]
       for (let i = 0; i < dataSource.length; i++) {
         if (dataSource[i]['is_default'] === 1) {
           initialAddress = dataSource[i]['recv_address']
@@ -110,15 +118,16 @@ class Apply extends Component {
             express_no: dataSource[i]['express_no']
           })
         }
-        if (dataSource[i]['express_no'] === this.state.addressNo) {
-          initialAddress = dataSource[i]['recv_address']
+        if (dataSource2[i]['express_no'] === this.state.addressNo) {
+          initialAddress2 = dataSource2[i]['recv_address']
           this.props.form.setFieldsValue({
-            express_no: dataSource[i]['express_no']
+            express_no: dataSource2[i]['express_no']
           })
+          isInit = true
         }
       }
       this.setState({
-        initialAddress,
+        initialAddress: isInit ? initialAddress2 : initialAddress,
         addressLoading: false
       })
     }

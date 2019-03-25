@@ -4,10 +4,9 @@ import ReactDOM from 'react-dom'
 import { Toast, Modal } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import { Header, Content, NewIcon, DefaultPage } from 'Components'
-import { getQueryString, onBackKeyDown } from 'Contants/tooler'
+import { getQueryString } from 'Contants/tooler'
 import style from './style.css'
 import api from 'Util/api'
-// import ChildStatus from './status'
 import { Button, Icon, List, Picker, Drawer } from 'antd-mobile'
 import tips from 'Src/assets/ad.png'
 import checkImg from 'Src/assets/checked2.png'
@@ -28,6 +27,7 @@ let checkType = [{
 }]
 let map = null
 let setTime
+let newalert = null
 class Check extends Component {
   constructor(props) {
     super(props)
@@ -36,7 +36,6 @@ class Check extends Component {
       isUserLoading: false, // 代考勤列表
       isMapLoading: false, // 加载地图
       isCheck: false,
-      visible: false,
       checkInTime: null, // 打卡时间
       time: '', // 考勤倒计时
       succTime: 5, // 返回列表倒计时
@@ -64,10 +63,6 @@ class Check extends Component {
         time: new Date().Format('hh:mm'),
       })
     }, 1000)
-    if ('cordova' in window) {
-      document.removeEventListener('backbutton', onBackKeyDown, false)
-      document.addEventListener('backbutton', this.backButtons, false)
-    }
     this.getAgentCheckList(1)
     this.getUserInfo()
   }
@@ -78,17 +73,6 @@ class Check extends Component {
         workerUid: userData.uid,
         workerOldUid: userData.uid
       })
-    }
-  }
-  backButtons = (e) => {
-    let { visible } = this.state
-    if (visible) {
-      e.preventDefault()
-      this.setState({
-        visible: !this.state.visible
-      })
-    } else {
-      this.props.match.history.goBack()
     }
   }
   showToast = (msg, duration) => {
@@ -250,7 +234,7 @@ class Check extends Component {
   handlePushTime = async (e) => {
     let { dataCheck, position, checkVal, workorderno, imgPath, isAgent, workerUid, workerOldUid } = this.state
     if (!('O' in position)) {
-      Toast.fail('无法获取该手机位置信息', 1)
+      // Toast.fail('无法获取该手机位置信息', 1)
       return false
     }
     if (e) {
@@ -344,14 +328,13 @@ class Check extends Component {
     if (data) {
       this.setState({
         data,
-        visible: true,
         checkInTime: new Date().Format('hh:mm'),
         openDrawer: false,
         isClick: false,
         dataCheck: {}
       })
       Toast.hide()
-      alert('打卡成功!', '', [{ text: '确定', onPress: () => {
+      newalert = alert('打卡成功!', '', [{ text: '确定', onPress: () => {
         if (isAgent === 1) {
           this.getAgentCheckList()
         }
@@ -368,7 +351,7 @@ class Check extends Component {
     let { position, checkVal, isAgent, isClick, openDrawer } = this.state
     console.log(position, '1')
     if (!('O' in position)) {
-      Toast.fail('无法获取该手机位置信息', 1)
+      // Toast.fail('无法获取该手机位置信息', 1)
       return false
     }
     let postData = {}
@@ -525,9 +508,8 @@ class Check extends Component {
   }
   componentWillUnmount() {
     clearInterval(setTime)
-    if ('cordova' in window) {
-      document.removeEventListener('backbutton', this.backButtons)
-      document.addEventListener('backbutton', onBackKeyDown, false)
+    if (newalert) {
+      newalert.close()
     }
   }
   onOpenChange = (...args) => { // 代考勤列表
@@ -599,7 +581,6 @@ class Check extends Component {
   }
   renderDom = (dataCheck, checkVal, isCheck, time, his, workorderno, workerUid, isClick) => {
     let { openDrawer, isAgent, isLoading } = this.state
-    console.log(isLoading, 'isloading')
     return <div style={{ textAlign: 'center' }} className={`${style['time-box']} ${this.state.openDrawer ? style['time-box-dw'] : ''}`}>
       {
         dataCheck['attend_type'] === 1
@@ -629,7 +610,7 @@ class Check extends Component {
     </div>
   }
   render() {
-    const { time, dataCheck = {}, checkVal, visible, isCheck, workerUid, workorderno, datalist, isUserLoading, isAgent, isMapLoading, isClick } = this.state
+    const { time, dataCheck = {}, checkVal, isCheck, workerUid, workorderno, datalist, isUserLoading, isAgent, isMapLoading, isClick } = this.state
     dataCheck.attend_time_config = dataCheck.attend_time_config || []
     dataCheck['attend_type'] = dataCheck['attend_type'] || ''
     let his = this.props.match.history
@@ -649,13 +630,7 @@ class Check extends Component {
         leftTitle1='返回'
         rightTitle={ '考勤明细'}
         leftClick1={() => {
-          if (!visible) {
-            his.go(-1)
-          } else {
-            this.setState({
-              visible: !this.state.visible
-            })
-          }
+          his.go(-1)
         }}
         rightClick={ this.handleClickRight}
       />
@@ -669,7 +644,6 @@ class Check extends Component {
       >
       </Drawer>
       <Content>
-        {/* <div style={{ display: visible ? 'none' : 'block' }}> */}
         <div ref={(el) => { this.lc = el }} className={style.check}>
           <div className={style['check-info']}>
             <div className={style['map-box']} style={{ height: document.documentElement.clientHeight - 240 - 18 - 45 }}>
@@ -686,10 +660,6 @@ class Check extends Component {
             {this.renderDom(dataCheck, checkVal, isCheck, time, his, workorderno, workerUid, isClick)}
           </div>
         </div>
-        {/* </div> */}
-        {/* <div style={{ display: !visible ? 'none' : 'block' }}>
-          <ChildStatus dataCheck={dataCheck} time={checkInTime} succTime={succTime} imgSrc={ imgSrc }/>
-        </div> */}
       </Content>
     </div>
   }
