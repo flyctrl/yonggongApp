@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2019-03-25 23:23:09
+* @Last Modified time: 2019-03-26 11:41:20
 */
 import * as Loading from './load.js'
 import { Toast } from 'antd-mobile'
@@ -69,15 +69,14 @@ fetcher.interceptors.request.use(function (config) {
       config.headers.appVersion = ''
     }
   } else if (typeof OCBridge !== 'undefined') { // ios
-    // let iosJson = OCBridge.getIPhoneInfo()
-    // console.log('iosJson:')
-    // console.log(iosJson)
-    // console.log(JSON.stringify(iosJson))
-    // config.headers.source = 2
-    // config.headers.deviceNo = iosJson['deviceNo']
-    // config.headers.os = iosJson['os']
-    // config.headers.osVersion = iosJson['osVersion']
-    // config.headers.appVersion = iosJson['appVersion']
+    let iosJson = OCBridge.getiPhoneInfo()
+    console.log('iosJson:')
+    console.log(iosJson)
+    config.headers.source = 2
+    config.headers.deviceNo = iosJson['deviceNo']
+    config.headers.os = iosJson['os']
+    config.headers.osVersion = iosJson['osVersion']
+    config.headers.appVersion = iosJson['appVersion']
   }
   return config
 }, function (error) {

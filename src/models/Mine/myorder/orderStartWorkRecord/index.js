@@ -165,7 +165,7 @@ class AccessRecord extends Component {
     let { dataSource } = this.state
     let currentIndex
     dataSource.map((item, index) => {
-      if (item['task_no'] === orderno) {
+      if (item['task_no'] === rowData['task_no']) {
         currentIndex = index
       }
     })
@@ -316,7 +316,7 @@ class AccessRecord extends Component {
         <div index={rowData['task_no']} className={style['record-box']}>
           <div className={`${style['record-header']} my-bottom-border`}>
             <div className={style['header']} style={{ 'backgroundImage': 'url(' + rowData['tasker_avatar'] + ')' }}></div>
-            <p className={style['name']}>{rowData['tasker_name']}{rowData['is_self'] === 1 ? <sapn>(自己)</sapn> : ''}</p>
+            <p className={style['name']}>{rowData['tasker_name']}{rowData['is_self'] === 1 ? <span>(自己)</span> : ''}</p>
             <div className={style['record-btn']}>
               {
                 this.showlistStatus(rowData)

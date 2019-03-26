@@ -316,7 +316,13 @@ export const requestHeader = (oldHeader) => {
     }
   } else if (typeof OCBridge !== 'undefined') { // ios
     let iosJson = OCBridge.getiPhoneInfo()
-    console.log('iosJson:', iosJson)
+    console.log('iosJson:')
+    console.log(iosJson)
+    newHeader.source = 2
+    newHeader.deviceNo = iosJson['deviceNo']
+    newHeader.os = iosJson['os']
+    newHeader.osVersion = iosJson['osVersion']
+    newHeader.appVersion = iosJson['appVersion']
     return newHeader
   } else {
     return newHeader

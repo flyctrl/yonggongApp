@@ -86,7 +86,7 @@ class ApplySettle extends Component {
     } else {
       this.setState({
         inputAmount: value,
-        acceptAmount: value - workerAmount
+        acceptAmount: (Number(value) - Number(workerAmount)).toFixed(2)
       })
     }
   }
