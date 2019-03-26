@@ -34,7 +34,8 @@ class RealNameAuth extends Component {
       isSuccessFront: false, // 反面照是否成功
       stepNum: 0, // 步骤数
       isShowFace: false, // 是否显示人脸识别页面,
-      token: ''
+      token: '',
+      inputVal: ''
     }
   }
   componentDidMount () {
@@ -138,7 +139,8 @@ class RealNameAuth extends Component {
             isClickBack: false,
             isSuccessFront: true,
             token: data['token'],
-            img: data['head_image']
+            img: data['head_image'],
+            inputVal: ''
           })
         }
       }
@@ -198,7 +200,8 @@ class RealNameAuth extends Component {
             isClickBack: true,
             isSuccessBack: true,
             stepNum: 1,
-            token: data['token']
+            token: data['token'],
+            inputVal: ''
           })
         }
       }
@@ -262,7 +265,8 @@ class RealNameAuth extends Component {
             isClickBack: true,
             isSuccessBack: true,
             stepNum: 2,
-            token: data['token']
+            token: data['token'],
+            inputVal: ''
           })
         }
       }
@@ -322,14 +326,14 @@ class RealNameAuth extends Component {
             <div className={style['auth-pic-front']}>
               {'cordova' in window
                 ? <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='button' onClick={this.handleTakeFront}/>
-                : <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/jpg' capture='camera' onChange={this.handleTakeFront}/>
+                : <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/jpg' capture='camera' value={this.state.inputVal} onChange={this.handleTakeFront}/>
               }
               <img src={frontImg} style={{ zIndex: isClickFront ? 1 : 0 }}/>
             </div>
             <div className={style['auth-pic-back']}>
               { 'cordova' in window
                 ? <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='button' onClick={this.handleTakeBack} />
-                : <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/jpg' onChange={this.handleTakeBack} />
+                : <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/jpg' value={this.state.inputVal} onChange={this.handleTakeBack} />
               }
               <img src={backImg} onClick={this.handleClick} style={{ zIndex: isClickBack ? 1 : 0 }}/>
             </div>
@@ -387,7 +391,7 @@ class RealNameAuth extends Component {
             拍一张照片
             { 'cordova' in window
               ? <input id='btn_camera_face' className={style['input']} type='button' onClick={this.handleTakeFace} />
-              : <input id='btn_camera_face' className={style['input']} type='file' accept='image/jpg' capture='camera' onChange={this.handleTakeFace} />
+              : <input id='btn_camera_face' className={style['input']} type='file' accept='image/jpg' capture='camera' value={this.state.inputVal} onChange={this.handleTakeFace} />
             }
           </div>
         </div>
