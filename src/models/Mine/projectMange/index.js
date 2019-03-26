@@ -50,7 +50,7 @@ class ProjectMange extends Component {
         pageNos: data['pageNos']
       })
     }
-    return await data['list']
+    return await data['list'] || []
   }
   componentDidMount() {
     const hei = this.state.height - 90

@@ -122,7 +122,7 @@ class SettleRecord extends Component {
         waitAmount: data['wait_amount']
       })
     }
-    return await data['list']
+    return await data['list'] || []
   }
   handleDetail = (orderno, status) => {
     let { worksheetno } = this.state

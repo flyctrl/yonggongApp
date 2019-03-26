@@ -97,7 +97,7 @@ class AccessRecord extends Component {
         pageNos: data['pageNos']
       })
     }
-    return await data['list']
+    return await data['list'] || []
   }
   showlistStatus = (item) => { // 状态按钮
     if (item['status'] === 2) { // 已确认

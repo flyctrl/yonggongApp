@@ -96,7 +96,7 @@ class WorkList extends Component {
         pageNos: data['pageNos']
       })
     }
-    return await data['list']
+    return await data['list'] || []
   }
   render() {
     const { isLoading, nodata, height, dataSource } = this.state

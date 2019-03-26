@@ -132,7 +132,7 @@ class AttendRecord extends Component {
         endDate: data['end_date']
       })
     }
-    return await data['list']
+    return await data['list'] || []
   }
   showStatus = () => {
     let { statusVal } = this.state

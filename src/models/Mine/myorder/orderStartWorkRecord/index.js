@@ -102,7 +102,7 @@ class AccessRecord extends Component {
         pageNos: data['pageNos']
       })
     }
-    return await data['list']
+    return await data['list'] || []
   }
   showlistStatus = (item) => { // 状态按钮
     if (item['handle_type'] === 1) { // 通过/驳回
@@ -165,7 +165,7 @@ class AccessRecord extends Component {
     let { dataSource } = this.state
     let currentIndex
     dataSource.map((item, index) => {
-      if (item['order_no'] === orderno) {
+      if (item['task_no'] === orderno) {
         currentIndex = index
       }
     })

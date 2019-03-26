@@ -295,3 +295,30 @@ export const corovaUploadImg = (type, callback) => {
   })
 }
 
+export const requestHeader = (oldHeader) => {
+  let newHeader = oldHeader
+  if ('cordova' in window) { // android
+    if (storage.get('cordovaObj')) {
+      let androidJson = storage.get('cordovaObj')
+      newHeader.source = 1
+      newHeader.deviceNo = androidJson['deviceNo']
+      newHeader.os = androidJson['os']
+      newHeader.osVersion = androidJson['osVersion']
+      newHeader.appVersion = androidJson['appVersion']
+      return newHeader
+    } else {
+      newHeader.source = 1
+      newHeader.deviceNo = ''
+      newHeader.os = ''
+      newHeader.osVersion = ''
+      newHeader.appVersion = ''
+      return newHeader
+    }
+  } else if (typeof OCBridge !== 'undefined') { // ios
+    let iosJson = OCBridge.getiPhoneInfo()
+    console.log('iosJson:', iosJson)
+    return newHeader
+  } else {
+    return newHeader
+  }
+}
