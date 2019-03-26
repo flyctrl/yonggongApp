@@ -42,6 +42,7 @@ class AttendRecord extends Component {
       startDate: null,
       endDate: null,
       worksheetno: tooler.getQueryString('worksheetno'),
+      orderno: tooler.getQueryString('orderno'),
       pageIndex: 1,
       pageNos: 0,
       dataSource: [],
@@ -107,9 +108,16 @@ class AttendRecord extends Component {
     this.setState({
       isLoading: true
     })
-    let { worksheetno, dateVal, statusVal } = this.state
+    let { worksheetno, dateVal, statusVal, orderno } = this.state
+    let form = {}
+    if (orderno) {
+      form.worksheet_no = worksheetno
+      form.order_no = orderno
+    } else {
+      form.worksheet_no = worksheetno
+    }
     let data = await api.WorkListManage.attendStat({
-      worksheet_no: worksheetno,
+      ...form,
       date: dateVal !== null ? dateVal.Format('yyyy-MM-dd') : null,
       status: statusVal !== 0 ? statusVal[0] : 0,
       page: pIndex,

@@ -53,7 +53,8 @@ class Check extends Component {
       workerUid: '', // 所有员工uid
       openDrawer: false,
       isClick: false,
-      datalist: []
+      datalist: [],
+      inputVal: ''
     }
   }
 
@@ -331,7 +332,8 @@ class Check extends Component {
         checkInTime: new Date().Format('hh:mm'),
         openDrawer: false,
         isClick: false,
-        dataCheck: {}
+        dataCheck: {},
+        inputVal: ''
       })
       Toast.hide()
       newalert = alert('打卡成功!', '', [{ text: '确定', onPress: () => {
@@ -593,7 +595,7 @@ class Check extends Component {
       }
       { 'cordova' in window
         ? <input id='btn_camera'className={style['check-input']} type='button' disabled={(!isCheck) || (isAgent === 1 ? !isClick : false) || isLoading} onClick={this.handleTake} />
-        : <input id='btn_camera'className={style['check-input']} type='file' disabled={(!isCheck) || (isAgent === 1 ? !isClick : false) || isLoading} accept='image/*' capture='camera' onChange={this.handleTake} />
+        : <input id='btn_camera'className={style['check-input']} type='file' disabled={(!isCheck) || (isAgent === 1 ? !isClick : false) || isLoading} accept='image/*' capture='camera' onChange={this.handleTake} value={this.state.inputVal}/>
       }
       <Button className={`${style.btnCheck} ${dataCheck['time_status'] === 1 ? style.btnCheck2 : ''}`} disabled={(!isCheck) || (isAgent === 1 ? !isClick : false) || isLoading} type='primary'>
         <span className={style['btn-title']}>{dataCheck['time_status'] === 1 ? '迟到打卡' : '拍照打卡'}</span>
@@ -613,6 +615,7 @@ class Check extends Component {
     const { time, dataCheck = {}, checkVal, isCheck, workerUid, workorderno, datalist, isUserLoading, isAgent, isMapLoading, isClick } = this.state
     dataCheck.attend_time_config = dataCheck.attend_time_config || []
     dataCheck['attend_type'] = dataCheck['attend_type'] || ''
+    console.log(this.state.inputVal, 'valu')
     let his = this.props.match.history
     let sidebar = (<div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div className={style['dw-header']}>代考勤<NewIcon onClick={this.onOpenChange} type='icon-shanchu'></NewIcon></div>

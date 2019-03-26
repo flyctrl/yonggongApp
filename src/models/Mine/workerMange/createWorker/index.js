@@ -41,7 +41,8 @@ class CreateWorker extends Component {
       isBack: getQueryString('orderno'),
       codeDisabled: false,
       codeText: '获取验证码',
-      total: TOTAL
+      total: TOTAL,
+      inputVal: ''
     }
   }
   componentDidMount () {
@@ -154,7 +155,8 @@ class CreateWorker extends Component {
             isClickFront: true,
             isClickBack: false,
             isSuccessFront: true,
-            token: data['token']
+            token: data['token'],
+            inputVal: ''
           }, () => {
             Toast.success('上传成功', 1.5)
           })
@@ -217,7 +219,8 @@ class CreateWorker extends Component {
             isClickBack: true,
             isSuccessBack: true,
             stepNum: 1,
-            token: data['token']
+            token: data['token'],
+            inputVal: ''
           }, () => {
             Toast.success('上传成功', 1.5)
           })
@@ -286,7 +289,8 @@ class CreateWorker extends Component {
             token: data['token'],
             isPhone: true,
             isShowFace: !data['mobile_verify'],
-            isVerifyPhone: data['mobile_verify']
+            isVerifyPhone: data['mobile_verify'],
+            inputVal: ''
           })
           if (!data['mobile_verify']) {
             _this.handelConfim()
@@ -445,7 +449,7 @@ class CreateWorker extends Component {
                 {
                   'cordova' in window
                     ? <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='button' onClick={this.handleTakeFront} />
-                    : <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFront} />
+                    : <input id='btn_camera_front' className={style['input']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' accept='image/*' value={this.state.inputVal} capture='camera' onChange={this.handleTakeFront} />
                 }
                 <img src={frontImg} style={{ zIndex: isClickFront ? 1 : 0 }}/>
               </div>
@@ -453,7 +457,7 @@ class CreateWorker extends Component {
                 {
                   'cordova' in window
                     ? <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='button' onClick={this.handleTakeBack} />
-                    : <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/*' capture='camera' onChange={this.handleTakeBack} />
+                    : <input id='btn_camera_back' className={style['input']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' accept='image/*' value={this.state.inputVal} capture='camera' onChange={this.handleTakeBack} />
                 }
                 <img src={backImg} onClick={this.handleClick} style={{ zIndex: isClickBack ? 1 : 0 }}/>
               </div>
@@ -559,7 +563,7 @@ class CreateWorker extends Component {
             {
               'cordova' in window
                 ? <input id='btn_camera_face' className={style['input']} type='button' onClick={this.handleTakeFace} />
-                : <input id='btn_camera_face' className={style['input']} type='file' accept='image/*' capture='camera' onChange={this.handleTakeFace} />
+                : <input id='btn_camera_face' className={style['input']} type='file' accept='image/*' value={this.state.inputVal} capture='camera' onChange={this.handleTakeFace} />
             }
           </div>
         </div>

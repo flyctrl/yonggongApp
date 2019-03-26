@@ -25,7 +25,8 @@ class Company extends Component {
       charterImg,
       isClickCharter: false,
       isClickFront: false,
-      isClickBack: false
+      isClickBack: false,
+      inputVal: ''
     }
   }
   componentDidMount () {
@@ -167,6 +168,9 @@ class Company extends Component {
           Toast.hide()
           Toast.success('上传成功', 1.5)
           _this.handleSetImg(data)
+          _this.setState({
+            inputVal: ''
+          })
         }
       }
       reader.onerror = function () {
@@ -315,7 +319,7 @@ class Company extends Component {
                   {
                     'cordova' in window
                       ? <input className={style['input-pic']} style={{ zIndex: isClickCharter ? 0 : 1 }} disabled={isClickCharter} type='button' capture='camera' onClick={this.handleTake} data-name='license'/>
-                      : <input className={style['input-pic']} style={{ zIndex: isClickCharter ? 0 : 1 }} disabled={isClickCharter} type='file' capture='camera' onChange={this.handleTake} data-name='license'/>
+                      : <input className={style['input-pic']} style={{ zIndex: isClickCharter ? 0 : 1 }} disabled={isClickCharter} type='file' capture='camera' value={this.state.inputVal} onChange={this.handleTake} data-name='license'/>
                   }
                 </div>
               </div>
@@ -337,7 +341,7 @@ class Company extends Component {
                   }{
                     'cordova' in window
                       ? <input className={style['input-pic']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='button' capture='camera' onClick={this.handleTake} data-name='front'/>
-                      : <input className={style['input-pic']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' capture='camera' onChange={this.handleTake} data-name='front'/>
+                      : <input className={style['input-pic']} style={{ zIndex: isClickFront ? 0 : 1 }} disabled={isClickFront} type='file' capture='camera' value={this.state.inputVal} onChange={this.handleTake} data-name='front'/>
                   }
                 </div>
               </div>
@@ -365,7 +369,7 @@ class Company extends Component {
                   }{
                     'cordova' in window
                       ? <input className={style['input-pic']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='button' capture='camera' onClick={this.handleTake} data-name='back'/>
-                      : <input className={style['input-pic']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' capture='camera' onChange={this.handleTake} data-name='back'/>
+                      : <input className={style['input-pic']} style={{ zIndex: isClickBack ? 0 : 1 }} disabled={isClickBack} type='file' capture='camera' value={this.state.inputVal} onChange={this.handleTake} data-name='back'/>
                   }
                 </div>
               </div>

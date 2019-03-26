@@ -413,7 +413,7 @@ class WorkListManage extends Component {
     this.props.match.history.push(`${urls.PENDINGSETTLERECORD}?workSheetOrderNo=${rowData['order_no']}`)
   }
   handleOrderViewAttend = (rowData) => { // 我接的 - 考勤记录
-    this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'])
+    this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'] + '&orderno=' + rowData['order_no'])
   }
   handleOrderViewSettle = (rowData) => { // 我接的 - 结算记录
     this.props.match.history.push(urls.OSETTLERECORD + '?orderno=' + rowData['order_no'])
