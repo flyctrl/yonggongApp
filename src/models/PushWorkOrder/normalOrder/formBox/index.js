@@ -240,7 +240,7 @@ class FormBox extends Component {
     let { fileList, remarkShow, startDate, endDate, mapShow, address, valuationUnit, chargeSizeData, remark, normalData } = this.state
     console.log('fileList:', fileList)
     let { settleValue, starttime, orderno, edittype, porderno, parentClassId } = this.state.urlJson
-    let newHeader = headersJson
+    let newHeader = tooler.requestHeader(headersJson)
     delete newHeader['Content-Type']
     const uploaderProps = {
       action: api.Common.uploadFile,

@@ -120,7 +120,7 @@ class SettleRecord extends Component {
         waitAmount: data['wait_amount']
       })
     }
-    return await data['list']
+    return await data['list'] || []
   }
   handleDetail = (orderno, status) => {
     this.props.match.history.push(`${urls.APPLYSETTLE}?orderno=${orderno}&recordStatus=${status}`)

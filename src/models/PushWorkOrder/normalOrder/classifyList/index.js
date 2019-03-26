@@ -115,7 +115,7 @@ class ClassifyList extends Component {
         pageNos: data['pageNos']
       })
     }
-    return await data['list']
+    return await data['list'] || []
   }
   searchChange = (searchtxt) => {
     this.setState({

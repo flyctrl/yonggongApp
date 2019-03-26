@@ -84,7 +84,7 @@ class Construct extends Component {
   render() {
     const { getFieldProps, getFieldError } = this.props.form
     let { info, fileList } = this.state
-    let newHeader = headersJson
+    let newHeader = tooler.requestHeader(headersJson)
     delete newHeader['Content-Type']
     const uploaderProps = {
       action: api.Common.uploadFile,

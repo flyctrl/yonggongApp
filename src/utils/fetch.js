@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2019-03-25 18:40:41
+* @Last Modified time: 2019-03-25 23:23:09
 */
 import * as Loading from './load.js'
 import { Toast } from 'antd-mobile'
@@ -114,7 +114,11 @@ fetcher.interceptors.response.use(function (response) {
           storage.set('refreshToken', res.data.data.refresh_token)
           // window.location.reload()
           history.go(0)
+        } else {
+          history.push('/Login/login')
         }
+      }).catch(function() {
+        Toast.offline('网络异常', 2)
       })
     }
   } else if (response.data.code === 16020006) { // 实名认证 未通过

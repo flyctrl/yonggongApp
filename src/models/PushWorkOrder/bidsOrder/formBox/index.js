@@ -198,7 +198,7 @@ class FormBox extends Component {
     console.log('fileList:', fileList)
     console.log('bidsData:', bidsData)
     let { bidwayId, edittype } = this.state.urlJson
-    let newHeader = headersJson
+    let newHeader = tooler.requestHeader(headersJson)
     delete newHeader['Content-Type']
     const uploaderProps = {
       action: api.Common.uploadFile,
