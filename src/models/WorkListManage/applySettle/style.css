@@ -1,79 +1,26 @@
 .money-box {
   width: 100%;
-  height: 114px;
-  &::before{
-    content: '';
-    width: 100%;
-    height: 60px;
-    background: #1298fc;
+  height: 70px;
+  padding-top: 10px;
+  background: #1298fc;
+  & strong {
+    color: #fff;
+    font-size: 18px;
     display: block;
+    text-align: center;
+    line-height: 34px;
+    font-weight: normal;
+    text-align: center;
   }
-  & .money-con {
-    position: absolute;
-    top: 6px;
-    left: 50%;
-    margin-left: -165px;
-    width: 330px;
-    height: 90px;
-    background:rgba(255,255,255,1);
-    box-shadow:-2px 1px 31px 0px rgba(10,94,163,0.2);
-    border-radius:5px;
-    overflow: hidden;
-    & li {
-      float: left;
-      width: 50%;
-      & .hand-input {
-        display: block;
-        width:86px;
-        height:26px;
-        background: rgba(18,152,252,.1);
-        border-radius:13px;
-        color: #1298FC;
-        line-height: 26px;
-        text-align: center;
-        font-size: 13px;
-        margin: 0 auto;
-        margin-top: 20px;
-        & svg {
-          margin-right: 3px;
-        }
-      }
-      & strong {
-        color: #333;
-        font-size: 22px;
-        display: block;
-        text-align: center;
-        line-height: 34px;
-        margin-top: 18px;
-        font-weight: normal;
-      }
-      & p {
-        line-height: 24px;
-        color: #999;
-        font-size: 12px;
-        text-align: center;
-      }
-      & :global(.am-list-item .am-input-control input) {
-        height: 34px;
-        line-height: 34px;
-        font-size: 20px;
-        text-align: center;
-      }
-      & :global(.am-list-item.am-input-item) {
-        padding-left: 0;
-        min-height: 34px;
-        height: 34px;
-        line-height: 34px;
-        margin-top: 16px;
-      }
-      & :global(.am-list-item .am-input-label.am-input-label-5) {
-        width: auto;
-      }
-    }
+  & p {
+    line-height: 24px;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
   }
 }
 .settle-box {
-  height: 460px;
+  height: 542px;
   -webkit-overflow-scrolling:touch;
   overflow-y: auto;
 }
@@ -90,52 +37,23 @@
   }
   & .settle-info {
     float: left;
-    width: 150px;
-    & h2 {
-      line-height: 20px;
-      color: #333;
-      font-size: 15px;
-      font-weight: normal;
-    }
-    & p {
-      font-size: 13px;
-      color: #666;
-    }
-    & time {
-      color:rgba(153,153,153,1);
-      font-size: 12px;
-    }
+    height: 60px;
+    line-height: 60px;
+    color: #333;
+    font-size: 15px;
+    font-weight: normal;
+  }
+  & .settle-workload {
+    height: 60px;
+    line-height: 60px;
+    float: right;
+    font-size: 14px;
+    color: #666;
   }
   & .price {
     float: right;
     color:rgba(250,107,109,1);
     font-size: 16px;
     line-height: 62px;
-  }
-}
-
-.btn-box {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 50px;
-  background: #fff;
-  &.two-btn {
-    overflow: hidden;
-    & a {
-      width: 47%;
-      float: left;
-      margin: 5px 0 0 0;
-      margin-left: 2%;
-    }
-  }
-  & a {
-    height: 40px;
-    line-height: 40px;
-    font-size: 16px;
-    width: 95%;
-    margin: 0 auto;
-    margin-top: 5px;
   }
 }

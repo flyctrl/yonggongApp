@@ -16,14 +16,15 @@ class ApplySettle extends Component {
       valuationEqual: false,
       workerAmount: 0,
       inputAmount: '',
-      recordStatus: tooler.getQueryString('recordStatus'),
+      // recordStatus: tooler.getQueryString('recordStatus'),
       workSheetOrderNo: tooler.getQueryString('workSheetOrderNo'),
       orderno: tooler.getQueryString('orderno'),
-      status: tooler.getQueryString('status'),
+      status: '',
       dataSource: [],
       canApply: false,
       canapplyDate: '',
       acceptAmount: 0,
+      payAmount: 0,
       isloading: false,
       handVisible: true
     }
@@ -47,7 +48,9 @@ class ApplySettle extends Component {
         valuationEqual: data['need_input_amount'],
         workerAmount: Number(data['worker_amount']),
         canApply: data['can_apply'],
+        status: data['status'],
         acceptAmount: data['accept_amount'],
+        payAmount: data['pay_amount'],
         dataSource: data['list'],
         canapplyDate: data['can_apply_date'],
         isloading: true
@@ -96,7 +99,7 @@ class ApplySettle extends Component {
     })
   }
   render() {
-    let { dataSource, amount, valuationEqual, isloading, status, recordStatus, canApply, acceptAmount, handVisible, canapplyDate } = this.state
+    let { dataSource, amount, valuationEqual, isloading, status, canApply, acceptAmount, payAmount, workerAmount, handVisible, canapplyDate } = this.state
     return <div className='pageBox'>
       <Header
         title='结算详情'
@@ -110,12 +113,8 @@ class ApplySettle extends Component {
         {
           isloading && dataSource.length !== 0 ? <div><div className={style['money-box']}>
             <ul className={style['money-con']}>
-              <li>
-                <strong>{acceptAmount}</strong>
-                <p>预计收入(元)</p>
-              </li>
               {
-                (status === '1' || status === '2' || status === '3' || recordStatus !== null) ? <li>
+                (status === '1' || status === '2' || status === '3') ? <li>
                   <strong>{amount}</strong>
                   <p>合计(元)</p>
                 </li> : (!valuationEqual) ? <li>
@@ -128,7 +127,7 @@ class ApplySettle extends Component {
                   {
                     !handVisible ? <InputItem
                       type='digit'
-                      placeholder='请输入总价'
+                      placeholder={`最小${workerAmount}元`}
                       onBlur={v => this.handleInputNum(v)}
                     ></InputItem> : null
                   }
@@ -138,6 +137,10 @@ class ApplySettle extends Component {
                   <p>合计(元)</p>
                 </li>
               }
+              <li className={style['income']}>
+                <p className='ellipsis'>预计收入(元) <span>{acceptAmount}</span></p>
+                <p className='ellipsis'>支出(元) <span>{payAmount}</span></p>
+              </li>
             </ul>
           </div>
           <div className={style['settle-box']}>
@@ -150,12 +153,15 @@ class ApplySettle extends Component {
                     <p>单价：{i.price}{i.unit}</p>
                     <p>工作量：{i.workload}{i['workload_unit']}</p>
                   </div>
-                  <span className={style['price']}>{i.amount}</span>
+                  <div className={style['price']}>
+                    <span className={i['is_pay'] === 1 ? style['ispay'] : ''}>{i['is_pay'] === 1 ? '已支付' : '未支付'}</span>
+                    <p>{i.amount}</p>
+                  </div>
                 </List.Item>
               ))}
             </List>
             {
-              (status === '1' || status === '2' || status === '3' || recordStatus !== null) ? '' : <div className={style['btn-box']}><Button disabled={!canApply} onClick={this.handleApply} type='primary'>申请结算{!canApply ? `（${canapplyDate}可申请）` : ''}</Button></div>
+              (status === '1' || status === '2' || status === '3') ? '' : <div className={style['btn-box']}><Button disabled={!canApply} onClick={this.handleApply} type='primary'>申请结算{!canApply ? `（${canapplyDate}可申请）` : ''}</Button></div>
             }
           </div></div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
         }

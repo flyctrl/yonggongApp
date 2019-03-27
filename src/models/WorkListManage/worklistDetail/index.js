@@ -45,9 +45,13 @@ class WorkListDetail extends Component {
     let { url } = this.state
     if (url !== '') {
       e.preventDefault()
-      this.props.match.history.push(urls.HOME)
+      if (url === 'WORKLISTMANAGE') {
+        this.props.match.history.push(`${urls[url]}?listType=${tooler.getQueryString('worktype')}`)
+      } else {
+        this.props.match.history.push(urls[url])
+      }
     } else {
-      this.props.match.history.goBack()
+      this.props.match.history.go(-1)
     }
   }
 
@@ -226,10 +230,14 @@ class WorkListDetail extends Component {
       <Header
         title='工单详情'
         leftIcon='icon-back'
-        leftTitle1={url !== '' ? '返回首页' : '返回'}
+        leftTitle1={url === 'HOME' ? '返回首页' : '返回'}
         leftClick1={() => {
           if (url !== '') {
-            this.props.match.history.push(urls[url])
+            if (url === 'WORKLISTMANAGE') {
+              this.props.match.history.push(`${urls[url]}?listType=${tooler.getQueryString('worktype')}`)
+            } else {
+              this.props.match.history.push(urls[url])
+            }
           } else {
             this.props.match.history.go(-1)
           }

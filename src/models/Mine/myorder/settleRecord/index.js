@@ -9,12 +9,18 @@ import { payModeRadio, paymethod } from 'Contants/fieldmodel'
 import style from './index.css'
 
 const status = {
+  0: '待申请',
+  1: '待确认',
   2: '待结算',
-  3: '已结算'
+  3: '已结算',
+  4: '已驳回'
 }
 const cssStatus = {
-  2: 'apply',
-  3: 'reject',
+  0: 'blue',
+  1: 'blue',
+  2: 'red',
+  3: 'green',
+  4: 'gray'
 }
 const valuation = {
   1: '计量',

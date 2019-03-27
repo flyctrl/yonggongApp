@@ -259,6 +259,9 @@ export default {
     },
     worksheetReview(params) { // 我发的 - 审批工单
       return FetchSave(prefix + '/worksheet/review', params, 'post', { showloading: false })
+    },
+    applySettleDetail(params) { // 结算记录详情
+      return Fetch(prefix + '/settle/send/detail', params, 'get')
     }
   },
   Mine: { // 我的
@@ -318,7 +321,7 @@ export default {
         return Fetch(prefix + '/settle/accept/apply', params, 'get')
       },
       applySettleDetail(params) { // 结算记录详情
-        return Fetch(prefix + '/settle/order/detail', params, 'get')
+        return Fetch(prefix + '/settle/accept/detail', params, 'get')
       },
       acceptApply(params) { // 接单方申请结算
         return FetchSave(prefix + '/settle/accept/apply', params)

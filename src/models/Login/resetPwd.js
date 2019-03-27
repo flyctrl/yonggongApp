@@ -58,7 +58,11 @@ class RestPwd extends Component {
             })
           }
         } else if (type === '2') { // 重置密码
-          let data = await api.auth.reset(values) || false
+          let data = await api.auth.reset({
+            ...values,
+            password: md5(values['password']),
+            confirm_password: md5(values['confirm_password'])
+          }) || false
           if (data) {
             Toast.hide()
             Toast.success('修改成功', 1.5, () => {
