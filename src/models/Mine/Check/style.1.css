@@ -255,18 +255,17 @@ html:not([data-scale]) .time-box :global(.am-list-body::before) {
     line-height: 20px
   }
 }
+.success-img {
+  display: block;
+  width:179px;
+  height: 30px;
+}
 .success-msg {
-  padding: 9px;
-  & .success-img {
-    display: block;
-    width:179px;
-    height: 30px;
-    margin: 12px 19px 30px;
-  }
+  box-sizing: border-box;
   & .sc-time {
     overflow: hidden;
     padding-left: 15px;
-    padding-bottom: 20px;
+    padding-bottom: 26px;
     & .sc-sq {
       float: left;
       width:49px;
@@ -309,9 +308,32 @@ html:not([data-scale]) .time-box :global(.am-list-body::before) {
     font-size: 15px;
   }
 }
-.success-text {
-  font-size: 17px;
-  color: #009AFC;
+html :global(#am-modal-container) {
+  color: red;
+  & :global(.am-modal-transparent) {
+    width: 277px;
+    & :global(.am-modal-content) {
+      padding-top: 0;
+      border-radius: 10px;
+      & :global(.am-modal-header) {
+        padding:0;
+      }
+      & :global(.am-modal-body) {
+        padding:0 27px 27px;
+      }
+      & :global(.am-modal-title) {
+        height: 103px;
+        display: flex;
+        justify-content:center;
+        align-items: center;
+      }
+      & :global(.am-modal-footer) {
+        & :global(.am-modal-button) {
+          font-size: 17px!important;
+          color: #009AFC!important;
+        }
+      }
+    }
+  }
 }
-
 
