@@ -49,7 +49,7 @@ class UserInfo extends Component {
       this.setState({
         companyDetail: data,
         isLoading: false,
-        region: data['region'] || {},
+        region: Array.isArray(data['region']) ? {} : data['region'],
         personDetail: dataInfo
       })
     }

@@ -129,7 +129,7 @@ class SetUp extends Component {
     }
   }
   handleSubmit = async() => {
-    let { data, isSetAddress, isSetRange, isSetType, defaultTime, worktype, worksheetno } = this.state
+    let { data, isSetAddress, isSetRange, isSetType, defaultTime, worksheetno } = this.state
     if (data['is_set'] === 0) {
       if (!isSetType) {
         Toast.info('请设置考勤类型')
@@ -160,11 +160,19 @@ class SetUp extends Component {
       Toast.hide()
       Toast.success('设置成功', 1.5, () => {
         // this.props.match.history.go(-1)
+<<<<<<< HEAD
         if (worktype) {
           this.props.match.history.push(`${urls['WORKLISTDETAIL']}?url=WORKLISTMANAGE&worksheetno=${worksheetno}&worktype=${worktype}`)
         } else {
           this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=${this.state.listType}`)
         }
+=======
+        // if (worktype) {
+        //   this.props.match.history.push(`${urls['WORKLISTDETAIL']}?worksheetno=${worksheetno}&worktype=${worktype}`)
+        // } else {
+        //   this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=${this.state.listType}`)
+        // }
+>>>>>>> origin/bugfix-yg-20190308
       })
     }
     console.log(...newData)

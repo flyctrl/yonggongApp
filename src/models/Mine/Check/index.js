@@ -11,8 +11,16 @@ import { Button, Icon, List, Picker, Drawer } from 'antd-mobile'
 import tips from 'Src/assets/ad.png'
 import checkImg from 'Src/assets/checked2.png'
 import daikaoqinImg from 'Src/assets/daikaoqin.png'
+import lateImg from 'Src/assets/late-clock.png'
+import normalImg from 'Src/assets/normal-clock.png'
+import leaveImg from 'Src/assets/leave-early.png'
 const alert = Modal.alert
 let positionPicker = null
+let timeStatus = {
+  0: normalImg,
+  1: lateImg,
+  2: leaveImg
+}
 let distanceStatus = {
   0: '在正常范围内',
   1: '已超出打卡范围'
@@ -36,9 +44,7 @@ class Check extends Component {
       isUserLoading: false, // 代考勤列表
       isMapLoading: false, // 加载地图
       isCheck: false,
-      checkInTime: null, // 打卡时间
-      time: '', // 考勤倒计时
-      succTime: 5, // 返回列表倒计时
+      time: '', // 考勤时间
       dataCheck: {}, // 校验
       position: {},
       checkVal: 1,
@@ -327,23 +333,14 @@ class Check extends Component {
     }
     data = await api.Mine.Check.attend(postData) || false
     if (data) {
+      this.showSuccessDom(dataCheck, new Date().Format('hh:mm:ss'))
+      if (isAgent === 1) {
+        this.onOpenChange()
+      }
       this.setState({
-        data,
-        checkInTime: new Date().Format('hh:mm'),
-        openDrawer: false,
-        isClick: false,
-        dataCheck: {},
         inputVal: ''
       })
       Toast.hide()
-      newalert = alert('打卡成功!', '', [{ text: '确定', onPress: () => {
-        if (isAgent === 1) {
-          this.getAgentCheckList()
-        }
-        if (isAgent === 0) {
-          this.handleCheckTime(workorderno)
-        }
-      } }])
     }
   }
   handleCheckTime = async (v, workerUid, click) => {
@@ -412,7 +409,6 @@ class Check extends Component {
       }
       this.setState({
         dataCheck,
-        checkInTime: null,
         isLoading: false,
         isCheck,
       }, () => {
@@ -581,6 +577,27 @@ class Check extends Component {
       this.props.match.history.push(`${urls.ATTENDDETAIL}?orderno=${workorderno}`)
     }
   }
+  showSuccessDom = (dataCheck, time) => {
+    let { isAgent } = this.state
+    let t = time.split(':')
+    newalert = alert('', <div className={style['success-msg']}>
+      <img className={style['success-img']} src={timeStatus[dataCheck['time_status']]}/>
+      <div className={style['sc-time']}>
+        <div className={style['sc-sq']}>{t[0]}</div>
+        <div className={style['sc-empty']}>
+          <span></span>
+          <span></span>
+        </div>
+        <div className={style['sc-sq']}>{t[1]}</div>
+        <div className={style['sc-empty']}>
+          <span></span>
+          <span></span>
+        </div>
+        <div className={style['sc-sq']}>{t[2]}</div>
+      </div>
+      <p>打卡地点: {dataCheck.address}</p></div>, [{ text: <span className={style['success-text']}>知道了</span>, onPress: () => { if (isAgent === 1) { this.getAgentCheckList() } } }])
+    return newalert
+  }
   renderDom = (dataCheck, checkVal, isCheck, time, his, workorderno, workerUid, isClick) => {
     let { openDrawer, isAgent, isLoading } = this.state
     return <div style={{ textAlign: 'center' }} className={`${style['time-box']} ${this.state.openDrawer ? style['time-box-dw'] : ''}`}>
@@ -613,9 +630,7 @@ class Check extends Component {
   }
   render() {
     const { time, dataCheck = {}, checkVal, isCheck, workerUid, workorderno, datalist, isUserLoading, isAgent, isMapLoading, isClick } = this.state
-    dataCheck.attend_time_config = dataCheck.attend_time_config || []
-    dataCheck['attend_type'] = dataCheck['attend_type'] || ''
-    console.log(this.state.inputVal, 'valu')
+    // dataCheck['attend_type'] = dataCheck['attend_type'] || ''
     let his = this.props.match.history
     let sidebar = (<div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div className={style['dw-header']}>代考勤<NewIcon onClick={this.onOpenChange} type='icon-shanchu'></NewIcon></div>

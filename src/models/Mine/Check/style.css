@@ -255,3 +255,63 @@ html:not([data-scale]) .time-box :global(.am-list-body::before) {
     line-height: 20px
   }
 }
+.success-msg {
+  padding: 9px;
+  & .success-img {
+    display: block;
+    width:179px;
+    height: 30px;
+    margin: 12px 19px 30px;
+  }
+  & .sc-time {
+    overflow: hidden;
+    padding-left: 15px;
+    padding-bottom: 20px;
+    & .sc-sq {
+      float: left;
+      width:49px;
+      height:49px;
+      border:1px solid rgba(153,153,153,1);
+      border-radius:5px;
+      line-height: 49px;
+      text-align: center;
+      font-size:25px;
+      font-family:SourceHanSansCN-Medium;
+      font-weight:500;
+      color:rgba(102,102,102,1);
+    }
+    & .sc-empty {
+      width: 20px;
+      height: 49px;
+      float: left;
+      display: flex;
+      justify-content: space-around;
+      flex-direction: column;
+      align-items: center;
+      & span {
+        display: block;
+        width: 4px;
+        height: 4px;
+        background:rgba(193,193,193,1);
+      }
+      & :nth-child(1) {
+        margin-top: 10px;
+      }
+      & :nth-child(2) {
+        margin-bottom: 10px;
+      }
+    }
+  }
+  & p {
+    text-align: left;
+    line-height: 22px;
+    color: #666;
+    font-size: 15px;
+  }
+}
+.success-text {
+  font-size: 17px;
+  color: #009AFC;
+}
+
+
