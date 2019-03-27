@@ -249,7 +249,6 @@ class Check extends Component {
     }
     let data
     let postData
-    console.log(dataCheck['attend_type'], 'type')
     if (dataCheck['attend_type'] && dataCheck['attend_type'] === 1) { // 自由打卡
       if (isAgent === 1) { // 代考勤
         if (this.state.openDrawer) { // 代考勤
@@ -339,8 +338,7 @@ class Check extends Component {
         this.onOpenChange()
       }
       this.setState({
-        inputVal: '',
-        dataCheck: {}
+        inputVal: ''
       })
       Toast.hide()
     }
@@ -580,6 +578,7 @@ class Check extends Component {
     }
   }
   showSuccessDom = (dataCheck, time) => {
+    let { isAgent } = this.state
     let t = time.split(':')
     newalert = alert('', <div className={style['success-msg']}>
       <img className={style['success-img']} src={timeStatus[dataCheck['time_status']]}/>
@@ -596,7 +595,7 @@ class Check extends Component {
         </div>
         <div className={style['sc-sq']}>{t[2]}</div>
       </div>
-      <p>打卡地点: {dataCheck.address}</p></div>, [{ text: <span className={style['success-text']}>知道了</span>, onPress: () => {} }])
+      <p>打卡地点: {dataCheck.address}</p></div>, [{ text: <span className={style['success-text']}>知道了</span>, onPress: () => { if (isAgent === 1) { this.getAgentCheckList() } } }])
     return newalert
   }
   renderDom = (dataCheck, checkVal, isCheck, time, his, workorderno, workerUid, isClick) => {
