@@ -60,7 +60,8 @@ class Check extends Component {
       openDrawer: false,
       isClick: false,
       datalist: [],
-      inputVal: ''
+      inputVal: '',
+      address: ''
     }
   }
 
@@ -209,7 +210,8 @@ class Check extends Component {
       positionPicker.on('success', function(positionResult) {
         _t.setState({
           position: positionResult.position,
-          isMapLoading: true
+          isMapLoading: true,
+          address: positionResult.address
         })
         if (_t.state.isAgent === 0) {
           _t.handleCheckTime(_t.state.workorderno)
@@ -347,7 +349,7 @@ class Check extends Component {
     this.setState({
       isLoading: true,
     })
-    let { position, checkVal, isAgent, isClick, openDrawer } = this.state
+    let { position, checkVal, isAgent, isClick, openDrawer, address } = this.state
     console.log(position, '1')
     if (!('O' in position)) {
       // Toast.fail('无法获取该手机位置信息', 1)
@@ -389,6 +391,7 @@ class Check extends Component {
     }
     let dataCheck = await api.Mine.Check.attendCheck(postData) || false
     if (dataCheck) {
+      dataCheck.address = address
       if (dataCheck['attend_type'] && dataCheck['attend_type'] === 1) { // 自由上下班
         dataCheck['type'] = checkVal
       }
