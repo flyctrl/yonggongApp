@@ -160,6 +160,15 @@ html:not([data-scale]) .btnCheck2 {
       color: #3296FA;
     }
   }
+  & .work-time {
+    color: #999;
+    font-size: 13px;
+    text-align: center;
+    padding-top: 20px;
+    & span {
+      margin-right: 5px;
+    }
+  }
 }
 html:not([data-scale]) .time-box-dw :global(.am-list-body::before) {
   height: 0;
@@ -179,6 +188,15 @@ html:not([data-scale]) .time-box :global(.am-list-body::before) {
   }
   & :global(.am-list-item) {
     border-radius: 25px 25px 0 0;
+  }
+  & .work-time {
+    color: #999;
+    font-size: 13px;
+    text-align: center;
+    padding-top: 20px;
+    & span {
+      margin-right: 5px;
+    }
   }
 }
 .drawer-list {
