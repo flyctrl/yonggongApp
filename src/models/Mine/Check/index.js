@@ -463,7 +463,7 @@ class Check extends Component {
     let _this = this
     navigator.camera.getPicture(onSuccess, onFail, {
       destinationType: Camera.DestinationType.DATA_URL,
-      quality: 10
+      quality: 15
     })
 
     async function onSuccess(imageURI) {

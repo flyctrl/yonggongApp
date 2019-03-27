@@ -131,19 +131,19 @@
       text-align: center;
       font-size: 13px;
       border-radius:12px;
-      background:rgba(252,164,36,.1);
-      color: #FCA424;
+      background:rgba(0,190,204,.1);
+      color: #00BECC;
       margin: 0 auto;
-      &.ispay {
-        background:rgba(0,190,204,.1);
-        color: #00BECC;
-      }
     }
     & p {
       color:rgba(250,107,109,1);
       font-size: 16px;
       height: 30px;
       line-height: 30px;
+      &.ispay-amonut {
+        height: 60px;
+        line-height: 60px;
+      }
     }
   }
 }
