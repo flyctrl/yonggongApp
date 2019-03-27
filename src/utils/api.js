@@ -215,6 +215,9 @@ export default {
     },
     editQuick(params) { // 编辑快单
       return FetchSave(prefix + '/worksheet/edit/quick', params, 'post', { showloading: false })
+    },
+    getSettleFixTime(params) { // 获取结算方式
+      return Fetch(prefix + '/worksheet/list/settle_fix_time', params, 'get')
     }
   },
   WorkListManage: {

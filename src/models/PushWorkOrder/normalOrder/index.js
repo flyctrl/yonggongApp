@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { List, Button, WingBlank, Radio, Picker } from 'antd-mobile'
 import NewIcon from 'Components/NewIcon'
 import { Header, Content } from 'Components'
-import { paymethod, valuationWay } from 'Contants/fieldmodel'
+import { valuationWay } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './index.css'
@@ -119,28 +119,38 @@ class SelectClass extends Component {
       }, () => callback())
     }
   }
-  contestPaymethod = (paymethodId = this.state.paymethodId) => {
+  contestPaymethod = async (paymethodId = this.state.paymethodId) => {
     console.log('paymethodId:', paymethodId)
-    let newary = []
     let newVal = ''
     let { orderno, porderno } = this.state
-    if ((paymethodId !== '' && orderno !== '') || (paymethodId !== '' && porderno !== '0')) {
-      paymethod.map(item => {
-        if (Number(paymethodId) >= item['value']) {
-          newary.push(item)
-          if (parseInt(paymethodId) === item['value']) {
-            newVal = item['label']
+    let postData = {
+      worksheet_type: 2
+    }
+    if (paymethodId !== '' && porderno !== '0') {
+      postData['p_order_no'] = porderno
+    }
+    let data = await api.PushOrder.getSettleFixTime({
+      ...postData
+    }) || false
+    console.log('paymethodVal', data)
+    if (data) {
+      if ((paymethodId !== '' && orderno !== '') || (paymethodId !== '' && porderno !== '0')) {
+        data.map(item => {
+          if (Number(paymethodId) >= item['value']) {
+            if (parseInt(paymethodId) === item['value']) {
+              newVal = item['label']
+            }
           }
-        }
-      })
-      this.setState({
-        paymethodAry: newary,
-        paymethodVal: newVal
-      })
-    } else {
-      this.setState({
-        paymethodAry: paymethod
-      })
+        })
+        this.setState({
+          paymethodAry: data,
+          paymethodVal: newVal
+        })
+      } else {
+        this.setState({
+          paymethodAry: data
+        })
+      }
     }
   }
   onChange = (value) => {

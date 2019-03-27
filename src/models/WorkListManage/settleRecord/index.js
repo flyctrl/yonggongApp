@@ -11,7 +11,8 @@ import style from './index.css'
 const status = {
   1: '待确认',
   2: '待结算',
-  3: '已结算'
+  3: '已结算',
+  4: '已驳回'
 }
 const cssStatus = {
   1: 'apply',

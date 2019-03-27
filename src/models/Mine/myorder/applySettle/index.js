@@ -142,7 +142,7 @@ class ApplySettle extends Component {
               </li>
             </ul>
           </div>
-          <div className={style['settle-box']}>
+          <div className={style['settle-box']} style={{ height: document.documentElement.clientHeight - 45 - 114 - 50 }}>
             <List className={`${style['settle-list']}`}>
               {dataSource.map((i, index) => (
                 <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>

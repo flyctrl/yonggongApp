@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { List, Button, WingBlank, Radio, Picker } from 'antd-mobile'
 import NewIcon from 'Components/NewIcon'
 import { Header, Content } from 'Components'
-import { tenderWayRadio, receiveTypeRadio, payModeRadio, paymethod, valuationWay } from 'Contants/fieldmodel'
+import { tenderWayRadio, receiveTypeRadio, payModeRadio, valuationWay } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './index.css'
@@ -22,6 +22,7 @@ class SelectClass extends Component {
       receiveType: tooler.getQueryString('receiveType') || 1,
       proId: tooler.getQueryString('proId') || '',
       proVal: tooler.getQueryString('proVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('proVal'))) : '请选择',
+      paymethod: [],
       paymethodId: tooler.getQueryString('paymethodId') || '',
       paymethodVal: tooler.getQueryString('paymethodVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('paymethodVal'))) : '请选择',
       bidwayId: tooler.getQueryString('bidwayId') || '',
@@ -39,6 +40,7 @@ class SelectClass extends Component {
     }
   }
   componentDidMount() {
+    this.getSettleFixTime()
     if (this.state.edittype === '1') {
       this.getEditData()
     } else {
@@ -126,8 +128,19 @@ class SelectClass extends Component {
       bidwayVal: newVal['label']
     })
   }
+  getSettleFixTime = async () => { // 获取结算方式
+    let data = await api.PushOrder.getSettleFixTime({
+      worksheet_type: 1
+    }) || false
+    if (data) {
+      this.setState({
+        paymethod: data
+      })
+    }
+  }
   handlePayMethod = (value) => { // 选择结算方式
     console.log(value)
+    let { paymethod } = this.state
     let newVal = paymethod.filter((item) => {
       return item['value'] === value[0]
     })[0]
@@ -214,7 +227,7 @@ class SelectClass extends Component {
     }
   }
   render() {
-    let { showIndex, teachVal, showtech, proId, proVal, paymethodVal, bidwayVal, paymodeVal, settleValue, receiveType, parentTeachId } = this.state
+    let { showIndex, teachVal, showtech, proId, proVal, paymethodVal, bidwayVal, paymodeVal, settleValue, receiveType, parentTeachId, paymethod } = this.state
     console.log(proVal)
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
