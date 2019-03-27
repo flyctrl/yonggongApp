@@ -392,6 +392,22 @@ class Check extends Component {
       if (dataCheck['attend_type'] && dataCheck['attend_type'] === 1) { // 自由上下班
         dataCheck['type'] = checkVal
       }
+      // dataCheck['attend_time_config'] = [[
+      //   '7:00',
+      //   '12:00'
+      // ],
+      // [
+      //   '13:00',
+      //   '17:00'
+      // ],
+      // [
+      //   '19:00',
+      //   '23:00'
+      // ],
+      // [
+      //   '02:00',
+      //   '06:00'
+      // ]]
       let isCheck
       if (isAgent === 1) {
         if (this.state.openDrawer) {
@@ -608,6 +624,16 @@ class Check extends Component {
               <List.Item arrow='horizontal'>选择打卡</List.Item>
             </Picker>
           </List>
+          : null
+      }
+      {
+        (dataCheck['attend_type'] === 0) && dataCheck['attend_time_config'] && dataCheck['attend_time_config'].length > 0
+          ? <div className={style['work-time']}>
+            <span>上班时间:</span>
+            {
+              dataCheck['attend_time_config'].map((item, index) => <span key={index}>{`${item[0]}-${item[1]}`}</span>)
+            }
+          </div>
           : null
       }
       { 'cordova' in window
