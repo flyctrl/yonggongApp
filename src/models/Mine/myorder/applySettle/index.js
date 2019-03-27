@@ -6,7 +6,6 @@ import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
 const alert = Modal.alert
-const numReg = /^[1-9]{1,}[\d]*$/
 const isnumReg = /^[0-9]+.?[0-9]*$/
 class ApplySettle extends Component {
   constructor(props) {
@@ -46,7 +45,7 @@ class ApplySettle extends Component {
       this.setState({
         amount: data['amount'],
         valuationEqual: data['need_input_amount'],
-        workerAmount: Number(data['worker_amount']),
+        workerAmount: Number(data['wait_pay_amount']),
         canApply: data['can_apply'],
         status: data['status'],
         acceptAmount: data['accept_amount'],
@@ -63,8 +62,8 @@ class ApplySettle extends Component {
       if (inputAmount === '') {
         alert('请输入总价')
         return
-      } else if (!isnumReg.test(inputAmount) || !numReg.test(Number(inputAmount))) {
-        alert('金额格式为正整数')
+      } else if (!isnumReg.test(inputAmount)) {
+        alert('金额格式为数字')
         return
       } else if (inputAmount < workerAmount) {
         alert(`金额需要大于${workerAmount}`)
@@ -82,8 +81,8 @@ class ApplySettle extends Component {
   }
   handleInputNum = (value) => {
     let { workerAmount } = this.state
-    if (!isnumReg.test(value) || !numReg.test(Number(value))) {
-      alert('金额格式为正整数')
+    if (!isnumReg.test(value)) {
+      alert('金额格式为数字')
     } else if (value < workerAmount) {
       alert(`金额需要大于${workerAmount}`)
     } else {
@@ -154,14 +153,16 @@ class ApplySettle extends Component {
                     <p>工作量：{i.workload}{i['workload_unit']}</p>
                   </div>
                   <div className={style['price']}>
-                    <span className={i['is_pay'] === 1 ? style['ispay'] : ''}>{i['is_pay'] === 1 ? '已支付' : '未支付'}</span>
-                    <p>{i.amount}</p>
+                    {
+                      i['is_pay'] ? <span>垫付</span> : ''
+                    }
+                    <p className={i['is_pay'] ? '' : style['ispay-amonut']}>{i.amount}</p>
                   </div>
                 </List.Item>
               ))}
             </List>
             {
-              (status === '1' || status === '2' || status === '3') ? '' : <div className={style['btn-box']}><Button disabled={!canApply} onClick={this.handleApply} type='primary'>申请结算{!canApply ? `（${canapplyDate}可申请）` : ''}</Button></div>
+              (status === 1 || status === 2 || status === 3) ? '' : <div className={style['btn-box']}><Button disabled={!canApply} onClick={this.handleApply} type='primary'>申请结算{!canApply ? `（${canapplyDate}可申请）` : ''}</Button></div>
             }
           </div></div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
         }

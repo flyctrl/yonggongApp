@@ -90,12 +90,12 @@ class Company extends Component {
     if (index === 0) {
       navigator.camera.getPicture(this.onSuccess, this.onFail, {
         destinationType: Camera.DestinationType.DATA_URL,
-        quality: 10
+        quality: 15
       })
     } else if (index === 1) {
       navigator.camera.getPicture(this.onSuccess, this.onFail, {
         destinationType: Camera.DestinationType.DATA_URL,
-        quality: 10,
+        quality: 15,
         sourceType: Camera.PictureSourceType.PHOTOLIBRARY
       })
     }

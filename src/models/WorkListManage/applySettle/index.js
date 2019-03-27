@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
-import { List, Modal, Toast } from 'antd-mobile'
+import { List, Modal, Toast, Button } from 'antd-mobile'
 import md5 from 'md5'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
@@ -112,7 +112,16 @@ class ApplySettle extends Component {
     }
   }
   render() {
-    let { dataSource, amount, isloading, status } = this.state
+    let { dataSource, amount, isloading, status, payWay } = this.state
+    let statusDom = {
+      1: <div className={`${style['btn-box']} ${style['two-btn']}`}>
+        <Button type='warning' onClick={this.handleReject}>驳回</Button><Button type='primary' onClick={this.handleSure}>确认</Button>
+      </div>,
+      2: payWay === 1 ? <div className={style['btn-box']}>
+        <Button type='primary' onClick={this.handleApply}>确认结算</Button>
+      </div> : '',
+      3: ''
+    }
     return <div className='pageBox gray'>
       <Header
         title='结算记录详情'
@@ -138,6 +147,9 @@ class ApplySettle extends Component {
                 </List.Item>
               ))}
             </List>
+            {
+              statusDom[status]
+            }
           </div></div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
         }
       </Content>
