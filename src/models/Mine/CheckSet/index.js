@@ -161,7 +161,7 @@ class SetUp extends Component {
       Toast.success('设置成功', 1.5, () => {
         // this.props.match.history.go(-1)
         if (worktype) {
-          this.props.match.history.push(`${urls['WORKLISTDETAIL']}?worksheetno=${worksheetno}&worktype=${worktype}`)
+          this.props.match.history.push(`${urls['WORKLISTDETAIL']}?url=WORKLISTMANAGE&worksheetno=${worksheetno}&worktype=${worktype}`)
         } else {
           this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=${this.state.listType}`)
         }

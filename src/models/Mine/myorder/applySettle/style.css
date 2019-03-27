@@ -22,6 +22,20 @@
     & li {
       float: left;
       width: 50%;
+      &.income {
+        & p {
+          text-align: left;
+          height: 34px;
+          line-height: 34px;
+          font-size: 13px;
+          &:nth-child(1) {
+            margin-top: 10px;
+          }
+          & span {
+            color: #333;
+          }
+        }
+      }
       & .hand-input {
         display: block;
         width:86px;
@@ -108,9 +122,29 @@
   }
   & .price {
     float: right;
-    color:rgba(250,107,109,1);
-    font-size: 16px;
-    line-height: 62px;
+    margin-top: 5px;
+    & span {
+      display: block;
+      height: 24px;
+      width: 70px;
+      line-height: 24px;
+      text-align: center;
+      font-size: 13px;
+      border-radius:12px;
+      background:rgba(252,164,36,.1);
+      color: #FCA424;
+      margin: 0 auto;
+      &.ispay {
+        background:rgba(0,190,204,.1);
+        color: #00BECC;
+      }
+    }
+    & p {
+      color:rgba(250,107,109,1);
+      font-size: 16px;
+      height: 30px;
+      line-height: 30px;
+    }
   }
 }
 

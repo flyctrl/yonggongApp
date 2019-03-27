@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
-import { List, Modal, Toast, Button } from 'antd-mobile'
+import { List, Modal, Toast } from 'antd-mobile'
 import md5 from 'md5'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
@@ -13,7 +13,6 @@ class ApplySettle extends Component {
     super(props)
     this.state = {
       amount: 0,
-      acceptAmount: 0,
       worksheetno: tooler.getQueryString('worksheetno'),
       orderno: tooler.getQueryString('orderno'),
       status: 0,
@@ -30,7 +29,7 @@ class ApplySettle extends Component {
       isloading: false
     })
     let { orderno } = this.state
-    let data = await api.Mine.myorder.applySettleDetail({
+    let data = await api.WorkListManage.applySettleDetail({
       orderNo: orderno,
       page: 1,
       pageSize: 500
@@ -39,7 +38,6 @@ class ApplySettle extends Component {
       this.setState({
         status: data['status'],
         amount: data['amount'],
-        acceptAmount: data['accept_amount'],
         payWay: data['pay_way'],
         dataSource: data['list'],
         isloading: true
@@ -114,16 +112,7 @@ class ApplySettle extends Component {
     }
   }
   render() {
-    let { dataSource, amount, isloading, status, payWay, acceptAmount } = this.state
-    let statusDom = {
-      1: <div className={`${style['btn-box']} ${style['two-btn']}`}>
-        <Button type='warning' onClick={this.handleReject}>驳回</Button><Button type='primary' onClick={this.handleSure}>确认</Button>
-      </div>,
-      2: payWay === 1 ? <div className={style['btn-box']}>
-        <Button type='primary' onClick={this.handleApply}>确认结算</Button>
-      </div> : '',
-      3: ''
-    }
+    let { dataSource, amount, isloading, status } = this.state
     return <div className='pageBox gray'>
       <Header
         title='结算记录详情'
@@ -136,34 +125,19 @@ class ApplySettle extends Component {
       <Content style={{ overflow: 'hidden', top: '0.43rem' }}>
         {
           isloading && dataSource.length !== 0 ? <div><div className={style['money-box']}>
-            <ul className={style['money-con']}>
-              <li>
-                <strong>{acceptAmount}</strong>
-                <p>预计收入(元)</p>
-              </li>
-              <li>
-                <strong>{amount}</strong>
-                <p>合计(元)</p>
-              </li>
-            </ul>
+            <p>合计(元)</p>
+            <strong>{amount}</strong>
           </div>
-          <div className={style['settle-box']}>
+          <div className={`${style['settle-box']} ${status === 1 || status === 2 ? style['has-btn'] : ''}`}>
             <List className={`${style['settle-list']}`}>
               {dataSource.map((i, index) => (
                 <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>
                   <div className={style['header']} style={{ 'backgroundImage': 'url(' + i['avatar'] + ')' }}></div>
-                  <div className={style['settle-info']}>
-                    <h2>{i.username}</h2>
-                    <p>单价：{i.price}{i.unit}</p>
-                    <p>工作量：{i.workload}{i['workload_unit']}</p>
-                  </div>
-                  <span className={style['price']}>{i.amount}</span>
+                  <div className={style['settle-info']}>{i.username}</div>
+                  <div className={style['settle-workload']}>工作量：{i.workload}{i['workload_unit']}</div>
                 </List.Item>
               ))}
             </List>
-            {
-              statusDom[status]
-            }
           </div></div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
         }
       </Content>

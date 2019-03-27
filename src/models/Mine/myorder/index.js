@@ -288,8 +288,8 @@ class WorkListManage extends Component {
       let levelJson = {}
       if (data['professional_level'].length !== 0) {
         levelJson = {
-          teachId: data['professional_level']['id'],
-          teachVal: data['professional_level']['name']
+          teachId: data['professional_level'][0]['id'],
+          teachVal: data['professional_level'][0]['name']
         }
       }
       let urlJson = {
