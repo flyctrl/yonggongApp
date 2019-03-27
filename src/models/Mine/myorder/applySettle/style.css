@@ -88,6 +88,7 @@
 }
 .settle-box {
   height: 460px;
+  overflow-scrolling:touch;
   -webkit-overflow-scrolling:touch;
   overflow-y: auto;
 }
