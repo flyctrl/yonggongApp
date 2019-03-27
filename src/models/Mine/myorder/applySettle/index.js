@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Header, Content, NewIcon, DefaultPage } from 'Components'
 import { List, InputItem, Modal, Button } from 'antd-mobile'
+import ReactIScroll from 'react-iscroll'
+import iScroll from 'iscroll'
 // import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
@@ -142,25 +144,27 @@ class ApplySettle extends Component {
               </li>
             </ul>
           </div>
-          <div className={style['settle-box']} style={{ height: document.documentElement.clientHeight - 45 - 114 - 50 }}>
-            <List className={`${style['settle-list']}`}>
-              {dataSource.map((i, index) => (
-                <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>
-                  <div className={style['header']} style={{ 'backgroundImage': 'url(' + i['avatar'] + ')' }}></div>
-                  <div className={style['settle-info']}>
-                    <h2>{i.username}</h2>
-                    <p>单价：{i.price}{i.unit}</p>
-                    <p>工作量：{i.workload}{i['workload_unit']}</p>
-                  </div>
-                  <div className={style['price']}>
-                    {
-                      i['is_pay'] ? <span>垫付</span> : ''
-                    }
-                    <p className={i['is_pay'] ? '' : style['ispay-amonut']}>{i.amount}</p>
-                  </div>
-                </List.Item>
-              ))}
-            </List>
+          <div className={style['settle-box']} style={{ height: (status === 1 || status === 2 || status === 3) ? document.documentElement.clientHeight - 45 - 114 : document.documentElement.clientHeight - 45 - 114 - 50 }}>
+            <ReactIScroll iScroll={iScroll}>
+              <List className={`${style['settle-list']}`}>
+                {dataSource.map((i, index) => (
+                  <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>
+                    <div className={style['header']} style={{ 'backgroundImage': 'url(' + i['avatar'] + ')' }}></div>
+                    <div className={style['settle-info']}>
+                      <h2>{i.username}</h2>
+                      <p>单价：{i.price}{i.unit}</p>
+                      <p>工作量：{i.workload}{i['workload_unit']}</p>
+                    </div>
+                    <div className={style['price']}>
+                      {
+                        i['is_pay'] ? <span>垫付</span> : ''
+                      }
+                      <p className={i['is_pay'] ? '' : style['ispay-amonut']}>{i.amount}</p>
+                    </div>
+                  </List.Item>
+                ))}
+              </List>
+            </ReactIScroll>
             {
               (status === 1 || status === 2 || status === 3) ? '' : <div className={style['btn-box']}><Button disabled={!canApply} onClick={this.handleApply} type='primary'>申请结算{!canApply ? `（${canapplyDate}可申请）` : ''}</Button></div>
             }

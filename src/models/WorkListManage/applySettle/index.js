@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
 import { List, Modal, Toast, Button } from 'antd-mobile'
+import ReactIScroll from 'react-iscroll'
+import iScroll from 'iscroll'
 import md5 from 'md5'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
@@ -137,16 +139,18 @@ class ApplySettle extends Component {
             <p>合计(元)</p>
             <strong>{amount}</strong>
           </div>
-          <div className={`${style['settle-box']} ${status === 1 || status === 2 ? style['has-btn'] : ''}`}>
-            <List className={`${style['settle-list']}`}>
-              {dataSource.map((i, index) => (
-                <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>
-                  <div className={style['header']} style={{ 'backgroundImage': 'url(' + i['avatar'] + ')' }}></div>
-                  <div className={style['settle-info']}>{i.username}</div>
-                  <div className={style['settle-workload']}>工作量：{i.workload}{i['workload_unit']}</div>
-                </List.Item>
-              ))}
-            </List>
+          <div className={`${style['settle-box']}`} style={{ height: status === 1 || status === 2 ? document.documentElement.clientHeight - 45 - 80 - 50 : document.documentElement.clientHeight - 45 - 80 }}>
+            <ReactIScroll iScroll={iScroll}>
+              <List className={`${style['settle-list']}`}>
+                {dataSource.map((i, index) => (
+                  <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>
+                    <div className={style['header']} style={{ 'backgroundImage': 'url(' + i['avatar'] + ')' }}></div>
+                    <div className={style['settle-info']}>{i.username}</div>
+                    <div className={style['settle-workload']}>工作量：{i.workload}{i['workload_unit']}</div>
+                  </List.Item>
+                ))}
+              </List>
+            </ReactIScroll>
             {
               statusDom[status]
             }
