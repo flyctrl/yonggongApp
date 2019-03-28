@@ -41,21 +41,28 @@ class SetUp extends Component {
       worksheet_no: this.state.worksheetno
     }) || false
     if (data) {
-      // data['attend_time_config'] = [[
-      //   '6:00',
-      //   '11:00'
-      // ],
-      // [
-      //   '12:00',
-      //   '16:00'
-      // ],
-      // [
-      //   '18:00',
-      //   '20:00'
-      // ]]
-      // data['attend_day_times'] = 3
-      // data['default_time_config'] = { 1: [['5:00', '17:30']], 2: [['7:00', '11:00'], ['13:00', '17:00']], 3: [['8:00', '10:00'], ['12:00', '16:00'], ['19:00', '23:00']] }
       this.setState({ data, defaultTime: data['default_time_config'], isLoading: false })
+    }
+  }
+  onSubmitAddress = (callback) => {
+    if (typeof OCBridge !== 'undefined') {
+      if (callback === 1) {
+        let { data = {}} = this.state
+        let position = OCBridge.loadMapInfo()
+        if (position && JSON.stringify(position) !== '{}') {
+          if (!('attend_place_coordinate' in data)) {
+            data['attend_place_coordinate'] = {}
+          }
+          data['attend_place_coordinate']['lng'] = `${position['longitude']}`
+          data['attend_place_coordinate']['lat'] = `${position['latitude']}`
+          data['attend_place'] = position.address
+          data['isset_address'] = true
+          this.setState({
+            data,
+            isSetAddress: true
+          })
+        }
+      }
     }
   }
   handleSetAddress = () => {
@@ -254,7 +261,6 @@ class SetUp extends Component {
   }
   render() {
     const { isShowType, isShowRange, isShowAddress, data = {}, isLoading, isSetType } = this.state
-    console.log(data, 'data')
     return (
       !isLoading
         ? isShowType

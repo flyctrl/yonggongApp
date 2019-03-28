@@ -25,10 +25,6 @@ let radioCount = [{
 {
   value: 2,
   label: '2次'
-},
-{
-  value: 3,
-  label: '3次'
 }]
 // const RadioItem = Radio.RadioItem
 class SetUpType extends Component {
