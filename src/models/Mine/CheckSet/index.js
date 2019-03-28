@@ -59,11 +59,24 @@ class SetUp extends Component {
     }
   }
   handleSetAddress = () => {
-    let { isShowAddress } = this.state
-    console.log(isShowAddress, 'add')
     if (typeof OCBridge !== 'undefined') {
-      OCBridge.loadingMap()
-      console.log(OCBridge.loadMapInfo(), 'map')
+      OCBridge.loadMap((callback) => {
+        console.log(callback, 'callback')
+        if (callback && JSON.stringify(callback) !== '{}') {
+          let { data = {}} = this.state
+          if (!('attend_place_coordinate' in data)) {
+            data['attend_place_coordinate'] = {}
+          }
+          data['attend_place_coordinate']['lng'] = `${callback['longitude']}`
+          data['attend_place_coordinate']['lat'] = `${callback['latitude']}`
+          data['attend_place'] = callback.address
+          data['isset_address'] = true
+          this.setState({
+            data,
+            isSetAddress: true
+          })
+        }
+      })
     } else {
       this.setState({
         isShowAddress: !this.state.isShowAddress
