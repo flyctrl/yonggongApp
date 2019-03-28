@@ -41,13 +41,34 @@ class SetUp extends Component {
       worksheet_no: this.state.worksheetno
     }) || false
     if (data) {
+      // data['attend_time_config'] = [[
+      //   '6:00',
+      //   '11:00'
+      // ],
+      // [
+      //   '12:00',
+      //   '16:00'
+      // ],
+      // [
+      //   '18:00',
+      //   '20:00'
+      // ]]
+      // data['attend_day_times'] = 3
+      // data['default_time_config'] = { 1: [['5:00', '17:30']], 2: [['7:00', '11:00'], ['13:00', '17:00']], 3: [['8:00', '10:00'], ['12:00', '16:00'], ['19:00', '23:00']] }
       this.setState({ data, defaultTime: data['default_time_config'], isLoading: false })
     }
   }
   handleSetAddress = () => {
-    this.setState({
-      isShowAddress: !this.state.isShowAddress
-    })
+    let { isShowAddress } = this.state
+    console.log(isShowAddress, 'add')
+    if (typeof OCBridge !== 'undefined') {
+      OCBridge.loadingMap()
+      console.log(OCBridge.loadMapInfo(), 'map')
+    } else {
+      this.setState({
+        isShowAddress: !this.state.isShowAddress
+      })
+    }
   }
   handleSetType = (e, val) => {
     let { data } = this.state
@@ -220,6 +241,7 @@ class SetUp extends Component {
   }
   render() {
     const { isShowType, isShowRange, isShowAddress, data = {}, isLoading, isSetType } = this.state
+    console.log(data, 'data')
     return (
       !isLoading
         ? isShowType
