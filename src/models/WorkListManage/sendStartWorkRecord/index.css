@@ -3,7 +3,6 @@ html:not([data-scale]) .record-list :global(.am-list-body::after) {
 } 
 .record-list {
   touch-action: none;
-  height: 622px;
   & li {
     background: #fff;
     margin-top: 4px;

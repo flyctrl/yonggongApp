@@ -170,7 +170,7 @@ class AccessRecord extends Component {
         }}
       />
       <Content>
-        <ul className={style['record-list']}>
+        <ul className={style['record-list']} style={{ height: document.documentElement.clientHeight - 50 }}>
           <ListView
             ref={(el) => {
               this.lv = el
