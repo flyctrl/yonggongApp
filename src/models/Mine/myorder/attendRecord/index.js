@@ -57,7 +57,7 @@ class AttendRecord extends Component {
     this.getdataTemp()
   }
   getdataTemp = () => {
-    const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 50
+    const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 50 - 36
     this.genData().then((rdata) => {
       this.rData = rdata
       this.setState({
@@ -208,7 +208,7 @@ class AttendRecord extends Component {
           this.props.match.history.go(-1)
         }}
       />
-      <Content>
+      <Content style={{ overflow: 'hidden' }}>
         <ul className={`${style['attend-header']}`}>
           <li onClick={() => { this.setState({ dateVisible: true }) }}>{ dateVal === null ? '日期' : dateVal.Format('yyyy-MM-dd') } <NewIcon type='icon-daosanjiao' /></li>
           <DatePicker

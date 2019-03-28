@@ -208,7 +208,7 @@ class AttendRecord extends Component {
           this.props.match.history.go(-1)
         }}
       />
-      <Content>
+      <Content style={{ overflow: 'hidden' }}>
         <ul className={`${style['attend-header']}`}>
           <li onClick={() => { this.setState({ dateVisible: true }) }}>{ dateVal === null ? '日期' : dateVal.Format('yyyy-MM-dd') } <NewIcon type='icon-daosanjiao' /></li>
           <DatePicker
