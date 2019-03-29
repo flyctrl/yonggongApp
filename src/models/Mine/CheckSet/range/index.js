@@ -33,10 +33,6 @@ class SetUpRange extends Component {
       this.props.onBack(value, value)
     }, 700)
   }
-  handleBack = () => {
-    alert('back')
-    this.props.onBack()
-  }
   render() {
     const { radioVal } = this.state
     return <div className='pageBox gray'>
@@ -44,7 +40,7 @@ class SetUpRange extends Component {
         title='考勤范围'
         leftIcon='icon-back'
         leftTitle1='返回'
-        leftClick1={this.handleBack }
+        maskClick={this.props.onBack}
       />
       <Content>
         <List className={style['set-up']}>
