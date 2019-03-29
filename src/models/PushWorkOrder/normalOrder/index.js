@@ -128,6 +128,8 @@ class SelectClass extends Component {
     }
     if (paymethodId !== '' && porderno !== '0') {
       postData['p_order_no'] = porderno
+    } else if (paymethodId !== '' && orderno !== '') {
+      postData['p_order_no'] = orderno
     }
     let data = await api.PushOrder.getSettleFixTime({
       ...postData

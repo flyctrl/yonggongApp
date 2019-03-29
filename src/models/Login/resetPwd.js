@@ -66,7 +66,11 @@ class RestPwd extends Component {
           if (data) {
             Toast.hide()
             Toast.success('修改成功', 1.5, () => {
-              this.props.match.history.push(urls.LOGIN)
+              if (typeof OCBridge !== 'undefined') {
+                OCBridge.login()
+              } else {
+                this.props.match.history.push(urls.LOGIN)
+              }
             })
           }
         }
