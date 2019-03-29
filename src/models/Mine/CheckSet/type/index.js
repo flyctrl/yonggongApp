@@ -123,7 +123,7 @@ class SetUpType extends Component {
         title='考勤类型'
         leftIcon='icon-back'
         leftTitle1='返回'
-        leftClick1={ this.props.onBack }
+        leftClick1={this.props.onBack }
       />
       <Content>
         <div className={style['set-up']}>

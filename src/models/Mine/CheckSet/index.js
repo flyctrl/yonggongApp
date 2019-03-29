@@ -66,8 +66,31 @@ class SetUp extends Component {
   //   }
   // }
   handleSetAddress = () => {
+    // let _this = this
     if (typeof OCBridge !== 'undefined') {
       OCBridge.loadMap()
+      // window.onSubmitAddress = (callback) => {
+      //   alert(callback)
+      //   if (callback === 1) {
+      //     let { data = {}} = _this.state
+      //     let position = OCBridge.loadMapInfo()
+      //     alert(position)
+      //     if (position && JSON.stringify(position) !== '{}') {
+      //       alert(4)
+      //       if (!('attend_place_coordinate' in data)) {
+      //         data['attend_place_coordinate'] = {}
+      //       }
+      //       data['attend_place_coordinate']['lng'] = `${position['longitude']}`
+      //       data['attend_place_coordinate']['lat'] = `${position['latitude']}`
+      //       data['attend_place'] = position.address
+      //       data['isset_address'] = true
+      //       _this.setState({
+      //         data,
+      //         isSetAddress: true
+      //       })
+      //     }
+      //   }
+      // }
     } else {
       this.setState({
         isShowAddress: !this.state.isShowAddress
@@ -92,6 +115,7 @@ class SetUp extends Component {
     })
   }
   handleSetRange = (key, value) => {
+    alert(this.state.isShowRange, 'is')
     let { data } = this.state
     if (value) {
       data['attend_distance_range'] = value
@@ -201,28 +225,6 @@ class SetUp extends Component {
     if ('cordova' in window) {
       document.removeEventListener('backbutton', this.backButtons)
       document.addEventListener('backbutton', onBackKeyDown, false)
-    }
-    if (typeof OCBridge !== 'undefined') {
-      window.onSubmitAddress = (callback) => {
-        if (callback === 1) {
-          let { data = {}} = this.state
-          let position = OCBridge.loadMapInfo()
-          if (position && JSON.stringify(position) !== '{}') {
-            if (!('attend_place_coordinate' in data)) {
-              data['attend_place_coordinate'] = {}
-            }
-            data['attend_place_coordinate']['lng'] = `${position['longitude']}`
-            data['attend_place_coordinate']['lat'] = `${position['latitude']}`
-            data['attend_place'] = position.address
-            data['isset_address'] = true
-            this.setState({
-              data,
-              isSetAddress: true
-            })
-          }
-        }
-      }
-      document.addEventListener('load', window.onSubmitAddress)
     }
   }
   backButtons = (e) => {
