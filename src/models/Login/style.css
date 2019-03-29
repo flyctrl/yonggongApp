@@ -135,16 +135,6 @@
   }
 }
 
-@media (-webkit-min-device-pixel-ratio: 2) and (-webkit-min-device-pixel-ratio: 3), (min-resolution: 2dppx) and (min-resolution: 3dppx) {
-  html:not([data-scale]) .registerForm :global(.am-list-body::after) {
-    height: 0;
-  }
-}
-@media (-webkit-min-device-pixel-ratio: 2) and (-webkit-min-device-pixel-ratio: 3), (min-resolution: 2dppx) and (min-resolution: 3dppx) {
-  html:not([data-scale]) .registerForm :global(.am-list-body::before) {
-    height: 0;
-  }  
-}
 .registerForm {
   width: 250px;
   margin: 0 auto;
@@ -259,10 +249,7 @@
   text-align: center;
   color: #999;
   font-size: 12px;
-  position: absolute;
-  bottom: 15px;
-  left: 0;
-  right: 0;
+  margin-top: 2px;
   & a {
     color: rgba(4,103,224,.7);
     cursor: pointer;

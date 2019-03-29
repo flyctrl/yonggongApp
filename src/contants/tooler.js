@@ -285,7 +285,7 @@ export const corovaUploadImg = (type, callback) => {
       Toast.fail('没选择图片')
     }, options)
   }, (msg) => {
-    Toast.offline(msg, 2)
+    Toast.offline('没有选择图片', 2)
   }, {
     sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
     destinationType: Camera.DestinationType.FILE_URI,
