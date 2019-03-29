@@ -12,7 +12,6 @@ import { AppContainer } from 'react-hot-loader'
 import 'Src/assets/iconfont.js'
 import './global.css'
 import './border.css'
-
 ReactDOM.render(
   <AppContainer>
     <MainRouter/>

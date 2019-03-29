@@ -44,10 +44,55 @@ class SetUp extends Component {
       this.setState({ data, defaultTime: data['default_time_config'], isLoading: false })
     }
   }
+  // onSubmitAddress = (callback) => {
+  //   if (typeof OCBridge !== 'undefined') {
+  //     if (callback === 1) {
+  //       let { data = {}} = this.state
+  //       let position = OCBridge.loadMapInfo()
+  //       if (position && JSON.stringify(position) !== '{}') {
+  //         if (!('attend_place_coordinate' in data)) {
+  //           data['attend_place_coordinate'] = {}
+  //         }
+  //         data['attend_place_coordinate']['lng'] = `${position['longitude']}`
+  //         data['attend_place_coordinate']['lat'] = `${position['latitude']}`
+  //         data['attend_place'] = position.address
+  //         data['isset_address'] = true
+  //         this.setState({
+  //           data,
+  //           isSetAddress: true
+  //         })
+  //       }
+  //     }
+  //   }
+  // }
   handleSetAddress = () => {
-    this.setState({
-      isShowAddress: !this.state.isShowAddress
-    })
+    let _this = this
+    if (typeof OCBridge !== 'undefined') {
+      OCBridge.loadMap()
+      window.onSubmitAddress = (callback) => {
+        if (callback === 1) {
+          let { data = {}} = _this.state
+          let position = OCBridge.loadMapInfo()
+          if (position && JSON.stringify(position) !== '{}') {
+            if (!('attend_place_coordinate' in data)) {
+              data['attend_place_coordinate'] = {}
+            }
+            data['attend_place_coordinate']['lng'] = `${position['longitude']}`
+            data['attend_place_coordinate']['lat'] = `${position['latitude']}`
+            data['attend_place'] = position.address
+            data['isset_address'] = true
+            _this.setState({
+              data,
+              isSetAddress: true
+            })
+          }
+        }
+      }
+    } else {
+      this.setState({
+        isShowAddress: !this.state.isShowAddress
+      })
+    }
   }
   handleSetType = (e, val) => {
     let { data } = this.state
@@ -174,8 +219,8 @@ class SetUp extends Component {
   }
   componentDidMount() {
     if ('cordova' in window) {
-      document.removeEventListener('backbutton', this.backButtons)
-      document.addEventListener('backbutton', onBackKeyDown, false)
+      document.removeEventListener('backbutton', onBackKeyDown)
+      document.addEventListener('backbutton', this.backButtons, false)
     }
   }
   backButtons = (e) => {
@@ -259,6 +304,7 @@ class SetUp extends Component {
                     // this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=1`)
                   }}
                 />
+                {/* <iframe id='iframe' onLoad={this.onload} frameBorder='0' scrolling='no' marginHeight='0' marginWidth='0'></iframe> */}
                 <Content>
                   <div className={style['set-up']}>
                     <List>

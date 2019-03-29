@@ -164,13 +164,13 @@ class EnginReality extends Component {
                   <List.Item arrow='horizontal'>项目名称</List.Item>
                 </Picker>
               </List>
-              <List className={`${style['input-form-list']}`}>
+              <List className={`${style['input-form-list']} ${style['input-form-list-prj']}`}>
                 <List.Item arrow='horizontal' extra={startTime && endTime ? (new Date(startTime)).toLocaleDateString() + ' ~ ' + (new Date(endTime)).toLocaleDateString() : '请选择日期范围' } onClick={ this.hanleShowCalendar} >日期范围</List.Item>
               </List>
               {
                 proSelect
                   ? !isLoadWork
-                    ? <List className={`${style['input-form-list']}`}>
+                    ? <List className={`${style['input-form-list']} ${style['input-form-list-prj']}`}>
                       <Picker extra='请选择工单' className='myPicker' value={[worksheetId]} onChange={this.onWorkSheetChange} data={worksheetData} cols={1}>
                         <List.Item arrow='horizontal'>工单名称</List.Item>
                       </Picker>
