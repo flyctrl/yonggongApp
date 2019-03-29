@@ -137,8 +137,8 @@ const urlCode = {
   'YB1002': { name: 'ORDERLISTDETAIL', params: false }, // 订单的工单详情
   'YA1002': { name: 'SENDSTARTWORKRECORD', params: false }, // 工单的开工记录
   'YA1003': { name: 'OORDERSTARTWORKRECORD', params: false }, // 订单的开工记录
-  'YA1004': { name: 'SETTLERECORD', params: false }, // 工单结算记录
-  'YA1005': { name: 'PENDINGSETTLERECORD', params: false }, // 订单结算记录
+  'YA1004': { name: 'SETTLERECORDDETAIL', params: false }, // 工单结算记录
+  'YA1005': { name: 'APPLYSETTLE', params: false }, // 订单结算记录
   'YC1001': { name: 'CHECK', params: false }, // 考勤打卡
   'YB1003': { name: 'REALNAMEAUTHDETAIL', params: false }, // 实名认证详情
   'YB1004': { name: 'COMPANYAUTHDETAIL', params: false }, // 企业认证详情

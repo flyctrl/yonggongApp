@@ -10,6 +10,7 @@ import * as urls from 'Contants/urls'
 import style from './style.css'
 const alert = Modal.alert
 const prompt = Modal.prompt
+const viewHeight = document.documentElement.clientHeight
 class ApplySettle extends Component {
   constructor(props) {
     super(props)
@@ -139,7 +140,7 @@ class ApplySettle extends Component {
             <p>合计(元)</p>
             <strong>{amount}</strong>
           </div>
-          <div className={`${style['settle-box']}`} style={{ height: status === 1 || status === 2 ? document.documentElement.clientHeight - 45 - 80 - 50 : document.documentElement.clientHeight - 45 - 80 }}>
+          <div className={`${style['settle-box']}`} style={{ height: status === 1 || status === 2 ? viewHeight - 45 - 80 - 50 : viewHeight - 45 - 80 }}>
             <ReactIScroll iScroll={iScroll}>
               <List className={`${style['settle-list']}`}>
                 {dataSource.map((i, index) => (
@@ -151,10 +152,11 @@ class ApplySettle extends Component {
                 ))}
               </List>
             </ReactIScroll>
-            {
-              statusDom[status]
-            }
-          </div></div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
+          </div>
+          {
+            statusDom[status]
+          }
+          </div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
         }
       </Content>
     </div>

@@ -66,6 +66,14 @@ class Check extends Component {
   }
 
   componentDidMount() {
+    map = new AMap.Map('mapContainer', {
+      resizeEnable: true,
+      zoomEnable: false,
+      zoom: 15,
+      doubleClickZoom: false,
+      touchZoom: false,
+      dragEnable: false,
+    })
     setTime = setInterval(() => {
       this.setState({
         time: new Date().Format('hh:mm'),
@@ -104,14 +112,6 @@ class Check extends Component {
   _getPosition () {
     let { lng, lat, radius } = this.state
     let _t = this
-    map = new AMap.Map('mapContainer', {
-      resizeEnable: true,
-      zoomEnable: false,
-      zoom: 15,
-      doubleClickZoom: false,
-      touchZoom: false,
-      dragEnable: false,
-    })
     if ('cordova' in window) {
       map.on('complete', function() {
         GaoDe.getCurrentPosition((natviepos) => {
