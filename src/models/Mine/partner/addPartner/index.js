@@ -51,7 +51,11 @@ class AddPartner extends Component {
       })
       Toast.hide()
       Toast.success('添加成功', 1.5, () => {
-        this.props.match.history.push(urls.PARTNER)
+        if (typeof OCBridge !== 'undefined') {
+          OCBridge.back()
+        } else {
+          this.props.match.history.push(urls.PARTNER)
+        }
       })
     }
   }

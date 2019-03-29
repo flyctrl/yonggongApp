@@ -15,7 +15,11 @@ class SuccessPage extends Component {
     }
   }
   handleBack = () => {
-    history.push(urls.ACCOUNT)
+    if (typeof OCBridge !== 'undefined') {
+      OCBridge.back()
+    } else {
+      history.push(urls.ACCOUNT)
+    }
   }
   async componentDidMount() {
     let ordernum = tooler.getQueryString('ygOrderNo')
