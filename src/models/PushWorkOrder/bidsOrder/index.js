@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { List, Button, WingBlank, Radio, Picker } from 'antd-mobile'
 import NewIcon from 'Components/NewIcon'
 import { Header, Content } from 'Components'
-import { tenderWayRadio, receiveTypeRadio, payModeRadio, valuationWay } from 'Contants/fieldmodel'
+import { tenderWayRadio, receiveTypeRadio, payModeRadio } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './index.css'
@@ -36,15 +36,17 @@ class SelectClass extends Component {
       showtech: false,
       url: tooler.getQueryString('url') || '',
       edittype: tooler.getQueryString('edittype') || 0,
-      editSheetno: tooler.getQueryString('editSheetno') || 0
+      editSheetno: tooler.getQueryString('editSheetno') || 0,
+      valuationWay: []
     }
   }
   componentDidMount() {
     this.getSettleFixTime()
     if (this.state.edittype === '1') {
-      this.getEditData()
+      this.getEditData(() => this.getValuationList())
     } else {
       let { receiveType } = this.state
+      this.getValuationList()
       this.setState({
         showtech: parseInt(receiveType) === 2
       })
@@ -83,7 +85,7 @@ class SelectClass extends Component {
       }
     }
   }
-  getEditData = async () => { // 获取编辑数据
+  getEditData = async (callback) => { // 获取编辑数据
     let { editSheetno } = this.state
     let data = await api.PushOrder.tenderDetail({
       worksheet_no: editSheetno
@@ -104,7 +106,7 @@ class SelectClass extends Component {
         paymodeId: data['pay_way'],
         paymodeVal: data['pay_way_name'],
         parentTeachId: 0
-      })
+      }, () => callback())
     }
   }
   onChange = (value) => {
@@ -149,6 +151,14 @@ class SelectClass extends Component {
       paymethodId: newVal['value'],
       paymethodVal: newVal['label']
     })
+  }
+  getValuationList = async (value) => { // 获取计价方式
+    let data = await api.PushOrder.getValuationList({}) || false
+    if (data) {
+      this.setState({
+        valuationWay: data
+      })
+    }
   }
   handlePayMode = (value) => { // 付款方式
     console.log(value)
@@ -227,7 +237,7 @@ class SelectClass extends Component {
     }
   }
   render() {
-    let { showIndex, teachVal, showtech, proId, proVal, paymethodVal, bidwayVal, paymodeVal, settleValue, receiveType, parentTeachId, paymethod } = this.state
+    let { showIndex, teachVal, showtech, proId, proVal, paymethodVal, bidwayVal, paymodeVal, settleValue, receiveType, parentTeachId, paymethod, valuationWay } = this.state
     console.log(proVal)
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>

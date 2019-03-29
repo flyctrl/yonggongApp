@@ -9,6 +9,7 @@ import * as tooler from 'Contants/tooler'
 import style from './style.css'
 const alert = Modal.alert
 const isnumReg = /^[0-9]+.?[0-9]*$/
+const viewHeight = document.documentElement.clientHeight
 class ApplySettle extends Component {
   constructor(props) {
     super(props)
@@ -144,7 +145,7 @@ class ApplySettle extends Component {
               </li>
             </ul>
           </div>
-          <div className={style['settle-box']} style={{ height: (status === 1 || status === 2 || status === 3) ? document.documentElement.clientHeight - 45 - 114 : document.documentElement.clientHeight - 45 - 114 - 50 }}>
+          <div className={style['settle-box']} style={{ height: (status === 1 || status === 2 || status === 3) ? viewHeight - 45 - 114 : viewHeight - 45 - 114 - 50 }}>
             <ReactIScroll iScroll={iScroll}>
               <List className={`${style['settle-list']}`}>
                 {dataSource.map((i, index) => (
@@ -165,10 +166,11 @@ class ApplySettle extends Component {
                 ))}
               </List>
             </ReactIScroll>
-            {
-              (status === 1 || status === 2 || status === 3) ? '' : <div className={style['btn-box']}><Button disabled={!canApply} onClick={this.handleApply} type='primary'>申请结算{!canApply ? `（${canapplyDate}可申请）` : ''}</Button></div>
-            }
-          </div></div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
+          </div>
+          {
+            (status === 1 || status === 2 || status === 3) ? '' : <div className={style['btn-box']}><Button disabled={!canApply} onClick={this.handleApply} type='primary'>申请结算{!canApply ? `（${canapplyDate}可申请）` : ''}</Button></div>
+          }
+          </div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
         }
       </Content>
     </div>

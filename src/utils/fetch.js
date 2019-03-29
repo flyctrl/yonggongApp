@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2019-03-26 11:41:20
+* @Last Modified time: 2019-03-29 21:35:21
 */
 import * as Loading from './load.js'
 import { Toast } from 'antd-mobile'
@@ -93,6 +93,7 @@ fetcher.interceptors.response.use(function (response) {
         data: window.location.href
       })
     } else {
+      Toast.hide()
       history.push('/Login/login')
     }
   } else if (response.data.code === 10011) { // token过期
@@ -107,6 +108,7 @@ fetcher.interceptors.response.use(function (response) {
         if (res.data.code === 10012) {
           storage.remove('Authorization')
           storage.remove('refreshToken')
+          Toast.hide()
           history.push('/Login/login')
         } else if (res.data.code === 0) {
           storage.set('Authorization', 'Bearer ' + res.data.data.access_token)
@@ -114,6 +116,7 @@ fetcher.interceptors.response.use(function (response) {
           // window.location.reload()
           history.go(0)
         } else {
+          Toast.hide()
           history.push('/Login/login')
         }
       }).catch(function() {

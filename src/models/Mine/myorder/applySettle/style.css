@@ -154,6 +154,7 @@
   right: 0;
   bottom: 0;
   height: 50px;
+  z-index: 1000;
   background: #fff;
   & a {
     height: 40px;

@@ -160,12 +160,8 @@ const SetUpAboutUs = Loadable({ // 我的设置》关于我们
   loader: () => import(/* webpackChunkName: "setupaboutus" */ '../models/Mine/SetUp/aboutAs'),
   loading: MyLoadingComponent
 })
-const SetUpIntrduce = Loadable({ // 我的设置》关于我们》功能介绍
-  loader: () => import(/* webpackChunkName: "setupintroduce" */ '../models/Mine/SetUp/introduce'),
-  loading: MyLoadingComponent
-})
-const SetUpIntrduceInfo = Loadable({ // 我的设置》关于我们》功能介绍》详情
-  loader: () => import(/* webpackChunkName: "setupintroduceinfo" */ '../models/Mine/SetUp/introduce/detail'),
+const Clause = Loadable({ // 服务条款协议
+  loader: () => import(/* webpackChunkName: "clause" */ '../models/Mine/SetUp/clause'),
   loading: MyLoadingComponent
 })
 const MyOrder = Loadable({ // 我的订单
@@ -600,21 +596,13 @@ const routes = [
     showMenu: false,
     title: '关于我们'
   }, {
-    path: urls.SETUPINTRODUCE,
+    path: urls.CLAUSE,
     exact: true,
-    component: SetUpIntrduce,
+    component: Clause,
     parent: null,
     animated: true,
     showMenu: false,
-    title: '功能介绍'
-  }, {
-    path: urls.SETUPINTRODUCEINFO,
-    exact: true,
-    component: SetUpIntrduceInfo,
-    parent: null,
-    animated: true,
-    showMenu: false,
-    title: '功能详情'
+    title: '服务条款协议'
   }, {
     path: urls.WORKLISTDETAIL,
     exact: true,

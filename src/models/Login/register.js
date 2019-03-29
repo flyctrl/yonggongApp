@@ -235,6 +235,7 @@ class Register extends Component {
               <Link to={ urls.LOGIN } className={style['loginBtn']}>已有帐号？去登录</Link>
             </div>
           </form>
+          <div className={style['reg-clause']}>注册即表示同意<a onClick={() => this.props.match.history.push(urls.CLAUSE)}>亚雀科技服务条款</a></div>
         </Content>
       </div>
     )

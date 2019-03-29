@@ -218,6 +218,9 @@ export default {
     },
     getSettleFixTime(params) { // 获取结算方式
       return Fetch(prefix + '/worksheet/list/settle_fix_time', params, 'get')
+    },
+    getValuationList(params) { // 获取计价方式
+      return Fetch(prefix + '/worksheet/list/valuation_way', params, 'get')
     }
   },
   WorkListManage: {

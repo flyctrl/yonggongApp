@@ -14,8 +14,8 @@
     border-radius: 8px;
     
     & img {
-      width: 38px;
-      height: 38px;
+      width: 66px;
+      height: 66px;
       display: block;
       position: absolute;
       left: 0;
@@ -25,6 +25,7 @@
       margin:auto;
       text-align: center;
       vertical-align: middle;
+      border-radius: 4px;
     }
   }
 }

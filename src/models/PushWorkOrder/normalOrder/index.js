@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { List, Button, WingBlank, Radio, Picker } from 'antd-mobile'
 import NewIcon from 'Components/NewIcon'
 import { Header, Content } from 'Components'
-import { valuationWay } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './index.css'
@@ -20,7 +19,6 @@ class SelectClass extends Component {
     super(props)
     this.state = {
       showIndex: 0,
-      settleId: parseInt(tooler.getQueryString('settleValue')),
       settleValue: parseInt(tooler.getQueryString('settleValue')) || 2,
       proId: tooler.getQueryString('proId') || '',
       proVal: tooler.getQueryString('proVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('proVal'))) : '请选择',
@@ -41,14 +39,19 @@ class SelectClass extends Component {
       detailsheetno: tooler.getQueryString('detailsheetno') || '',
       starttime: tooler.getQueryString('starttime') || '',
       edittype: tooler.getQueryString('edittype') || 0,
-      editSheetno: tooler.getQueryString('editSheetno') || 0
+      editSheetno: tooler.getQueryString('editSheetno') || 0,
+      valuationWay: []
     }
   }
   componentDidMount() {
     if (this.state.edittype === '2') {
-      this.getEditData(() => this.contestPaymethod())
+      this.getEditData(() => {
+        this.contestPaymethod()
+        this.getValuationList()
+      })
     } else {
       this.contestPaymethod()
+      this.getValuationList()
     }
     if ('cordova' in window) {
       document.removeEventListener('backbutton', onBackKeyDown, false)
@@ -182,6 +185,21 @@ class SelectClass extends Component {
       paymethodVal: newVal['label']
     })
   }
+  getValuationList = async (value) => { // 获取计价方式
+    let { orderno, porderno } = this.state
+    let postData = {}
+    if (porderno !== '0') {
+      postData['p_order_no'] = porderno
+    } else if (orderno !== '') {
+      postData['p_order_no'] = orderno
+    }
+    let data = await api.PushOrder.getValuationList(postData) || false
+    if (data) {
+      this.setState({
+        valuationWay: data
+      })
+    }
+  }
   handleSelectTech = () => {
     this.setState({
       showIndex: 3
@@ -256,7 +274,7 @@ class SelectClass extends Component {
     }
   }
   render() {
-    let { orderno, porderno, settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, paymethodVal, paymethodAry, teachId, settleId } = this.state
+    let { orderno, porderno, settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, paymethodVal, paymethodAry, teachId, valuationWay } = this.state
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
         <Header
@@ -284,7 +302,7 @@ class SelectClass extends Component {
           </List>
           <List renderHeader={() => '选择计价方式'} className={`${style['select-class-list']} ${style['settle-type-list']}`}>
             {valuationWay.map(i => (
-              <RadioItem key={i.value} disabled={ (orderno !== '' && settleId === 2) || (porderno !== '0' && settleValue === 2) } checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
+              <RadioItem key={i.value} disabled={ i.disable === 1 } checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
                 {i.label}
               </RadioItem>
             ))}

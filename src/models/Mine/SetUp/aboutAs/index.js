@@ -9,7 +9,7 @@ import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
 // import api from 'Util/api'
 import style from './style.css'
-import logo from 'Src/assets/logo.png'
+import icon from 'Src/assets/icon.png'
 const Item = List.Item
 
 class AboutUs extends Component {
@@ -42,7 +42,7 @@ class AboutUs extends Component {
       <Content>
         <div className={style['about']}>
           <div className={`${style['about-avatar']} my-full-border`}>
-            <img src={logo} />
+            <img src={icon} />
           </div>
         </div>
         <p className={style['about-v']}>亚雀用工{
@@ -51,7 +51,7 @@ class AboutUs extends Component {
         <div className={style['about-content']}>
           <List>
             {/* <Item onClick={() => {}} arrow='horizontal'>去评分</Item> */}
-            <Item onClick={() => { this.props.match.history.push(urls.SETUPINTRODUCE) }} arrow='horizontal'>功能介绍</Item>
+            <Item onClick={() => this.props.match.history.push(urls.CLAUSE)}arrow='horizontal'>服务条款</Item>
           </List>
         </div>
       </Content>
