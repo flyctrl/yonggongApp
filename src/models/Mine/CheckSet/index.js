@@ -44,46 +44,30 @@ class SetUp extends Component {
       this.setState({ data, defaultTime: data['default_time_config'], isLoading: false })
     }
   }
-  onSubmitAddress = (callback) => {
-    if (typeof OCBridge !== 'undefined') {
-      if (callback === 1) {
-        let { data = {}} = this.state
-        let position = OCBridge.loadMapInfo()
-        if (position && JSON.stringify(position) !== '{}') {
-          if (!('attend_place_coordinate' in data)) {
-            data['attend_place_coordinate'] = {}
-          }
-          data['attend_place_coordinate']['lng'] = `${position['longitude']}`
-          data['attend_place_coordinate']['lat'] = `${position['latitude']}`
-          data['attend_place'] = position.address
-          data['isset_address'] = true
-          this.setState({
-            data,
-            isSetAddress: true
-          })
-        }
-      }
-    }
-  }
+  // onSubmitAddress = (callback) => {
+  //   if (typeof OCBridge !== 'undefined') {
+  //     if (callback === 1) {
+  //       let { data = {}} = this.state
+  //       let position = OCBridge.loadMapInfo()
+  //       if (position && JSON.stringify(position) !== '{}') {
+  //         if (!('attend_place_coordinate' in data)) {
+  //           data['attend_place_coordinate'] = {}
+  //         }
+  //         data['attend_place_coordinate']['lng'] = `${position['longitude']}`
+  //         data['attend_place_coordinate']['lat'] = `${position['latitude']}`
+  //         data['attend_place'] = position.address
+  //         data['isset_address'] = true
+  //         this.setState({
+  //           data,
+  //           isSetAddress: true
+  //         })
+  //       }
+  //     }
+  //   }
+  // }
   handleSetAddress = () => {
     if (typeof OCBridge !== 'undefined') {
-      OCBridge.loadMap((callback) => {
-        console.log(callback, 'callback')
-        if (callback && JSON.stringify(callback) !== '{}') {
-          let { data = {}} = this.state
-          if (!('attend_place_coordinate' in data)) {
-            data['attend_place_coordinate'] = {}
-          }
-          data['attend_place_coordinate']['lng'] = `${callback['longitude']}`
-          data['attend_place_coordinate']['lat'] = `${callback['latitude']}`
-          data['attend_place'] = callback.address
-          data['isset_address'] = true
-          this.setState({
-            data,
-            isSetAddress: true
-          })
-        }
-      })
+      OCBridge.loadMap()
     } else {
       this.setState({
         isShowAddress: !this.state.isShowAddress
@@ -218,6 +202,28 @@ class SetUp extends Component {
       document.removeEventListener('backbutton', this.backButtons)
       document.addEventListener('backbutton', onBackKeyDown, false)
     }
+    if (typeof OCBridge !== 'undefined') {
+      window.onSubmitAddress = (callback) => {
+        if (callback === 1) {
+          let { data = {}} = this.state
+          let position = OCBridge.loadMapInfo()
+          if (position && JSON.stringify(position) !== '{}') {
+            if (!('attend_place_coordinate' in data)) {
+              data['attend_place_coordinate'] = {}
+            }
+            data['attend_place_coordinate']['lng'] = `${position['longitude']}`
+            data['attend_place_coordinate']['lat'] = `${position['latitude']}`
+            data['attend_place'] = position.address
+            data['isset_address'] = true
+            this.setState({
+              data,
+              isSetAddress: true
+            })
+          }
+        }
+      }
+      document.addEventListener('load', window.onSubmitAddress)
+    }
   }
   backButtons = (e) => {
     let { isShowType, isShowAddress, isShowRange } = this.state
@@ -244,6 +250,9 @@ class SetUp extends Component {
     if ('cordova' in window) {
       document.removeEventListener('backbutton', this.backButtons)
       document.addEventListener('backbutton', onBackKeyDown, false)
+    }
+    if (typeof OCBridge !== 'undefined') {
+      document.removeEventListener('load', window.onSubmitAddress)
     }
   }
   handleChange = (val, val2) => {
@@ -300,6 +309,7 @@ class SetUp extends Component {
                     // this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=1`)
                   }}
                 />
+                {/* <iframe id='iframe' onLoad={this.onload} frameBorder='0' scrolling='no' marginHeight='0' marginWidth='0'></iframe> */}
                 <Content>
                   <div className={style['set-up']}>
                     <List>
