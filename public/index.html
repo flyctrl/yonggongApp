@@ -63,6 +63,9 @@
           document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"' + '>' + '<' + '/' + 'script>')
         }
         document.body.style.margin = '0'
+        if (typeof OCBridge !== 'undefined') {
+          localStorage.setItem('Authorization', OCBridge.token())
+        }
       }
     </script>
     <title>亚雀-用工端</title>

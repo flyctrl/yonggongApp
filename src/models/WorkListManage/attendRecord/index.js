@@ -42,6 +42,7 @@ class AttendRecord extends Component {
       startDate: null,
       endDate: null,
       worksheetno: tooler.getQueryString('worksheetno'),
+      orderno: tooler.getQueryString('orderno'),
       pageIndex: 1,
       pageNos: 0,
       dataSource: [],
@@ -107,9 +108,16 @@ class AttendRecord extends Component {
     this.setState({
       isLoading: true
     })
-    let { worksheetno, dateVal, statusVal } = this.state
+    let { worksheetno, dateVal, statusVal, orderno } = this.state
+    let form = {}
+    if (orderno) {
+      form.worksheet_no = worksheetno
+      form.order_no = orderno
+    } else {
+      form.worksheet_no = worksheetno
+    }
     let data = await api.WorkListManage.attendStat({
-      worksheet_no: worksheetno,
+      ...form,
       date: dateVal !== null ? dateVal.Format('yyyy-MM-dd') : null,
       status: statusVal !== 0 ? statusVal[0] : 0,
       page: pIndex,
@@ -132,7 +140,7 @@ class AttendRecord extends Component {
         endDate: data['end_date']
       })
     }
-    return await data['list']
+    return await data['list'] || []
   }
   showStatus = () => {
     let { statusVal } = this.state
@@ -158,8 +166,8 @@ class AttendRecord extends Component {
     })
     return strAry.join(',')
   }
-  handleAttendClick = (orderno, date) => {
-    this.props.match.history.push(`${urls.ATTENDDETAIL}?orderno=${orderno}&date=${date}`)
+  handleAttendClick = (orderno, date, uid) => {
+    this.props.match.history.push(`${urls.ATTENDDETAIL}?orderno=${orderno}&date=${date}&uid=${uid}`)
   }
   handleDateChange = (date) => {
     this.setState({ dateVal: date, dateVisible: false }, () => {
@@ -187,7 +195,7 @@ class AttendRecord extends Component {
         key={rowID}
         thumb={<div className={style['avatar-thumb']} style={{ 'backgroundImage': 'url(' + rowData['avatar'] + ')' }}></div>}
         className={parseInt(rowData['status'][0]) > 1 ? style['unusual'] : style['normal']} // unusual
-        onClick={() => this.handleAttendClick(rowData['order_no'], rowData['date'].split(' ')[0])}
+        onClick={() => this.handleAttendClick(rowData['order_no'], rowData['date'].split(' ')[0], rowData['uid'])}
         extra={this.changeStatus(rowData)}
       >{rowData['uid_name']}<time>{rowData['date']}</time></Item>
     }
@@ -200,7 +208,7 @@ class AttendRecord extends Component {
           this.props.match.history.go(-1)
         }}
       />
-      <Content>
+      <Content style={{ overflow: 'hidden' }}>
         <ul className={`${style['attend-header']}`}>
           <li onClick={() => { this.setState({ dateVisible: true }) }}>{ dateVal === null ? '日期' : dateVal.Format('yyyy-MM-dd') } <NewIcon type='icon-daosanjiao' /></li>
           <DatePicker

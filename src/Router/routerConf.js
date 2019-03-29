@@ -115,10 +115,6 @@ const AgentFinishList = Loadable({ // 代完工列表 我的订单
   loader: () => import(/* webpackChunkName: "agentfinishlist" */ '../models/Mine/myorder/agentFinish'),
   loading: MyLoadingComponent
 })
-const AgentCheckList = Loadable({ // 代考勤列表 我的订单
-  loader: () => import(/* webpackChunkName: "agentchecklist" */ '../models/Mine/myorder/agentCheck'),
-  loading: MyLoadingComponent
-})
 const OOrderStartWorkRecord = Loadable({ // 订单开工记录 我接的
   loader: () => import(/* webpackChunkName: "oorderStartWorkRecord" */ '../models/Mine/myorder/orderStartWorkRecord'),
   loading: MyLoadingComponent
@@ -164,12 +160,8 @@ const SetUpAboutUs = Loadable({ // 我的设置》关于我们
   loader: () => import(/* webpackChunkName: "setupaboutus" */ '../models/Mine/SetUp/aboutAs'),
   loading: MyLoadingComponent
 })
-const SetUpIntrduce = Loadable({ // 我的设置》关于我们》功能介绍
-  loader: () => import(/* webpackChunkName: "setupintroduce" */ '../models/Mine/SetUp/introduce'),
-  loading: MyLoadingComponent
-})
-const SetUpIntrduceInfo = Loadable({ // 我的设置》关于我们》功能介绍》详情
-  loader: () => import(/* webpackChunkName: "setupintroduceinfo" */ '../models/Mine/SetUp/introduce/detail'),
+const Clause = Loadable({ // 服务条款协议
+  loader: () => import(/* webpackChunkName: "clause" */ '../models/Mine/SetUp/clause'),
   loading: MyLoadingComponent
 })
 const MyOrder = Loadable({ // 我的订单
@@ -380,10 +372,6 @@ const Check = Loadable({ // 考勤管理
 })
 const CheckList = Loadable({ // 考勤管理
   loader: () => import(/* webpackChunkName: "checklist" */ '../models/Mine/Check/checkList'),
-  loading: MyLoadingComponent
-})
-const CheckStatus = Loadable({ // 考勤状态
-  loader: () => import(/* webpackChunkName: "checkstatus" */ '../models/Mine/Check/status'),
   loading: MyLoadingComponent
 })
 const Login = Loadable({ // 登录
@@ -608,21 +596,13 @@ const routes = [
     showMenu: false,
     title: '关于我们'
   }, {
-    path: urls.SETUPINTRODUCE,
+    path: urls.CLAUSE,
     exact: true,
-    component: SetUpIntrduce,
+    component: Clause,
     parent: null,
     animated: true,
     showMenu: false,
-    title: '功能介绍'
-  }, {
-    path: urls.SETUPINTRODUCEINFO,
-    exact: true,
-    component: SetUpIntrduceInfo,
-    parent: null,
-    animated: true,
-    showMenu: false,
-    title: '功能详情'
+    title: '服务条款协议'
   }, {
     path: urls.WORKLISTDETAIL,
     exact: true,
@@ -703,14 +683,6 @@ const routes = [
     showMenu: false,
     animated: true,
     title: '订单代完工列表'
-  }, {
-    path: urls.AGENTCHECKLIST,
-    exact: true,
-    component: AgentCheckList,
-    parent: null,
-    showMenu: false,
-    animated: true,
-    title: '订单代考勤列表'
   }, {
     path: urls.OORDERSTARTWORKRECORD,
     exact: true,
@@ -1150,14 +1122,6 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '考勤列表'
-  }, {
-    path: urls.CHECKSTATUS,
-    exact: true,
-    component: CheckStatus,
-    parent: true,
-    animated: true,
-    showMenu: false,
-    title: '考勤状态'
   }, {
     path: urls.LOGIN,
     exact: true,

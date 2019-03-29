@@ -8,21 +8,21 @@ import api from 'Util/api'
 // import { projectStatus } from 'Contants/fieldmodel'
 import style from './style.css'
 const Item = List.Item
-const prjStatus = {
-  1: '待开工',
-  2: '施工中',
-  3: '已作废',
-  4: '已完成'
-}
+// const prjStatus = {
+//   1: '待开工',
+//   2: '施工中',
+//   3: '已作废',
+//   4: '已完成'
+// }
 const projectStatus = {
   1: '审核中',
   2: '已审核',
   3: '审核未通过'
 }
-const isShowPrj = {
-  0: '不显示',
-  1: '显示'
-}
+// const isShowPrj = {
+//   0: '不显示',
+//   1: '显示'
+// }
 class ProjectDetail extends Component {
   constructor(props) {
     super(props)
@@ -31,7 +31,10 @@ class ProjectDetail extends Component {
       dataSource: {},
       isLoading: true,
       tabIndex: tooler.getQueryString('tabIndex'),
-      coordinate: '{}'
+      coordinate: '{}',
+      showimg: false,
+      imgurlP: '',
+      imgurl: ''
     }
   }
   getProjectDetail = async () => {
@@ -52,8 +55,22 @@ class ProjectDetail extends Component {
   componentDidMount() {
     this.getProjectDetail()
   }
+  showImg = (img, imgP) => {
+    this.setState({
+      showimg: true,
+      imgurl: img,
+      imgurlP: imgP
+    })
+  }
+  handleImgMask = () => {
+    this.setState({
+      showimg: false,
+      imgurl: '',
+      imgurlP: ''
+    })
+  }
   render() {
-    let { dataSource = {}, fileList = [], coordinate = '{}' } = this.state
+    let { dataSource = {}, fileList = [], coordinate = '{}', showimg, imgurlP } = this.state
     return (
       <div className='pageBox gray'>
         <Header
@@ -79,12 +96,12 @@ class ProjectDetail extends Component {
                     <div className={style['input-ellipsis']}>
                       <Item extra={projectStatus[dataSource['status']]}>项目审核状态</Item>
                     </div>
-                    <div className={style['input-ellipsis']}>
+                    {/* <div className={style['input-ellipsis']}>
                       <Item extra={prjStatus[dataSource['bid_status']]}>项目状态</Item>
                     </div>
                     <div className={style['input-ellipsis']}>
                       <Item extra={isShowPrj[dataSource['is_show']]}>项目是否显示</Item>
-                    </div>
+                    </div> */}
                     <div className={style['input-ellipsis']}>
                       <Item extra={dataSource['prj_win_bid_unit']}>项目中标单位</Item>
                     </div>
@@ -138,7 +155,7 @@ class ProjectDetail extends Component {
                         {
                           fileList.map((item, index) => {
                             return (
-                              <li key={index} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a></li>
+                              <li key={index} onClick={ () => this.showImg(item['url'], item['preview_url'])} className='my-bottom-border'><NewIcon type='icon-paperclip' className={style['file-list-icon']}/><a>{item.org_name}</a></li>
                             )
                           })
                         }
@@ -150,6 +167,11 @@ class ProjectDetail extends Component {
               : null
           }
         </Content>
+        <div style={{ display: showimg ? 'block' : 'none' }} onClick={this.handleImgMask} className={`showimg-box animated ${showimg ? 'fadeIn' : 'fadeOut'}`}>
+          <img onClick={(e) => {
+            e.stopPropagation()
+          }} src={imgurlP} />
+        </div>
       </div>
     )
   }

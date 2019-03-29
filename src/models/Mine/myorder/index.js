@@ -9,7 +9,7 @@ import api from 'Util/api'
 import style from './index.css'
 import { onBackKeyDown } from 'Contants/tooler'
 const prompt = Modal.prompt
-const NUM_ROWS = 20
+const NUM_ROWS = 10
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
 })
@@ -110,7 +110,7 @@ class WorkListManage extends Component {
         pageNos: data['pageNos']
       })
     }
-    return await data['list']
+    return await data['list'] || []
   }
 
   handleShowDetail = (number) => {
@@ -288,8 +288,8 @@ class WorkListManage extends Component {
       let levelJson = {}
       if (data['professional_level'].length !== 0) {
         levelJson = {
-          teachId: data['professional_level']['id'],
-          teachVal: data['professional_level']['name']
+          teachId: data['professional_level'][0]['id'],
+          teachVal: data['professional_level'][0]['name']
         }
       }
       let urlJson = {
@@ -299,6 +299,7 @@ class WorkListManage extends Component {
         classifyId: data['construct'].length > 0 ? data['construct'][0]['code'] : '',
         classifyVal: data['construct'].length > 0 ? data['construct'][0]['name'] : '',
         constructType: data['construct'].length > 0 ? data['construct'][0]['construct_type'] : '',
+        parentClassId: data['construct'].length > 0 ? (data['construct'][0]['construct_type'] === 1 ? 'skill' : 0) : 0,
         ...levelJson,
         settleValue: data['valuation_way'],
         starttime: data['start_time']
@@ -325,7 +326,7 @@ class WorkListManage extends Component {
     }
   }
   handleGenAttend = (rowData) => { // 我接的 - 代考勤
-    this.props.match.history.push(urls.AGENTCHECKLIST + '?orderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
+    this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
   }
   handleStart = async (rowData) => { // 我接的 - 开工
     console.log('开工')
@@ -361,9 +362,8 @@ class WorkListManage extends Component {
         currentIndex = index
       }
     })
-    let valuationWay = rowData['valuation_way']
-    if (valuationWay === 1) {
-      prompt('工作量', `（单位：${rowData['valuation_unit']})`, [
+    if (rowData['tip_type'] === 1) {
+      prompt('工作量', `工作量单位：${rowData['workload_unit']}`, [
         { text: '取消' },
         {
           text: '确认',
@@ -407,13 +407,13 @@ class WorkListManage extends Component {
     }
   }
   handleAgentFished = (rowData) => { // 我接的 - 代完工
-    this.props.match.history.push(`${urls.AGENTFINISHLIST}?orderno=${rowData['order_no']}&valuationWay=${rowData['valuation_way']}`)
+    this.props.match.history.push(`${urls.AGENTFINISHLIST}?orderno=${rowData['order_no']}`)
   }
   handleRefSettle = (rowData) => { // 我接的 - 提交结算
     this.props.match.history.push(`${urls.PENDINGSETTLERECORD}?workSheetOrderNo=${rowData['order_no']}`)
   }
   handleOrderViewAttend = (rowData) => { // 我接的 - 考勤记录
-    this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'])
+    this.props.match.history.push(urls.ATTENDRECORD + '?worksheetno=' + rowData['worksheet_no'] + '&orderno=' + rowData['order_no'])
   }
   handleOrderViewSettle = (rowData) => { // 我接的 - 结算记录
     this.props.match.history.push(urls.OSETTLERECORD + '?orderno=' + rowData['order_no'])

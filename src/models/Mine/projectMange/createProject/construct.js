@@ -61,39 +61,41 @@ class Construct extends Component {
             }}
           />
           <Content>
-            <List renderHeader={() => '中标单位信息'}>
-              <div>
-                {getFieldDecorator('prj_win_bid_unit', {
-                  initialValue: unit,
-                  rules: [
-                    { required: true, message: '请输入中标单位名称' },
-                    { pattern: /^.{1,30}$/, message: '字数1~30字' }
-                  ]
-                })(
-                  <InputItem
-                    error={!!getFieldError('prj_win_bid_unit')}
-                    onErrorClick={() => this.onErrorClick('prj_win_bid_unit')}
-                    placeholder='请输入中标单位名称'
-                  >中标单位<em className={style['asterisk']}>*</em></InputItem>
-                )}
-              </div>
-              <div>
-                {getFieldDecorator('prj_win_bid_notice_no', {
-                  initialValue: number,
-                  rules: [
-                    { required: true, message: '请输入中标通知书编号' },
-                    // { pattern: /^[0-9]*$/, message: '格式错误' }
-                  ]
-                })(
-                  <InputItem
-                    clear
-                    error={!!getFieldError('prj_win_bid_notice_no')}
-                    onErrorClick={() => this.onErrorClick('prj_win_bid_notice_no')}
-                    placeholder='请输入中标通知书编号'
-                  >中标通知书编号<em className={style['asterisk']}>*</em></InputItem>
-                )}
-              </div>
-            </List>
+            <div className={style['pushOrderForm']}>
+              <List renderHeader={() => '中标单位信息'}>
+                <div>
+                  {getFieldDecorator('prj_win_bid_unit', {
+                    initialValue: unit,
+                    rules: [
+                      { required: true, message: '请输入中标单位名称' },
+                      { pattern: /^.{1,30}$/, message: '字数1~30字' }
+                    ]
+                  })(
+                    <InputItem
+                      error={!!getFieldError('prj_win_bid_unit')}
+                      onErrorClick={() => this.onErrorClick('prj_win_bid_unit')}
+                      placeholder='请输入中标单位名称'
+                    >中标单位<em className={style['asterisk']}>*</em></InputItem>
+                  )}
+                </div>
+                <div>
+                  {getFieldDecorator('prj_win_bid_notice_no', {
+                    initialValue: number,
+                    rules: [
+                      { required: true, message: '请输入中标通知书编号' },
+                      // { pattern: /^[0-9]*$/, message: '格式错误' }
+                    ]
+                  })(
+                    <InputItem
+                      clear
+                      error={!!getFieldError('prj_win_bid_notice_no')}
+                      onErrorClick={() => this.onErrorClick('prj_win_bid_notice_no')}
+                      placeholder='请输入中标通知书编号'
+                    >中标通知书编号<em className={style['asterisk']}>*</em></InputItem>
+                  )}
+                </div>
+              </List>
+            </div>
             <div className={style['pro-btn']} onClick={this.onHandleSubmit}>保存</div>
           </Content>
         </div>

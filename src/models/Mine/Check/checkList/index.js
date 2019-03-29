@@ -57,10 +57,16 @@ class CheckList extends Component {
                 <Card.Body>
                   <div className={style['checklist-hd']}>
                     <NewIcon type='icon-biao' />
-                    <p>
-                      <time>考勤时间：{`${timeAry[0][0]} ~ ${timeAry[timeAry.length - 1][1]}`}</time>
-                      <Button type='primary' size='small'>立即打卡</Button>
-                    </p>
+                    {
+                      timeAry && timeAry.length > 0
+                        ? <p>
+                          <time>考勤时间：{`${timeAry[0][0]} ~ ${timeAry[timeAry.length - 1][1]}`}</time>
+                          <Button type='primary' size='small'>立即打卡</Button>
+                        </p>
+                        : <p className={style['check-btn']}>
+                          <Button type='primary' size='small'>立即打卡</Button>
+                        </p>
+                    }
                   </div>
                   <div className={style['checklist-bd']}>
                     {item['attend_config']['attend_place']}

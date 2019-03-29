@@ -1,11 +1,28 @@
-.settle-list {
-  height: 530px;
-  margin-top: 10px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling:touch;
+.money-box {
+  width: 100%;
+  height: 70px;
+  padding-top: 10px;
+  background: #1298fc;
+  & strong {
+    color: #fff;
+    font-size: 18px;
+    display: block;
+    text-align: center;
+    line-height: 34px;
+    font-weight: normal;
+    text-align: center;
+  }
+  & p {
+    line-height: 24px;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+  }
 }
-.settle-all {
-  height: 580px;    
+.settle-box {
+  overflow-scrolling:touch;
+  -webkit-overflow-scrolling:touch;
+  overflow-y: auto;
 }
 .settle-list {
   & .header {
@@ -20,21 +37,18 @@
   }
   & .settle-info {
     float: left;
-    width: 150px;
-    & h2 {
-      line-height: 20px;
-      color: #333;
-      font-size: 16px;
-      font-weight: normal;
-    }
-    & p {
-      font-size: 14px;
-      color: #666;
-    }
-    & time {
-      color:rgba(153,153,153,1);
-      font-size: 12px;
-    }
+    height: 60px;
+    line-height: 60px;
+    color: #333;
+    font-size: 15px;
+    font-weight: normal;
+  }
+  & .settle-workload {
+    height: 60px;
+    line-height: 60px;
+    float: right;
+    font-size: 14px;
+    color: #666;
   }
   & .price {
     float: right;
@@ -44,18 +58,6 @@
   }
 }
 
-.settle-total {
-  width: 100%;
-  height: 30px;
-  line-height: 30px;
-  font-size:14px;
-  color:rgba(51,51,51,1);
-  background: #fff;
-  text-indent: 15px;
-  & em {
-    color: #FA6B6D;
-  }
-}
 .btn-box {
   position: fixed;
   left: 0;
@@ -63,23 +65,21 @@
   bottom: 0;
   height: 50px;
   background: #fff;
-  overflow: hidden;
+  &.two-btn {
+    overflow: hidden;
+    & a {
+      width: 47%;
+      float: left;
+      margin: 5px 0 0 0;
+      margin-left: 2%;
+    }
+  }
   & a {
-    float: right;
-    width: 158px;
-    margin-top: 5px;
+    height: 40px;
     line-height: 40px;
-    background:rgba(0,152,245,1);
-    text-align: center;
-    font-size: 15px;
-    color: #fff;
-    margin-right: 20px;
-    &.reject-btn {
-      background: #fd5454;
-    }
-    &.settle-btn {
-      width: 340px;
-      margin-right: 17px;
-    }
+    font-size: 16px;
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 5px;
   }
 }

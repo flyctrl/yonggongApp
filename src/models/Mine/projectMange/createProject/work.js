@@ -65,56 +65,58 @@ class Work extends Component {
             }}
           />
           <Content>
-            <List renderHeader={() => '施工信息'}>
-              <div>
-                {getFieldDecorator('prj_construct_unit', {
-                  initialValue: unit,
-                  rules: [
-                    { required: true, message: '请输入施工单位名称' },
-                    { pattern: /^.{1,30}$/, message: '字数1~30字' }
-                  ]
-                })(
-                  <InputItem
-                    clear
-                    error={!!getFieldError('prj_construct_unit')}
-                    onErrorClick={() => this.onErrorClick('prj_construct_unit')}
-                    placeholder='请输入施工单位名称'
-                  >施工单位<em className={style['asterisk']}>*</em></InputItem>
-                )}
-              </div>
-              <div>
-                {getFieldDecorator('prj_construct_unit_code', {
-                  initialValue: code,
-                  rules: [
-                    { required: true, message: '统一社会信用代码' },
-                    { pattern: /^.{1,30}$/, message: '字数1~30字' }
-                  ]
-                })(
-                  <InputItem
-                    clear
-                    error={!!getFieldError('prj_construct_unit_code')}
-                    onErrorClick={() => this.onErrorClick('prj_construct_unit_code')}
-                    placeholder='统一社会信用代码'
-                  >信用代码<em className={style['asterisk']}>*</em></InputItem>
-                )}
-              </div>
-              <div>
-                {getFieldDecorator('licence_no', {
-                  initialValue: number,
-                  rules: [
-                    { required: true, message: '请输入施工许可证编号' },
-                    { pattern: /^.{1,30}$/, message: '字数1~30字' }
-                  ]
-                })(
-                  <InputItem
-                    clear
-                    error={!!getFieldError('licence_no')}
-                    onErrorClick={() => this.onErrorClick('licence_no')}
-                    placeholder='请输入施工许可证编号'
-                  >施工许可证编号<em className={style['asterisk']}>*</em></InputItem>
-                )}
-              </div>
-            </List>
+            <div className={style['pushOrderForm']}>
+              <List renderHeader={() => '施工信息'}>
+                <div>
+                  {getFieldDecorator('prj_construct_unit', {
+                    initialValue: unit,
+                    rules: [
+                      { required: true, message: '请输入施工单位名称' },
+                      { pattern: /^.{1,30}$/, message: '字数1~30字' }
+                    ]
+                  })(
+                    <InputItem
+                      clear
+                      error={!!getFieldError('prj_construct_unit')}
+                      onErrorClick={() => this.onErrorClick('prj_construct_unit')}
+                      placeholder='请输入施工单位名称'
+                    >施工单位<em className={style['asterisk']}>*</em></InputItem>
+                  )}
+                </div>
+                <div>
+                  {getFieldDecorator('prj_construct_unit_code', {
+                    initialValue: code,
+                    rules: [
+                      { required: true, message: '统一社会信用代码' },
+                      { pattern: /^.{1,30}$/, message: '字数1~30字' }
+                    ]
+                  })(
+                    <InputItem
+                      clear
+                      error={!!getFieldError('prj_construct_unit_code')}
+                      onErrorClick={() => this.onErrorClick('prj_construct_unit_code')}
+                      placeholder='统一社会信用代码'
+                    >信用代码<em className={style['asterisk']}>*</em></InputItem>
+                  )}
+                </div>
+                <div>
+                  {getFieldDecorator('licence_no', {
+                    initialValue: number,
+                    rules: [
+                      { required: true, message: '请输入施工许可证编号' },
+                      { pattern: /^.{1,30}$/, message: '字数1~30字' }
+                    ]
+                  })(
+                    <InputItem
+                      clear
+                      error={!!getFieldError('licence_no')}
+                      onErrorClick={() => this.onErrorClick('licence_no')}
+                      placeholder='请输入施工许可证编号'
+                    >施工许可证编号<em className={style['asterisk']}>*</em></InputItem>
+                  )}
+                </div>
+              </List>
+            </div>
             <div className={style['pro-btn']} onClick={this.onHandleSubmit}>保存</div>
           </Content>
         </div>

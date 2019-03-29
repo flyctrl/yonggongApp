@@ -8,9 +8,10 @@ import api from 'Util/api'
 import SelectDepart from '../selectDepart'
 import { rightWrongRadio } from 'Contants/fieldmodel'
 import { createForm } from 'rc-form'
+import md5 from 'md5'
 import 'antd-mobile/lib/date-picker/style/css'
 import style from 'Src/models/form.css'
-
+import styles from './style.css'
 let DatePicker = Loadable({
   loader: () => import('antd-mobile'),
   modules: ['./DatePicker'],
@@ -34,10 +35,23 @@ class AddPerson extends Component {
       entryDateShow: false,
       birthDateShow: false,
       entryDate: null,
-      birthDate: null
+      birthDate: null,
+      companyDetail: {}
     }
   }
-
+  componentDidMount () {
+    this.getCompanyInfo()
+  }
+  getCompanyInfo = async() => {
+    const data = await api.Mine.checkDetails.getCompanyInfo({
+    }) || false
+    if (data) {
+      this.setState({
+        companyDetail: data,
+        isLoading: false,
+      })
+    }
+  }
   handleChangeDepart = () => {
     this.setState({
       showDepart: true
@@ -107,13 +121,17 @@ class AddPerson extends Component {
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
         Toast.loading('提交中...', 0)
-        let newData = { type: typeRadioVal, groupId: selectGroupId }
+        let newData = { type: typeRadioVal, groupId: selectGroupId, password: md5(values['password']) }
         let postData = { ...values, ...newData }
         const data = await api.Mine.department.addPerson(postData) || false
         if (data) {
           Toast.hide()
           Toast.success('添加成功', 1.5, () => {
-            this.props.match.history.push(urls.PERSONSTRUCTURE)
+            if (typeof OCBridge !== 'undefined') {
+              OCBridge.back()
+            } else {
+              this.props.match.history.push(urls.PERSONSTRUCTURE)
+            }
           })
         }
       } else {
@@ -129,7 +147,7 @@ class AddPerson extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form
-    const { showDepart, typeRadioVal, entryDateShow, birthDateShow } = this.state
+    const { showDepart, typeRadioVal, entryDateShow, birthDateShow, companyDetail } = this.state
     return (
       <div>
         <div style={{ display: showDepart ? 'none' : 'block' }} className='pageBox'>
@@ -162,7 +180,7 @@ class AddPerson extends Component {
                     <Icon type='right' color='#ccc' />
                   </div>
                 </List>
-                <List className={`${style['input-form-list']}`} renderHeader={() => '用户名'}>
+                <List className={`${style['input-form-list']} ${styles['input-form-lists']}`} renderHeader={() => '用户名'}>
                   {
                     getFieldDecorator('username', {
                       rules: [
@@ -170,6 +188,7 @@ class AddPerson extends Component {
                       ]
                     })(
                       <InputItem
+                        extra={`@${companyDetail['company_no'] || 0}`}
                         clear
                         placeholder='请输入用户名'
                       ></InputItem>

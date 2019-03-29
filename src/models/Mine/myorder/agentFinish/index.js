@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Header, Content } from 'Components'
+import { Header, Content, DefaultPage } from 'Components'
 import { List, Checkbox, Modal, InputItem } from 'antd-mobile'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
@@ -13,7 +13,6 @@ class ApplySettle extends Component {
     super(props)
     this.state = {
       orderno: tooler.getQueryString('orderno'),
-      valuationWay: tooler.getQueryString('valuationWay'),
       checkall: false,
       dataSource: [],
       isloading: false
@@ -103,12 +102,12 @@ class ApplySettle extends Component {
     return total !== 0 ? total : 0
   }
   handleApply = () => { // 代完工事件
-    let { dataSource, valuationWay } = this.state
+    let { dataSource } = this.state
     let ishas = false
     for (let i = 0; i < dataSource.length; i++) {
       if (dataSource[i].ischeck) {
         ishas = true
-        if (valuationWay === '1' && dataSource[i]['currentprice'] <= 0) {
+        if (dataSource[i]['tip_type'] === 1 && dataSource[i]['currentprice'] <= 0) {
           alert('工作量必须大于0')
           return
         }
@@ -176,7 +175,7 @@ class ApplySettle extends Component {
     })
   }
   render() {
-    let { dataSource, checkall, isloading, valuationWay } = this.state
+    let { dataSource, checkall, isloading } = this.state
     return <div className='pageBox gray'>
       <Header
         title='代完工列表'
@@ -199,7 +198,7 @@ class ApplySettle extends Component {
                     <time>开工时间：{i['started_at']}</time>
                   </div>
                   {
-                    valuationWay === '1' ? <span className={style['price']}>
+                    i['tip_type'] === 1 ? <span className={style['price']}>
                       <InputItem
                         placeholder=''
                         extra={`${i.workload_unit}`}
@@ -218,7 +217,7 @@ class ApplySettle extends Component {
               <a onClick={this.handleApply}>代完工</a>
               <span>共选择：<em>{this.countTotal(dataSource)}人</em></span>
             </div>
-          </div> : dataSource.length === 0 && isloading ? <div className='nodata'>暂无数据</div> : null
+          </div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
         }
       </Content>
     </div>

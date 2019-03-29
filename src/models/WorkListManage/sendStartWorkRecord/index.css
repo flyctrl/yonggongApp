@@ -3,72 +3,128 @@ html:not([data-scale]) .record-list :global(.am-list-body::after) {
 } 
 .record-list {
   touch-action: none;
-  height: 622px;
   & li {
     background: #fff;
-    padding: 8px 10px;
-    height: 74px;
-    overflow: hidden;
     margin-top: 4px;
     color: #313f48;
-    & .record-img {
-      float: left;
-      margin-right: 10px;
-      margin-top: 10px;
-      & .header {
-        width: 40px;
-        height: 40px;
-        margin-top: 7px;
-        float: left;
-        border-radius: 50%;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center top;
-      }
-    }
-    & .record-hd {
-      float: left;
-      & p {
-        width: 210px;
-        height: 32px;
-        line-height: 32px;
-        & span {
-          color: #1298FC;
-        }
-      }
-      & time {
-        display: block;
-        line-height: 20px;
-        color: #ccc;
-      }
-    }
-    & .record-btn {
-      float: right;
-      margin-top: 6px;
-      & .confirm-status {
-        height: 52px;
-        line-height: 52px;
-        font-size: 12px;
-        text-align: center;
-        color: #03bd03;
-      }
-      & .reject-status {
+    & .record-box {
+      height: 101px;
+      & .record-header {
+        overflow: hidden;
+        padding: 0 10px;
         height: 50px;
-        line-height: 50px;
-        font-size: 12px;
-        text-align: center;
-        color: #e40505;
-      }
-      & :global(.am-button) {
-        font-size: 12px;
-        height: 24px;
-        line-height: 24px;
-        background: #1298FC;
-        &:nth-child(2) {
-          margin-top: 14px;
-          background: #fff;
-          color: #1298FC;
+        & .header {
+          float: left;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          margin-top: 7px;
+          border-radius: 50%;
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: center top;
         }
+        & .name {
+          float: left;
+          line-height: 50px;
+          margin-left: 10px;
+          color: #333;
+          font-size: 15px;
+          & span {
+            color: green;
+          }
+        }
+        & .record-btn {
+          float: right;
+          height: 50px;
+          line-height: 50px;
+          & .confirm-status {
+            height: 50px;
+            line-height: 50px;
+            font-size: 13px;
+            text-align: center;
+            color: #03bd03;
+          }
+          & .reject-status {
+            height: 50px;
+            line-height: 50px;
+            font-size: 12px;
+            text-align: center;
+            color: #e40505;
+          }
+          & .run-status {
+            height: 50px;
+            line-height: 50px;
+            font-size: 12px;
+            text-align: center;
+            color: #1298fc;
+          }
+          & :global(.am-button) {
+            float: right;
+            margin-top: 12px;
+            font-size: 12px;
+            height: 24px;
+            line-height: 24px;
+            background: #1298FC;
+            &:nth-child(2) {
+              background: #fff;
+              color: #1298FC;
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+      & .record-body {
+        padding: 0 10px;
+        font-size: 13px;
+        color: #666;
+        height: 50px;
+        & span {
+          float: right;
+          line-height: 50px;
+        }
+        & time {
+          float: left;
+          line-height: 50px;
+        }
+        & a {
+          float: right;
+          margin-left: 14px;
+          height: 50px;
+          color: #1298fc;
+          & i {
+            float: left;
+            margin-top: 16px;
+            line-height: 18px;
+          }
+          & svg {
+            float: left;
+            margin-top: 16px;
+          }
+        }
+      }
+    }
+    & .down-box {
+      padding: 15px;
+      background: #fff;
+      word-break: break-all;
+      &.show {
+        display: block;
+        transition: all 0.5s linear;
+      }
+      &.hide {
+        display: none;
+      }
+      & h4 {
+        line-height: 24px;
+        color: #333;
+        font-size: 13px;
+        font-weight: normal;
+      }
+      & p {
+        line-height: 24px;
+        color: #999;
+        font-size: 13px;
       }
     }
   }

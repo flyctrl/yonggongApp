@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import { InputItem, Button, Toast, List } from 'antd-mobile'
 import { createForm } from 'rc-form'
 import { Content } from 'Components'
+import md5 from 'md5'
 import Timer from './timer'
 import style from './style.css'
 import logo from 'Src/assets/logo.png'
@@ -31,17 +32,44 @@ class Register extends Component {
     this.props.form.validateFields(async (error, values) => {
       if (!error) {
         Toast.loading('提交中...', 0)
-        let newValues = { ...values, ...{ 'user_type': 1 }}
-        console.log(newValues)
-        const data = await api.auth.register(newValues) || false
-        if (data) {
-          storage.set('Authorization', 'Bearer ' + data['access_token'])
-          storage.set('uid', data['uid'])
-          storage.set('username', data['username'])
-          Toast.hide()
-          Toast.success('注册成功', 1.5, () => {
-            this.props.match.history.push(urls.HOME)
+        let newValues = { ...values, ...{ 'user_type': 1, 'password': md5(values['password']), confirm_password: md5(values['confirm_password']) }}
+        if ('cordova' in window) {
+          cordova.getAppVersion.getVersionNumber().then(async (version) => {
+            let newPostdata = {
+              ...newValues,
+              ...{
+                platform: 1,
+                device: {
+                  os: 2,
+                  osver: device.version,
+                  version: version,
+                  device_id: storage.get('deviceId'),
+                  outer_id: storage.get('outerId')
+                }
+              }
+            }
+            let data = await api.auth.register(newPostdata) || false
+            if (data) {
+              storage.set('Authorization', 'Bearer ' + data['access_token'])
+              storage.set('uid', data['uid'])
+              storage.set('username', data['username'])
+              Toast.hide()
+              Toast.success('注册成功', 1.5, () => {
+                this.props.match.history.push(urls.HOME)
+              })
+            }
           })
+        } else {
+          let data = await api.auth.register(newValues) || false
+          if (data) {
+            storage.set('Authorization', 'Bearer ' + data['access_token'])
+            storage.set('uid', data['uid'])
+            storage.set('username', data['username'])
+            Toast.hide()
+            Toast.success('注册成功', 1.5, () => {
+              this.props.match.history.push(urls.HOME)
+            })
+          }
         }
       } else {
         for (let value of validateAry) {
@@ -207,6 +235,7 @@ class Register extends Component {
               <Link to={ urls.LOGIN } className={style['loginBtn']}>已有帐号？去登录</Link>
             </div>
           </form>
+          <div className={style['reg-clause']}>注册即表示同意<a onClick={() => this.props.match.history.push(urls.CLAUSE)}>亚雀科技服务条款</a></div>
         </Content>
       </div>
     )

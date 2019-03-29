@@ -138,6 +138,7 @@ html:not([data-scale]) :global(.pageBox) {
     & span {
       float: right;
       color: #333333;
+      max-width: 274px;
     }
   }
 }

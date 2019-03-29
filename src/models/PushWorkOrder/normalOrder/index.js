@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { List, Button, WingBlank, Radio, Picker } from 'antd-mobile'
 import NewIcon from 'Components/NewIcon'
 import { Header, Content } from 'Components'
-import { paymethod, valuationWay } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './index.css'
@@ -20,7 +19,6 @@ class SelectClass extends Component {
     super(props)
     this.state = {
       showIndex: 0,
-      settleId: parseInt(tooler.getQueryString('settleValue')),
       settleValue: parseInt(tooler.getQueryString('settleValue')) || 2,
       proId: tooler.getQueryString('proId') || '',
       proVal: tooler.getQueryString('proVal') ? decodeURIComponent(decodeURIComponent(tooler.getQueryString('proVal'))) : '请选择',
@@ -37,18 +35,23 @@ class SelectClass extends Component {
       showtech: false,
       url: tooler.getQueryString('url') || '',
       orderno: tooler.getQueryString('orderno') || '',
+      porderno: tooler.getQueryString('porderno') || '0',
       detailsheetno: tooler.getQueryString('detailsheetno') || '',
       starttime: tooler.getQueryString('starttime') || '',
       edittype: tooler.getQueryString('edittype') || 0,
-      editSheetno: tooler.getQueryString('editSheetno') || 0
+      editSheetno: tooler.getQueryString('editSheetno') || 0,
+      valuationWay: []
     }
   }
   componentDidMount() {
     if (this.state.edittype === '2') {
-      this.getEditData()
-      this.contestPaymethod()
+      this.getEditData(() => {
+        this.contestPaymethod()
+        this.getValuationList()
+      })
     } else {
       this.contestPaymethod()
+      this.getValuationList()
     }
     if ('cordova' in window) {
       document.removeEventListener('backbutton', onBackKeyDown, false)
@@ -96,7 +99,7 @@ class SelectClass extends Component {
       }
     }
   }
-  getEditData = async () => { // 获取编辑数据
+  getEditData = async (callback) => { // 获取编辑数据
     let { editSheetno } = this.state
     let data = await api.PushOrder.normalDetail({
       worksheet_no: editSheetno
@@ -116,30 +119,43 @@ class SelectClass extends Component {
         paymethodVal: data['settle_cn'],
         paymethodId: data['settle_fix_time'],
         settleValue: data['valuation_way']
-      })
+      }, () => callback())
     }
   }
-  contestPaymethod = (paymethodId = this.state.paymethodId) => {
-    let newary = []
+  contestPaymethod = async (paymethodId = this.state.paymethodId) => {
+    console.log('paymethodId:', paymethodId)
     let newVal = ''
-    let { orderno } = this.state
-    if (paymethodId !== '' && orderno !== '') {
-      paymethod.map(item => {
-        if (Number(paymethodId) >= item['value']) {
-          newary.push(item)
-          if (parseInt(paymethodId) === item['value']) {
-            newVal = item['label']
+    let { orderno, porderno } = this.state
+    let postData = {
+      worksheet_type: 2
+    }
+    if (paymethodId !== '' && porderno !== '0') {
+      postData['p_order_no'] = porderno
+    } else if (paymethodId !== '' && orderno !== '') {
+      postData['p_order_no'] = orderno
+    }
+    let data = await api.PushOrder.getSettleFixTime({
+      ...postData
+    }) || false
+    console.log('paymethodVal', data)
+    if (data) {
+      if ((paymethodId !== '' && orderno !== '') || (paymethodId !== '' && porderno !== '0')) {
+        data.map(item => {
+          if (Number(paymethodId) >= item['value']) {
+            if (parseInt(paymethodId) === item['value']) {
+              newVal = item['label']
+            }
           }
-        }
-      })
-      this.setState({
-        paymethodAry: newary,
-        paymethodVal: newVal
-      })
-    } else {
-      this.setState({
-        paymethodAry: paymethod
-      })
+        })
+        this.setState({
+          paymethodAry: data,
+          paymethodVal: newVal
+        })
+      } else {
+        this.setState({
+          paymethodAry: data
+        })
+      }
     }
   }
   onChange = (value) => {
@@ -168,6 +184,21 @@ class SelectClass extends Component {
       paymethodId: newVal['value'],
       paymethodVal: newVal['label']
     })
+  }
+  getValuationList = async (value) => { // 获取计价方式
+    let { orderno, porderno } = this.state
+    let postData = {}
+    if (porderno !== '0') {
+      postData['p_order_no'] = porderno
+    } else if (orderno !== '') {
+      postData['p_order_no'] = orderno
+    }
+    let data = await api.PushOrder.getValuationList(postData) || false
+    if (data) {
+      this.setState({
+        valuationWay: data
+      })
+    }
   }
   handleSelectTech = () => {
     this.setState({
@@ -230,11 +261,11 @@ class SelectClass extends Component {
         paymethodVal: paymethodId === '' ? <span style={{ color: '#ff0000' }}>未填写</span> : paymethodVal,
       })
     } else {
-      let { url, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, starttime, proId, proVal, edittype, editSheetno, orderno, detailsheetno } = this.state
+      let { url, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, showtech, starttime, proId, proVal, edittype, editSheetno, orderno, porderno, detailsheetno } = this.state
       if (parentClassId !== 'skill' || showtech === false) {
         teachId = 'null'
       }
-      let urlJson = { url: url, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, starttime, proId, proVal, paymethodId, paymethodVal, edittype, editSheetno, orderno, detailsheetno }
+      let urlJson = { url: url, settleValue, parentClassId, classifyId, classifyVal, teachVal, teachId, constructType, starttime, proId, proVal, paymethodId, paymethodVal, edittype, editSheetno, orderno, porderno, detailsheetno }
       console.log('urlJson:', urlJson)
       let skipurl = tooler.parseJsonUrl(urlJson)
       console.log('skipurl:', skipurl)
@@ -243,7 +274,7 @@ class SelectClass extends Component {
     }
   }
   render() {
-    let { orderno, settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, paymethodVal, paymethodAry, teachId, settleId } = this.state
+    let { orderno, porderno, settleValue, classifyVal, showIndex, parentClassId, teachVal, showtech, classifyId, proId, proVal, paymethodVal, paymethodAry, teachId, valuationWay } = this.state
     return <div>
       <div className='pageBox gray' style={{ display: showIndex === 0 ? 'block' : 'none' }}>
         <Header
@@ -254,14 +285,14 @@ class SelectClass extends Component {
         />
         <Content>
           <List renderHeader={() => '选择工单关联的项目信息'} className={style['select-class-list']}>
-            <Item extra={proVal} arrow={orderno !== '' ? '' : 'horizontal'} onClick={() => {
-              orderno !== '' ? null : this.handleProject()
+            <Item extra={proVal} arrow={orderno !== '' || porderno !== '0' ? '' : 'horizontal'} onClick={() => {
+              orderno !== '' || porderno !== '0' ? null : this.handleProject()
             }} thumb={<NewIcon type='icon-xiangmuxiaoxi' className={style['icon-class-haiwai']} />}>项目<em className={style['asterisk']}>*</em></Item>
           </List>
           <List renderHeader={() => '发布所需要的工种或机械'} className={style['select-class-list']}>
             <Item extra={classifyVal} arrow='horizontal' onClick={this.handleSelectClassify} thumb={<NewIcon type='icon-haiwai' className={style['icon-class-haiwai']} />}>工种/机械<em className={style['asterisk']}>*</em></Item>
           </List>
-          <List style={{ display: (parentClassId === 'skill' && showtech === true) || (orderno !== '' && teachId !== '0') ? 'block' : 'none' }} renderHeader={() => '技能要求只能允许满足相关技能要求的个人接单'} className={style['select-class-list']}>
+          <List style={{ display: (parentClassId === 'skill' && showtech === true) || (orderno !== '' && teachId !== '0') || (porderno !== '0' && teachId !== '0') ? 'block' : 'none' }} renderHeader={() => '技能要求只能允许满足相关技能要求的个人接单'} className={style['select-class-list']}>
             <Item extra={teachVal} arrow='horizontal' onClick={this.handleSelectTech} thumb={<NewIcon type='icon-jobHunting' className={style['icon-class-haiwai']} />}>技能要求</Item>
           </List>
           <List renderHeader={() => '选择结算方式'} className={style['select-class-list']}>
@@ -271,7 +302,7 @@ class SelectClass extends Component {
           </List>
           <List renderHeader={() => '选择计价方式'} className={`${style['select-class-list']} ${style['settle-type-list']}`}>
             {valuationWay.map(i => (
-              <RadioItem key={i.value} disabled={ orderno !== '' && settleId === 2 } checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
+              <RadioItem key={i.value} disabled={ i.disable === 1 } checked={parseInt(settleValue) === i.value} onChange={() => this.onChange(i.value)}>
                 {i.label}
               </RadioItem>
             ))}

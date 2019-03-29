@@ -7,6 +7,7 @@ import * as tooler from 'Contants/tooler'
 import { createForm } from 'rc-form'
 import NewIcon from 'Components/NewIcon'
 import api from 'Util/api'
+import { headersJson } from 'Util'
 import style from './index.css'
 import Address from 'Components/Address'
 import storage from 'Util/storage'
@@ -72,8 +73,10 @@ class FormBox extends Component {
     let { remarkShow, mapShow } = this.state
     if (remarkShow) {
       e.preventDefault()
+      this.props.form.setFieldsValue({ remark: '' })
       this.setState({
-        remarkShow: false
+        remarkShow: false,
+        remark: ''
       })
     } else if (mapShow) {
       e.preventDefault()
@@ -105,6 +108,9 @@ class FormBox extends Component {
     })
   }
   handleSelectMap = () => {
+    if (!('cordova' in window) && tooler.getQueryString('chrome') === null) {
+      history.pushState(null, null, tooler.addParameterToURL('chrome=1'))
+    }
     this.setState({
       mapShow: true
     })
@@ -179,16 +185,26 @@ class FormBox extends Component {
       }
     })
   }
+  handleCordovaImg = () => {
+    tooler.corovaUploadImg(3, (data) => {
+      this.setState(({ fileList }) => ({
+        fileList: [...fileList, data]
+      }))
+    })
+  }
   render() {
-    const { getFieldProps, getFieldError, getFieldValue } = this.props.form
+    const { getFieldProps, getFieldError, getFieldValue, setFieldsValue } = this.props.form
     let { fileList, remarkShow, startDate, endDate, mapShow, address, remark, bidsData } = this.state
     console.log('fileList:', fileList)
     console.log('bidsData:', bidsData)
     let { bidwayId, edittype } = this.state.urlJson
+    let newHeader = tooler.requestHeader(headersJson)
+    delete newHeader['Content-Type']
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
       multiple: false,
+      headers: newHeader,
       onSuccess: (file) => {
         if (file['code'] === 0) {
           Toast.hide()
@@ -212,7 +228,8 @@ class FormBox extends Component {
           leftTitle1='返回'
           leftClick1={() => {
             if (remarkShow) {
-              this.setState({ remarkShow: false })
+              setFieldsValue({ remark: '' })
+              this.setState({ remarkShow: false, remark: '' })
             } else {
               let { urlJson } = this.state
               console.log('parseurl:', tooler.parseJsonUrl(urlJson))
@@ -221,8 +238,8 @@ class FormBox extends Component {
           }}
           rightTitle={remarkShow ? '确认' : null}
           rightClick={() => {
-            let bool = !!getFieldError('count')
-            bool ? Toast.info(getFieldError('count').join('、')) : this.setState({ remarkShow: false, remark: getFieldValue('remark') })
+            let bool = !!getFieldError('remark')
+            bool ? Toast.info(getFieldError('remark').join('、')) : this.setState({ remarkShow: false, remark: getFieldValue('remark') })
           }}
         />
         <Content className={style['quickorder-form']} style={{ display: remarkShow ? 'none' : 'block' }}>
@@ -365,7 +382,9 @@ class FormBox extends Component {
           </div>
           <div className={`${style['push-form-upload']}`}>
             <p className={style['push-title']}>附件</p>
-            <Upload {...uploaderProps} ><NewIcon type='icon-upload' className={style['push-upload-icon']} /></Upload>
+            {
+              'cordova' in window ? <div onClick={this.handleCordovaImg}><NewIcon type='icon-upload' className={style['push-upload-icon']} /></div> : <Upload {...uploaderProps} ><NewIcon type='icon-upload' className={style['push-upload-icon']} /></Upload>
+            }
             <ul className={style['file-list']}>
               {
                 fileList.map((item, index, ary) => {

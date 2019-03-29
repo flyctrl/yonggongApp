@@ -1,6 +1,11 @@
 html .bind-bankcard :global(.am-list-body::before) {
   height: 0;
 }
+.error-alert {
+  color: red;
+  text-align: center;
+  line-height: 40px;
+}
 .bindcard-btn {
   & :global(.am-button){
     background-color: #0098F5;

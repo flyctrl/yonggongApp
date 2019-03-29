@@ -10,6 +10,7 @@ import { createForm } from 'rc-form'
 import { Content, Header } from 'Components'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
+import md5 from 'md5'
 import style from './style.css'
 import logo from 'Src/assets/logo.png'
 import api from 'Util/api'
@@ -45,6 +46,8 @@ class RestPwd extends Component {
           let newValue = {
             ...values,
             verify_code: codeVerify,
+            password: md5(values['password']),
+            confirm_password: md5(values['confirm_password']),
             mobile
           }
           let data = await api.auth.forgetPsw(newValue) || false
@@ -55,11 +58,19 @@ class RestPwd extends Component {
             })
           }
         } else if (type === '2') { // 重置密码
-          let data = await api.auth.reset(values) || false
+          let data = await api.auth.reset({
+            ...values,
+            password: md5(values['password']),
+            confirm_password: md5(values['confirm_password'])
+          }) || false
           if (data) {
             Toast.hide()
             Toast.success('修改成功', 1.5, () => {
-              this.props.match.history.push(urls.LOGIN)
+              if (typeof OCBridge !== 'undefined') {
+                OCBridge.login()
+              } else {
+                this.props.match.history.push(urls.LOGIN)
+              }
             })
           }
         }

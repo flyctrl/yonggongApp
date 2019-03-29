@@ -97,7 +97,7 @@ class AccessRecord extends Component {
         pageNos: data['pageNos']
       })
     }
-    return await data['list']
+    return await data['list'] || []
   }
   showlistStatus = (item) => { // 状态按钮
     if (item['status'] === 2) { // 已确认
@@ -112,13 +112,6 @@ class AccessRecord extends Component {
     }
   }
   getSolicit = async (applyno, type) => {
-    let { dataSource } = this.state
-    let currentIndex
-    dataSource.map((item, index) => {
-      if (item['apply_no'] === applyno) {
-        currentIndex = index
-      }
-    })
     Toast.loading('提交中...', 0)
     let data = await api.WorkListManage.confirmQtReefusal({
       apply_no: applyno,
@@ -126,11 +119,9 @@ class AccessRecord extends Component {
     }) || false
     Toast.hide()
     if (data) {
-      dataSource[currentIndex] = data
-      this.setState({
-        dataSource
+      Toast.success('操作成功', 1.5, () => {
+        this.getdataTemp()
       })
-      Toast.success('操作成功', 1.5)
     }
   }
   render() {
@@ -179,7 +170,7 @@ class AccessRecord extends Component {
         }}
       />
       <Content>
-        <ul className={style['record-list']}>
+        <ul className={style['record-list']} style={{ height: document.documentElement.clientHeight - 50 }}>
           <ListView
             ref={(el) => {
               this.lv = el

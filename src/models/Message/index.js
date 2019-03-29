@@ -193,7 +193,7 @@ class Message extends Component {
             </dt>
             <dd>
               <p>{rowData['title']}<em>{rowData['show_time']}</em></p>
-              <span className='ellipsis'>{rowData['content']}</span>
+              <span>{rowData['content']}</span>
             </dd>
           </dl>
           <div className={`${style['notice-border']} my-bottom-border`}></div>

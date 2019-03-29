@@ -19,7 +19,11 @@ class FeedBack extends Component {
         if (data) {
           Toast.hide()
           Toast.success('提交成功', 1.5, () => {
-            this.props.match.history.push(urls.MINE)
+            if (typeof OCBridge !== 'undefined') {
+              OCBridge.back()
+            } else {
+              this.props.match.history.push(urls.MINE)
+            }
           })
         }
       } else {

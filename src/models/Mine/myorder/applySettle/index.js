@@ -1,27 +1,34 @@
 import React, { Component } from 'react'
-import { Header, Content } from 'Components'
-import { List, InputItem, Modal } from 'antd-mobile'
+import { Header, Content, NewIcon, DefaultPage } from 'Components'
+import { List, InputItem, Modal, Button } from 'antd-mobile'
+import ReactIScroll from 'react-iscroll'
+import iScroll from 'iscroll'
 // import * as urls from 'Contants/urls'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
 const alert = Modal.alert
-const numReg = /^[1-9]{1,}[\d]*$/
 const isnumReg = /^[0-9]+.?[0-9]*$/
+const viewHeight = document.documentElement.clientHeight
 class ApplySettle extends Component {
   constructor(props) {
     super(props)
     this.state = {
       amount: 0,
-      valuationEqual: 1,
+      valuationEqual: false,
       workerAmount: 0,
-      inputAmount: 0,
-      recordStatus: tooler.getQueryString('recordStatus'),
+      inputAmount: '',
+      // recordStatus: tooler.getQueryString('recordStatus'),
       workSheetOrderNo: tooler.getQueryString('workSheetOrderNo'),
       orderno: tooler.getQueryString('orderno'),
-      status: tooler.getQueryString('status'),
+      status: '',
       dataSource: [],
-      isloading: false
+      canApply: false,
+      canapplyDate: '',
+      acceptAmount: 0,
+      payAmount: 0,
+      isloading: false,
+      handVisible: true
     }
   }
   componentDidMount() {
@@ -40,20 +47,28 @@ class ApplySettle extends Component {
     if (data) {
       this.setState({
         amount: data['amount'],
-        valuationEqual: data['valuation_equal'],
-        workerAmount: data['worker_amount'],
+        valuationEqual: data['need_input_amount'],
+        workerAmount: Number(data['wait_pay_amount']),
+        canApply: data['can_apply'],
+        status: data['status'],
+        acceptAmount: data['accept_amount'],
+        payAmount: data['pay_amount'],
         dataSource: data['list'],
+        canapplyDate: data['can_apply_date'],
         isloading: true
       })
     }
   }
   handleApply = async () => { // 申请结算
-    let { workSheetOrderNo, orderno, inputAmount, valuationEqual, workerAmount } = this.state
-    if (valuationEqual === 2) {
-      if (!isnumReg.test(inputAmount) || !numReg.test(Number(inputAmount))) {
-        alert('金额格式为正整数')
+    let { workSheetOrderNo, orderno, inputAmount, valuationEqual, workerAmount, canApply } = this.state
+    if (valuationEqual && canApply) {
+      if (inputAmount === '') {
+        alert('请输入总价')
         return
-      } else if (inputAmount <= workerAmount) {
+      } else if (!isnumReg.test(inputAmount)) {
+        alert('金额格式为数字')
+        return
+      } else if (inputAmount < workerAmount) {
         alert(`金额需要大于${workerAmount}`)
         return
       }
@@ -69,19 +84,25 @@ class ApplySettle extends Component {
   }
   handleInputNum = (value) => {
     let { workerAmount } = this.state
-    if (!isnumReg.test(value) || !numReg.test(Number(value))) {
-      alert('金额格式为正整数')
-    } else if (value <= workerAmount) {
+    if (!isnumReg.test(value)) {
+      alert('金额格式为数字')
+    } else if (value < workerAmount) {
       alert(`金额需要大于${workerAmount}`)
     } else {
       this.setState({
-        inputAmount: value
+        inputAmount: value,
+        acceptAmount: (Number(value) - Number(workerAmount)).toFixed(2)
       })
     }
   }
+  handleHandInput = () => {
+    this.setState({
+      handVisible: !this.state.handVisible
+    })
+  }
   render() {
-    let { dataSource, amount, valuationEqual, isloading, status, recordStatus } = this.state
-    return <div className='pageBox gray'>
+    let { dataSource, amount, valuationEqual, isloading, status, canApply, acceptAmount, payAmount, workerAmount, handVisible, canapplyDate } = this.state
+    return <div className='pageBox'>
       <Header
         title='结算详情'
         leftIcon='icon-back'
@@ -90,38 +111,66 @@ class ApplySettle extends Component {
           this.props.match.history.go(-1)
         }}
       />
-      <Content>
+      <Content style={{ overflow: 'hidden', top: '0.43rem' }}>
         {
-          isloading && dataSource.length !== 0 ? <div style={{ height: '100%', 'overflow': 'hidden' }}>
-            <List className={`${style['settle-list']}`}>
-              {dataSource.map((i, index) => (
-                <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>
-                  <div className={style['header']} style={{ 'backgroundImage': 'url(' + i['avatar'] + ')' }}></div>
-                  <div className={style['settle-info']}>
-                    <h2>{i.username}</h2>
-                    <p>单价：{i.price}{i.unit}</p>
-                    <p>工作量：{i.workload}{i['workload_unit']}</p>
-                  </div>
-                  <span className={style['price']}>¥{i.amount}</span>
-                </List.Item>
-              ))}
-            </List>
-            <div className={style['btn-box']}>
+          isloading && dataSource.length !== 0 ? <div><div className={style['money-box']}>
+            <ul className={style['money-con']}>
               {
-                status === '1' || recordStatus !== null ? '' : <a onClick={this.handleApply}>申请结算</a>
+                (status === '1' || status === '2' || status === '3') ? <li>
+                  <strong>{amount}</strong>
+                  <p>合计(元)</p>
+                </li> : (!valuationEqual) ? <li>
+                  <strong>{amount}</strong>
+                  <p>合计(元)</p>
+                </li> : canApply ? <li>
+                  {
+                    handVisible ? <span className={style['hand-input']} onClick={this.handleHandInput}><NewIcon type='icon-bianji' />手动输入</span> : null
+                  }
+                  {
+                    !handVisible ? <InputItem
+                      type='digit'
+                      placeholder={`最小${workerAmount}元`}
+                      onBlur={v => this.handleInputNum(v)}
+                    ></InputItem> : null
+                  }
+                  <p>合计(元)</p>
+                </li> : <li>
+                  <strong>{amount}</strong>
+                  <p>合计(元)</p>
+                </li>
               }
-              {
-                status === '1' || recordStatus !== null ? <span>合计：<em>{amount}</em></span> : valuationEqual === 1 ? <span>合计：<em>{amount}</em></span> : <span>
-                  <List><InputItem
-                    type='digit'
-                    placeholder='请输入总价'
-                    extra='元'
-                    onBlur={v => this.handleInputNum(v)}
-                  >合计：</InputItem></List>
-                </span>
-              }
-            </div>
-          </div> : dataSource.length === 0 && isloading ? <div className='nodata'>暂无数据</div> : null
+              <li className={style['income']}>
+                <p className='ellipsis'>预计收入(元) <span>{acceptAmount}</span></p>
+                <p className='ellipsis'>支出(元) <span>{payAmount}</span></p>
+              </li>
+            </ul>
+          </div>
+          <div className={style['settle-box']} style={{ height: (status === 1 || status === 2 || status === 3) ? viewHeight - 45 - 114 : viewHeight - 45 - 114 - 50 }}>
+            <ReactIScroll iScroll={iScroll}>
+              <List className={`${style['settle-list']}`}>
+                {dataSource.map((i, index) => (
+                  <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>
+                    <div className={style['header']} style={{ 'backgroundImage': 'url(' + i['avatar'] + ')' }}></div>
+                    <div className={style['settle-info']}>
+                      <h2>{i.username}</h2>
+                      <p>单价：{i.price}{i.unit}</p>
+                      <p>工作量：{i.workload}{i['workload_unit']}</p>
+                    </div>
+                    <div className={style['price']}>
+                      {
+                        i['is_pay'] ? <span>垫付</span> : ''
+                      }
+                      <p className={i['is_pay'] ? '' : style['ispay-amonut']}>{i.amount}</p>
+                    </div>
+                  </List.Item>
+                ))}
+              </List>
+            </ReactIScroll>
+          </div>
+          {
+            (status === 1 || status === 2 || status === 3) ? '' : <div className={style['btn-box']}><Button disabled={!canApply} onClick={this.handleApply} type='primary'>申请结算{!canApply ? `（${canapplyDate}可申请）` : ''}</Button></div>
+          }
+          </div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
         }
       </Content>
     </div>

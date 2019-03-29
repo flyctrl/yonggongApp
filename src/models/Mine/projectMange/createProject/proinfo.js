@@ -4,7 +4,9 @@ import { Toast, TextareaItem } from 'antd-mobile'
 import { Header, Content, NewIcon } from 'Components'
 import { createForm } from 'rc-form'
 import style from './style.css'
+import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
+import { headersJson } from 'Util'
 import Loadable from 'react-loadable'
 let Upload = Loadable({
   loader: () => import('rc-upload'),
@@ -72,14 +74,23 @@ class Construct extends Component {
       }
     })
   }
-
+  handleCordovaImg = () => {
+    tooler.corovaUploadImg(3, (data) => {
+      this.setState(({ fileList }) => ({
+        fileList: [...fileList, data]
+      }))
+    })
+  }
   render() {
     const { getFieldProps, getFieldError } = this.props.form
     let { info, fileList } = this.state
+    let newHeader = tooler.requestHeader(headersJson)
+    delete newHeader['Content-Type']
     const uploaderProps = {
       action: api.Common.uploadFile,
       data: { type: 3 },
       multiple: false,
+      headers: newHeader,
       onSuccess: (file) => {
         if (file['code'] === 0) {
           Toast.hide()
@@ -99,7 +110,7 @@ class Construct extends Component {
       <div>
         <div className='pageBox gray'>
           <Header
-            title='中标单位信息'
+            title='项目概况'
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {
@@ -124,7 +135,9 @@ class Construct extends Component {
             </div>
             <div className={`${style['push-form-upload']}`}>
               <p className={style['push-title']}>附件</p>
-              <Upload {...uploaderProps} ><NewIcon type='icon-upload' className={style['push-upload-icon']} /></Upload>
+              {
+                'cordova' in window ? <div onClick={this.handleCordovaImg}><NewIcon type='icon-upload' className={style['push-upload-icon']} /></div> : <Upload {...uploaderProps} ><NewIcon type='icon-upload' className={style['push-upload-icon']} /></Upload>
+              }
               <ul className={style['file-list']}>
                 {
                   fileList.map((item, index, ary) => {

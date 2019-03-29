@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom'
 import style from './style.css'
 import api from 'Util/api'
 import zuofei from 'Src/assets/zuofei.png'
-import { getQueryString, onBackKeyDown } from 'Contants/tooler'
+import { getQueryString, onBackKeyDown, getCommpanyStatus } from 'Contants/tooler'
 const RadioItem = Radio.RadioItem
 const NUM_ROWS = 20
 const defaultSource = new ListView.DataSource({
@@ -182,12 +182,14 @@ class InvoiceMange extends Component {
     })
   }
   handleChange = (value, type) => { // 开票申请列表
-    this.setState({
-      radioVal: value
+    getCommpanyStatus(() => {
+      this.setState({
+        radioVal: value,
+      })
+      setTimeout(() => {
+        this.props.match.history.push(`${urls['INVOICEORDER']}?id=${value}&type=${type ? 1 : 2}`)
+      }, 500)
     })
-    setTimeout(() => {
-      this.props.match.history.push(`${urls['INVOICEORDER']}?id=${value}&type=${type ? 1 : 2}`)
-    }, 500)
   }
   handleClickInvoice = (e) => { // 发票详情
     let no = e.currentTarget.getAttribute('data-id')
@@ -265,7 +267,14 @@ class InvoiceMange extends Component {
             this.props.match.history.push(urls.MINE)
           }}
           rightIcon='icon-caidan'
-          rightClick={ this.handleVisibleChange }
+          rightClick={ () => {
+            getCommpanyStatus(() => {
+              this.setState({
+                visible: !this.state.visible,
+                actopt: true
+              })
+            }, this.state.actopt)
+          }}
         />
         <div style={{ display: this.state.visible ? 'block' : 'none' }} onClick={this.handleVisibleChange} className={`showimg-box animated ${this.state.visible ? 'fadeIn' : 'fadeOut'}`}>
           <div className={style['mask-content']}>

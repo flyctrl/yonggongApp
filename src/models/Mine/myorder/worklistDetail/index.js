@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Badge, WhiteSpace, Button, Toast } from 'antd-mobile'
+import { Badge, WhiteSpace, Button, Toast, Modal } from 'antd-mobile'
 import { Header, Content, NewIcon } from 'Components'
 import { worksheetType, paymethod } from 'Contants/fieldmodel'
 import * as urls from 'Contants/urls'
@@ -12,6 +12,7 @@ const typeicon = {
   2: 'sheeticon',
   3: 'quickicon'
 }
+const prompt = Modal.prompt
 class WorkListDetail extends Component {
   constructor(props) {
     super(props)
@@ -195,6 +196,7 @@ class WorkListDetail extends Component {
         classifyId: data['construct'].length > 0 ? data['construct'][0]['code'] : '',
         classifyVal: data['construct'].length > 0 ? data['construct'][0]['name'] : '',
         constructType: data['construct'].length > 0 ? data['construct'][0]['construct_type'] : '',
+        parentClassId: data['construct'].length > 0 ? (data['construct'][0]['construct_type'] === 1 ? 'skill' : 0) : 0,
         ...levelJson,
         settleValue: data['valuation_way'],
         starttime: data['start_time']
@@ -209,7 +211,7 @@ class WorkListDetail extends Component {
     this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
   }
   handleGenAttend = (rowData) => { // 我接的 - 代考勤
-    this.props.match.history.push(urls.AGENTCHECKLIST + '?orderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
+    this.props.match.history.push(urls.CHECK + '?workorderno=' + rowData['order_no'] + '&lat=' + rowData['latitude'] + '&lng=' + rowData['longitude'] + '&radius=' + rowData['distance_range'])
   }
   handleStart = async (rowData) => { // 我接的 - 开工
     console.log(rowData)
@@ -229,9 +231,8 @@ class WorkListDetail extends Component {
   }
   handleFished = async (rowData) => { // 我接的 - 完工
     let data
-    let valuationWay = rowData['valuation_way']
-    if (valuationWay === 1) {
-      prompt('工作量', `（单位：${rowData['valuation_unit']})`, [
+    if (rowData['tip_type'] === 1) {
+      prompt('工作量', `工作量单位：${rowData['workload_unit']}`, [
         { text: '取消' },
         {
           text: '确认',
@@ -270,7 +271,7 @@ class WorkListDetail extends Component {
     }
   }
   handleAgentFished = (rowData) => { // 我接的 - 代完工
-    this.props.match.history.push(`${urls.AGENTFINISHLIST}?orderno=${rowData['order_no']}&valuationWay=${rowData['valuation_way']}`)
+    this.props.match.history.push(`${urls.AGENTFINISHLIST}?orderno=${rowData['order_no']}`)
   }
   handleRefSettle = (rowData) => { // 我接的 - 提交结算
     this.props.match.history.push(`${urls.PENDINGSETTLERECORD}?workSheetOrderNo=${rowData['order_no']}`)

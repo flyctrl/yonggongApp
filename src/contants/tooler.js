@@ -5,8 +5,13 @@
 * @Last Modified time: 2018-06-02 17:04:01
 */
 import arrayTreeFilter from 'array-tree-filter'
+import { Modal, Toast } from 'antd-mobile'
 import history from 'Util/history'
-
+import api from 'Util/api'
+import * as urls from 'Contants/urls'
+import { headersJson } from 'Util'
+import storage from 'Util/storage'
+const alert = Modal.alert
 const DATE_REGEXP = new RegExp('(\\d{4})-(\\d{2})-(\\d{2})([T\\s](\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{3}))?)?.*')
 export const getSel = (value, optionsObj) => { // 根据键值筛选数结果数据中的对象，value:需要筛选树的value数据，optionsObj: 所在的树的数据
   if (!value) {
@@ -49,6 +54,12 @@ export const getQueryString = (name) => { // url转json
     }
     return null
   }
+}
+
+export const addParameterToURL = (param) => {
+  let url = location.href
+  url += (url.split('?')[1] ? '&' : '?') + param
+  return url
 }
 
 export const parseJsonUrl = (ojson) => { // json对象转URL
@@ -100,6 +111,9 @@ export const addCommas = (number) => {
   let newStr = ''
   let count = 0
   let str = ''
+  if (number === 0 || number === '0') {
+    return '0'
+  }
   if (number) {
     str = number + ''
   } else {
@@ -198,3 +212,119 @@ export const backButton = function () {
   })
 }
 
+export const getCommpanyStatus = async(callback, actopt) => { // 参数1是一个回调函数 参数2判断是否重复执行请求认证，默认不传参数2
+  if (!actopt) {
+    let data = await api.Common.getEmployAllStatus({}) || false
+    if (data) {
+      if (data['is_realname'] !== 1) {
+        alert('未实名认证', '是否前往认证？', [{
+          text: '取消'
+        }, {
+          text: '去认证', onPress: () => {
+            history.push(urls.REALNAMEAUTH)
+          }
+        }])
+      } else {
+        if (data['company_aptitude_status'] !== 1) {
+          alert('企业未认证', '是否前往认证？', [{
+            text: '取消'
+          }, {
+            text: '去认证', onPress: () => {
+              history.push(urls.COMPANYAUTH)
+            }
+          }])
+        } else {
+          callback()
+        }
+      }
+    }
+  } else {
+    callback()
+  }
+}
+
+export const corovaUploadImg = (type, callback) => {
+  navigator.camera.getPicture((imageURI) => {
+    let options = new FileUploadOptions()
+    options.fileKey = 'file'
+    options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1)
+    let newHeader = headersJson
+    newHeader.source = 1
+    if (storage.get('cordovaObj')) {
+      let androidJson = storage.get('cordovaObj')
+      newHeader.deviceNo = androidJson['deviceNo']
+      newHeader.os = androidJson['os']
+      newHeader.osVersion = androidJson['osVersion']
+      newHeader.appVersion = androidJson['appVersion']
+    } else {
+      newHeader.deviceNo = ''
+      newHeader.os = ''
+      newHeader.osVersion = ''
+      newHeader.appVersion = ''
+    }
+    delete newHeader['Content-Type']
+    options.headers = newHeader
+    let params = {}
+    params.type = type
+    options.params = params
+    let ft = new FileTransfer()
+    Toast.loading('上传中...', 0)
+    ft.upload(imageURI, api.Common.uploadFile, (file) => {
+      console.log(file)
+      Toast.hide()
+      let newdata = JSON.parse(file.response)
+      if (newdata['code'] === 0) {
+        Toast.success('上传成功', 1)
+        callback(newdata['data'])
+      } else {
+        Toast.fail(newdata['msg'], 1)
+      }
+    }, (error) => {
+      console.log(error)
+      Toast.hide()
+      Toast.fail('没选择图片')
+    }, options)
+  }, (msg) => {
+    Toast.offline('没有选择图片', 2)
+  }, {
+    sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+    destinationType: Camera.DestinationType.FILE_URI,
+    targetWidth: 1400,
+    targetHeight: 1400,
+    quality: 80
+  })
+}
+
+export const requestHeader = (oldHeader) => {
+  let newHeader = oldHeader
+  if ('cordova' in window) { // android
+    if (storage.get('cordovaObj')) {
+      let androidJson = storage.get('cordovaObj')
+      newHeader.source = 1
+      newHeader.deviceNo = androidJson['deviceNo']
+      newHeader.os = androidJson['os']
+      newHeader.osVersion = androidJson['osVersion']
+      newHeader.appVersion = androidJson['appVersion']
+      return newHeader
+    } else {
+      newHeader.source = 1
+      newHeader.deviceNo = ''
+      newHeader.os = ''
+      newHeader.osVersion = ''
+      newHeader.appVersion = ''
+      return newHeader
+    }
+  } else if (typeof OCBridge !== 'undefined') { // ios
+    let iosJson = OCBridge.getiPhoneInfo()
+    console.log('iosJson:')
+    console.log(iosJson)
+    newHeader.source = 2
+    newHeader.deviceNo = iosJson['deviceNo']
+    newHeader.os = iosJson['os']
+    newHeader.osVersion = iosJson['osVersion']
+    newHeader.appVersion = iosJson['appVersion']
+    return newHeader
+  } else {
+    return newHeader
+  }
+}

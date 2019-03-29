@@ -6,7 +6,7 @@ import * as urls from 'Contants/urls'
 import { projectStatus } from 'Contants/fieldmodel'
 import history from 'Util/history'
 import style from './style.css'
-import { getQueryString } from 'Contants/tooler'
+import { getQueryString, getCommpanyStatus } from 'Contants/tooler'
 import { ListView, PullToRefresh, Tabs, Badge } from 'antd-mobile'
 const NUM_ROWS = 20
 const defaultSource = new ListView.DataSource({
@@ -50,7 +50,7 @@ class ProjectMange extends Component {
         pageNos: data['pageNos']
       })
     }
-    return await data['list']
+    return await data['list'] || []
   }
   componentDidMount() {
     const hei = this.state.height - 90
@@ -123,7 +123,11 @@ class ProjectMange extends Component {
     if (typeof OCBridge !== 'undefined') {
       OCBridge.addOrEditProject()
     } else {
-      history.push(urls.CREATEPROJECT)
+      if (!('cordova' in window) && getQueryString('chrome') === null) {
+        history.push(urls.CREATEPROJECT + '?chrome=1')
+      } else {
+        history.push(urls.CREATEPROJECT)
+      }
     }
   }
   handleDetail = (e) => { // 项目详情
@@ -190,7 +194,7 @@ class ProjectMange extends Component {
           }}
           rightTitle={<NewIcon type='icon-add-default' />}
           rightClick={() => {
-            this.handleCreateProject()
+            getCommpanyStatus(this.handleCreateProject)
           }}
         />
         <Content>

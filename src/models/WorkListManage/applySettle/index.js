@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
-import { Header, Content } from 'Components'
-import { List } from 'antd-mobile'
+import { Header, Content, DefaultPage } from 'Components'
+import { List, Modal, Toast, Button } from 'antd-mobile'
+import ReactIScroll from 'react-iscroll'
+import iScroll from 'iscroll'
+import md5 from 'md5'
 import api from 'Util/api'
 import * as tooler from 'Contants/tooler'
+import * as urls from 'Contants/urls'
 import style from './style.css'
+const alert = Modal.alert
+const prompt = Modal.prompt
+const viewHeight = document.documentElement.clientHeight
 class ApplySettle extends Component {
   constructor(props) {
     super(props)
@@ -25,7 +32,7 @@ class ApplySettle extends Component {
       isloading: false
     })
     let { orderno } = this.state
-    let data = await api.Mine.myorder.applySettleDetail({
+    let data = await api.WorkListManage.applySettleDetail({
       orderNo: orderno,
       page: 1,
       pageSize: 500
@@ -40,14 +47,47 @@ class ApplySettle extends Component {
       })
     }
   }
-  handleApply = async () => { // 结算
-    let { worksheetno, orderno } = this.state
-    let data = await api.WorkListManage.settleSendSettle({
-      workSheetNo: worksheetno,
-      orderNo: orderno
-    }) || false
+  handleApply = async () => { // 结算 - 检测是否设置支付密码
+    let data = await api.Mine.companyAuth.getCompanyStuts({}) || false
     if (data) {
-      this.props.match.history.go(-1)
+      if (data['is_withdraw_password'] === 1) {
+        prompt(
+          '请输入支付密码',
+          null,
+          [
+            { text: '取消' },
+            { text: '提交', onPress: password => new Promise(async (resolve, reject) => {
+              if (password === '') {
+                Toast.info('请输入密码', 0.8)
+                reject()
+              } else if (!/\d{6}/.test(password)) {
+                Toast.info('密码为6位数字', 0.8)
+                reject()
+              } else {
+                let { worksheetno, orderno } = this.state
+                let data = await api.WorkListManage.settleSendSettle({
+                  workSheetNo: worksheetno,
+                  orderNo: orderno,
+                  password: md5(password)
+                }) || false
+                if (data) {
+                  resolve()
+                  Toast.success('成功结算', 1, () => {
+                    this.props.match.history.go(-1)
+                  })
+                }
+              }
+            })
+            },
+          ],
+          'secure-text',
+        )
+      } else {
+        alert('您未设置支付密码，是否前往设置？', null, [
+          { text: '取消' },
+          { text: '前往设置', onPress: () => this.props.match.history.push(urls.SETPAYPWD) },
+        ])
+      }
     }
   }
   handleSure = async () => { // 确认
@@ -77,11 +117,11 @@ class ApplySettle extends Component {
   render() {
     let { dataSource, amount, isloading, status, payWay } = this.state
     let statusDom = {
-      1: <div className={style['btn-box']}>
-        <a className={style['reject-btn']} onClick={this.handleReject}>驳回</a><a onClick={this.handleSure}>确认</a>
+      1: <div className={`${style['btn-box']} ${style['two-btn']}`}>
+        <Button type='warning' onClick={this.handleReject}>驳回</Button><Button type='primary' onClick={this.handleSure}>确认</Button>
       </div>,
       2: payWay === 1 ? <div className={style['btn-box']}>
-        <a className={style['settle-btn']} onClick={this.handleApply}>结算</a>
+        <Button type='primary' onClick={this.handleApply}>确认结算</Button>
       </div> : '',
       3: ''
     }
@@ -94,27 +134,29 @@ class ApplySettle extends Component {
           this.props.match.history.go(-1)
         }}
       />
-      <Content>
+      <Content style={{ overflow: 'hidden', top: '0.43rem' }}>
         {
-          isloading && dataSource.length !== 0 ? <div style={{ height: '100%', 'overflow': 'hidden' }}>
-            <p className={`${style['settle-total']} my-bottom-border`}>合计：<em>{amount}</em></p>
-            <List className={`${style['settle-list']} ${status === 3 ? style['settle-all'] : ''}`}>
-              {dataSource.map((i, index) => (
-                <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>
-                  <div className={style['header']} style={{ 'backgroundImage': 'url(' + i['avatar'] + ')' }}></div>
-                  <div className={style['settle-info']}>
-                    <h2>{i.username}</h2>
-                    <p>单价：{i.price}{i.unit}</p>
-                    <p>工作量：{i.workload}{i['workload_unit']}</p>
-                  </div>
-                  <span className={style['price']}>{i.amount}</span>
-                </List.Item>
-              ))}
-            </List>
-            {
-              statusDom[status]
-            }
-          </div> : dataSource.length === 0 && isloading ? <div className='nodata'>暂无数据</div> : null
+          isloading && dataSource.length !== 0 ? <div><div className={style['money-box']}>
+            <p>合计(元)</p>
+            <strong>{amount}</strong>
+          </div>
+          <div className={`${style['settle-box']}`} style={{ height: status === 1 || status === 2 ? viewHeight - 45 - 80 - 50 : viewHeight - 45 - 80 }}>
+            <ReactIScroll iScroll={iScroll}>
+              <List className={`${style['settle-list']}`}>
+                {dataSource.map((i, index) => (
+                  <List.Item key={`${i.uid}${index}`} activeStyle={{ backgroundColor: '#fff' }}>
+                    <div className={style['header']} style={{ 'backgroundImage': 'url(' + i['avatar'] + ')' }}></div>
+                    <div className={style['settle-info']}>{i.username}</div>
+                    <div className={style['settle-workload']}>工作量：{i.workload}{i['workload_unit']}</div>
+                  </List.Item>
+                ))}
+              </List>
+            </ReactIScroll>
+          </div>
+          {
+            statusDom[status]
+          }
+          </div> : dataSource.length === 0 && isloading ? <DefaultPage type='nodata' /> : null
         }
       </Content>
     </div>

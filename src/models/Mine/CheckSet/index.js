@@ -7,13 +7,12 @@ import React, { Component } from 'react'
 import { List, Button, Toast } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
-import { getQueryString } from 'Contants/tooler'
+import { getQueryString, onBackKeyDown } from 'Contants/tooler'
 import api from 'Util/api'
 import style from './style.css'
 import SetType from './type'
 import SetRange from './range'
 import SetAddress from 'Components/Address'
-import { onBackKeyDown } from 'Contants/tooler'
 let title = {
   0: '未设置',
   1: '已设置'
@@ -30,22 +29,51 @@ class SetUp extends Component {
       isSetType: false,
       isSetRange: false,
       isSetAddress: false,
-      defaultTime: null
+      defaultTime: null,
+      worksheetno: getQueryString('worksheetno'),
+      worktype: getQueryString('worktype'),
+      listType: getQueryString('listType'),
+      data: {}
     }
   }
   getCheckConfig= async() => {
     this.setState({ isLoading: true })
     const data = await api.Mine.CheckSet.getConfig({
-      worksheet_no: getQueryString('worksheetno')
+      worksheet_no: this.state.worksheetno
     }) || false
     if (data) {
       this.setState({ data, defaultTime: data['default_time_config'], isLoading: false })
     }
   }
+  // onSubmitAddress = (callback) => {
+  //   if (typeof OCBridge !== 'undefined') {
+  //     if (callback === 1) {
+  //       let { data = {}} = this.state
+  //       let position = OCBridge.loadMapInfo()
+  //       if (position && JSON.stringify(position) !== '{}') {
+  //         if (!('attend_place_coordinate' in data)) {
+  //           data['attend_place_coordinate'] = {}
+  //         }
+  //         data['attend_place_coordinate']['lng'] = `${position['longitude']}`
+  //         data['attend_place_coordinate']['lat'] = `${position['latitude']}`
+  //         data['attend_place'] = position.address
+  //         data['isset_address'] = true
+  //         this.setState({
+  //           data,
+  //           isSetAddress: true
+  //         })
+  //       }
+  //     }
+  //   }
+  // }
   handleSetAddress = () => {
-    this.setState({
-      isShowAddress: !this.state.isShowAddress
-    })
+    if (typeof OCBridge !== 'undefined') {
+      OCBridge.loadMap()
+    } else {
+      this.setState({
+        isShowAddress: !this.state.isShowAddress
+      })
+    }
   }
   handleSetType = (e, val) => {
     let { data } = this.state
@@ -90,8 +118,8 @@ class SetUp extends Component {
     }
     let { position = {}, nowAddress = '' } = map
     if (map) {
-      data['attend_place_coordinate']['lng'] = position['lng']
-      data['attend_place_coordinate']['lat'] = position['lat']
+      data['attend_place_coordinate']['lng'] = `${position['lng']}`
+      data['attend_place_coordinate']['lat'] = `${position['lat']}`
       data['attend_place'] = nowAddress
       data['isset_address'] = true
       this.setState({
@@ -126,50 +154,81 @@ class SetUp extends Component {
       })
     }
   }
-  handleSubmit = async() => {
-    let { data, isSetAddress, isSetRange, isSetType, defaultTime } = this.state
-    if (data['is_set'] === 0) {
-      if (!isSetType) {
-        Toast.info('请设置考勤类型')
-        return false
-      } else if (!isSetAddress) {
-        Toast.info('请设置考勤地址')
-        return false
-      } else if (!isSetRange) {
-        Toast.info('请设置考勤范围')
-        return false
+  loadmapData = (callback) => {
+    if (typeof OCBridge !== 'undefined') {
+      let { data } = this.state
+      let position = OCBridge.loadMapInfo()
+      console.log('position', position)
+      if (JSON.stringify(position) !== '{}') {
+        if (!('attend_place_coordinate' in data)) {
+          data['attend_place_coordinate'] = {}
+        }
+        data['attend_place_coordinate']['lng'] = position['longitude']
+        data['attend_place_coordinate']['lat'] = position['latitude']
+        data['attend_place'] = position.address
+        data['isset_address'] = true
+        console.log('data', data)
+        this.setState({
+          data,
+          isSetAddress: true
+        }, () => callback())
+      } else {
+        callback()
       }
+    } else {
+      callback()
     }
-    Toast.loading('提交中...', 0)
-    let newData = {
-      worksheet_no: getQueryString('worksheetno'),
-      attend_type: data['attend_type'],
-      attend_place: data['attend_place'],
-      attend_place_coordinate: data['attend_place_coordinate'],
-      attend_distance_range: data['attend_distance_range'],
-      attend_time_config: data['attend_time_config'],
-      default_time_config: defaultTime,
-      type: data['check_type']
-    }
-    const config = await api.Mine.CheckSet.saveConfig({
-      ...newData
-    }) || false
-    if (config) {
-      Toast.hide()
-      Toast.success('设置成功', 1.5, () => {
-        // this.props.match.history.go(-1)
-        this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=1`)
-      })
-    }
-    console.log(...newData)
   }
-  componentWillMount() {
-    this.getCheckConfig()
+  handleSubmit = () => {
+    this.loadmapData(async () => {
+      let { data, isSetAddress, isSetRange, isSetType, defaultTime, worksheetno } = this.state
+      if (data['is_set'] === 0) {
+        if (!isSetType) {
+          Toast.info('请设置考勤类型')
+          return false
+        } else if (!isSetAddress) {
+          Toast.info('请设置考勤地址')
+          return false
+        } else if (!isSetRange) {
+          Toast.info('请设置考勤范围')
+          return false
+        }
+      }
+      Toast.loading('提交中...', 0)
+      let newData = {
+        worksheet_no: worksheetno,
+        attend_type: data['attend_type'],
+        attend_place: data['attend_place'],
+        attend_place_coordinate: data['attend_place_coordinate'],
+        attend_distance_range: data['attend_distance_range'],
+        attend_time_config: data['attend_time_config'],
+        default_time_config: defaultTime,
+        type: data['check_type']
+      }
+      const config = await api.Mine.CheckSet.saveConfig({
+        ...newData
+      }) || false
+      if (config) {
+        Toast.hide()
+        Toast.success('设置成功', 1.5, () => {
+          // this.props.match.history.go(-1)
+          // if (worktype) {
+          //   this.props.match.history.push(`${urls['WORKLISTDETAIL']}?worksheetno=${worksheetno}&worktype=${worktype}`)
+          // } else {
+          //   this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=${this.state.listType}`)
+          // }
+        })
+      }
+    })
   }
+  // componentWillMount() {
+  //   this.getCheckConfig()
+  // }
   componentDidMount() {
+    this.getCheckConfig()
     if ('cordova' in window) {
-      document.removeEventListener('backbutton', this.backButtons)
-      document.addEventListener('backbutton', onBackKeyDown, false)
+      document.removeEventListener('backbutton', onBackKeyDown)
+      document.addEventListener('backbutton', this.backButtons, false)
     }
   }
   backButtons = (e) => {
@@ -253,12 +312,19 @@ class SetUp extends Component {
                     // this.props.match.history.push(`${urls['WORKLISTMANAGE']}?listType=1`)
                   }}
                 />
+                {/* <iframe id='iframe' onLoad={this.onload} frameBorder='0' scrolling='no' marginHeight='0' marginWidth='0'></iframe> */}
                 <Content>
                   <div className={style['set-up']}>
                     <List>
-                      <Item extra={ data['isset_type'] ? '已设置' : title[data['is_set']]} arrow='horizontal' onClick={(e) => this.handleSetType(e, 1)}>考勤类型</Item>
-                      <Item extra={ data['isset_address'] ? '已设置' : title[data['is_set']]} arrow='horizontal' onClick={this.handleSetAddress}>考勤地址</Item>
-                      <Item extra={ data['isset_range'] ? '已设置' : title[data['is_set']]} arrow='horizontal' onClick={this.handleSetRange}>考勤范围</Item>
+                      {
+                        typeof OCBridge !== 'undefined' ? <Item arrow='horizontal' onClick={(e) => this.handleSetType(e, 1)}>考勤类型</Item> : <Item extra={ data['isset_type'] ? '已设置' : title[data['is_set']]} arrow='horizontal' onClick={(e) => this.handleSetType(e, 1)}>考勤类型</Item>
+                      }
+                      {
+                        typeof OCBridge !== 'undefined' ? <Item arrow='horizontal' onClick={this.handleSetAddress}>考勤地址</Item> : <Item extra={ data['isset_address'] ? '已设置' : title[data['is_set']]} arrow='horizontal' onClick={this.handleSetAddress}>考勤地址</Item>
+                      }
+                      {
+                        typeof OCBridge !== 'undefined' ? <Item arrow='horizontal' onClick={this.handleSetRange}>考勤范围</Item> : <Item extra={ data['isset_range'] ? '已设置' : title[data['is_set']]} arrow='horizontal' onClick={this.handleSetRange}>考勤范围</Item>
+                      }
                     </List>
                     <Button className={style.btn} onClick={this.handleSubmit}>保存</Button>
                   </div>

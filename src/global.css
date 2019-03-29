@@ -430,11 +430,11 @@ html:not([data-scale]) :global(.contentBox .am-list-body div:not(:last-child) .a
 html:not([data-scale]) :global(.pageBox .am-button-primary::before) {
   height: 198%;
 }
-:global(.pageBox .am-pull-to-refresh-content-wrapper) {
+:global(.pageBox .am-pull-to-refresh-content-wrapper), :global(.contentBox .am-pull-to-refresh-content-wrapper){
   overflow: unset;
 }
 
-:global(.pageBox) {
+:global(.pageBox), :global(.contentBox) {
   & :global(.am-badge) {
     &:global(.typericon) {
       margin-right: 6px;
