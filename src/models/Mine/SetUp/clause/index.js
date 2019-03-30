@@ -6,6 +6,7 @@
 import React, { Component } from 'react'
 // import * as urls from 'Contants/urls'
 import { Header, Content } from 'Components'
+import style from './style.css'
 
 class Caluse extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class Caluse extends Component {
           this.props.match.history.go(-1)
         }}
       />
-      <Content style={{ overflow: 'hidden' }}>
+      <Content className={style['clause']}>
         <iframe width='100%' height='100%' src='https://www.yaque365.com/clause.html' frameBorder='0'></iframe>
       </Content>
     </div>
