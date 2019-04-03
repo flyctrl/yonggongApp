@@ -39,7 +39,7 @@ class RestPwd extends Component {
             ...values,
             ...{
               'org_password': md5(values['org_password']),
-              'password': md5(values['org_password']),
+              'password': md5(values['password']),
               'confirm_password': md5(values['confirm_password'])
             }
           }) || false
