@@ -1,5 +1,9 @@
 /* stylelint-disable */
 
+html:not([data-scale]) .registerForm :global(.am-list-body::after), html:not([data-scale]) .loginForm :global(.am-list-body::after) {
+  height: 0;
+}
+
 .regBtn {
   display: block;
   width: 100%;
@@ -54,6 +58,11 @@
   & :global(.am-list-body) {
     border-top: none;
     border-bottom: none;
+    & .error-extra {
+      line-height: 20px;
+      color: #ff0505;
+      font-size: 12px;
+    }
     & :global(.login-item) {
       & :global(.login-line) {
         position: relative;
@@ -147,6 +156,11 @@
   & :global(.am-list-body) {
     border-top: none;
     border-bottom: none;
+    & .error-extra {
+      line-height: 20px;
+      color: #ff0505;
+      font-size: 12px;
+    }
     & :global(.register-item) {
       & :global(.register-line) {
         position: relative;
@@ -195,7 +209,7 @@
   & .codeBox {
     position: relative;
     width: 100%;
-    height: 40px;
+    min-height: 40px;
     & :global(.register-item .register-line .am-input-clear) {
       right: 90px;
     }
@@ -249,7 +263,6 @@
   text-align: center;
   color: #999;
   font-size: 12px;
-  margin-top: 2px;
   & a {
     color: rgba(4,103,224,.7);
     cursor: pointer;

@@ -139,9 +139,11 @@ export default {
     login(params) { // 登录
       return FetchSave(prefix + '/login', params, 'post', { loadtitle: '登录中...' })
     },
+    loginUrl: prefix + '/login',
     register(params) { // 注册
       return Fetch(prefix + '/register', params, 'post', { showloading: false })
     },
+    registerUrl: prefix + '/register',
     getcode(params) { // 短信验证码
       return Fetch('/common/verify/code', params)
     },

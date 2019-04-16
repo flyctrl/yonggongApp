@@ -5,6 +5,7 @@
 * @Last Modified time: 2018-07-01 15:17:56
 */
 import React, { Component } from 'react'
+import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { InputItem, Button, Toast, List } from 'antd-mobile'
 import { Content } from 'Components'
@@ -17,6 +18,7 @@ import storage from 'Util/storage'
 import history from 'Util/history'
 import md5 from 'md5'
 import { onBackKeyDown } from 'Contants/tooler'
+import { baseUrl, headersJson } from 'Util'
 class Login extends Component {
   constructor(props) {
     super(props)
@@ -25,13 +27,53 @@ class Login extends Component {
       value: '',
     }
   }
-  userLogin = async (postJson) => {
-    const data = await api.auth.login(postJson) || false
-    if (data) {
-      storage.set('Authorization', 'Bearer ' + data['access_token'])
-      storage.set('refreshToken', data['refresh_token'])
-      history.push(urls.HOME)
+  handleSetError = (value, errorAry) => { // 处理错误
+    const { setFields } = this.props.form
+    let errorKey = Object.keys(errorAry)
+    switch (errorKey[0]) {
+      case 'username':
+        setFields({
+          username: {
+            value: value[errorKey[0]],
+            errors: [new Error(errorAry[errorKey[0]])]
+          }
+        })
+        break
+      case 'password':
+        setFields({
+          password: {
+            errors: [new Error(errorAry[errorKey[0]])]
+          }
+        })
+        break
     }
+  }
+  userLogin = (postJson) => {
+    Toast.loading('登录中...', 0)
+    axios({
+      method: 'post',
+      baseURL: baseUrl,
+      url: api.auth.loginUrl,
+      data: postJson,
+      headers: headersJson,
+      timeout: 60000
+    }).then((res) => {
+      let newdata = res.data
+      if (newdata.code === 0) {
+        Toast.hide()
+        let data = newdata.data
+        storage.set('Authorization', 'Bearer ' + data['access_token'])
+        storage.set('refreshToken', data['refresh_token'])
+        history.push(urls.HOME)
+      } else {
+        Toast.hide()
+        if (newdata.errors) {
+          this.handleSetError(postJson, newdata.errors)
+        } else {
+          Toast.fail(newdata.msg, 2.2)
+        }
+      }
+    })
   }
   onSubmit = () => { // 表单提交
     const { getFieldError } = this.props.form
@@ -112,6 +154,9 @@ class Login extends Component {
                   Toast.fail(getFieldError('username'), 1)
                 }}
               ></InputItem>
+              {
+                getFieldError('username') ? <p className={style['error-extra']}>{getFieldError('username')}</p> : null
+              }
             </List>
             <List>
               <InputItem
@@ -130,6 +175,9 @@ class Login extends Component {
                   Toast.fail(getFieldError('password'), 1)
                 }}
               ></InputItem>
+              {
+                getFieldError('password') ? <p className={style['error-extra']}>{getFieldError('password')}</p> : null
+              }
             </List>
             <div className={style['forgetPwd']}>
               <Link to={ urls.FORGETPWD } className={style['forgetPwdBtn']}>忘记密码?</Link>

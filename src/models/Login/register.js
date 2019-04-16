@@ -6,6 +6,7 @@
 */
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 import { InputItem, Button, Toast, List } from 'antd-mobile'
 import { createForm } from 'rc-form'
 import { Content } from 'Components'
@@ -16,6 +17,7 @@ import logo from 'Src/assets/logo.png'
 import storage from 'Util/storage'
 import api from 'Util/api'
 import * as urls from 'Contants/urls'
+import { baseUrl, headersJson } from 'Util'
 // import history from 'Util/history'
 
 class Register extends Component {
@@ -26,15 +28,55 @@ class Register extends Component {
       codeText: '获取验证码'
     }
   }
+  handleSetError = (value, errorAry) => { // 处理错误
+    const { setFields } = this.props.form
+    let errorKey = Object.keys(errorAry)
+    switch (errorKey[0]) {
+      case 'username':
+        setFields({
+          username: {
+            value: value[errorKey[0]],
+            errors: [new Error(errorAry[errorKey[0]])]
+          }
+        })
+        break
+      case 'mobile':
+        setFields({
+          mobile: {
+            errors: [new Error(errorAry[errorKey[0]])]
+          }
+        })
+        break
+      case 'verify_code':
+        setFields({
+          verify_code: {
+            errors: [new Error(errorAry[errorKey[0]])]
+          }
+        })
+        break
+      case 'password':
+        setFields({
+          password: {
+            errors: [new Error(errorAry[errorKey[0]])]
+          }
+        })
+        break
+      case 'confirm_password':
+        setFields({
+          confirm_password: {
+            errors: [new Error(errorAry[errorKey[0]])]
+          }
+        })
+        break
+    }
+  }
   onSubmit = () => { // 表单提交
-    let validateAry = ['username', 'mobile', 'verify_code', 'password', 'confirm_password']
-    const { getFieldError } = this.props.form
-    this.props.form.validateFields(async (error, values) => {
+    this.props.form.validateFields((error, values) => {
       if (!error) {
         Toast.loading('提交中...', 0)
         let newValues = { ...values, ...{ 'user_type': 1, 'password': md5(values['password']), confirm_password: md5(values['confirm_password']) }}
         if ('cordova' in window) {
-          cordova.getAppVersion.getVersionNumber().then(async (version) => {
+          cordova.getAppVersion.getVersionNumber().then((version) => {
             let newPostdata = {
               ...newValues,
               ...{
@@ -48,8 +90,46 @@ class Register extends Component {
                 }
               }
             }
-            let data = await api.auth.register(newPostdata) || false
-            if (data) {
+            axios({
+              method: 'post',
+              baseURL: baseUrl,
+              url: api.auth.registerUrl,
+              data: newPostdata,
+              headers: headersJson,
+              timeout: 60000
+            }).then((res) => {
+              let newdata = res.data
+              if (newdata.code === 0) {
+                let data = newdata.data
+                storage.set('Authorization', 'Bearer ' + data['access_token'])
+                storage.set('uid', data['uid'])
+                storage.set('username', data['username'])
+                Toast.hide()
+                Toast.success('注册成功', 1.5, () => {
+                  this.props.match.history.push(urls.HOME)
+                })
+              } else {
+                Toast.hide()
+                if (newdata.errors) {
+                  this.handleSetError(newValues, newdata.errors)
+                } else {
+                  Toast.fail(newdata.msg, 2.2)
+                }
+              }
+            })
+          })
+        } else {
+          axios({
+            method: 'post',
+            baseURL: baseUrl,
+            url: api.auth.registerUrl,
+            data: newValues,
+            headers: headersJson,
+            timeout: 60000
+          }).then((res) => {
+            let newdata = res.data
+            if (newdata.code === 0) {
+              let data = newdata.data
               storage.set('Authorization', 'Bearer ' + data['access_token'])
               storage.set('uid', data['uid'])
               storage.set('username', data['username'])
@@ -57,26 +137,15 @@ class Register extends Component {
               Toast.success('注册成功', 1.5, () => {
                 this.props.match.history.push(urls.HOME)
               })
+            } else {
+              Toast.hide()
+              if (newdata.errors) {
+                this.handleSetError(newValues, newdata.errors)
+              } else {
+                Toast.fail(newdata.msg, 2.2)
+              }
             }
           })
-        } else {
-          let data = await api.auth.register(newValues) || false
-          if (data) {
-            storage.set('Authorization', 'Bearer ' + data['access_token'])
-            storage.set('uid', data['uid'])
-            storage.set('username', data['username'])
-            Toast.hide()
-            Toast.success('注册成功', 1.5, () => {
-              this.props.match.history.push(urls.HOME)
-            })
-          }
-        }
-      } else {
-        for (let value of validateAry) {
-          if (error[value]) {
-            Toast.fail(getFieldError(value), 1)
-            return
-          }
         }
       }
     })
@@ -138,7 +207,8 @@ class Register extends Component {
                 {...getFieldProps('username', {
                   rules: [
                     { required: true, message: '请输入您的用户名' },
-                    { pattern: /^.{6,30}$/, message: '用户名至少6位字符' },
+                    { pattern: /^.{6,30}$/, message: '用户名至少6位字符 ' },
+                    { pattern: /^[\w@_-]{1,30}$/, message: '用户名只能包含字母,数字,下划线,减号和@' }
                   ],
                 })}
                 clear
@@ -149,6 +219,9 @@ class Register extends Component {
                   Toast.fail(getFieldError('username'), 1)
                 }}
               ></InputItem>
+              {
+                getFieldError('username') ? <p className={style['error-extra']}>{getFieldError('username')}</p> : null
+              }
             </List>
             <List>
               <InputItem
@@ -166,6 +239,9 @@ class Register extends Component {
                   Toast.fail(getFieldError('mobile'), 1)
                 }}
               ></InputItem>
+              {
+                getFieldError('mobile') ? <p className={style['error-extra']}>{getFieldError('mobile')}</p> : null
+              }
             </List>
             <div className={style['codeBox']}>
               <List>
@@ -185,6 +261,9 @@ class Register extends Component {
                   }}
                 >
                 </InputItem>
+                {
+                  getFieldError('verify_code') ? <p className={style['error-extra']}>{getFieldError('verify_code')}</p> : null
+                }
               </List>
               <Button className={ style['codebtn'] } style={{ position: 'absolute' }} disabled={this.state.codeDisabled} type='ghost' size='small' onClick={this.getCode.bind(this)}>
                 {
@@ -210,6 +289,9 @@ class Register extends Component {
                   Toast.fail(getFieldError('password'), 1)
                 }}
               ></InputItem>
+              {
+                getFieldError('password') ? <p className={style['error-extra']}>{getFieldError('password')}</p> : null
+              }
             </List>
             <List>
               <InputItem
@@ -229,6 +311,9 @@ class Register extends Component {
                   Toast.fail(getFieldError('confirm_password'), 1)
                 }}
               ></InputItem>
+              {
+                getFieldError('confirm_password') ? <p className={style['error-extra']}>{getFieldError('confirm_password')}</p> : null
+              }
             </List>
             <Button type='primary' className={ style['submitBtn'] } activeClassName={style['activeSubmitBtn']} onClick={this.onSubmit}>确 定</Button>
             <div className={style['register']}>
