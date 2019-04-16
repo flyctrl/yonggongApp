@@ -169,7 +169,7 @@ class ProjectDetail extends Component {
         </Content>
         <div style={{ display: showimg ? 'block' : 'none' }} onClick={this.handleImgMask} className={`showimg-box animated ${showimg ? 'fadeIn' : 'fadeOut'}`}>
           <img onClick={(e) => {
-            e.stopPropagation()
+            e.preventDefault()
           }} src={imgurlP} />
         </div>
       </div>
