@@ -115,4 +115,22 @@
   & :global(.am-list-line:after) {
     display: none!important;
   }
+  & .widthdraw-chanel {
+    & :global(.am-list-line:after) {
+      display: block!important;
+    }
+    & img {
+      display: block;
+      width: 150px;
+      height: 35px;
+    }
+    & :global(.am-list-content) {
+      padding: 10px 0;
+    }
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  html:not([data-scale]) .am-list-body div:not(:last-child) .am-list-line {
+  }
 }

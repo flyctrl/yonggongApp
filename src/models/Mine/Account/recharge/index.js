@@ -13,6 +13,15 @@ import { onBackKeyDown } from 'Contants/tooler'
 const Item = List.Item
 const Brief = Item.Brief
 const RadioItem = Radio.RadioItem
+const channelData = [{
+  label: '易宝支付',
+  value: 'yeepay',
+  src: require('Assets/yeepay.png')
+}, {
+  label: '连连支付',
+  value: 'lianlian',
+  src: require('Assets/lianlian.png')
+}]
 class Rechange extends Component {
   state = {
     amount: '',
@@ -20,7 +29,8 @@ class Rechange extends Component {
     cashValue: '',
     showlist: false,
     bankval: {},
-    banklist: []
+    banklist: [],
+    channelValue: 'yeepay'
   }
   onChange = (value) => {
     if (Number(value) <= 0) {
@@ -35,13 +45,27 @@ class Rechange extends Component {
       })
     }
   }
+  getUrl = () => {
+    let url = ''
+    if (process.env.NODE_ENV === 'production') {
+      url = 'https://yg.yaque365.com/Mine/Account/successPage'
+      if (TEST || CORDOVATEST) {
+        url = 'https://yg-test.yaque365.com/Mine/Account/successPage'
+      }
+    } else {
+      url = 'https://yg-test.yaque365.com/Mine/Account/successPage'
+    }
+    return url
+  }
   handleSubmit = async () => { // 充值确认按钮
     console.log('onsubmit')
-    let { bankval, cashValue } = this.state
+    let { bankval, cashValue, channelValue } = this.state
     const data = await api.Mine.account.recharge({
-      channel: 'yeepay',
+      channel: channelValue,
       amount: cashValue,
-      cardId: bankval['card_id']
+      card_id: bankval['card_id'],
+      source: 2,
+      return_url: this.getUrl()
     }) || false
     if (data) {
       if ('cordova' in window) {
@@ -141,9 +165,14 @@ class Rechange extends Component {
       </Content>
     </div>
   }
+  onChannelChange = (value) => {
+    this.setState({
+      channelValue: value
+    })
+  }
 
   render() {
-    const { bankval, hasError, cashValue, showlist } = this.state
+    const { bankval, hasError, cashValue, showlist, channelValue } = this.state
     return (
       <div>
         <div className='pageBox' style={{ display: showlist ? 'none' : 'block' }}>
@@ -174,6 +203,13 @@ class Rechange extends Component {
                 value={cashValue}
               ><span className={style['money']}>¥</span></InputItem>
               <Item className={style['account-money']}><span className={style['maxMoney']}></span></Item>
+              <List className={style['widthdraw-chanel']} renderHeader={() => '充值渠道'}>
+                {channelData.map(i => (
+                  <RadioItem key={i.value} checked={channelValue === i.value} onChange={() => this.onChannelChange(i.value)}>
+                    <img src={i.src} />
+                  </RadioItem>
+                ))}
+              </List>
               <Button type='primary' onClick={this.handleSubmit} className={ !hasError ? style['disabled-btn'] : style['primary-btn']} disabled={!hasError}>确认充值</Button>
             </div>
           </Content>

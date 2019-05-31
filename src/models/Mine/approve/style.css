@@ -1,0 +1,130 @@
+html:not([data-scale]) .approve-page :global(.am-list-body::before), html:not([data-scale]) .approve-page :global(.am-list-body::after) {
+  height: 0;
+}
+html:not([data-scale]) .approve-page :global(.am-tabs-default-bar-top .am-tabs-default-bar-tab::after) {
+  height: 0;
+}
+.approve-page {
+  & .approve-list {
+    width: 100%;
+    overflow-y: auto;
+    & :global(.am-list-body) {
+      background: transparent;
+    }
+    & dl {
+      background: #fff;
+      margin-top: 8px;
+      padding: 15px;
+      padding-bottom: 0;
+      & dt {
+        & .header-hd {
+          overflow: hidden;
+          & em {
+            float: left;
+            padding: 0 3px;
+            height: 17px;
+            border-radius: 2px;
+            line-height: 17px;
+            font-size: 12px;
+            color: #fff;
+            text-align: center;
+            margin-right: 7px;
+            &.purple {
+              background: #9B91FB;
+            }
+            &.lightred {
+              background: #FF528A;
+            }
+            &.blue {
+              background: #1298FC;
+            }
+            &.lightgreen {
+              background: #58D1B2;
+            }
+            &.orange {
+              background: #FF955D;
+            }
+            &.lightblue {
+              background: #66CFFD;
+            }
+            &.yellow {
+              background: #FFBE40;
+            }
+          }
+          & p {
+            float: left;
+            color: #333;
+            font-size: 15px;
+            width: 246px;
+            height: 18px;
+            line-height: 18px;
+          }
+          & span {
+            float: right;
+            font-size: 14px;
+            &.suc {
+              color: #00BECC;
+            }
+            &.reject {
+              color: #FA6B6D;
+            }
+            &.run {
+              color: #FF955D;
+            }
+          }
+        }
+        & .header-bd {
+          display: flex;
+          justify-content: space-between;
+          & span {
+            display: block;
+            color: #999999;
+            font-size: 13px;
+            height: 38px;
+            line-height: 38px;
+          }
+        }
+      }
+      & dd {
+        height: 44px;
+        justify-content: space-between;
+        & .info {
+          line-height: 44px;
+          color: #999;
+        }
+        & .btn {
+          height: 44px;
+          overflow: hidden;
+          & :global(.am-button) {
+            float: right;
+            margin-top: 7px;
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+  }
+  & .visaBtn {
+    position: fixed;
+    bottom: 50px;
+    right: 30px;
+    width: 62px;
+    height: 62px;
+    background: linear-gradient(0deg, rgba(0, 119, 255, 1) 1%, rgba(0, 180, 255, 1) 100%);
+    box-shadow: 0px 2px 9px 0px rgba(0, 89, 155, 0.52);
+    border-radius: 50%;
+    text-align: center;
+    & svg {
+      color: #fff;
+      font-size: 22px;
+      margin-top: 12px;
+    }
+    & p {
+      font-size: 12px;
+      text-align: center;
+      color: #fff;
+      height: 20px;
+      line-height: 20px;
+    }
+  }
+}

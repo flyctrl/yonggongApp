@@ -612,6 +612,41 @@ export default {
       postMobile(params) {
         return Fetch(prefix + '/worker/mobile', params, 'post', { showloading: false }) // 验证手机号
       },
+    },
+    approve: { // 审批管理
+      applyList(params) { // 我的发起
+        return Fetch(prefix + '/approval/apply/list', params, 'get')
+      },
+      approveList(params) { // 我的审批
+        return Fetch(prefix + '/approval/flow/list', params, 'get')
+      },
+      approveDetail(params) { // 审批详情
+        return Fetch(prefix + '/approval/flow/detail', params, 'get')
+      },
+      approveReview(params) { // 通过驳回
+        return FetchSave(prefix + '/approval/flow/review', params, 'post')
+      },
+      applyVisaForm(params) { // 申请填写签证单
+        return FetchSave(prefix + '/visaForm/apply', params, 'post')
+      },
+      visaOrderlist(params) { // 签证单可关联的订单列表
+        return Fetch(prefix + '/visaForm/order/list', params, 'get')
+      },
+      projectList(params) { // 审批设置项目列表
+        return Fetch(prefix + '/approval/config/project/list', params, 'get')
+      },
+      categoryList(params) { // 审批设置类别
+        return FetchSave(prefix + '/approval/category/list', params, 'get')
+      },
+      configDetail(params) { // 审批设置详情
+        return Fetch(prefix + '/approval/config/detail', params, 'get')
+      },
+      configEdit(params) { // 审批设置编辑
+        return FetchSave(prefix + '/approval/config/edit', params, 'post')
+      },
+      configSet(params) { // 设置审批设置
+        return FetchSave(prefix + '/approval/config/set', params, 'post')
+      }
     }
   },
   Home: {

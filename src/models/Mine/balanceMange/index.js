@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
-import { ListView, PullToRefresh, Tabs, Badge } from 'antd-mobile'
+import { ListView, PullToRefresh, Tabs, Badge, Button } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
@@ -9,7 +9,8 @@ import { worksheetType } from 'Contants/fieldmodel'
 const NUM_ROWS = 20
 let tabType = [
   { title: '工单结算' },
-  { title: '订单结算' }
+  { title: '订单结算' },
+  { title: '签证单结算' }
 ]
 const settleSheetStatus = {
   1: '待确认',
@@ -30,6 +31,11 @@ const badgeStatus = {
   2: 'warning',
   3: 'success',
   4: 'default'
+}
+const visaStatus = {
+  1: { title: '已结算', classname: 'green' },
+  2: { title: '未结算', classname: 'orage' },
+  3: { title: '已驳回', classname: 'red' }
 }
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
@@ -62,6 +68,26 @@ class BalanceMange extends Component {
         page: pIndex,
         pageSize: NUM_ROWS
       }) || false
+    } else if (tabIndex === 2 || tabIndex === '2') {
+      return await [{
+        id: 1,
+        title: '承接浙江亚雀科技公司项目分包',
+        status: 1,
+        date: '2019-09-09',
+        desc: ''
+      }, {
+        id: 2,
+        title: '承接浙江亚雀科技公司项目分包',
+        status: 2,
+        date: '2019-09-09',
+        desc: '不符合审核标准'
+      }, {
+        id: 2,
+        title: '承接浙江亚雀科技公司项目分包',
+        status: 3,
+        date: '2019-09-09',
+        desc: '不符合审核标准不符合不符这就是原因原因最长限制30个字符'
+      }]
     }
     if (data['currPageNo'] === 1 && data['list'].length === 0) {
       document.body.style.overflow = 'hidden'
@@ -155,6 +181,12 @@ class BalanceMange extends Component {
       this.props.match.history.push(`${urls.APPLYSETTLE}?orderno=${rowData['order_no']}&workSheetOrderNo=${rowData['worksheet_order_no']}&status=${rowData['status']}`)
     }
   }
+  handleVisaDetail = () => {
+    this.props.match.history.push(urls.VISABALANCEDETAIL)
+  }
+  handleVisaPay = () => {
+    this.props.match.history.push(urls.ADDTOBALANCED)
+  }
   render() {
     let { isLoading, nodata, tabIndex, dataSource } = this.state
     const footerShow = () => {
@@ -167,7 +199,27 @@ class BalanceMange extends Component {
       }
     }
     const row = (rowData, sectionID, rowID) => {
-      return (
+      return tabIndex === 2 || tabIndex === '2' ? (
+        <ul key={rowData['id']} className={style['visaList']}>
+          <li>
+            <div className={style['visa-hd']} onClick={this.handleVisaDetail}>
+              <div className={style['title']}>
+                <h4>{rowData['title']}</h4>
+                <em className={style[visaStatus[rowData['status']]['classname']]}>{visaStatus[rowData['status']]['title']}</em>
+              </div>
+              <time>申请日期：{rowData['date']}</time>
+            </div>
+            {
+              rowData['status'] !== 1 ? <div className={`${style['visa-bd']} my-top-border`}>
+                <div className={`${style['desc']} ellipsis2`}>
+                  驳回原因：{rowData['desc']}
+                </div>
+                <Button type='ghost' size='small' onClick={this.handleVisaPay}>去申请</Button>
+              </div> : null
+            }
+          </li>
+        </ul>
+      ) : (
         <dl key={rowData['id']} onClick={() => this.handleClick(rowData)}>
           <dt className='my-bottom-border'>
             <Badge className={rowData['worksheet_type'] === 2 ? `${style['typericon-2']} ${style['typericon']}` : rowData['worksheet_type'] === 1 ? `${style['typericon-1']} ${style['typericon']}` : rowData['worksheet_type'] === 3 ? `${style['typericon-3']} ${style['typericon']}` : `${style['typericon']}`} text={worksheetType[rowData['worksheet_type']]} text={worksheetType[rowData['worksheet_type']]} />
@@ -206,7 +258,7 @@ class BalanceMange extends Component {
               page={parseInt(tabIndex, 10)}
               tabBarTextStyle={{ fontSize: '.14rem', color: '#999999' }}
               tabBarActiveTextColor='#1298FC'
-              tabBarUnderlineStyle={{ borderColor: '#0098F5', width: '12%', marginLeft: '18.5%' }}
+              tabBarUnderlineStyle={{ borderColor: '#0098F5', width: '12%', marginLeft: '10.3%' }}
               onChange={this.handleTabsChange}
             >
               <ul className={style['balance-list']} style={{ height: '100%' }}>

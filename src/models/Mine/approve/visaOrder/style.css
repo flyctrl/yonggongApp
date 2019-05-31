@@ -1,0 +1,132 @@
+.pro-radio :global(.am-radio) {
+  padding: 3px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+html:not([data-scale]) .form-radio :global(.am-list-body::after), html:not([data-scale]) .form-proj :global(.am-list-body::after) {
+  height: 0;
+}
+.visalist {
+  margin-top: 10px;
+  & .form-proj {
+    & :global(.am-list-body) {
+      & :global(.am-list-item .am-list-line .am-list-extra) {
+        text-align: left;
+        flex-basis: 67.4%;
+      }
+    }
+  }
+  & .form-radio {
+    height: 44px;
+    & :global(.am-list-body) {
+      height: 44px;
+      padding-left: 15px;
+      overflow: hidden;
+      & .type {
+        float: left;
+        height: 44px;
+        width: 85px;
+        line-height: 44px;
+        color: #333;
+      }
+      & label {
+        float: left;
+        height: 44px;
+        line-height: 44px;
+        color: #333;
+        &:nth-child(2) {
+          margin-right: 18px;
+        }
+      }
+      & .pro-radio:nth-child(1) {
+        margin-right: 18px;
+      }
+      & .pro-radio {
+        display: inline-block;
+        & :global(.am-radio) {
+          width: 11px;
+          height: 11px;
+          padding: 2px;
+          margin-top: -2px;
+          background: #fff;
+          & :global(.am-radio-inner) {
+            width: 11px;
+            height: 11px;
+          }
+          & :global(.am-radio-inner:after) {
+            width: 5px;
+            height: 10px;
+            right: 5px;
+            border-color: #fff;
+          }
+        }
+        & :global(.am-radio-checked) {
+          background: #108ee9;
+          border-color: #108ee9;
+        }
+      }
+    }
+  }
+  & .form-date {
+    &:global(.am-list-item .am-list-line .am-list-extra) {
+      flex-basis: 67.4%;
+      text-align: left;
+    }
+  }
+  & .notice {
+    padding: 0 15px;
+    margin-top: 30px;
+    color: #999;
+    font-size: 13px;
+    & p {
+      line-height: 18px;
+    }
+  }
+  & .submitBtn {
+    display: block;
+    width: 90%;
+    height: 40px;
+    background: rgba(18,152,252,1);
+    box-shadow: 0px 2px 5px 0px rgba(5, 114, 196, 0.33);
+    border-radius: 20px;
+    margin: 0 auto;
+    color: #fff;
+    text-align: center;
+    line-height: 40px;
+    font-size: 14px;
+    margin-top: 50px;
+  }
+}
+
+.calendar-box {
+  height: 100%;
+  width: 100%;
+  & :global(.am-calendar){
+    & :global(.content) {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      & :global(.date-picker) {
+        position: absolute;
+        top: 30px;
+        left: 0;
+        right: 0;
+        bottom: 51px;
+        & :global(.wrapper) {
+          position: absolute;
+          top: 25px;
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
+      }
+      & :global(.confirm-panel) {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+      }
+    }
+  }
+}

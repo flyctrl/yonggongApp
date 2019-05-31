@@ -71,6 +71,11 @@ const menuData = [
     icon: 'icon-gongrenguanli',
     type: 11
   },
+  {
+    title: '审批',
+    icon: 'icon-gongrenguanli',
+    type: 14
+  }
 ]
 const menuRouter = {
   1: urls.MYORDER,
@@ -85,7 +90,8 @@ const menuRouter = {
   10: urls.PERSONSTRUCTURE,
   // 11: `${urls.FEEDBACK}?url=MINE`,
   11: urls.WORKERMANGE,
-  13: urls.BANKCARDLIST
+  13: urls.BANKCARDLIST,
+  14: urls.APPROVE
 }
 class Mine extends Component {
   constructor(props) {

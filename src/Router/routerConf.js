@@ -290,6 +290,14 @@ const BalanceDetail = Loadable({ // 结算详情
   loader: () => import(/* webpackChunkName: "balacedetail" */ '../models/Mine/balanceMange/balanceDetail'),
   loading: MyLoadingComponent
 })
+const VisaBalanceDetail = Loadable({ // 签证单结算详情
+  loader: () => import(/* webpackChunkName: "visabalacedetail" */ '../models/Mine/balanceMange/visaMange'),
+  loading: MyLoadingComponent
+})
+const AddtoBalance = Loadable({ // 结算追加工程款
+  loader: () => import(/* webpackChunkName: "addtobalance" */ '../models/Mine/balanceMange/visaMange/addtoForm'),
+  loading: MyLoadingComponent
+})
 const EnginReality = Loadable({ // 工程实况
   loader: () => import(/* webpackChunkName: "enginreality" */ '../models/Mine/enginReality'),
   loading: MyLoadingComponent
@@ -388,6 +396,26 @@ const ForgetPwd = Loadable({ // 忘记密码
 })
 const ResetPwd = Loadable({ // 重置密码
   loader: () => import(/* webpackChunkName: "resetpwd" */ '../models/Login/resetPwd'),
+  loading: MyLoadingComponent
+})
+const Approve = Loadable({ // 审批
+  loader: () => import(/* webpackChunkName: "approve" */ '../models/Mine/approve'),
+  loading: MyLoadingComponent
+})
+const VisaOrder = Loadable({ // 签证单
+  loader: () => import(/* webpackChunkName: "visaorder" */ '../models/Mine/approve/visaOrder'),
+  loading: MyLoadingComponent
+})
+const ApproveSet = Loadable({ // 审批设置
+  loader: () => import(/* webpackChunkName: "approveset" */ '../models/Mine/approve/setting'),
+  loading: MyLoadingComponent
+})
+const ApproveSetForm = Loadable({ // 审批设置
+  loader: () => import(/* webpackChunkName: "approvesetform" */ '../models/Mine/approve/setting/setForm'),
+  loading: MyLoadingComponent
+})
+const ApproveDetail = Loadable({ // 审批详情
+  loader: () => import(/* webpackChunkName: "approvedetail" */ '../models/Mine/approve/detail'),
   loading: MyLoadingComponent
 })
 
@@ -955,6 +983,22 @@ const routes = [
     showMenu: false,
     title: '结算详情'
   }, {
+    path: urls.VISABALANCEDETAIL,
+    exact: true,
+    component: VisaBalanceDetail,
+    parent: 'BalanceMange',
+    animated: true,
+    showMenu: false,
+    title: '签证单结算详情'
+  }, {
+    path: urls.ADDTOBALANCED,
+    exact: true,
+    component: AddtoBalance,
+    parent: 'BalanceMange',
+    animated: true,
+    showMenu: false,
+    title: '追加工程款'
+  }, {
     path: urls.ENGINREALITY,
     exact: true,
     component: EnginReality,
@@ -1154,6 +1198,51 @@ const routes = [
     animated: false,
     showMenu: false,
     title: '重置密码'
+  },
+  {
+    path: urls.APPROVE,
+    exact: true,
+    component: Approve,
+    parent: 'Mine',
+    animated: true,
+    showMenu: false,
+    title: '审批'
+  },
+  {
+    path: urls.VISAORDER,
+    exact: true,
+    component: VisaOrder,
+    parent: 'Approve',
+    animated: true,
+    showMenu: false,
+    title: '签证单'
+  },
+  {
+    path: urls.APPROVESET,
+    exact: true,
+    component: ApproveSet,
+    parent: 'Approve',
+    animated: true,
+    showMenu: false,
+    title: '审批设置'
+  },
+  {
+    path: urls.APPROVESETFORM,
+    exact: true,
+    component: ApproveSetForm,
+    parent: 'ApproveSet',
+    animated: true,
+    showMenu: false,
+    title: '审批流程'
+  },
+  {
+    path: urls.APPROVEDETAIL,
+    exact: true,
+    component: ApproveDetail,
+    parent: 'Approve',
+    animated: true,
+    showMenu: false,
+    title: '审批详情'
   },
   // {
   //   path: urls.SYSNOTICE,
