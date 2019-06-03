@@ -73,7 +73,7 @@ const menuData = [
   },
   {
     title: '审批',
-    icon: 'icon-gongrenguanli',
+    icon: 'icon-shenpi1',
     type: 14
   }
 ]
@@ -175,7 +175,6 @@ class Mine extends Component {
             }
           </ul>
         </Content>
-        }
       </div>
     )
   }
