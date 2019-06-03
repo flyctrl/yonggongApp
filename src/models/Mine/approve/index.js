@@ -43,9 +43,11 @@ class Approve extends Component {
       pageNos: 1,
       nodata: false,
       tabIndex: tooler.getQueryString('tabIndex') || 0,
+      isadmin: 0
     }
   }
   componentDidMount() {
+    this.getConfigCheck()
     let { tabIndex } = this.state
     const hei = this.state.height - 88.5
     this.genData(1, tabIndex).then((rdata) => {
@@ -57,6 +59,14 @@ class Approve extends Component {
         isLoading: false,
       })
     })
+  }
+  getConfigCheck = async () => {
+    let data = await api.Mine.approve.configCheck({}) || false
+    if (data) {
+      this.setState({
+        isadmin: data['is_admin']
+      })
+    }
   }
   getInitData = () => {
     let { tabIndex } = this.state
@@ -203,7 +213,7 @@ class Approve extends Component {
       ], 'default', null, ['填写驳回理由'])
   }
   render() {
-    let { isLoading, nodata, tabIndex, dataSource } = this.state
+    let { isLoading, nodata, tabIndex, dataSource, isadmin } = this.state
     const footerShow = () => {
       if (isLoading) {
         return null
@@ -250,9 +260,9 @@ class Approve extends Component {
           leftClick1={() => {
             this.props.match.history.go(-1)
           }}
-          rightTitle='设置'
+          rightTitle={isadmin === 1 ? '设置' : null}
           rightClick={() => {
-            this.props.match.history.push(urls.APPROVESET)
+            isadmin === 1 ? this.props.match.history.push(urls.APPROVESET) : null
           }}
         />
         <Content>

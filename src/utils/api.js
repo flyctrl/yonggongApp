@@ -661,6 +661,9 @@ export default {
       },
       configSet(params) { // 设置审批设置
         return FetchSave(prefix + '/approval/config/set', params, 'post')
+      },
+      configCheck(params) { // 审批设置人员权限校验
+        return Fetch(prefix + '/approval/config/check', params, 'get')
       }
     }
   },

@@ -141,7 +141,7 @@
   },
   "proxy": {
     "/api": {
-      "target": "http://rap.51selfspace.com/mockjsdata/1/api-test.yaque365.com",
+      "target": "http://api-test.yaque365.com",
       "changeOrigin": true,
       "pathRewrite": {
         "^/api": "/"
