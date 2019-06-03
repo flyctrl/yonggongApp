@@ -393,6 +393,21 @@ export default {
       },
       settleDetail(params) { // 结算管理详情
         return Fetch(prefix + '/worksheetManage/settleDetail', params, 'get')
+      },
+      applyList(params) { // 我申请的
+        return Fetch(prefix + '/visaForm/settle/apply/list', params, 'get')
+      },
+      payList(params) { // 我签发的
+        return Fetch(prefix + '/visaForm/settle/pay/list', params, 'get')
+      },
+      settleApply(params) { // 签证单申请结算
+        return FetchSave(prefix + '/visaForm/settle/apply', params, 'post')
+      },
+      settlePay(params) { // 签证单结算支付
+        return FetchSave(prefix + '/visaForm/settle/pay', params, 'post')
+      },
+      payVisaDetail(params) { // 结算签证单详情
+        return Fetch(prefix + '/visaForm/detail', params, 'get')
       }
     },
     companyAuth: {

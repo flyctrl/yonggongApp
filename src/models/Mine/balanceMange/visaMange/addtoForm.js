@@ -2,21 +2,34 @@ import React, { Component } from 'react'
 import { Header, Content } from 'Components'
 import { InputItem, Toast, TextareaItem, Button } from 'antd-mobile'
 import { createForm } from 'rc-form'
+import * as tooler from 'Contants/tooler'
+import api from 'Util/api'
 import style from './style.css'
 
 class AddtoForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      orderno: tooler.getQueryString('orderno')
     }
   }
   onErrorClick = (field) => {
     Toast.info(this.props.form.getFieldError(field).join('、'))
   }
   handleSubmit = () => {
+    let { orderno } = this.state
     this.props.form.validateFields({ force: true }, async (error, values) => {
       if (!error) {
         console.log(values)
+        let data = await api.Mine.balanceMange.settleApply({
+          ...values,
+          ...{ order_no: orderno }
+        }) || false
+        if (data) {
+          setTimeout(() => {
+            this.props.match.history.go(-1)
+          }, 1000)
+        }
       }
     })
   }

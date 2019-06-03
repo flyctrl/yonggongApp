@@ -6,30 +6,48 @@ import * as tooler from 'Contants/tooler'
 import api from 'Util/api'
 import style from './style.css'
 
+const visaJson = {
+  1: '领工人',
+  2: '项目指挥',
+  3: '区域主管负责人',
+  4: '生产项目经理'
+}
 // 1:'项目',2:'财务',3:'发票',4:'合同',5:'签证单'
 class SetForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
       prjno: tooler.getQueryString('prjno'),
+      isadd: tooler.getQueryString('isadd'),
       showStruct: false,
       choicetype: '',
-      proArry: [{
-        username: '小明',
-        uid: '2251919089205248',
-        avatar: 'https://img-test.yaque365.com/avatar/05/61/58/23/06_display_avatar.png?imageMogr2/auto-orient/thumbnail/!80x80r/quality/75/size-limit/100k!&e=1558924629&token=8bdavyGUDdSK57VQ13yOx2uKGW1s0xgsolAY3Llu:Hy5dTMuEi_vq-PCSmLUvqcYASII=&v=1889642863'
-      }],
+      proArry: [],
       financeArry: [],
       receiptArry: [],
       agreementArry: [],
       visaArry: [],
       visa1Arry: [],
       visa2Arry: [],
-      visa3Arry: []
+      visa3Arry: [],
+      proEdit: false,
+      financeEdit: false,
+      receiptEdit: false,
+      agreementEdit: false,
+      visaEdit: false,
+      proSave: false,
+      financeSave: false,
+      receiptSave: false,
+      agreementSave: false,
+      visaSave: false,
+      flag: tooler.getQueryString('flag') || null,
+      configno: {}
     }
   }
   componentDidMount() {
-    this.getDetail()
+    let { isadd } = this.state
+    if (isadd === '0') {
+      this.getDetail()
+    }
   }
   getDetail = async () => {
     let { prjno } = this.state
@@ -37,24 +55,50 @@ class SetForm extends Component {
       prj_no: prjno
     }) || false
     if (data) {
+      this.setState({
+        flag: data['flag'],
+        configno: data['config_no_data']
+      })
       Object.keys(data).filter((key) => {
         console.log('key:', key)
-        if (key === 1) {
+        if (key === 1 || key === '1') {
           this.setState({
-            proArry: data[key]
+            proArry: data[key],
+            proSave: data[key].length > 0
           })
-        } else if (key === 2) {
+        } else if (key === 2 || key === '2') {
           this.setState({
-            financeArry: data[key]
+            financeArry: data[key],
+            financeSave: data[key].length > 0
           })
-        } else if (key === 3) {
+        } else if (key === 3 || key === '3') {
           this.setState({
-            receiptArry: data[key]
+            receiptArry: data[key],
+            receiptSave: data[key].length > 0
           })
-        } else if (key === 4) {
+        } else if (key === 4 || key === '4') {
+          console.log(data[key])
           this.setState({
-            agreementArry: data[key]
+            agreementArry: data[key],
+            agreementSave: data[key].length > 0
           })
+        } else if (key === 5 || key === '5') {
+          console.log('visa:', data[key])
+          if (data[key].length > 0) {
+            if (data['flag'] === 0 || data['flag'] === '0') {
+              this.setState({
+                visa1Arry: [{ ...data[key][0], ...{ type: 'visa1', post: visaJson[2] }}],
+                visa2Arry: [{ ...data[key][1], ...{ type: 'visa2', post: visaJson[3] }}],
+                visa3Arry: [{ ...data[key][2], ...{ type: 'visa3', post: visaJson[4] }}],
+                visaSave: true
+              })
+            } else if (data['flag'] === 1 || data['flag'] === '1') {
+              this.setState({
+                visaArry: [{ ...data[key], ...{ type: 'visa', post: visaJson[1] }}],
+                visaSave: true
+              })
+            }
+          }
         }
       })
     }
@@ -70,7 +114,7 @@ class SetForm extends Component {
     let { choicetype, proArry, financeArry, receiptArry, agreementArry, visaArry, visa1Arry, visa2Arry, visa3Arry } = this.state
     let newary = {}
     newary = {
-      username: postjson.username,
+      name: postjson.username,
       uid: postjson.uid,
       avatar: postjson.avatar,
       type: choicetype
@@ -134,6 +178,7 @@ class SetForm extends Component {
           return false
         }
       }
+      newary = { ...newary, ...{ post: visaJson[1] }}
       visaArry.push(newary)
       this.setState({
         showStruct: false,
@@ -146,6 +191,7 @@ class SetForm extends Component {
           return false
         }
       }
+      newary = { ...newary, ...{ post: visaJson[2] }}
       visa1Arry.push(newary)
       this.setState({
         showStruct: false,
@@ -158,6 +204,7 @@ class SetForm extends Component {
           return false
         }
       }
+      newary = { ...newary, ...{ post: visaJson[3] }}
       visa2Arry.push(newary)
       this.setState({
         showStruct: false,
@@ -170,6 +217,7 @@ class SetForm extends Component {
           return false
         }
       }
+      newary = { ...newary, ...{ post: visaJson[4] }}
       visa3Arry.push(newary)
       this.setState({
         showStruct: false,
@@ -254,9 +302,12 @@ class SetForm extends Component {
     }
   }
   showVisaHeader = () => { // 签证单审批人显示
-    let { choicetype, visaArry, visa1Arry, visa2Arry, visa3Arry } = this.state
+    let { choicetype, visaArry, visa1Arry, visa2Arry, visa3Arry, flag, visaEdit, isadd } = this.state
     let newDom = []
     let newArry = []
+    if (flag !== null) {
+      newArry = [...visaArry, ...visa1Arry, ...visa2Arry, ...visa3Arry]
+    }
     if (choicetype === 'visa') {
       newArry = visaArry
     } else if (choicetype === 'visa1' || choicetype === 'visa2' || choicetype === 'visa3') {
@@ -269,7 +320,7 @@ class SetForm extends Component {
       visa3: '生产项目经理'
     }
     newArry.map((item, index) => {
-      newDom.push(<li key={item.uid} className={style['visali']}><img src={item.avatar} /><p>{typeJson[item.type]}</p><a className={style['closebtn']} onClick={() => this.handleDel(item.type, item)}>x</a></li>)
+      newDom.push(<li key={`visa${Math.random() * 100}${item.uid}`} className={style['visali']}><img src={item.avatar} /><p>{typeJson[item.type]}</p><a style={{ display: visaEdit || isadd === '1' ? 'block' : 'none' }} className={style['closebtn']} onClick={() => this.handleDel(item.type, item)}>x</a></li>)
     })
     return newDom
   }
@@ -279,8 +330,181 @@ class SetForm extends Component {
       choicetype: ''
     })
   }
+  handleClickEdit = (type) => {
+    if (type === 'pro') {
+      this.setState({
+        proEdit: true
+      })
+    } else if (type === 'finance') {
+      this.setState({
+        financeEdit: true
+      })
+    } else if (type === 'receipt') {
+      this.setState({
+        receiptEdit: true
+      })
+    } else if (type === 'agreement') {
+      this.setState({
+        agreementEdit: true
+      })
+    } else if (type === 'visa') {
+      this.setState({
+        visaEdit: true
+      })
+    }
+  }
+  getNewPostAry = (oldAry, type = 0) => {
+    let newAry = []
+    oldAry.map((item) => {
+      if (type === 5) {
+        newAry.push({ uid: item.uid, post: item.post })
+      } else {
+        newAry.push({ uid: item.uid })
+      }
+    })
+    return newAry
+  }
+  handleClickSubmit = async (type) => {
+    const { proArry, financeArry, receiptArry, agreementArry, visaArry, visa1Arry, visa2Arry, visa3Arry, configno, prjno, proSave, financeSave, receiptSave, agreementSave, visaSave } = this.state
+    if (type === 'pro') {
+      if (proSave) { // 编辑
+        let data = api.Mine.approve.configEdit({
+          config_no: configno[1],
+          user_list: this.getNewPostAry(proArry)
+        }) || false
+        if (data) {
+        }
+      } else { // 保存
+        let data = api.Mine.approve.configSet({
+          category_id: 1,
+          prj_no: prjno,
+          user_list: this.getNewPostAry(proArry)
+        }) || false
+        if (data) {
+        }
+      }
+      this.setState({
+        proEdit: false
+      })
+    } else if (type === 'finance') {
+      if (financeSave) { // 编辑
+        let data = api.Mine.approve.configEdit({
+          config_no: configno[2],
+          user_list: this.getNewPostAry(financeArry)
+        }) || false
+        if (data) {
+        }
+      } else { // 保存
+        let data = api.Mine.approve.configSet({
+          category_id: 2,
+          prj_no: prjno,
+          user_list: this.getNewPostAry(financeArry)
+        }) || false
+        if (data) {
+        }
+      }
+      this.setState({
+        financeEdit: false
+      })
+    } else if (type === 'receipt') {
+      if (receiptSave) { // 编辑
+        let data = api.Mine.approve.configEdit({
+          config_no: configno[3],
+          user_list: this.getNewPostAry(receiptArry)
+        }) || false
+        if (data) {
+        }
+      } else { // 保存
+        let data = api.Mine.approve.configSet({
+          category_id: 3,
+          prj_no: prjno,
+          user_list: this.getNewPostAry(receiptArry)
+        }) || false
+        if (data) {
+        }
+      }
+      this.setState({
+        receiptEdit: false
+      })
+    } else if (type === 'agreement') {
+      if (agreementSave) { // 编辑
+        let data = api.Mine.approve.configEdit({
+          config_no: configno[4],
+          user_list: this.getNewPostAry(agreementArry)
+        }) || false
+        if (data) {
+        }
+      } else { // 保存
+        let data = api.Mine.approve.configSet({
+          category_id: 4,
+          prj_no: prjno,
+          user_list: this.getNewPostAry(agreementArry)
+        }) || false
+        if (data) {
+        }
+      }
+      this.setState({
+        agreementEdit: false
+      })
+    } else if (type === 'visa') {
+      let { flag } = this.state
+      let newVisaArry = []
+      if (flag === 0 || flag === '0') {
+        if (visa1Arry.length === 0 || visa2Arry.length === 0 || visa3Arry.length === 0) {
+          Toast.fail('必须选择三位签证单审批人', 1)
+        } else {
+          newVisaArry.push(visa1Arry[0])
+          newVisaArry.push(visa2Arry[0])
+          newVisaArry.push(visa3Arry[0])
+        }
+      } else {
+        if (visaArry.length === 0) {
+          Toast.fail('请选择签证单审批人', 1)
+        } else {
+          newVisaArry.push(visaArry)
+        }
+      }
+      console.log('newVisaArry:', newVisaArry)
+      if (visaSave) { // 编辑
+        let data = api.Mine.approve.configEdit({
+          config_no: configno[5],
+          user_list: this.getNewPostAry(newVisaArry, 5)
+        }) || false
+        if (data) {
+        }
+      } else { // 保存
+        let data = api.Mine.approve.configSet({
+          category_id: 5,
+          prj_no: prjno,
+          user_list: this.getNewPostAry(newVisaArry, 5)
+        }) || false
+        if (data) {
+        }
+      }
+      this.setState({
+        visaEdit: false
+      })
+    }
+  }
   render() {
-    let { showStruct, proArry, financeArry, receiptArry, agreementArry, visa1Arry, visa2Arry, visa3Arry } = this.state
+    let { flag,
+      showStruct,
+      proArry,
+      financeArry,
+      receiptArry,
+      agreementArry,
+      visa1Arry,
+      visa2Arry,
+      visa3Arry,
+      visaArry,
+      proEdit,
+      financeEdit,
+      receiptEdit,
+      agreementEdit,
+      visaEdit,
+      isadd
+    } = this.state
+    console.log('visa1Arry: ', visa1Arry)
     return <div>
       <div className='pageBox gray'>
         <Header
@@ -299,19 +523,21 @@ class SetForm extends Component {
                 <ul>
                   {
                     proArry.map((item, index) => {
-                      return <li key={item.uid}>
+                      return <li key={`pro${item.uid}`}>
                         <img src={item.avatar} />
-                        <a className={style['closebtn']} onClick={() => this.handleDel('pro', item)}>x</a>
+                        <a style={{ display: proEdit || isadd === '1' ? 'block' : 'none' }} className={style['closebtn']} onClick={() => this.handleDel('pro', item)}>x</a>
                       </li>
                     })
                   }
                 </ul>
                 {
-                  proArry.length < 5 ? <a className={`${style['addbtn']} ${proArry.length > 0 ? style['more'] : ''}`} onClick={() => this.handleAddItem('pro')}><NewIcon type='icon-add-default' /></a> : null
+                  proArry.length < 5 && (proEdit || isadd === '1') ? <a className={`${style['addbtn']} ${proArry.length > 0 ? style['more'] : ''}`} onClick={() => this.handleAddItem('pro')}><NewIcon type='icon-add-default' /></a> : null
                 }
               </div>
               <div className={`${style['examine-foot']} my-top-border`}>
-                <Button type='primary' size='small'>提交</Button>
+                {
+                  proEdit || isadd === '1' ? <Button type='primary' onClick={() => this.handleClickSubmit('pro')} size='small'>提交</Button> : <Button type='primary' onClick={() => this.handleClickEdit('pro')} size='small'>编辑</Button>
+                }
               </div>
             </dd>
           </dl>
@@ -322,19 +548,21 @@ class SetForm extends Component {
                 <ul>
                   {
                     financeArry.map((item, index) => {
-                      return <li key={item.uid}>
+                      return <li key={`finance${item.uid}`}>
                         <img src={item.avatar} />
-                        <a className={style['closebtn']} onClick={() => this.handleDel('finance', item)}>x</a>
+                        <a style={{ display: financeEdit || isadd === '1' ? 'block' : 'none' }} className={style['closebtn']} onClick={() => this.handleDel('finance', item)}>x</a>
                       </li>
                     })
                   }
                 </ul>
                 {
-                  financeArry.length < 5 ? <a className={`${style['addbtn']} ${financeArry.length > 0 ? style['more'] : ''}`} onClick={() => this.handleAddItem('finance')}><NewIcon type='icon-add-default' /></a> : null
+                  financeArry.length < 5 && (financeEdit || isadd === '1') ? <a className={`${style['addbtn']} ${financeArry.length > 0 ? style['more'] : ''}`} onClick={() => this.handleAddItem('finance')}><NewIcon type='icon-add-default' /></a> : null
                 }
               </div>
               <div className={`${style['examine-foot']} my-top-border`}>
-                <Button type='primary' size='small'>提交</Button>
+                {
+                  financeEdit || isadd === '1' ? <Button type='primary' onClick={() => this.handleClickSubmit('finance')} size='small'>提交</Button> : <Button type='primary' onClick={() => this.handleClickEdit('finance')} size='small'>编辑</Button>
+                }
               </div>
             </dd>
           </dl>
@@ -345,19 +573,21 @@ class SetForm extends Component {
                 <ul>
                   {
                     receiptArry.map((item, index) => {
-                      return <li key={item.uid}>
+                      return <li key={`receipt${item.uid}`}>
                         <img src={item.avatar} />
-                        <a className={style['closebtn']} onClick={() => this.handleDel('receipt', item)}>x</a>
+                        <a style={{ display: receiptEdit || isadd === '1' ? 'block' : 'none' }} className={style['closebtn']} onClick={() => this.handleDel('receipt', item)}>x</a>
                       </li>
                     })
                   }
                 </ul>
                 {
-                  receiptArry.length < 5 ? <a className={`${style['addbtn']} ${receiptArry.length > 0 ? style['more'] : ''}`} onClick={() => this.handleAddItem('receipt')}><NewIcon type='icon-add-default' /></a> : null
+                  receiptArry.length < 5 && (receiptEdit || isadd === '1') ? <a className={`${style['addbtn']} ${receiptArry.length > 0 ? style['more'] : ''}`} onClick={() => this.handleAddItem('receipt')}><NewIcon type='icon-add-default' /></a> : null
                 }
               </div>
               <div className={`${style['examine-foot']} my-top-border`}>
-                <Button type='primary' size='small'>提交</Button>
+                {
+                  receiptEdit || isadd === '1' ? <Button type='primary' onClick={() => this.handleClickSubmit('receipt')} size='small'>提交</Button> : <Button type='primary' onClick={() => this.handleClickEdit('receipt')} size='small'>编辑</Button>
+                }
               </div>
             </dd>
           </dl>
@@ -368,19 +598,21 @@ class SetForm extends Component {
                 <ul>
                   {
                     agreementArry.map((item, index) => {
-                      return <li key={item.uid}>
+                      return <li key={`agreement${item.uid}`}>
                         <img src={item.avatar} />
-                        <a className={style['closebtn']} onClick={() => this.handleDel('agreement', item)}>x</a>
+                        <a style={{ display: agreementEdit || isadd === '1' ? 'block' : 'none' }} className={style['closebtn']} onClick={() => this.handleDel('agreement', item)}>x</a>
                       </li>
                     })
                   }
                 </ul>
                 {
-                  agreementArry.length < 5 ? <a className={`${style['addbtn']} ${agreementArry.length > 0 ? style['more'] : ''}`} onClick={() => this.handleAddItem('agreement')}><NewIcon type='icon-add-default' /></a> : null
+                  agreementArry.length < 5 && (agreementEdit || isadd === '1') ? <a className={`${style['addbtn']} ${agreementArry.length > 0 ? style['more'] : ''}`} onClick={() => this.handleAddItem('agreement')}><NewIcon type='icon-add-default' /></a> : null
                 }
               </div>
               <div className={`${style['examine-foot']} my-top-border`}>
-                <Button type='primary' size='small'>提交</Button>
+                {
+                  agreementEdit || isadd === '1' ? <Button type='primary' onClick={() => this.handleClickSubmit('agreement')} size='small'>提交</Button> : <Button type='primary' onClick={() => this.handleClickEdit('agreement')} size='small'>编辑</Button>
+                }
               </div>
             </dd>
           </dl>
@@ -394,15 +626,15 @@ class SetForm extends Component {
                   }
                 </ul>
                 {
-                  // visaArry.length < 1 ? <div className={`${style['visabtn']} ${visaArry.length > 0 ? style['more'] : ''}`}>
-                  //   <p>
-                  //     <a className={`${style['addbtn']}`} onClick={() => this.handleAddItem('visa')}><NewIcon type='icon-add-default' /></a>
-                  //     <span>领工人</span>
-                  //   </p>
-                  // </div> : null
+                  visaArry.length < 1 && (flag === 1 || flag === '1') && (visaEdit || isadd === '1') ? <div className={`${style['visabtn']} ${visaArry.length > 0 ? style['more'] : ''}`}>
+                    <p>
+                      <a className={`${style['addbtn']}`} onClick={() => this.handleAddItem('visa')}><NewIcon type='icon-add-default' /></a>
+                      <span>领工人</span>
+                    </p>
+                  </div> : null
                 }
                 {
-                  <div className={`${style['visabtn']} ${style['morevisabtn']}`}>
+                  (flag === 0 || flag === '0') && (visaEdit || isadd === '1') ? <div className={`${style['visabtn']} ${style['morevisabtn']}`}>
                     {
                       visa1Arry.length < 1 ? <p>
                         <a className={`${style['addbtn']}`} onClick={() => this.handleAddItem('visa1')}><NewIcon type='icon-add-default' /></a>
@@ -421,11 +653,13 @@ class SetForm extends Component {
                         <span>生产项目经理</span>
                       </p> : null
                     }
-                  </div>
+                  </div> : null
                 }
               </div>
               <div className={`${style['examine-foot']} my-top-border`}>
-                <Button type='primary' size='small'>提交</Button>
+                {
+                  visaEdit || isadd === '1' ? <Button type='primary' onClick={() => this.handleClickSubmit('visa')} size='small'>提交</Button> : <Button type='primary' onClick={() => this.handleClickEdit('visa')} size='small'>编辑</Button>
+                }
               </div>
             </dd>
           </dl>

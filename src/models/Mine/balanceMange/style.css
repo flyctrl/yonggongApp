@@ -157,7 +157,7 @@
         background: #fff;
         margin-top: 10px;
         & .visa-hd {
-          height: 70px;
+          height: 75px;
           padding: 0 15px;
           & .title {
             display: flex;
@@ -168,6 +168,8 @@
               color: #333;
               font-size: 15px;
               line-height: 30px;
+              height: 30px;
+              width: 266px;
             }
             & em {
               display: block;
@@ -184,10 +186,21 @@
               }
             }
           }
-          & time {
-            display: block;
-            color: #999;
-            font-size: 13px;
+          & .visa-date {
+            display: flex;
+            justify-content: space-between;
+            height: 24px;
+            line-height: 24px;
+            & time {
+              display: block;
+              color: #999;
+              font-size: 13px;
+            }
+            & span {
+              font-size: 14px;
+              color: #999;
+              display: block;
+            }
           }
         }
         & .visa-bd {

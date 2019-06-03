@@ -40,7 +40,7 @@ class ApproveSet extends Component {
     })
   }
   handleClickList = (rowData) => {
-    this.props.match.history.push(`${urls.APPROVESETFORM}?prjno=${rowData['prj_no']}`)
+    this.props.match.history.push(`${urls.APPROVESETFORM}?prjno=${rowData['prj_no']}&isadd=0`)
   }
   handleShowProject = () => {
     this.setState({
