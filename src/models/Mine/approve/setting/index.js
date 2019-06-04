@@ -57,11 +57,11 @@ class ApproveSet extends Component {
     this.setState({
       showpro: false
     }, () => {
-      this.props.match.history.push(urls.APPROVESETFORM)
+      this.props.match.history.push(`${urls.APPROVESETFORM}?prjno=${postjson['prj_no']}&isadd=1&flag=${postjson['flag']}`)
     })
   }
   genData = async (pIndex = 1) => {
-    let data = await api.Mine.approve.visaOrderlist({
+    let data = await api.Mine.approve.projectList({
       limit: NUM_ROWS,
       page: pIndex
     }) || false
@@ -131,7 +131,7 @@ class ApproveSet extends Component {
     }
     const row = (rowData, sectionID, rowID) => {
       return (
-        <Item arrow='horizontal' key={rowData['prj_no']} onClick={() => this.handleClickList(rowData)}>{rowData['title']}</Item>
+        <Item arrow='horizontal' key={rowData['prj_no']} onClick={() => this.handleClickList(rowData)}>{rowData['prj_name']}</Item>
       )
     }
     return <div><div className='pageBox gray'>

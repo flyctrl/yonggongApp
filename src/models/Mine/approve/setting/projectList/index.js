@@ -32,7 +32,10 @@ class ClassifyList extends Component {
     this.setState({
       isloading: true
     })
-    let data = await api.Mine.projectMange.projectList({}) || []
+    let data = await api.Mine.approve.projectAddList({
+      limit: 200,
+      page: 1
+    }) || []
     if (data) {
       this.setState({
         datasource: data,
@@ -46,7 +49,7 @@ class ClassifyList extends Component {
       Toast.offline('未选择项目或暂无项目', 2)
     } else {
       let checkJson = datasource.find(item => {
-        return item['value'] === value
+        return item['prj_no'] === value
       })
       this.props.onSubmit(checkJson)
     }
@@ -68,8 +71,8 @@ class ClassifyList extends Component {
         {
           datasource.length !== 0 && !isloading ? <List renderHeader={() => '请选择需要添加的项目'}>
             {datasource.map(i => (
-              <RadioItem key={i['value']} checked={value === i['value']} onChange={() => this.onChange(i['value'])}>
-                {i['label']}
+              <RadioItem key={i['prj_no']} checked={value === i['prj_no']} onChange={() => this.onChange(i['prj_no'])}>
+                {i['prj_name']}
               </RadioItem>
             ))}
           </List> : datasource.length === 0 && !isloading ? <DefaultPage click={() => { this.props.match.history.push(urls.CREATEPROJECT) }} type='noitems' /> : ''

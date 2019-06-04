@@ -227,7 +227,7 @@ class visaOrder extends Component {
           </div>
         </div>
         {
-          showOrderlist ? <OrderList onClose={() => this.handleCloseOrder} onSubmit={(postjson) => this.handleOrderSubmit(postjson)} /> : null
+          showOrderlist ? <OrderList onClose={this.handleCloseOrder} onSubmit={(postjson) => this.handleOrderSubmit(postjson)} /> : null
         }
       </div>
     )

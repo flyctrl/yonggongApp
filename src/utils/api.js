@@ -664,6 +664,9 @@ export default {
       },
       configCheck(params) { // 审批设置人员权限校验
         return Fetch(prefix + '/approval/config/check', params, 'get')
+      },
+      projectAddList(params) { // 添加项目的列表
+        return Fetch(prefix + '/approval/project/list', params, 'get')
       }
     }
   },

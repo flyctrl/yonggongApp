@@ -246,7 +246,7 @@ class BalanceMange extends Component {
               </div>
             </div>
             {
-              (rowData['status'] === 1 || rowData['status'] === 4) && (tabIndex === 2 || tabIndex === '2') ? <div style={{ 'justifyContent': rowData['status'] === 1 ? 'flex-end' : 'space-between' }} className={`${style['visa-bd']} my-top-border`}>
+              (rowData['status'] === 1 || rowData['status'] === 4) && (tabIndex === 2 || tabIndex === '2') && rowData['reject_reason'] !== '' ? <div style={{ 'justifyContent': rowData['status'] === 1 ? 'flex-end' : 'space-between' }} className={`${style['visa-bd']} my-top-border`}>
                 {
                   rowData['status'] === 4 ? <div className={`${style['desc']} ellipsis2`}>
                   驳回原因：{rowData['reject_reason']}
@@ -256,7 +256,7 @@ class BalanceMange extends Component {
               </div> : null
             }
             {
-              rowData['pay_status'] === 1 && (tabIndex === 3 || tabIndex === '3') ? <div className={`${style['visa-bd']} my-top-border`}>
+              rowData['pay_status'] === 1 && (tabIndex === 3 || tabIndex === '3') && rowData['reason'] !== '' ? <div className={`${style['visa-bd']} my-top-border`}>
                 {
                   rowData['reason'] !== '' ? <div className={`${style['desc']} ellipsis2`}>
                     追加原因：{rowData['reason']}

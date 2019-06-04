@@ -234,7 +234,6 @@ class Approve extends Component {
             </div>
             <div className={style['header-bd']}>
               <span>申请日期：{rowData['date']}</span>
-              <span>申请金额：37589元</span>
             </div>
           </dt>
           <dd className='my-top-border' style={{ display: rowData['remark'] !== '' || ((tabIndex === 1 || tabIndex === '1') && rowData['status'] === 1) ? 'flex' : 'none' }}>

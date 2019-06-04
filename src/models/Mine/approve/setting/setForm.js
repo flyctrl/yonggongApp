@@ -7,7 +7,7 @@ import api from 'Util/api'
 import style from './style.css'
 
 const visaJson = {
-  1: '领工人',
+  1: '领工员',
   2: '项目指挥',
   3: '区域主管负责人',
   4: '生产项目经理'
@@ -94,7 +94,7 @@ class SetForm extends Component {
               })
             } else if (data['flag'] === 1 || data['flag'] === '1') {
               this.setState({
-                visaArry: [{ ...data[key], ...{ type: 'visa', post: visaJson[1] }}],
+                visaArry: [{ ...data[key][0], ...{ type: 'visa', post: visaJson[1] }}],
                 visaSave: true
               })
             }
@@ -314,13 +314,13 @@ class SetForm extends Component {
       newArry = [...visa1Arry, ...visa2Arry, ...visa3Arry]
     }
     let typeJson = {
-      visa: '领工人',
+      visa: '领工员',
       visa1: '项目指挥',
       visa2: '区域主管负责人',
       visa3: '生产项目经理'
     }
     newArry.map((item, index) => {
-      newDom.push(<li key={`visa${Math.random() * 100}${item.uid}`} className={style['visali']}><img src={item.avatar} /><p>{typeJson[item.type]}</p><a style={{ display: visaEdit || isadd === '1' ? 'block' : 'none' }} className={style['closebtn']} onClick={() => this.handleDel(item.type, item)}>x</a></li>)
+      newDom.push(<li key={`visa${Math.random() * 100}${item.uid}`} className={style['visali']}><img src={item.avatar} /><span>{item.name}</span><p>{typeJson[item.type]}</p><a style={{ display: visaEdit || isadd === '1' ? 'block' : 'none' }} className={style['closebtn']} onClick={() => this.handleDel(item.type, item)}>x</a></li>)
     })
     return newDom
   }
@@ -461,7 +461,7 @@ class SetForm extends Component {
         if (visaArry.length === 0) {
           Toast.fail('请选择签证单审批人', 1)
         } else {
-          newVisaArry.push(visaArry)
+          newVisaArry.push(visaArry[0])
         }
       }
       console.log('newVisaArry:', newVisaArry)
@@ -504,7 +504,9 @@ class SetForm extends Component {
       visaEdit,
       isadd
     } = this.state
-    console.log('visa1Arry: ', visa1Arry)
+    console.log('visaArry: ', visaArry)
+    console.log('flag:', flag)
+    console.log('isadd:', isadd)
     return <div>
       <div className='pageBox gray'>
         <Header
@@ -525,6 +527,7 @@ class SetForm extends Component {
                     proArry.map((item, index) => {
                       return <li key={`pro${item.uid}`}>
                         <img src={item.avatar} />
+                        <span>{item.name}</span>
                         <a style={{ display: proEdit || isadd === '1' ? 'block' : 'none' }} className={style['closebtn']} onClick={() => this.handleDel('pro', item)}>x</a>
                       </li>
                     })
@@ -550,6 +553,7 @@ class SetForm extends Component {
                     financeArry.map((item, index) => {
                       return <li key={`finance${item.uid}`}>
                         <img src={item.avatar} />
+                        <span>{item.name}</span>
                         <a style={{ display: financeEdit || isadd === '1' ? 'block' : 'none' }} className={style['closebtn']} onClick={() => this.handleDel('finance', item)}>x</a>
                       </li>
                     })
@@ -575,6 +579,7 @@ class SetForm extends Component {
                     receiptArry.map((item, index) => {
                       return <li key={`receipt${item.uid}`}>
                         <img src={item.avatar} />
+                        <span>{item.name}</span>
                         <a style={{ display: receiptEdit || isadd === '1' ? 'block' : 'none' }} className={style['closebtn']} onClick={() => this.handleDel('receipt', item)}>x</a>
                       </li>
                     })
@@ -600,6 +605,7 @@ class SetForm extends Component {
                     agreementArry.map((item, index) => {
                       return <li key={`agreement${item.uid}`}>
                         <img src={item.avatar} />
+                        <span>{item.name}</span>
                         <a style={{ display: agreementEdit || isadd === '1' ? 'block' : 'none' }} className={style['closebtn']} onClick={() => this.handleDel('agreement', item)}>x</a>
                       </li>
                     })
@@ -629,7 +635,7 @@ class SetForm extends Component {
                   visaArry.length < 1 && (flag === 1 || flag === '1') && (visaEdit || isadd === '1') ? <div className={`${style['visabtn']} ${visaArry.length > 0 ? style['more'] : ''}`}>
                     <p>
                       <a className={`${style['addbtn']}`} onClick={() => this.handleAddItem('visa')}><NewIcon type='icon-add-default' /></a>
-                      <span>领工人</span>
+                      <span>领工员</span>
                     </p>
                   </div> : null
                 }
