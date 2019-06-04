@@ -656,7 +656,7 @@ class SetForm extends Component {
                     {
                       visa3Arry.length < 1 ? <p>
                         <a className={`${style['addbtn']}`} onClick={() => this.handleAddItem('visa3')}><NewIcon type='icon-add-default' /></a>
-                        <span>生产项目经理</span>
+                        <span>生产/项目经理</span>
                       </p> : null
                     }
                   </div> : null

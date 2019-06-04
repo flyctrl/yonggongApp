@@ -13,7 +13,7 @@ const tabType = [
 ]
 const typeJson = {
   'reviewTaker': { title: '承接', icon: 'purple' },
-  'pubWorksheet': { title: '发包', icon: 'lightred' },
+  'pubWorksheet': { title: '工单', icon: 'lightred' },
   'paySalary': { title: '工资', icon: 'blue' },
   'payEngineering': { title: '工程款', icon: 'orange' },
   'payVisa': { title: '签证单', icon: 'lightgreen' },

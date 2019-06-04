@@ -62,7 +62,7 @@ class ApproveDetail extends Component {
         hdDom = <dl className={style['pubwork']}>
           <dt className='my-bottom-border'>
             <div className={style['header-info']}>
-              <em className={[style['lightred']]}>发包</em>
+              <em className={[style['lightred']]}>工单</em>
               <span className='ellipsis'>{headerJson['title']}</span>
               <NewIcon type='icon-youjiantou' />
             </div>
