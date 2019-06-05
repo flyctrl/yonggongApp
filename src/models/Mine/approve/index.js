@@ -169,6 +169,10 @@ class Approve extends Component {
     let { tabIndex } = this.state
     if (tabIndex === 1 || tabIndex === '1') {
       this.props.match.history.push(`${urls.APPROVEDETAIL}?type=${rowData['category_code']}&approvalno=${rowData['approval_no']}`)
+    } else if (tabIndex === 0 || tabIndex === '0') {
+      if (rowData['visa_no']) {
+        this.props.match.history.push(`${urls.VISABALANCEDETAIL}?type=${rowData['visa_type']}&visano=${rowData['visa_no']}`)
+      }
     }
   }
   render() {

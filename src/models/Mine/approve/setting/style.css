@@ -46,8 +46,6 @@
     & .examine-bd {
       padding: 10px 15px;
       overflow: hidden;
-      position: relative;
-      height: 94px;
       & ul {
         float: left;
         & li {

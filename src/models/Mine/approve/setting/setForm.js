@@ -87,9 +87,9 @@ class SetForm extends Component {
           if (data[key].length > 0) {
             if (data['flag'] === 0 || data['flag'] === '0') {
               this.setState({
-                visa1Arry: [{ ...data[key][0], ...{ type: 'visa1', post: visaJson[2] }}],
-                visa2Arry: [{ ...data[key][1], ...{ type: 'visa2', post: visaJson[3] }}],
-                visa3Arry: [{ ...data[key][2], ...{ type: 'visa3', post: visaJson[4] }}],
+                visa1Arry: [{ ...data[key][2], ...{ type: 'visa1', post: visaJson[2] }}],
+                visa2Arry: [{ ...data[key][0], ...{ type: 'visa2', post: visaJson[3] }}],
+                visa3Arry: [{ ...data[key][1], ...{ type: 'visa3', post: visaJson[4] }}],
                 visaSave: true
               })
             } else if (data['flag'] === 1 || data['flag'] === '1') {
@@ -311,7 +311,7 @@ class SetForm extends Component {
     if (choicetype === 'visa') {
       newArry = visaArry
     } else if (choicetype === 'visa1' || choicetype === 'visa2' || choicetype === 'visa3') {
-      newArry = [...visa1Arry, ...visa2Arry, ...visa3Arry]
+      newArry = [...visa2Arry, ...visa3Arry, ...visa1Arry]
     }
     let typeJson = {
       visa: '领工员',
@@ -473,9 +473,9 @@ class SetForm extends Component {
         if (visa1Arry.length === 0 || visa2Arry.length === 0 || visa3Arry.length === 0) {
           Toast.fail('必须选择三位签证单审批人', 1)
         } else {
-          newVisaArry.push(visa1Arry[0])
           newVisaArry.push(visa2Arry[0])
           newVisaArry.push(visa3Arry[0])
+          newVisaArry.push(visa1Arry[0])
         }
       } else {
         if (visaArry.length === 0) {
