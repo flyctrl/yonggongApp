@@ -117,9 +117,9 @@ class ApplySettle extends Component {
   render() {
     let { dataSource, amount, isloading, status, payWay } = this.state
     let statusDom = {
-      1: <div className={`${style['btn-box']} ${style['two-btn']}`}>
+      1: dataSource['is_approve'] === 0 ? <div className={`${style['btn-box']} ${style['two-btn']}`}>
         <Button type='warning' onClick={this.handleReject}>驳回</Button><Button type='primary' onClick={this.handleSure}>确认</Button>
-      </div>,
+      </div> : '',
       2: payWay === 1 ? <div className={style['btn-box']}>
         <Button type='primary' onClick={this.handleApply}>确认结算</Button>
       </div> : '',

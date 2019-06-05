@@ -386,7 +386,8 @@ class SetForm extends Component {
         if (data) {
           this.setState({
             proSave: true,
-            proEdit: false
+            proEdit: false,
+            configno: data['config_no_data']
           })
         }
       }
@@ -410,7 +411,8 @@ class SetForm extends Component {
         if (data) {
           this.setState({
             financeEdit: false,
-            financeSave: true
+            financeSave: true,
+            configno: data['config_no_data']
           })
         }
       }
@@ -434,7 +436,8 @@ class SetForm extends Component {
         if (data) {
           this.setState({
             receiptEdit: false,
-            receiptSave: true
+            receiptSave: true,
+            configno: data['config_no_data']
           })
         }
       }
@@ -458,7 +461,8 @@ class SetForm extends Component {
         if (data) {
           this.setState({
             agreementEdit: false,
-            agreementSave: true
+            agreementSave: true,
+            configno: data['config_no_data']
           })
         }
       }
@@ -500,7 +504,8 @@ class SetForm extends Component {
         if (data) {
           this.setState({
             visaEdit: false,
-            visaSave: true
+            visaSave: true,
+            configno: data['config_no_data']
           })
         }
       }
