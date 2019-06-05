@@ -106,7 +106,7 @@ class ApproveDetail extends Component {
             </div>
             <p className={`${style['desc']} ellipsis`}>所属项目：{headerJson['prj_name']}</p>
           </dt>
-          <dd><span>结算工程量：{headerJson['settle_workload']}</span><a className={style['detail-btn']} onClick={() => this.handleClickDetail(headerJson)}>结算人员<NewIcon type='icon-youjiantou' /></a></dd>
+          <dd><span>结算工程量：{headerJson['settle_workload']}</span><a className={style['detail-btn']} onClick={() => this.handleClickDetail(headerJson)}>结算记录<NewIcon type='icon-youjiantou' /></a></dd>
         </dl>
         break
       case 'payEngineering': // 工程款 无
@@ -206,7 +206,7 @@ class ApproveDetail extends Component {
     }) || false
     if (data) {
       setTimeout(() => {
-        this.getInitData()
+        this.getDetail()
       }, 600)
     }
   }
@@ -235,7 +235,7 @@ class ApproveDetail extends Component {
               if (data) {
                 resolve()
                 setTimeout(() => {
-                  this.getInitData()
+                  this.getDetail()
                 }, 600)
               }
               resolve()

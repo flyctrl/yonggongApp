@@ -545,8 +545,8 @@ export default {
       contractDetail(params) { // 合同详情
         return Fetch(prefix + '/contract/show', params, 'get')
       },
-      contractonfirm(params) { // 合同同意
-        return Fetch(prefix + '/contract/confirm', params, 'get')
+      contractConfirm(params) { // 合同同意
+        return FetchSave(prefix + '/contract/confirm', params, 'post')
       }
     },
     checkDetails: {
