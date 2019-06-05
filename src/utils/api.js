@@ -487,6 +487,9 @@ export default {
       },
       editAddressDetail(params) { // 编辑时的地址详情
         return Fetch(prefix + '/invoice/express/edit', params, 'get')
+      },
+      invoiceProList(params) { // 项目列表
+        return Fetch(prefix + '/invoice/project/list', params, 'get')
       }
     },
     Personaldara: { // 编辑个人资料
@@ -541,6 +544,9 @@ export default {
       },
       contractDetail(params) { // 合同详情
         return Fetch(prefix + '/contract/show', params, 'get')
+      },
+      contractonfirm(params) { // 合同同意
+        return Fetch(prefix + '/contract/confirm', params, 'get')
       }
     },
     checkDetails: {

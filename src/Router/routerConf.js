@@ -253,9 +253,12 @@ const InvoiceNewDetail = Loadable({ // 新发票详情
   loader: () => import(/* webpackChunkName: "invoicenewdetail" */ '../models/Mine/invoiceMange/detail'),
   loading: MyLoadingComponent
 })
-
 const ApplyNewInvoice = Loadable({ // 申请新发票
   loader: () => import(/* webpackChunkName: "applynewinvoice" */ '../models/Mine/invoiceMange/applyInvoice'),
+  loading: MyLoadingComponent
+})
+const InvoiceProList = Loadable({ // 发票项目列表
+  loader: () => import(/* webpackChunkName: "InvoiceProList" */ '../models/Mine/invoiceMange/projectList'),
   loading: MyLoadingComponent
 })
 const ContractMange = Loadable({ // 合同管理
@@ -918,6 +921,14 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '申请新发票'
+  }, {
+    path: urls.INVOICEPROLIST,
+    exact: true,
+    component: InvoiceProList,
+    parent: 'InvoiceMange',
+    animated: true,
+    showMenu: false,
+    title: '发票项目列表'
   }, {
     path: urls.CONTRACTMANGE,
     exact: true,

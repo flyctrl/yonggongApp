@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage, NewIcon } from 'Components'
-import { ListView, PullToRefresh, Tabs, Button, Modal, Toast } from 'antd-mobile'
+import { ListView, PullToRefresh, Tabs } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
 import api from 'Util/api'
-const prompt = Modal.prompt
 const NUM_ROWS = 20
 const tabType = [
   { title: '我的发起' },
@@ -167,50 +166,10 @@ class Approve extends Component {
     this.props.match.history.push(urls.VISAORDER)
   }
   handleClickList = (rowData) => {
-    this.props.match.history.push(`${urls.APPROVEDETAIL}?type=${rowData['category_code']}&approvalno=${rowData['approval_no']}`)
-  }
-  handleAdopt = async (rowData) => { // 通过
-    let data = await api.Mine.approve.approveReview({
-      type: 1,
-      approval_no: rowData['approval_no']
-    }) || false
-    if (data) {
-      setTimeout(() => {
-        this.getInitData()
-      }, 600)
+    let { tabIndex } = this.state
+    if (tabIndex === 1 || tabIndex === '1') {
+      this.props.match.history.push(`${urls.APPROVEDETAIL}?type=${rowData['category_code']}&approvalno=${rowData['approval_no']}`)
     }
-  }
-  handleReject = (rowData) => { // 驳回
-    prompt('驳回理由', null,
-      [
-        {
-          text: '取消',
-          onPress: value => new Promise((resolve) => {
-            resolve()
-          }),
-        },
-        {
-          text: '确认',
-          onPress: value => new Promise(async (resolve, reject) => {
-            if (value === '') {
-              Toast.info('请输入驳回理由', 1.5)
-              reject()
-            } else {
-              let data = await api.Mine.approve.approveReview({
-                type: 2,
-                approval_no: rowData['approval_no'],
-                remark: value
-              }) || false
-              if (data) {
-                resolve()
-                setTimeout(() => {
-                  this.getInitData()
-                }, 600)
-              }
-            }
-          }),
-        },
-      ], 'default', null, ['填写驳回理由'])
   }
   render() {
     let { isLoading, nodata, tabIndex, dataSource, isadmin } = this.state
@@ -236,15 +195,9 @@ class Approve extends Component {
               <span>申请日期：{rowData['date']}</span>
             </div>
           </dt>
-          <dd className='my-top-border' style={{ display: rowData['remark'] !== '' || ((tabIndex === 1 || tabIndex === '1') && rowData['status'] === 1) ? 'flex' : 'none' }}>
+          <dd className='my-top-border' style={{ display: rowData['remark'] !== '' ? 'flex' : 'none' }}>
             {
               rowData['remark'] !== '' ? <p className={`${style['info']} ellipsis`} style={{ maxWidth: (tabIndex === 1 || tabIndex === '1') && rowData['status'] === 1 ? '2rem' : '3.4rem' }}>驳回原因：{rowData['remark']}</p> : <div></div>
-            }
-            {
-              (tabIndex === 1 || tabIndex === '1') && rowData['status'] === 1 ? <div className={style['btn']}>
-                <Button type='primary' inline size='small' onClick={() => this.handleAdopt(rowData)}>通过</Button>
-                <Button type='ghost' inline size='small' onClick={() => this.handleReject(rowData)}>驳回</Button>
-              </div> : null
             }
           </dd>
         </dl>

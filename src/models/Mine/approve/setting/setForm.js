@@ -10,7 +10,7 @@ const visaJson = {
   1: '领工员',
   2: '项目指挥',
   3: '区域主管负责人',
-  4: '生产项目经理'
+  4: '生产/项目经理'
 }
 // 1:'项目',2:'财务',3:'发票',4:'合同',5:'签证单'
 class SetForm extends Component {
@@ -306,7 +306,7 @@ class SetForm extends Component {
     let newDom = []
     let newArry = []
     if (flag !== null) {
-      newArry = [...visaArry, ...visa1Arry, ...visa2Arry, ...visa3Arry]
+      newArry = [...visaArry, ...visa2Arry, ...visa3Arry, ...visa1Arry]
     }
     if (choicetype === 'visa') {
       newArry = visaArry
@@ -317,7 +317,7 @@ class SetForm extends Component {
       visa: '领工员',
       visa1: '项目指挥',
       visa2: '区域主管负责人',
-      visa3: '生产项目经理'
+      visa3: '生产/项目经理'
     }
     newArry.map((item, index) => {
       newDom.push(<li key={`visa${Math.random() * 100}${item.uid}`} className={style['visali']}><img src={item.avatar} /><span>{item.name}</span><p>{typeJson[item.type]}</p><a style={{ display: visaEdit || isadd === '1' ? 'block' : 'none' }} className={style['closebtn']} onClick={() => this.handleDel(item.type, item)}>x</a></li>)
@@ -373,19 +373,23 @@ class SetForm extends Component {
           user_list: this.getNewPostAry(proArry)
         }) || false
         if (data) {
+          this.setState({
+            proEdit: false
+          })
         }
       } else { // 保存
         let data = api.Mine.approve.configSet({
           category_id: 1,
           prj_no: prjno,
-          user_list: this.getNewPostAry(proArry)
+          user_list: this.getNewPostAry(proArry),
         }) || false
         if (data) {
+          this.setState({
+            proSave: true,
+            proEdit: false
+          })
         }
       }
-      this.setState({
-        proEdit: false
-      })
     } else if (type === 'finance') {
       if (financeSave) { // 编辑
         let data = api.Mine.approve.configEdit({
@@ -393,6 +397,9 @@ class SetForm extends Component {
           user_list: this.getNewPostAry(financeArry)
         }) || false
         if (data) {
+          this.setState({
+            financeEdit: false
+          })
         }
       } else { // 保存
         let data = api.Mine.approve.configSet({
@@ -401,11 +408,12 @@ class SetForm extends Component {
           user_list: this.getNewPostAry(financeArry)
         }) || false
         if (data) {
+          this.setState({
+            financeEdit: false,
+            financeSave: true
+          })
         }
       }
-      this.setState({
-        financeEdit: false
-      })
     } else if (type === 'receipt') {
       if (receiptSave) { // 编辑
         let data = api.Mine.approve.configEdit({
@@ -413,6 +421,9 @@ class SetForm extends Component {
           user_list: this.getNewPostAry(receiptArry)
         }) || false
         if (data) {
+          this.setState({
+            receiptEdit: false
+          })
         }
       } else { // 保存
         let data = api.Mine.approve.configSet({
@@ -421,11 +432,12 @@ class SetForm extends Component {
           user_list: this.getNewPostAry(receiptArry)
         }) || false
         if (data) {
+          this.setState({
+            receiptEdit: false,
+            receiptSave: true
+          })
         }
       }
-      this.setState({
-        receiptEdit: false
-      })
     } else if (type === 'agreement') {
       if (agreementSave) { // 编辑
         let data = api.Mine.approve.configEdit({
@@ -433,6 +445,9 @@ class SetForm extends Component {
           user_list: this.getNewPostAry(agreementArry)
         }) || false
         if (data) {
+          this.setState({
+            agreementEdit: false
+          })
         }
       } else { // 保存
         let data = api.Mine.approve.configSet({
@@ -441,11 +456,12 @@ class SetForm extends Component {
           user_list: this.getNewPostAry(agreementArry)
         }) || false
         if (data) {
+          this.setState({
+            agreementEdit: false,
+            agreementSave: true
+          })
         }
       }
-      this.setState({
-        agreementEdit: false
-      })
     } else if (type === 'visa') {
       let { flag } = this.state
       let newVisaArry = []
@@ -471,6 +487,9 @@ class SetForm extends Component {
           user_list: this.getNewPostAry(newVisaArry, 5)
         }) || false
         if (data) {
+          this.setState({
+            visaEdit: false
+          })
         }
       } else { // 保存
         let data = api.Mine.approve.configSet({
@@ -479,11 +498,12 @@ class SetForm extends Component {
           user_list: this.getNewPostAry(newVisaArry, 5)
         }) || false
         if (data) {
+          this.setState({
+            visaEdit: false,
+            visaSave: true
+          })
         }
       }
-      this.setState({
-        visaEdit: false
-      })
     }
   }
   render() {
@@ -642,12 +662,6 @@ class SetForm extends Component {
                 {
                   (flag === 0 || flag === '0') && (visaEdit || isadd === '1') ? <div className={`${style['visabtn']} ${style['morevisabtn']}`}>
                     {
-                      visa1Arry.length < 1 ? <p>
-                        <a className={`${style['addbtn']}`} onClick={() => this.handleAddItem('visa1')}><NewIcon type='icon-add-default' /></a>
-                        <span>项目指挥</span>
-                      </p> : null
-                    }
-                    {
                       visa2Arry.length < 1 ? <p>
                         <a className={`${style['addbtn']}`} onClick={() => this.handleAddItem('visa2')}><NewIcon type='icon-add-default' /></a>
                         <span>区域主管负责人</span>
@@ -657,6 +671,12 @@ class SetForm extends Component {
                       visa3Arry.length < 1 ? <p>
                         <a className={`${style['addbtn']}`} onClick={() => this.handleAddItem('visa3')}><NewIcon type='icon-add-default' /></a>
                         <span>生产/项目经理</span>
+                      </p> : null
+                    }
+                    {
+                      visa1Arry.length < 1 ? <p>
+                        <a className={`${style['addbtn']}`} onClick={() => this.handleAddItem('visa1')}><NewIcon type='icon-add-default' /></a>
+                        <span>项目指挥</span>
                       </p> : null
                     }
                   </div> : null

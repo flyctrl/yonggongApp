@@ -32,14 +32,17 @@ class OrderRange extends Component {
       nodata: false,
       dataSource: [],
       payId: getQueryString('id') || '',
-      payType: getQueryString('type')
+      payType: getQueryString('type'),
+      prjno: getQueryString('prj_no')
     }
   }
   genData = async (pIndex = 1) => {
+    let { prjno } = this.state
     const data = await api.Mine.invoiceMange.invoiceOrderList({
       page: pIndex,
       limit: NUM_ROWS,
-      payee_company_id: this.state.payId
+      payee_company_id: this.state.payId,
+      prj_no: prjno
     }) || false
     if (data) {
       if (data['currPageNo'] === 1 && data['list'].length === 0) {

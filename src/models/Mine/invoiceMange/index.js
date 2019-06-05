@@ -186,8 +186,11 @@ class InvoiceMange extends Component {
       this.setState({
         radioVal: value,
       })
+      // setTimeout(() => {
+      //   this.props.match.history.push(`${urls['INVOICEORDER']}?id=${value}&type=${type ? 1 : 2}`)
+      // }, 500)
       setTimeout(() => {
-        this.props.match.history.push(`${urls['INVOICEORDER']}?id=${value}&type=${type ? 1 : 2}`)
+        this.props.match.history.push(`${urls['INVOICEPROLIST']}?id=${value}&type=${type ? 1 : 2}`)
       }, 500)
     })
   }
@@ -248,7 +251,7 @@ class InvoiceMange extends Component {
             <div className='border-bottom'>
               <RadioItem
                 key={rowData.company_id}
-                onClick={() => this.handleChange(rowData.company_id, rowData.type)}
+                onClick={() => this.handleChange(rowData.company_id, rowData.type, rowData)}
                 checked={parseInt(radioVal, 10) === parseInt(rowData.company_id, 10)}>
                 <div className={style['brief']}>{rowData.company_name}</div>
               </RadioItem>

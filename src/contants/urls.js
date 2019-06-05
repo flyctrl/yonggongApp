@@ -74,6 +74,7 @@ export const ADDRESSMANGE = `${INVOICENEWMANGE}/address` // 地址管理
 export const ADDRESSOPERATE = `${ADDRESSMANGE}/operate` // 地址添加和编辑
 export const INVOICENEWDETAIL = `${INVOICENEWMANGE}/detail` // 新发票详情
 export const APPLYINEWINVOICE = `${INVOICENEWMANGE}/applyInvoice` // 申请新发票
+export const INVOICEPROLIST = `${INVOICENEWMANGE}/projectList` // 发票项目列表
 
 export const CONTRACTMANGE = `${MINE}/contractMange` // 合同管理
 export const CONTRACTLIST = `${MINE}/contractList` // 我发的合同管理列表

@@ -1,5 +1,24 @@
+.agree-body {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 40px;
+}
 .argee-content {
   overflow-y: auto;
   width: 100%;
   height: 100%;
+}
+.contract-btn {
+  position: fixed;
+  bottom: 48px;
+  right: 0;
+  left: 0;
+  & :global(.am-button) {
+    width: 94%;
+    margin: 0 auto;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+  }
 }
