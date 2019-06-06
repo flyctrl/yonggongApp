@@ -151,6 +151,48 @@
   }
 }
 
+.userinfo {
+  padding: 10px 15px;
+  background: #fff;
+  overflow: hidden;
+  margin-top: 10px;
+  & img {
+    float: left;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  & .username {
+    float: left;
+    & p {
+      color: #333333;
+      font-size: 14px;
+      line-height: 34px;
+      max-width: 250px;
+    }
+    & span {
+      display: block;
+      color: #999;
+      font-size: 13px;
+    }
+  }
+  & .userstatus {
+    float: right;
+    line-height: 50px;
+    font-size: 14px;
+    &.suc {
+      color: #00BECC;
+    }
+    &.reject {
+      color: #FA6B6D;
+    }
+    &.run {
+      color: #FF955D;
+    }
+  }
+}
+
 .detail-bd {
   background: #fff;
   margin-top: 10px;

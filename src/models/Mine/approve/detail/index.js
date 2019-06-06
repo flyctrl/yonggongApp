@@ -16,6 +16,11 @@ const statusJson = {
   2: { title: '已同意', icon: 'suc', typeclass: '' },
   3: { title: '已驳回', icon: 'fail', typeclass: 'reject' },
 }
+const contractStatus = {
+  1: { title: '待审批', icon: 'run' },
+  2: { title: '通过', icon: 'suc' },
+  3: { title: '驳回', icon: 'reject' }
+}
 class ApproveDetail extends Component {
   constructor(props) {
     super(props)
@@ -61,9 +66,9 @@ class ApproveDetail extends Component {
     } else if (type === 'payVisa' || type === 'reviewVisa') {
       this.props.match.history.push(`${urls.VISABALANCEDETAIL}?type=${headerJson['visa_type']}&visano=${headerJson['visa_no']}`)
     } else if (type === 'reviewInvoice') {
-      this.props.match.history.push(`${urls.ELETAGREEMENT}?contract_no=${headerJson['contract_no']}`)
-    } else if (type === 'reviewContract') {
       this.props.match.history.push(`${urls.INVOICENEWDETAIL}?no=${headerJson['invoice_apply_no']}`)
+    } else if (type === 'reviewContract') {
+      this.props.match.history.push(`${urls.ELETAGREEMENT}?contract_no=${headerJson['contract_no']}`)
     }
   }
   showHeader = (headerJson = {}) => {
@@ -171,17 +176,29 @@ class ApproveDetail extends Component {
         </dl>
         break
       case 'reviewContract': // 合同
-        hdDom = <dl className={style['pubwork']}>
-          <dt className='my-bottom-border' onClick={() => this.handleClickDetail(headerJson)}>
-            <div className={style['header-info']}>
-              <em className={[style['lightblue']]}>合同</em>
-              <span className='ellipsis'>{headerJson['title']}</span>
-              <NewIcon type='icon-youjiantou' />
+        hdDom = <div>
+          <dl className={style['pubwork']}>
+            <dt className='my-bottom-border' onClick={() => this.handleClickDetail(headerJson)}>
+              <div className={style['header-info']}>
+                <em className={[style['lightblue']]}>合同</em>
+                <span className='ellipsis'>{headerJson['title']}</span>
+                <NewIcon type='icon-youjiantou' />
+              </div>
+              <p className={`${style['desc']} ellipsis`}>所属项目：{headerJson['prj_name']}</p>
+            </dt>
+            <dd><span>工程总量：{headerJson['total_quantity']}</span><span>总额：{headerJson['total_amount']}</span></dd>
+          </dl>
+          <div className={style['userinfo']}>
+            <img src={headerJson['contract_other_party_avatar']} />
+            <div className={style['username']}>
+              <p className='ellipsis'>{headerJson['contract_other_party_name']}</p>
+              <span>{headerJson['contract_other_party_role']}</span>
             </div>
-            <p className={`${style['desc']} ellipsis`}>所属项目：{headerJson['prj_name']}</p>
-          </dt>
-          <dd><span>工程总量：{headerJson['total_quantity']}</span><span>总额：{headerJson['total_amount']}</span></dd>
-        </dl>
+            <div className={`${style['userstatus']} ${typeof headerJson['contract_other_flow_status'] !== 'undefined' ? style[contractStatus[headerJson['contract_other_flow_status']]['icon']] : ''}`}>
+              {typeof headerJson['contract_other_flow_status'] !== 'undefined' ? contractStatus[headerJson['contract_other_flow_status']]['title'] : ''}
+            </div>
+          </div>
+        </div>
         break
       case 'reviewVisa': // 签证单审核
         hdDom = <dl>
