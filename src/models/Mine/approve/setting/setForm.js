@@ -18,7 +18,7 @@ class SetForm extends Component {
     super(props)
     this.state = {
       prjno: tooler.getQueryString('prjno'),
-      isadd: tooler.getQueryString('isadd'),
+      isadd: 0,
       showStruct: false,
       choicetype: '',
       proArry: [],
@@ -44,10 +44,7 @@ class SetForm extends Component {
     }
   }
   componentDidMount() {
-    let { isadd } = this.state
-    if (isadd === '0') {
-      this.getDetail()
-    }
+    this.getDetail()
   }
   getDetail = async () => {
     let { prjno } = this.state
@@ -57,7 +54,8 @@ class SetForm extends Component {
     if (data) {
       this.setState({
         flag: data['flag'],
-        configno: data['config_no_data']
+        configno: data['config_no_data'],
+        isadd: data['is_set'] === 1 ? '0' : '1'
       })
       Object.keys(data).filter((key) => {
         console.log('key:', key)
