@@ -165,7 +165,7 @@ class Rechange extends Component {
       </Content>
     </div>
   }
-  onChannelChange = (value) => {
+  onHandleChannel = (value) => {
     this.setState({
       channelValue: value
     })
@@ -203,13 +203,12 @@ class Rechange extends Component {
                 value={cashValue}
               ><span className={style['money']}>¥</span></InputItem>
               <Item className={style['account-money']}><span className={style['maxMoney']}></span></Item>
-              <List className={style['widthdraw-chanel']} renderHeader={() => '充值渠道'}>
+              <dl className={style['widthdraw-chanel']}>
+                <dt>充值渠道</dt>
                 {channelData.map(i => (
-                  <RadioItem key={i.value} checked={channelValue === i.value} onChange={() => this.onChannelChange(i.value)}>
-                    <img src={i.src} />
-                  </RadioItem>
+                  <dd className={`${channelValue === i.value ? 'bule-full-border' : 'my-full-border'}`} key={i.value} onClick={() => this.onHandleChannel(i.value)}><img src={i.src} /></dd>
                 ))}
-              </List>
+              </dl>
               <Button type='primary' onClick={this.handleSubmit} className={ !hasError ? style['disabled-btn'] : style['primary-btn']} disabled={!hasError}>确认充值</Button>
             </div>
           </Content>

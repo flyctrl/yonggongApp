@@ -44,6 +44,11 @@ const visaPayStatus = {
   1: { title: '待支付', classname: 'orage' },
   2: { title: '已支付', classname: 'green' }
 }
+const signType = {
+  1: { title: '用工', classname: 'employ' },
+  2: { title: '签证单', classname: 'visa' },
+  3: { title: '机械', classname: 'mach' }
+}
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
 })
@@ -233,6 +238,7 @@ class BalanceMange extends Component {
           <li>
             <div className={style['visa-hd']} onClick={() => this.handleVisaDetail(tabIndex, rowData)}>
               <div className={style['title']}>
+                <span className={`${style['list-type']} ${style[signType[rowData['type']]['classname']]}`}>{signType[rowData['type']]['title']}</span>
                 <h4 className='ellipsis'>{rowData['title']}</h4>
                 {
                   tabIndex === 2 || tabIndex === '2' ? <em className={style[visaStatus[rowData['status']]['classname']]}>{visaStatus[rowData['status']]['title']}</em> : <em className={style[visaPayStatus[rowData['pay_status']]['classname']]}>{visaPayStatus[rowData['pay_status']]['title']}</em>

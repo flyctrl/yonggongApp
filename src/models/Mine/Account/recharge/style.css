@@ -116,16 +116,45 @@
     display: none!important;
   }
   & .widthdraw-chanel {
-    & :global(.am-list-line:after) {
-      display: block!important;
+    background: #fff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 15px 15px;
+    padding-top: 0;
+    margin-top: 10px;
+    & dt {
+      color: #333;
+      font-size: 14px;
+      height: 50px;
+      line-height: 50px;
+      width: 100%;
     }
-    & img {
-      display: block;
-      width: 150px;
-      height: 35px;
-    }
-    & :global(.am-list-content) {
-      padding: 10px 0;
+    & dd {
+      width: 162px;
+      height: 52px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      &:global(.bule-full-border) {
+        &::after{
+          content: '';
+          display: block;
+          width: 32px;
+          height: 28px;
+          background: url('../../../../assets/righted.png') no-repeat center center;
+          background-size: contain;
+          position: absolute;
+          top: 0;
+          right: 1px;
+        }
+      }
+      & img {
+        display: block;
+        height: 30px;
+        align-self: center;
+      }
     }
   }
 }
