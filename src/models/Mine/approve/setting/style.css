@@ -1,0 +1,163 @@
+.approve-list {
+  margin-top: 10px;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  html:not([data-scale]) .examine dd .examine-bd .addbtn {
+    position: relative;
+    border: none;
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  html:not([data-scale]) .examine dd .examine-bd .addbtn::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 198%;
+    height: 198%;
+    border: 1PX solid #1298FC;
+    border-radius: 50%;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    pointer-events: none;
+    overflow: hidden;
+  }
+}
+.examine {
+  margin-top: 10px;
+  background: #fff;
+  &:last-child {
+    margin-bottom: 20px;
+  }
+  & dt {
+    padding: 0 15px;
+    height: 50px;
+    line-height: 50px;
+    color: #333;
+    font-size: 15px;
+  }
+  & dd {
+    & .examine-bd {
+      padding: 10px 15px;
+      overflow: hidden;
+      & ul {
+        float: left;
+        & li {
+          float: left;
+          position: relative;
+          margin-right: 22px;
+          &.visali {
+            width: 94px;
+            & img {
+              margin: 0 auto;
+            }
+            & p {
+              color: #999;
+              font-size: 12px;
+              text-align: center;
+            }
+            & .closebtn {
+              right: 5px;
+            }
+          }
+          &:last-child {
+            margin-right: 0;
+          }
+          & img {
+            display: block;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+          }
+          & span {
+            display: block;
+            line-height: 24px;
+            text-align: center;
+          }
+          & .closebtn {
+            display: block;
+            position: absolute;
+            top: 0;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            line-height: 14px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            background: #1298FC;
+            text-align: center;
+            color: #fff;
+          }
+        }
+      }
+      & .visabtn {
+        float: left;
+        width: 50px;
+        height: 80px;
+        &.morevisabtn {
+          width: auto;
+          & p {
+            width: 114px;
+            & .addbtn {
+              margin:  0 auto;
+            }
+          }
+        }
+        &.more {
+          margin-left: 22px;
+        }
+        & p {
+          float: left;
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          & .addbtn {
+            float: none;
+            display: block;
+          }
+          & span {
+            display: block;
+            line-height: 30px;
+            color: #999;
+            font-size: 13px;
+            text-align: center;
+          }
+        }
+      }
+      & .addbtn {
+        float: left;
+        width: 50px;
+        height: 50px;
+        line-height: 55px;
+        border-radius: 50%;
+        text-align: center;
+        border: 1Px solid #1298FC;
+        position: relative;
+        &.more {
+          margin-left: 22px;
+        }
+        & svg {
+          color: #1298FC;
+          font-size: 24px;
+        }
+      }
+    }
+    & .examine-foot {
+      padding: 0 15px;
+      height: 50px;
+      line-height: 50px;
+      overflow: hidden;
+      & :global(.am-button) {
+        float: right;
+        width: 62px;
+        margin-top: 10px;
+      }
+    }
+  }
+}

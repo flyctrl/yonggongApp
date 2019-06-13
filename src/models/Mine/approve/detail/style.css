@@ -1,0 +1,311 @@
+.detail-hd {
+  & dl {
+    padding: 0 15px;
+    background: #fff;
+    &.pubwork {
+      & dt {
+        height: 70px;
+        & .header-info {
+          height: 34px;
+          & em {
+            margin-top: 13px;
+          }
+          & span {
+            line-height: 44px;
+          }
+          & svg {
+            margin-top: 15px;
+          }
+        }
+        & .desc {
+          height: 30px;
+          line-height: 30px;
+          font-size: 13px;
+          color: #999;
+        }
+      }
+    }
+    & dt {
+      & .header-info {
+        overflow: hidden;
+        height: 50px;
+        line-height: 50px;
+        & em {
+          float: left;
+          padding: 0 3px;
+          height: 17px;
+          border-radius: 2px;
+          line-height: 17px;
+          font-size: 12px;
+          color: #fff;
+          text-align: center;
+          margin-right: 7px;
+          margin-top: 17px;
+          &.purple {
+            background: #9B91FB;
+          }
+          &.lightred {
+            background: #FF528A;
+          }
+          &.blue {
+            background: #1298FC;
+          }
+          &.lightgreen {
+            background: #58D1B2;
+          }
+          &.orange {
+            background: #FF955D;
+          }
+          &.lightblue {
+            background: #66CFFD;
+          }
+          &.yellow {
+            background: #FFBE40;
+          }
+        }
+        & span {
+          float: left;
+          max-width: 280px;
+          color: #333;
+          font-size: 15px;
+        }
+        & svg {
+          float: right;
+          color: #999;
+          margin-top: 17px;
+        }
+      }
+    }
+    & dd {
+      display: flex;
+      justify-content: space-between;
+      & span {
+        display: block;
+        height: 44px;
+        line-height: 44px;
+        color: #333;
+        font-size: 14px;
+      }
+      & .detail-btn {
+        display: block;
+        color: #1298FC;
+        font-size: 14px;
+        height: 44px;
+        line-height: 44px;
+      }
+      & .money-box {
+        width: 100%;
+        padding: 10px 0;
+        display: flex;
+        justify-content: space-around;
+        & strong {
+          display: block;
+          color: #333;
+          font-size: 14px;
+          line-height: 20px;
+          text-align: center;
+        }
+        & em {
+          display: block;
+          color: #999;
+          font-size: 12px;
+          line-height: 20px;
+          text-align: center;
+        }
+      }
+      & .progress-box {
+        width: 100%;
+        height: 50px;
+        position: relative;
+        padding-top: 10px;
+        padding-bottom: 18px;
+        overflow: hidden;
+        & em {
+          display: block;
+          margin-right: 8px;
+          color: #999;
+          font-size: 12px;
+          line-height: 22px;
+        }
+        & i {
+          display: block;
+          position: absolute;
+          top: 46px;
+          color: #666;
+          font-size: 12px;
+          &.endnumber {
+            right: 0;
+            top: 14px;
+          }
+        }
+        & :global(.am-progress-outer) {
+          width: 100%;
+          border-radius: 2px;
+          margin-top: 5px;
+          & :global(.am-progress-bar) {
+            border-radius: 2px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.userinfo {
+  padding: 10px 15px;
+  background: #fff;
+  overflow: hidden;
+  margin-top: 10px;
+  & img {
+    float: left;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  & .username {
+    float: left;
+    & p {
+      color: #333333;
+      font-size: 14px;
+      line-height: 34px;
+      max-width: 250px;
+    }
+    & span {
+      display: block;
+      color: #999;
+      font-size: 13px;
+    }
+  }
+  & .userstatus {
+    float: right;
+    line-height: 50px;
+    font-size: 14px;
+    &.suc {
+      color: #00BECC;
+    }
+    &.reject {
+      color: #FA6B6D;
+    }
+    &.run {
+      color: #FF955D;
+    }
+  }
+}
+
+.detail-bd {
+  background: #fff;
+  margin-top: 10px;
+  padding: 0 15px;
+  padding-bottom: 15px;
+  & h4 {
+    color: #333;
+    font-size: 15px;
+    line-height: 46px;
+    font-weight: normal;
+  }
+  & .flow-path {
+    & dl {
+      display: flex;
+      flex-flow: row;
+      position: relative;
+      padding-bottom: 50px;
+      &:last-child {
+        padding-bottom: 0;
+        &::before {
+          height: 0;
+        }
+      }
+      &::before {
+        content: '';
+        display: block;
+        width: 3px;
+        height: 35px;
+        background: #EDECEC;
+        position: absolute;
+        top: 50px;
+        left: 18px;
+      }
+      & dt {
+        position: relative;
+        width: 42px;
+        height: 42px;
+        & img {
+          display: block;
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
+        }
+        & span {
+          display: block;
+          width: 17px;
+          height: 17px;
+          position: absolute;
+          color: #fff;
+          text-align: center;
+          line-height: 17px;
+          bottom: 0;
+          right: -5px;
+          border-radius: 50%;
+          border: 2px solid #fff;
+          & i {
+            display: block;
+            text-align: center;
+            line-height: 17px;
+          }
+          &.suc {
+            background: #1298FC;
+          }
+          &.fail {
+            background: #FA6B6D;
+          }
+        }
+      }
+      & dd {
+        overflow: hidden;
+        flex: 1;
+        padding-left: 12px;
+        &.reject {
+          & .name {
+            height: 22px;
+            line-height: 22px;
+          }
+          & time {
+            height: 22px;
+            line-height: 22px;
+          }
+          & p {
+            color: #999;
+            height: 22px;
+            line-height: 22px;
+            font-size: 12px;
+          }
+        }
+        &.tobe {
+          & .btnbox {
+            float: right;
+            height: 42px;
+            & :global(.am-button) {
+              float: right;
+              margin-top: 6px;
+              margin-left: 8px;
+            }
+          }
+        }
+        & .name {
+          float: left;
+          height: 42px;
+          line-height: 42px;
+          color: #333333;
+          max-width: 146px;
+        }
+        & time {
+          float: right;
+          height: 42px;
+          line-height: 42px;
+          color: #999999;
+        }
+      }
+    }
+  }
+}

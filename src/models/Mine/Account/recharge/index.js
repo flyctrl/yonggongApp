@@ -20,7 +20,9 @@ class Rechange extends Component {
     cashValue: '',
     showlist: false,
     bankval: {},
-    banklist: []
+    banklist: [],
+    channelValue: '',
+    channelData: []
   }
   onChange = (value) => {
     if (Number(value) <= 0) {
@@ -35,18 +37,46 @@ class Rechange extends Component {
       })
     }
   }
+  getUrl = () => {
+    let url = ''
+    if (process.env.NODE_ENV === 'production') {
+      url = 'https://yg.yaque365.com/Mine/Account/successPage'
+      if (TEST || CORDOVATEST) {
+        url = 'https://yg-test.yaque365.com/Mine/Account/successPage'
+      }
+    } else {
+      url = 'https://yg-test.yaque365.com/Mine/Account/successPage'
+    }
+    return url
+  }
   handleSubmit = async () => { // 充值确认按钮
     console.log('onsubmit')
-    let { bankval, cashValue } = this.state
+    let { bankval, cashValue, channelValue } = this.state
     const data = await api.Mine.account.recharge({
-      channel: 'yeepay',
+      channel: channelValue,
       amount: cashValue,
-      cardId: bankval['card_id']
+      card_id: bankval['card_id'],
+      source: 2,
+      return_url: this.getUrl()
     }) || false
     if (data) {
       if ('cordova' in window) {
         document.addEventListener('deviceready', () => {
-          let ref = cordova.InAppBrowser.open(data.url, '_blank', 'location=yes,hardwareback=no,closebuttoncaption=关闭,closebuttoncolor=#000000,hidenavigationbuttons=yes,hideurlbar=yes')
+          let ref
+          if (channelValue === 'lianlian') {
+            let newurl = ''
+            if (process.env.NODE_ENV === 'production') {
+              newurl = 'https://yg.yaque365.com/Mine/Account/recharge/skip?url=' + encodeURIComponent(data.url)
+              if (TEST || CORDOVATEST) {
+                newurl = 'https://yg-test.yaque365.com/Mine/Account/recharge/skip?url=' + encodeURIComponent(data.url)
+              }
+            } else {
+              newurl = 'https://yg-test.yaque365.com/Mine/Account/recharge/skip?url=' + encodeURIComponent(data.url)
+            }
+            ref = cordova.InAppBrowser.open(newurl, '_blank', 'location=yes,hardwareback=no,closebuttoncaption=关闭,closebuttoncolor=#000000,hidenavigationbuttons=yes,hideurlbar=yes')
+          } else {
+            ref = cordova.InAppBrowser.open(data.url, '_blank', 'location=yes,hardwareback=no,closebuttoncaption=关闭,closebuttoncolor=#000000,hidenavigationbuttons=yes,hideurlbar=yes')
+          }
           ref.addEventListener('exit', () => {
             this.props.match.history.push(urls.ACCOUNTRECHARGE)
           })
@@ -81,6 +111,7 @@ class Rechange extends Component {
   componentDidMount() {
     // this.getBindCardlist()
     this.getDefaultCard()
+    this.getChannel()
     if ('cordova' in window) {
       document.removeEventListener('backbutton', onBackKeyDown, false)
       document.addEventListener('backbutton', this.backButtons, false)
@@ -141,9 +172,33 @@ class Rechange extends Component {
       </Content>
     </div>
   }
+  onHandleChannel = (value) => {
+    this.setState({
+      channelValue: value
+    })
+  }
+  getChannel = async () => {
+    let data = await api.Mine.account.getChannel({
+      source: 'web'
+    }) || false
+    if (data) {
+      let channelData = []
+      data.map((item, index) => {
+        channelData.push({
+          label: item['name'],
+          value: item['channel'],
+          src: item['logo']
+        })
+      })
+      this.setState({
+        channelData,
+        channelValue: channelData[0]['value']
+      })
+    }
+  }
 
   render() {
-    const { bankval, hasError, cashValue, showlist } = this.state
+    const { bankval, hasError, cashValue, showlist, channelValue, channelData } = this.state
     return (
       <div>
         <div className='pageBox' style={{ display: showlist ? 'none' : 'block' }}>
@@ -174,6 +229,12 @@ class Rechange extends Component {
                 value={cashValue}
               ><span className={style['money']}>¥</span></InputItem>
               <Item className={style['account-money']}><span className={style['maxMoney']}></span></Item>
+              <dl className={style['widthdraw-chanel']}>
+                <dt>充值渠道</dt>
+                {channelData.map(i => (
+                  <dd className={`${channelValue === i.value ? 'bule-full-border' : 'my-full-border'}`} key={i.value} onClick={() => this.onHandleChannel(i.value)}><img src={i.src} /></dd>
+                ))}
+              </dl>
               <Button type='primary' onClick={this.handleSubmit} className={ !hasError ? style['disabled-btn'] : style['primary-btn']} disabled={!hasError}>确认充值</Button>
             </div>
           </Content>

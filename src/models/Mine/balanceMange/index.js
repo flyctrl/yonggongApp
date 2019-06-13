@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Header, Content, DefaultPage } from 'Components'
-import { ListView, PullToRefresh, Tabs, Badge } from 'antd-mobile'
+import { ListView, PullToRefresh, Tabs, Badge, Button, Modal } from 'antd-mobile'
+import md5 from 'md5'
 import * as urls from 'Contants/urls'
 import * as tooler from 'Contants/tooler'
 import style from './style.css'
@@ -9,7 +10,9 @@ import { worksheetType } from 'Contants/fieldmodel'
 const NUM_ROWS = 20
 let tabType = [
   { title: '工单结算' },
-  { title: '订单结算' }
+  { title: '订单结算' },
+  { title: '我申请的' },
+  { title: '我签发的' }
 ]
 const settleSheetStatus = {
   1: '待确认',
@@ -31,9 +34,24 @@ const badgeStatus = {
   3: 'success',
   4: 'default'
 }
+const visaStatus = {
+  1: { title: '待申请', classname: 'orage' },
+  2: { title: '待审核', classname: 'orage' },
+  3: { title: '已审核', classname: 'green' },
+  4: { title: '审核未通过', classname: 'red' }
+}
+const visaPayStatus = {
+  1: { title: '待支付', classname: 'orage' },
+  2: { title: '已支付', classname: 'green' }
+}
+const signType = {
+  1: { title: '用工', classname: 'employ' },
+  2: { title: '机械', classname: 'mach' }
+}
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
 })
+const prompt = Modal.prompt
 class BalanceMange extends Component {
   constructor(props) {
     super(props)
@@ -61,6 +79,16 @@ class BalanceMange extends Component {
       data = await api.Mine.balanceMange.settleListAccept({
         page: pIndex,
         pageSize: NUM_ROWS
+      }) || false
+    } else if (tabIndex === 2 || tabIndex === '2') {
+      data = await api.Mine.balanceMange.applyList({
+        page: pIndex,
+        limit: NUM_ROWS
+      }) || false
+    } else if (tabIndex === 3 || tabIndex === '3') {
+      data = await api.Mine.balanceMange.payList({
+        page: pIndex,
+        limit: NUM_ROWS
       }) || false
     }
     if (data['currPageNo'] === 1 && data['list'].length === 0) {
@@ -155,6 +183,43 @@ class BalanceMange extends Component {
       this.props.match.history.push(`${urls.APPLYSETTLE}?orderno=${rowData['order_no']}&workSheetOrderNo=${rowData['worksheet_order_no']}&status=${rowData['status']}`)
     }
   }
+  handleVisaDetail = (type, rowData) => {
+    if (type === 2 || type === '2') {
+      this.props.match.history.push(`${urls.VISABALANCEDETAIL}?type=${rowData['type']}&visano=${rowData['visa_no']}`)
+    }
+  }
+  handleVisaApply = (rowData) => {
+    this.props.match.history.push(`${urls.ADDTOBALANCED}?orderno=${rowData['order_no']}`)
+  }
+  handleVisaPay = (rowData) => {
+    prompt(
+      '请输入支付密码',
+      null,
+      [
+        { text: '取消' },
+        { text: '提交', onPress: password => new Promise(async (resolve) => {
+          let { tabIndex } = this.state
+          let data = await api.Mine.balanceMange.settlePay({
+            order_no: rowData['order_no'],
+            password: md5(password)
+          }) || false
+          if (data) {
+            resolve()
+            this.genData(1, tabIndex).then((rdata) => {
+              this.rData = rdata
+              this.setState({
+                dataSource: this.rData,
+                refreshing: false,
+                isLoading: false,
+              })
+            })
+          }
+        })
+        }
+      ],
+      'secure-text',
+    )
+  }
   render() {
     let { isLoading, nodata, tabIndex, dataSource } = this.state
     const footerShow = () => {
@@ -167,7 +232,47 @@ class BalanceMange extends Component {
       }
     }
     const row = (rowData, sectionID, rowID) => {
-      return (
+      return tabIndex === 2 || tabIndex === '2' || tabIndex === 3 || tabIndex === '3' ? (
+        <ul key={rowData['id']} className={style['visaList']}>
+          <li>
+            <div className={style['visa-hd']} onClick={() => this.handleVisaDetail(tabIndex, rowData)}>
+              <div className={style['title']}>
+                <span className={`${style['list-type']} ${style[signType[rowData['type']]['classname']]}`}>{signType[rowData['type']]['title']}</span>
+                <h4 className='ellipsis'>{rowData['title']}</h4>
+                {
+                  tabIndex === 2 || tabIndex === '2' ? <em className={style[visaStatus[rowData['status']]['classname']]}>{visaStatus[rowData['status']]['title']}</em> : <em className={style[visaPayStatus[rowData['pay_status']]['classname']]}>{visaPayStatus[rowData['pay_status']]['title']}</em>
+                }
+              </div>
+              <div className={style['visa-date']}>
+                <time>申请日期：{rowData['created_at']}</time>
+                {
+                  (tabIndex === 2 || tabIndex === '2') && rowData['status'] === 1 ? null : <span>金额：{rowData['amount']}</span>
+                }
+              </div>
+            </div>
+            {
+              (rowData['status'] === 1 || rowData['status'] === 4) && (tabIndex === 2 || tabIndex === '2') ? <div style={{ 'justifyContent': rowData['status'] === 1 ? 'flex-end' : 'space-between' }} className={`${style['visa-bd']} my-top-border`}>
+                {
+                  rowData['status'] === 4 && rowData['reject_reason'] !== '' ? <div className={`${style['desc']} ellipsis2`}>
+                  驳回原因：{rowData['reject_reason']}
+                  </div> : null
+                }
+                <Button type='ghost' size='small' onClick={() => this.handleVisaApply(rowData)}>去申请</Button>
+              </div> : null
+            }
+            {
+              rowData['pay_status'] === 1 && (tabIndex === 3 || tabIndex === '3') && rowData['reason'] !== '' ? <div className={`${style['visa-bd']} my-top-border`}>
+                {
+                  rowData['reason'] !== '' ? <div className={`${style['desc']} ellipsis2`}>
+                    追加原因：{rowData['reason']}
+                  </div> : null
+                }
+                <Button type='primary' size='small' onClick={() => this.handleVisaPay(rowData)}>去支付</Button>
+              </div> : null
+            }
+          </li>
+        </ul>
+      ) : (
         <dl key={rowData['id']} onClick={() => this.handleClick(rowData)}>
           <dt className='my-bottom-border'>
             <Badge className={rowData['worksheet_type'] === 2 ? `${style['typericon-2']} ${style['typericon']}` : rowData['worksheet_type'] === 1 ? `${style['typericon-1']} ${style['typericon']}` : rowData['worksheet_type'] === 3 ? `${style['typericon-3']} ${style['typericon']}` : `${style['typericon']}`} text={worksheetType[rowData['worksheet_type']]} text={worksheetType[rowData['worksheet_type']]} />
@@ -206,7 +311,7 @@ class BalanceMange extends Component {
               page={parseInt(tabIndex, 10)}
               tabBarTextStyle={{ fontSize: '.14rem', color: '#999999' }}
               tabBarActiveTextColor='#1298FC'
-              tabBarUnderlineStyle={{ borderColor: '#0098F5', width: '12%', marginLeft: '18.5%' }}
+              tabBarUnderlineStyle={{ borderColor: '#0098F5', width: '12%', marginLeft: '5.7%' }}
               onChange={this.handleTabsChange}
             >
               <ul className={style['balance-list']} style={{ height: '100%' }}>

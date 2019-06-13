@@ -115,4 +115,51 @@
   & :global(.am-list-line:after) {
     display: none!important;
   }
+  & .widthdraw-chanel {
+    background: #fff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 15px 15px;
+    padding-top: 0;
+    margin-top: 10px;
+    & dt {
+      color: #333;
+      font-size: 14px;
+      height: 50px;
+      line-height: 50px;
+      width: 100%;
+    }
+    & dd {
+      width: 162px;
+      height: 52px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      &:global(.bule-full-border) {
+        &::after{
+          content: '';
+          display: block;
+          width: 32px;
+          height: 28px;
+          background: url('../../../../assets/righted.png') no-repeat center center;
+          background-size: contain;
+          position: absolute;
+          top: 0;
+          right: 1px;
+        }
+      }
+      & img {
+        display: block;
+        height: 30px;
+        align-self: center;
+      }
+    }
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  html:not([data-scale]) .am-list-body div:not(:last-child) .am-list-line {
+  }
 }

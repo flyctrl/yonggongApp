@@ -362,6 +362,9 @@ export default {
       },
       withdraw(params) { // 提现
         return FetchSave(prefix + '/withdraw', params, 'post', { showloading: false })
+      },
+      getChannel(params) { // 充值渠道
+        return Fetch(prefix + '/recharge/channel', params, 'get')
       }
     },
     projectMange: { // 项目管理
@@ -393,6 +396,21 @@ export default {
       },
       settleDetail(params) { // 结算管理详情
         return Fetch(prefix + '/worksheetManage/settleDetail', params, 'get')
+      },
+      applyList(params) { // 我申请的
+        return Fetch(prefix + '/visaForm/settle/apply/list', params, 'get')
+      },
+      payList(params) { // 我签发的
+        return Fetch(prefix + '/visaForm/settle/pay/list', params, 'get')
+      },
+      settleApply(params) { // 签证单申请结算
+        return FetchSave(prefix + '/visaForm/settle/apply', params, 'post')
+      },
+      settlePay(params) { // 签证单结算支付
+        return FetchSave(prefix + '/visaForm/settle/pay', params, 'post')
+      },
+      payVisaDetail(params) { // 结算签证单详情
+        return Fetch(prefix + '/visaForm/detail', params, 'get')
       }
     },
     companyAuth: {
@@ -472,6 +490,9 @@ export default {
       },
       editAddressDetail(params) { // 编辑时的地址详情
         return Fetch(prefix + '/invoice/express/edit', params, 'get')
+      },
+      invoiceProList(params) { // 项目列表
+        return Fetch(prefix + '/invoice/project/list', params, 'get')
       }
     },
     Personaldara: { // 编辑个人资料
@@ -526,6 +547,9 @@ export default {
       },
       contractDetail(params) { // 合同详情
         return Fetch(prefix + '/contract/show', params, 'get')
+      },
+      contractConfirm(params) { // 合同同意
+        return FetchSave(prefix + '/contract/confirm', params, 'post')
       }
     },
     checkDetails: {
@@ -612,6 +636,47 @@ export default {
       postMobile(params) {
         return Fetch(prefix + '/worker/mobile', params, 'post', { showloading: false }) // 验证手机号
       },
+    },
+    approve: { // 审批管理
+      applyList(params) { // 我的发起
+        return Fetch(prefix + '/approval/apply/list', params, 'get')
+      },
+      approveList(params) { // 我的审批
+        return Fetch(prefix + '/approval/flow/list', params, 'get')
+      },
+      approveDetail(params) { // 审批详情
+        return Fetch(prefix + '/approval/flow/detail', params, 'get')
+      },
+      approveReview(params) { // 通过驳回
+        return FetchSave(prefix + '/approval/flow/review', params, 'post')
+      },
+      applyVisaForm(params) { // 申请填写签证单
+        return FetchSave(prefix + '/visaForm/apply', params, 'post')
+      },
+      visaOrderlist(params) { // 签证单可关联的订单列表
+        return Fetch(prefix + '/visaForm/order/list', params, 'get')
+      },
+      projectList(params) { // 审批设置项目列表
+        return Fetch(prefix + '/approval/config/project/list', params, 'get')
+      },
+      categoryList(params) { // 审批设置类别
+        return FetchSave(prefix + '/approval/category/list', params, 'get')
+      },
+      configDetail(params) { // 审批设置详情
+        return Fetch(prefix + '/approval/config/detail', params, 'get')
+      },
+      configEdit(params) { // 审批设置编辑
+        return FetchSave(prefix + '/approval/config/edit', params, 'post')
+      },
+      configSet(params) { // 设置审批设置
+        return FetchSave(prefix + '/approval/config/set', params, 'post')
+      },
+      configCheck(params) { // 审批设置人员权限校验
+        return Fetch(prefix + '/approval/config/check', params, 'get')
+      },
+      projectAddList(params) { // 添加项目的列表
+        return Fetch(prefix + '/approval/project/list', params, 'get')
+      }
     }
   },
   Home: {

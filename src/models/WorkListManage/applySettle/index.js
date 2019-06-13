@@ -19,6 +19,7 @@ class ApplySettle extends Component {
       worksheetno: tooler.getQueryString('worksheetno'),
       orderno: tooler.getQueryString('orderno'),
       status: 0,
+      isApprove: 0,
       dataSource: [],
       isloading: false,
       payWay: 0
@@ -40,6 +41,7 @@ class ApplySettle extends Component {
     if (data) {
       this.setState({
         status: data['status'],
+        isApprove: data['is_approve'],
         amount: data['amount'],
         payWay: data['pay_way'],
         dataSource: data['list'],
@@ -115,11 +117,11 @@ class ApplySettle extends Component {
     }
   }
   render() {
-    let { dataSource, amount, isloading, status, payWay } = this.state
+    let { dataSource, amount, isloading, status, payWay, isApprove } = this.state
     let statusDom = {
-      1: <div className={`${style['btn-box']} ${style['two-btn']}`}>
+      1: isApprove === 0 ? <div className={`${style['btn-box']} ${style['two-btn']}`}>
         <Button type='warning' onClick={this.handleReject}>驳回</Button><Button type='primary' onClick={this.handleSure}>确认</Button>
-      </div>,
+      </div> : '',
       2: payWay === 1 ? <div className={style['btn-box']}>
         <Button type='primary' onClick={this.handleApply}>确认结算</Button>
       </div> : '',

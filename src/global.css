@@ -157,6 +157,9 @@ input {
 :global(.my-full-border) {
   position: relative;
   border: 1PX solid #ddd;
+  &:global(.on) {
+    border-color: #1298FC;
+  }
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
   html:not([data-scale]) :global(.my-full-border) {
@@ -183,6 +186,9 @@ input {
     box-sizing: border-box;
     pointer-events: none;
     overflow: hidden;
+  }
+  html:not([data-scale]) :global(.my-full-border.on:before) {
+    border-color: #1298FC;
   }
 }
 
@@ -260,6 +266,16 @@ input {
   -o-text-overflow:ellipsis;
   text-overflow:ellipsis;
   width: 100%;
+}
+
+:global(.ellipsis2) {
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 :global(html:not([data-scale]) .am-list-body:before) {
@@ -461,7 +477,7 @@ html:not([data-scale]) :global(.pageBox .am-button-primary::before) {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
   html:not([data-scale]) :global(.pageBox) :global(.am-button-ghost::before) {
     width: 198%;
-    height: 198%;
+    height: 196%;
   }
 }
 

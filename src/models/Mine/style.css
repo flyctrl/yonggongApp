@@ -18,6 +18,7 @@ html .mine-header :global(.am-button-ghost::before) {
   width: 100%;
   position: relative;
   background:linear-gradient(235deg,rgba(18,152,252,1) 0%,rgba(91,185,255,1) 100%);
+  border-bottom: 10px solid #f5f5f9;
   & .company-set {
     padding: 5px 10px;
     height: 30px;
@@ -182,15 +183,17 @@ html .mine-header :global(.am-button-ghost::before) {
 }
 
 .mine-btn-list {
-  border-top: 10px solid #f5f5f9;
+  width: 94%;
   overflow: hidden;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   flex-wrap: wrap;
+  margin: 0 auto;
+  margin-top: 10px;
   & li {
     width: 25%;
     height: 60px;
-    margin-top: 30px;
+    margin-top: 20px;
     & a {
       display: block;
       width: 60px;

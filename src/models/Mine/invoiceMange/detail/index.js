@@ -272,14 +272,16 @@ class InvoiceDetail extends Component {
                     {this.handleCircle()}
                   </ul>
                 </div>
-                <Button style={{ display: dataSource['status'] === 3 || dataSource['status'] === 2 || dataSource['status'] === 11 ? 'none' : 'block' }} className={`${style['confirm']} ${style['btn']}`} onClick={this.handleConfirm}>确认</Button>
+                <Button style={{ display: dataSource['status'] === 12 && (dataSource['approval_status'] === 2 || dataSource['approval_status'] === 4) ? 'block' : 'none' }} className={`${style['confirm']} ${style['btn']}`} onClick={this.handleConfirm}>开 票</Button>
                 <Button style={{ display: dataSource['status'] === 2 && dataSource['user_type'] === 1 && dataSource['material_type'] === 2 ? 'block' : 'none' }} onClick={this.handleSendEmail} className={`${style['confirm']} ${style['btn']}`}>下载发票</Button>
-                <Button style={{ display: dataSource['status'] === 3 || dataSource['status'] === 2 ? 'none' : 'block' }} className={`${style['cancel']} ${style['btn']}`} onClick={() =>
-                  alert('提示', '驳回发票将作废,确定要作废吗？', [
-                    { text: '取消', onPress: () => console.log('cancel') },
-                    { text: '确定', onPress: () => this.handleCancel() },
-                  ])
-                }>取消</Button>
+                {
+                  dataSource['user_type'] === 2 && dataSource['approval_status'] === 4 ? <Button style={{ display: dataSource['status'] === 11 || dataSource['status'] === 12 || dataSource['approval_status'] === 4 ? 'block' : 'none' }} className={`${style['cancel']} ${style['btn']}`} onClick={() =>
+                    alert('提示', '驳回发票将作废,确定要作废吗？', [
+                      { text: '取消', onPress: () => console.log('cancel') },
+                      { text: '确定', onPress: () => this.handleCancel() },
+                    ])
+                  }>取消</Button> : null
+                }
               </div>
               : null
           }

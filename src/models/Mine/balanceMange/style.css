@@ -151,6 +151,91 @@
           }
         }
       }
+    }
+    & .visaList {
+      & li {
+        background: #fff;
+        margin-top: 10px;
+        & .visa-hd {
+          height: 75px;
+          padding: 0 15px;
+          & .title {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 10px;
+            & h4 {
+              font-weight: normal;
+              color: #333;
+              font-size: 15px;
+              line-height: 30px;
+              height: 30px;
+              width: 230px;
+            }
+            & em {
+              display: block;
+              line-height: 30px;
+              font-size: 15px;
+              width: 78px;
+              text-align: right;
+              &.green {
+                color: #00BECC;
+              }
+              &.orage {
+                color: #FF955D;
+              }
+              &.red {
+                color: #FA6B6D;
+              }
+            }
+          }
+          & .list-type {
+            display: block;
+            height: 18px;
+            line-height: 18px;
+            border-radius: 3px;
+            padding: 0 3px;
+            color: #fff;
+            font-size: 12px;
+            align-self: center;
+            &.employ {
+              background: #58D1B2;
+            }
+            &.visa {
+              background: #FF528A;
+            }
+            &.mach {
+              background: #66CFFD;
+            }
+          }
+          & .visa-date {
+            display: flex;
+            justify-content: space-between;
+            height: 24px;
+            line-height: 24px;
+            & time {
+              display: block;
+              color: #999;
+              font-size: 13px;
+            }
+            & span {
+              font-size: 14px;
+              color: #999;
+              display: block;
+            }
+          }
+        }
+        & .visa-bd {
+          padding: 15px;
+          display: flex;
+          justify-content: space-between;
+          & .desc {
+            width: 260px;
+            color: #666;
+            font-size: 14px;
+            line-height: 17px;
+          }
+        }
+      }
+    }
   }
-}
 }

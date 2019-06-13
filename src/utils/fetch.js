@@ -1,7 +1,7 @@
 /*
 * @Author: baosheng
 * @Date:   2018-04-02 22:28:51
-* @Last Modified time: 2019-03-29 21:35:21
+* @Last Modified time: 2019-06-03 16:38:55
 */
 import * as Loading from './load.js'
 import { Toast } from 'antd-mobile'
@@ -96,7 +96,7 @@ fetcher.interceptors.response.use(function (response) {
       Toast.hide()
       history.push('/Login/login')
     }
-  } else if (response.data.code === 10011) { // token过期
+  } else if (response.data.code === 10011 || response.data.code === 10034) { // token过期
     if (typeof OCBridge !== 'undefined') {
       OCBridge.refreshToken({
         data: window.location.href

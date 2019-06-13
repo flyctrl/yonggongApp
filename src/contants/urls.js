@@ -50,6 +50,7 @@ export const SETUPABOUTUS = `${MINE}/aboutUs` // 我的设置》关于我们
 export const CLAUSE = `${SETUP}/clause` // 服务条款协议
 export const ACCOUNT = `${MINE}/Account` // 我的账户
 export const ACCOUNTRECHARGE = `${ACCOUNT}/recharge` // 我的账户》充值
+export const SKIPRECHARGE = `${ACCOUNT}/recharge/skip` // 我的账户》充值跳转
 export const ACCOUNTWITHDRAWCASH = `${ACCOUNT}/withdrawCash` // 我的账户》提现
 export const SUCCESSPAGE = `${ACCOUNT}/successPage` // 支付成功页面
 export const FAILPAGE = `${ACCOUNT}/failPage` // 支付失败页面
@@ -74,6 +75,7 @@ export const ADDRESSMANGE = `${INVOICENEWMANGE}/address` // 地址管理
 export const ADDRESSOPERATE = `${ADDRESSMANGE}/operate` // 地址添加和编辑
 export const INVOICENEWDETAIL = `${INVOICENEWMANGE}/detail` // 新发票详情
 export const APPLYINEWINVOICE = `${INVOICENEWMANGE}/applyInvoice` // 申请新发票
+export const INVOICEPROLIST = `${INVOICENEWMANGE}/projectList` // 发票项目列表
 
 export const CONTRACTMANGE = `${MINE}/contractMange` // 合同管理
 export const CONTRACTLIST = `${MINE}/contractList` // 我发的合同管理列表
@@ -83,6 +85,8 @@ export const PROJECTDETAIL = `${MINE}/projectMange/projectDetail` // 项目详�
 export const CREATEPROJECT = `${MINE}/projectMange/createProject` // 创建项目
 export const BALANCEMANGE = `${MINE}/balanceMange` // 结算管理
 export const BALANCEDETAIL = `${MINE}/projectMange/balanceMange/balanceDetail` // 结算详情
+export const VISABALANCEDETAIL = `${MINE}/projectMange/balanceMange/visaMange` // 签证单结算详情
+export const ADDTOBALANCED = `${MINE}/projectMange/balanceMange/visaMange/addtoForm` // 结算追加工程款
 export const ENGINREALITY = `${MINE}/enginReality` // 工程实况
 export const LEAVESITU = `${MINE}/enginReality/leaveSitu` // 请假情况
 export const PARTNER = `${MINE}/partner` // 合作方管理
@@ -101,6 +105,12 @@ export const BANKCARDLIST = `${MINE}/bankcardList` // 银行卡
 export const WORKERMANGE = `${MINE}/workList` // 工人管理
 export const CREATEWORKER = `${WORKERMANGE}/createWorker` // 添加工人
 export const CREATEWORKERSUCCESS = `${CREATEWORKER}/success` // 添加工人成功
+
+export const APPROVE = `${MINE}/approve` // 审批
+export const VISAORDER = `${APPROVE}/visaOrder` // 签证单
+export const APPROVESET = `${APPROVE}/setting` // 审批设置
+export const APPROVESETFORM = `${APPROVESET}/setForm` // 审批流程
+export const APPROVEDETAIL = `${APPROVE}/detail` // 审批详情
 
 export const LOGIN = `${BASE_URL}/Login/login` // 登录
 export const REGISTER = `${BASE_URL}/Login/register` // 注册
