@@ -362,6 +362,9 @@ export default {
       },
       withdraw(params) { // 提现
         return FetchSave(prefix + '/withdraw', params, 'post', { showloading: false })
+      },
+      getChannel(params) { // 充值渠道
+        return Fetch(prefix + '/recharge/channel', params, 'get')
       }
     },
     projectMange: { // 项目管理

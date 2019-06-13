@@ -238,16 +238,21 @@
         }
         & span {
           display: block;
-          width: 16px;
-          height: 16px;
+          width: 17px;
+          height: 17px;
           position: absolute;
           color: #fff;
           text-align: center;
-          line-height: 16px;
+          line-height: 17px;
           bottom: 0;
           right: -5px;
           border-radius: 50%;
           border: 2px solid #fff;
+          & i {
+            display: block;
+            text-align: center;
+            line-height: 17px;
+          }
           &.suc {
             background: #1298FC;
           }

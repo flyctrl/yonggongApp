@@ -192,6 +192,10 @@ const AccountRecharge = Loadable({ // 我的账户》充值
   loader: () => import(/* webpackChunkName: "accountrecharge" */ '../models/Mine/Account/recharge'),
   loading: MyLoadingComponent
 })
+const SkipRecharge = Loadable({ // 我的账户》充值跳转
+  loader: () => import(/* webpackChunkName: "skiprecharge" */ '../models/Mine/Account/recharge/skip'),
+  loading: MyLoadingComponent
+})
 const SuccessPage = Loadable({ // 成功页面
   loader: () => import(/* webpackChunkName: "successpage" */ '../models/Mine/Account/successPage'),
   loading: MyLoadingComponent
@@ -786,6 +790,14 @@ const routes = [
     animated: true,
     showMenu: false,
     title: '充值'
+  }, {
+    path: urls.SKIPRECHARGE,
+    exact: true,
+    component: SkipRecharge,
+    parent: 'Account',
+    animated: true,
+    showMenu: false,
+    title: '充值跳转'
   }, {
     path: urls.SUCCESSPAGE,
     exact: true,

@@ -50,6 +50,7 @@ export const SETUPABOUTUS = `${MINE}/aboutUs` // 我的设置》关于我们
 export const CLAUSE = `${SETUP}/clause` // 服务条款协议
 export const ACCOUNT = `${MINE}/Account` // 我的账户
 export const ACCOUNTRECHARGE = `${ACCOUNT}/recharge` // 我的账户》充值
+export const SKIPRECHARGE = `${ACCOUNT}/recharge/skip` // 我的账户》充值跳转
 export const ACCOUNTWITHDRAWCASH = `${ACCOUNT}/withdrawCash` // 我的账户》提现
 export const SUCCESSPAGE = `${ACCOUNT}/successPage` // 支付成功页面
 export const FAILPAGE = `${ACCOUNT}/failPage` // 支付失败页面

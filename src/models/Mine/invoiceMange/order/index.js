@@ -285,7 +285,8 @@ class OrderRange extends Component {
               isConfirm: false
             })
           } else {
-            this.props.match.history.push(`${urls['INVOICENEWMANGE']}?listType=1`)
+            // this.props.match.history.push(`${urls['INVOICENEWMANGE']}?listType=1`)
+            this.props.match.history.go(-1)
           }
         } }
       />

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Header, Content } from 'Components'
+import { Header, Content, DefaultPage } from 'Components'
 import { List, ListView, PullToRefresh } from 'antd-mobile'
 import * as urls from 'Contants/urls'
 import ProjectList from './projectList'

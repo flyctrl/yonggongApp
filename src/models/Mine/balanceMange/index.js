@@ -46,8 +46,7 @@ const visaPayStatus = {
 }
 const signType = {
   1: { title: '用工', classname: 'employ' },
-  2: { title: '签证单', classname: 'visa' },
-  3: { title: '机械', classname: 'mach' }
+  2: { title: '机械', classname: 'mach' }
 }
 const defaultSource = new ListView.DataSource({
   rowHasChanged: (row1, row2) => row1 !== row2,
@@ -247,14 +246,14 @@ class BalanceMange extends Component {
               <div className={style['visa-date']}>
                 <time>申请日期：{rowData['created_at']}</time>
                 {
-                  tabIndex === 3 || tabIndex === '3' ? <span>金额：{rowData['amount']}</span> : null
+                  (tabIndex === 2 || tabIndex === '2') && rowData['status'] === 1 ? null : <span>金额：{rowData['amount']}</span>
                 }
               </div>
             </div>
             {
-              (rowData['status'] === 1 || rowData['status'] === 4) && (tabIndex === 2 || tabIndex === '2') && rowData['reject_reason'] !== '' ? <div style={{ 'justifyContent': rowData['status'] === 1 ? 'flex-end' : 'space-between' }} className={`${style['visa-bd']} my-top-border`}>
+              (rowData['status'] === 1 || rowData['status'] === 4) && (tabIndex === 2 || tabIndex === '2') ? <div style={{ 'justifyContent': rowData['status'] === 1 ? 'flex-end' : 'space-between' }} className={`${style['visa-bd']} my-top-border`}>
                 {
-                  rowData['status'] === 4 ? <div className={`${style['desc']} ellipsis2`}>
+                  rowData['status'] === 4 && rowData['reject_reason'] !== '' ? <div className={`${style['desc']} ellipsis2`}>
                   驳回原因：{rowData['reject_reason']}
                   </div> : null
                 }

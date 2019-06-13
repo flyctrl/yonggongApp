@@ -13,15 +13,6 @@ import { onBackKeyDown } from 'Contants/tooler'
 const Item = List.Item
 const Brief = Item.Brief
 const RadioItem = Radio.RadioItem
-const channelData = [{
-  label: '易宝支付',
-  value: 'yeepay',
-  src: require('Assets/yeepay.png')
-}, {
-  label: '连连支付',
-  value: 'lianlian',
-  src: require('Assets/lianlian.png')
-}]
 class Rechange extends Component {
   state = {
     amount: '',
@@ -30,7 +21,8 @@ class Rechange extends Component {
     showlist: false,
     bankval: {},
     banklist: [],
-    channelValue: 'yeepay'
+    channelValue: '',
+    channelData: []
   }
   onChange = (value) => {
     if (Number(value) <= 0) {
@@ -70,7 +62,21 @@ class Rechange extends Component {
     if (data) {
       if ('cordova' in window) {
         document.addEventListener('deviceready', () => {
-          let ref = cordova.InAppBrowser.open(data.url, '_blank', 'location=yes,hardwareback=no,closebuttoncaption=关闭,closebuttoncolor=#000000,hidenavigationbuttons=yes,hideurlbar=yes')
+          let ref
+          if (channelValue === 'lianlian') {
+            let newurl = ''
+            if (process.env.NODE_ENV === 'production') {
+              newurl = 'https://yg.yaque365.com/Mine/Account/recharge/skip?url=' + encodeURIComponent(data.url)
+              if (TEST || CORDOVATEST) {
+                newurl = 'https://yg-test.yaque365.com/Mine/Account/recharge/skip?url=' + encodeURIComponent(data.url)
+              }
+            } else {
+              newurl = 'https://yg-test.yaque365.com/Mine/Account/recharge/skip?url=' + encodeURIComponent(data.url)
+            }
+            ref = cordova.InAppBrowser.open(newurl, '_blank', 'location=yes,hardwareback=no,closebuttoncaption=关闭,closebuttoncolor=#000000,hidenavigationbuttons=yes,hideurlbar=yes')
+          } else {
+            ref = cordova.InAppBrowser.open(data.url, '_blank', 'location=yes,hardwareback=no,closebuttoncaption=关闭,closebuttoncolor=#000000,hidenavigationbuttons=yes,hideurlbar=yes')
+          }
           ref.addEventListener('exit', () => {
             this.props.match.history.push(urls.ACCOUNTRECHARGE)
           })
@@ -105,6 +111,7 @@ class Rechange extends Component {
   componentDidMount() {
     // this.getBindCardlist()
     this.getDefaultCard()
+    this.getChannel()
     if ('cordova' in window) {
       document.removeEventListener('backbutton', onBackKeyDown, false)
       document.addEventListener('backbutton', this.backButtons, false)
@@ -170,9 +177,28 @@ class Rechange extends Component {
       channelValue: value
     })
   }
+  getChannel = async () => {
+    let data = await api.Mine.account.getChannel({
+      source: 'web'
+    }) || false
+    if (data) {
+      let channelData = []
+      data.map((item, index) => {
+        channelData.push({
+          label: item['name'],
+          value: item['channel'],
+          src: item['logo']
+        })
+      })
+      this.setState({
+        channelData,
+        channelValue: channelData[0]['value']
+      })
+    }
+  }
 
   render() {
-    const { bankval, hasError, cashValue, showlist, channelValue } = this.state
+    const { bankval, hasError, cashValue, showlist, channelValue, channelData } = this.state
     return (
       <div>
         <div className='pageBox' style={{ display: showlist ? 'none' : 'block' }}>

@@ -169,12 +169,14 @@
               font-size: 15px;
               line-height: 30px;
               height: 30px;
-              width: 260px;
+              width: 230px;
             }
             & em {
               display: block;
               line-height: 30px;
               font-size: 15px;
+              width: 78px;
+              text-align: right;
               &.green {
                 color: #00BECC;
               }

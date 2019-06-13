@@ -198,7 +198,7 @@ class Apply extends Component {
   }
   render() {
     const { getFieldError, getFieldProps } = this.props.form
-    let { totalRadioValue, initialTitle, initialAddress, payId, payType } = this.state
+    let { totalRadioValue, initialTitle, initialAddress } = this.state
     return (
       <div className={`${style['invoice-box']} pageBox gray`}>
         <div>
@@ -207,7 +207,8 @@ class Apply extends Component {
             leftIcon='icon-back'
             leftTitle1='返回'
             leftClick1={() => {
-              history.push(`${urls['INVOICEORDER']}?id=${payId}&type=${payType}`)
+              // history.push(`${urls['INVOICEORDER']}?id=${payId}&type=${payType}`)
+              history.go(-1)
             }}
           />
           <Content>

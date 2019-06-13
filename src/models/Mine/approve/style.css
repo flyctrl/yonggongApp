@@ -19,6 +19,8 @@ html:not([data-scale]) .approve-page :global(.am-tabs-default-bar-top .am-tabs-d
       & dt {
         & .header-hd {
           overflow: hidden;
+          height: 22px;
+          line-height: 22px;
           & em {
             float: left;
             padding: 0 3px;
@@ -55,7 +57,7 @@ html:not([data-scale]) .approve-page :global(.am-tabs-default-bar-top .am-tabs-d
             float: left;
             color: #333;
             font-size: 15px;
-            width: 246px;
+            width: 220px;
             height: 18px;
             line-height: 18px;
           }
