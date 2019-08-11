@@ -21,16 +21,6 @@
 
 5、兼容各个主流机型，已适配iPhoneX
 
-## 框架页面展示
-<div align="center">
-<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg1.jpg" width="375" />
-<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg2.jpg" width="375" />
-<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg3.jpg" width="375" />
-<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg4.jpg" width="375" />
-<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg5.jpg" width="375" />
-</div>
-
-
 ## 路由
 
 ### 路由书写简单规范
@@ -375,3 +365,12 @@ npm run build:pre
 npm run build
 npm run upload // 上传服务器
 ```
+
+## 框架页面展示
+<div align="center">
+<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg1.jpg" width="375" />
+<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg2.jpg" width="375" />
+<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg3.jpg" width="375" />
+<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg4.jpg" width="375" />
+<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg5.jpg" width="375" />
+</div>
