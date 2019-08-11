@@ -22,11 +22,11 @@
 5、兼容各个主流机型，已适配iPhoneX
 
 ## 框架页面展示
-![用工端](https://github.com/flyctrl/yongongApp/raw/master/remark/yg1.jpg)
-![用工端](https://github.com/flyctrl/yongongApp/raw/master/remark/yg2.jpg)
-![用工端](https://github.com/flyctrl/yongongApp/raw/master/remark/yg3.jpg)
-![用工端](https://github.com/flyctrl/yongongApp/raw/master/remark/yg4.jpg)
-![用工端](https://github.com/flyctrl/yongongApp/raw/master/remark/yg5.jpg)
+<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg1.jpg" width="375" />
+<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg2.jpg" width="375" />
+<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg3.jpg" width="375" />
+<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg4.jpg" width="375" />
+<img src="https://raw.githubusercontent.com/flyctrl/yongongApp/master/remark/yg5.jpg" width="375" />
 
 ## 路由
 
