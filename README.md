@@ -21,6 +21,13 @@
 
 5、兼容各个主流机型，已适配iPhoneX
 
+## 框架页面展示
+![用工端](https://github.com/flyctrl/yongongApp/raw/master/remark/yg1.jpg)
+![用工端](https://github.com/flyctrl/yongongApp/raw/master/remark/yg2.jpg)
+![用工端](https://github.com/flyctrl/yongongApp/raw/master/remark/yg3.jpg)
+![用工端](https://github.com/flyctrl/yongongApp/raw/master/remark/yg4.jpg)
+![用工端](https://github.com/flyctrl/yongongApp/raw/master/remark/yg5.jpg)
+
 ## 路由
 
 ### 路由书写简单规范
